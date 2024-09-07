@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.RobotMap;
+import org.firstinspires.ftc.teamcode.pedroPathing.localization.localizers.OTOSLocalizer;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.localizers.ThreeWheelLocalizer;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.MathFunctions;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Vector;
@@ -47,13 +49,10 @@ public class PoseUpdater {
     /**
      * Creates a new PoseUpdater from a HardwareMap and a Localizer.
      *
-     * @param hardwareMap the HardwareMap
      * @param localizer the Localizer
      */
-    public PoseUpdater(HardwareMap hardwareMap, Localizer localizer) {
-        this.hardwareMap = hardwareMap;
-
-        for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
+    public PoseUpdater(Localizer localizer) {
+        for (LynxModule module : RobotMap.getInstance().getLynxModules()) {
             module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
         }
 
@@ -62,12 +61,9 @@ public class PoseUpdater {
 
     /**
      * Creates a new PoseUpdater from a HardwareMap.
-     *
-     * @param hardwareMap the HardwareMap
      */
-    public PoseUpdater(HardwareMap hardwareMap) {
-        // TODO: replace the second argument with your preferred localizer
-        this(hardwareMap, new ThreeWheelLocalizer(hardwareMap));
+    public PoseUpdater() {
+        this(new OTOSLocalizer());
     }
 
     /**
