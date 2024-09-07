@@ -18,14 +18,14 @@ public class RobotMap {
 
     private static RobotMap instance = null;
 
-    public static RobotMap getInstance(){
-        if (instance == null){
+    public static RobotMap getInstance() {
+        if (instance == null) {
             instance = new RobotMap();
         }
         return instance;
     }
 
-    public void init(final HardwareMap hardwareMap){
+    public void init(final HardwareMap hardwareMap) {
         MOTOR_FL = hardwareMap.get(DcMotorEx.class, "leftFront");
         MOTOR_FR = hardwareMap.get(DcMotorEx.class, "rightFront");
         MOTOR_BL = hardwareMap.get(DcMotorEx.class, "leftBack");
