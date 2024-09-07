@@ -5,12 +5,10 @@ import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.pedroPathing.localization.SparkFunOTOSCorrected;
-
 import java.util.List;
 
 public class RobotMap {
-    public SparkFunOTOSCorrected OTOS;
+    public SparkFunOTOS OTOS;
     private HardwareMap hMap;
 
     public DcMotorEx MOTOR_FL;
@@ -33,7 +31,7 @@ public class RobotMap {
         MOTOR_BL = hardwareMap.get(DcMotorEx.class, "leftBack");
         MOTOR_BR = hardwareMap.get(DcMotorEx.class, "rightBack");
 
-        OTOS = hardwareMap.get(SparkFunOTOSCorrected.class, "otos");
+        OTOS = hardwareMap.get(SparkFunOTOS.class, "otos");
 
         this.hMap = hardwareMap;
     }
