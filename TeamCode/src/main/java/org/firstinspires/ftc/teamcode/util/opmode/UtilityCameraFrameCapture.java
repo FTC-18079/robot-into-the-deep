@@ -35,12 +35,14 @@ package org.firstinspires.ftc.teamcode.util.opmode;
 
 import android.util.Size;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.RobotMap;
 import org.firstinspires.ftc.vision.VisionPortal;
 
 import java.util.Locale;
@@ -66,7 +68,7 @@ public class UtilityCameraFrameCapture extends LinearOpMode
     /*
      * EDIT THESE PARAMETERS AS NEEDED
      */
-    final boolean USING_WEBCAM = false;
+    final boolean USING_WEBCAM = true;
     final BuiltinCameraDirection INTERNAL_CAM_DIR = BuiltinCameraDirection.BACK;
     final int RESOLUTION_WIDTH = 640;
     final int RESOLUTION_HEIGHT = 480;
@@ -79,13 +81,16 @@ public class UtilityCameraFrameCapture extends LinearOpMode
     @Override
     public void runOpMode()
     {
+        RobotMap.getInstance().init(hardwareMap);
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         VisionPortal portal;
 
         if (USING_WEBCAM)
         {
             portal = new VisionPortal.Builder()
-                    .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
+                    .setCamera(RobotMap.getInstance().APRILTAG_CAMERA)
                     .setCameraResolution(new Size(RESOLUTION_WIDTH, RESOLUTION_HEIGHT))
+                    .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
                     .build();
         }
         else
