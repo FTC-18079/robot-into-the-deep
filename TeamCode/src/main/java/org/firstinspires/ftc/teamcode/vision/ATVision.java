@@ -38,6 +38,7 @@ public class ATVision {
                 .setDrawAxes(true)
                 .setDrawTagOutline(true)
                 .setDrawTagID(true)
+                .setDrawCubeProjection(true)
                 .setOutputUnits(DistanceUnit.INCH, AngleUnit.RADIANS)
                 .setCameraPose(cameraPose, new YawPitchRollAngles(AngleUnit.RADIANS, 0, 0, 0, 0))
                 .build();

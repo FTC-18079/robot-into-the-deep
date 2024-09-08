@@ -11,8 +11,8 @@ public class VisionConstants {
     public static final Position cameraPose = new Position(DistanceUnit.MM, 8.0315, 5.3871 ,3.3625, 0);
 
     // Arducam lens intrinsics
-    public static final double arducam_fx = 0.0;
-    public static final double arducam_fy = 0.0;
-    public static final double arducam_cx = 0.0;
-    public static final double arducam_cy = 0.0;
+    public static final double arducam_fx = 549.535;
+    public static final double arducam_fy = 549.535;
+    public static final double arducam_cx = 310.076;
+    public static final double arducam_cy = 251.101;
 }

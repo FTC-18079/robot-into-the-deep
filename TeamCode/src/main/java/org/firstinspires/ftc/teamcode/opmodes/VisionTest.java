@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -14,6 +15,7 @@ public class VisionTest extends OpMode {
     @Override
     public void init() {
         RobotMap.getInstance().init(hardwareMap);
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         atVision = new ATVision(true);
         FtcDashboard.getInstance().startCameraStream(atVision.livestream, 15);
     }
@@ -21,5 +23,6 @@ public class VisionTest extends OpMode {
     @Override
     public void loop() {
         telemetry.addData("AprilTag FPS", atVision.getFPS());
+        telemetry.update();
     }
 }
