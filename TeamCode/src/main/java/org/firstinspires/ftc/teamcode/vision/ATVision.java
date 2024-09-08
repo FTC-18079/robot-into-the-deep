@@ -48,6 +48,7 @@ public class ATVision {
                 .setCameraResolution(new Size(640, 480))
                 .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
                 .addProcessor(processor)
+                .addProcessor(livestream)
                 .enableLiveView(liveView)
                 .build();
     }

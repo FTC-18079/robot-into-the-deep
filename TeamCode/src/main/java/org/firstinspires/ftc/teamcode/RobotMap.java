@@ -13,7 +13,7 @@ import java.util.List;
 
 public class RobotMap {
     private HardwareMap hMap;
-    private ArrayList<HardwareDevice> hardwareDevices;
+//    private ArrayList<HardwareDevice> hardwareDevices = new ArrayList<HardwareDevice>();
 
     // Sensors
     public SparkFunOTOS OTOS;
@@ -30,6 +30,8 @@ public class RobotMap {
     // Returns an instance of this
     public static RobotMap getInstance() {
         // Check that no hardware is null
+
+        /*
         boolean hasNullHardware = false;
         for (HardwareDevice h : instance.hardwareDevices) {
             if (h == null) {
@@ -37,8 +39,9 @@ public class RobotMap {
                 break;
             }
         }
+        */
 
-        if (instance == null || hasNullHardware) {
+        if (instance == null /*|| hasNullHardware*/) {
             instance = new RobotMap();
         }
         return instance;
@@ -53,12 +56,12 @@ public class RobotMap {
         MOTOR_BL = hardwareMap.get(DcMotorEx.class, "leftBack");
         MOTOR_BR = hardwareMap.get(DcMotorEx.class, "rightBack");
 
-        hardwareDevices.add(OTOS);
-        hardwareDevices.add(APRILTAG_CAMERA);
-        hardwareDevices.add(MOTOR_FL);
-        hardwareDevices.add(MOTOR_FR);
-        hardwareDevices.add(MOTOR_BL);
-        hardwareDevices.add(MOTOR_BR);
+//        hardwareDevices.add(OTOS);
+//        hardwareDevices.add(APRILTAG_CAMERA);
+//        hardwareDevices.add(MOTOR_FL);
+//        hardwareDevices.add(MOTOR_FR);
+//        hardwareDevices.add(MOTOR_BL);
+//        hardwareDevices.add(MOTOR_BR);
 
         this.hMap = hardwareMap;
     }
