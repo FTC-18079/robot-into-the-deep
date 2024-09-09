@@ -20,7 +20,7 @@ public class Chassis extends SubsystemBase {
     }
 
     public void setDrivePowers(double fwd, double str, double rot) {
-        follower.setTeleOpMovementVectors(fwd, str, rot);
+        follower.setTeleOpMovementVectors(fwd, str, rot, isRobotCentric);
     }
 
     public Pose getPoseEstimate() {
