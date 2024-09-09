@@ -132,7 +132,15 @@ public class RobotCore extends Robot {
         this.telemetry.update();
     }
 
+    public Pose getPoseEstimate() {
+        return chassis.getPoseEstimate();
+    }
+
     public Telemetry getTelemetry() {
         return telemetry;
+    }
+
+    public double getFPS() {
+        return atVision.getFPS();
     }
 }
