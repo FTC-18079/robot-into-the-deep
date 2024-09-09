@@ -9,6 +9,13 @@ import org.firstinspires.ftc.teamcode.pedroPathing.util.CustomFilteredPIDFCoeffi
 import org.firstinspires.ftc.teamcode.pedroPathing.util.CustomPIDFCoefficients;
 import org.firstinspires.ftc.teamcode.pedroPathing.util.KalmanFilterParameters;
 
+// empty lines to make line numbers consistent with TUNING.md
+// dont ctrl + alt + L this pls Anthony
+
+
+
+
+
 /**
  * This is the FollowerConstants class. It holds many constants and parameters for various parts of
  * the Follower. This is here to allow for easier tuning of Pedro Pathing, as well as concentrate
@@ -23,8 +30,8 @@ import org.firstinspires.ftc.teamcode.pedroPathing.util.KalmanFilterParameters;
 public class FollowerConstants {
     // This section is for setting the actual drive vector for the front left wheel, if the robot
     // is facing a heading of 0 radians with the wheel centered at (0,0)
-    private static double xMovement = 81.34056;
-    private static double yMovement = 65.43028;
+    private static double xMovement = 63.1614;
+    private static double yMovement = 49.3205;
     private static double[] convertToPolar = Point.cartesianToPolar(xMovement, -yMovement);
     public static Vector frontLeftVector = MathFunctions.normalizeVector(new Vector(convertToPolar[0],convertToPolar[1]));
 
@@ -76,7 +83,7 @@ public class FollowerConstants {
 
 
     // Mass of robot in kilograms
-    public static double mass = 10.65942;
+    public static double mass = 6.713167;
 
     // Centripetal force to power scaling
     public static double centripetalScaling = 0.0005;
