@@ -122,6 +122,14 @@ public class RobotCore extends Robot {
     @Override
     public void run() {
         CommandScheduler.getInstance().run();
+
+        double loop = System.nanoTime();
+        this.telemetry.addData("AprilTag FPS", atVision.getFPS());
+        this.telemetry.addData("hz", 1000000000 / (loop - loopTime));
+        this.telemetry.addData("Runtime", endTime == 0 ? timer.seconds() : endTime);
+        loopTime = loop;
+
+        this.telemetry.update();
     }
 
     public Telemetry getTelemetry() {
