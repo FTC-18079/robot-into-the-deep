@@ -68,12 +68,12 @@ public class RobotCore extends Robot {
 
         this.initialPose = RobotGlobal.robotPose;
 
-        // Set up opmode
-        setupOpMode(type);
-
         telemetry.addData("Status", "Initializing subsystems");
         telemetry.update();
         initSubsystems();
+
+        // Set up opmode
+        setupOpMode(type);
 
         telemetry.addData("Status", "Robot initialized, ready to enable");
         telemetry.update();
@@ -112,7 +112,7 @@ public class RobotCore extends Robot {
                 () -> responseCurve(driveController.getLeftX(), DRIVE_SENSITIVITY),
                 () -> responseCurve(driveController.getRightX(), ROTATIONAL_SENSITIVITY)
         );
-
+        chassis.setDefaultCommand(driveCommand);
     }
 
     public double responseCurve(double value, double power) {

@@ -19,7 +19,7 @@ public class TeleOpMode extends OpMode {
     public void init() {
         RobotMap.getInstance().init(hardwareMap);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        RobotCore robot = new RobotCore(RobotCore.OpModeType.TELEOP, telemetry, gamepad1, gamepad2);
+        robot = new RobotCore(RobotCore.OpModeType.TELEOP, telemetry, gamepad1, gamepad2);
     }
 
     @Override
