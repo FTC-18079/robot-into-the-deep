@@ -26,6 +26,10 @@ public class RobotCore extends Robot {
         return telemetry;
     }
 
+    public void rumbleGamepad(GamepadEx gamepad, double rumble1, double rumble2, int ms) {
+        gamepad.gamepad.rumble(rumble1, rumble2, ms);
+    }
+
     public boolean getTouchpad(GamepadEx gamepad) {
         return gamepad.gamepad.touchpad;
     }
