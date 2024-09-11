@@ -119,7 +119,7 @@ public class RobotCore extends Robot {
 
         driveController.getGamepadButton(GamepadKeys.Button.Y)
                 .whenPressed(chassis::resetHeading);
-        driveController.getGamepadButton(GamepadKeys.Button.X)
+        driveController.getGamepadButton(GamepadKeys.Button.B)
                 .whenPressed(chassis::toggleRobotCentric);
 
         chassis.setDefaultCommand(driveCommand);
