@@ -113,8 +113,8 @@ public class RobotCore extends Robot {
         driveCommand = new TeleOpDriveCommand(
                 chassis,
                 () -> responseCurve(driveController.getLeftY(), DRIVE_SENSITIVITY),
-                () -> -responseCurve(driveController.getLeftX(), DRIVE_SENSITIVITY),
-                () -> -responseCurve(driveController.getRightX(), ROTATIONAL_SENSITIVITY)
+                () -> responseCurve(driveController.getLeftX(), DRIVE_SENSITIVITY),
+                () -> responseCurve(driveController.getRightX(), ROTATIONAL_SENSITIVITY)
         );
 
         driveController.getGamepadButton(GamepadKeys.Button.Y)

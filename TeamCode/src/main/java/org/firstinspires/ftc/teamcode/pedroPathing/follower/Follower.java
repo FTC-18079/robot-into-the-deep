@@ -549,7 +549,7 @@ public class Follower {
         teleopDriveVector.setOrthogonalComponents(teleopDriveValues[0], teleopDriveValues[1]);
         teleopDriveVector.setMagnitude(MathFunctions.clamp(teleopDriveVector.getMagnitude(), 0, 1));
 
-        if (robotCentric) {
+        if (!robotCentric) {
             teleopDriveVector.rotateVector(getPose().getHeading());
         }
 
