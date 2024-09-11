@@ -6,20 +6,21 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotCore;
 import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
+import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 
 public class Chassis extends SubsystemBase {
     Follower follower;
     Telemetry telemetry;
     boolean isRobotCentric;
 
-    public Chassis(RobotCore robot, Pose initialPose) {
+    public Chassis(RobotCore robot) {
         this.telemetry = robot.getTelemetry();
         isRobotCentric = false;
-        follower = new Follower(initialPose);
+        follower = new Follower(RobotGlobal.robotPose);
     }
 
     public void setDrivePowers(double fwd, double str, double rot) {
-        follower.setTeleOpMovementVectors(fwd, str, rot);
+        follower.setTeleOpMovementVectors(fwd, str, rot, isRobotCentric);
     }
 
     public Pose getPoseEstimate() {
@@ -43,6 +44,7 @@ public class Chassis extends SubsystemBase {
         follower.startTeleopDrive();
     }
 
+    @Override
     public void periodic() {
         follower.update();
         telemetry.addData("Robot Centric", isRobotCentric);

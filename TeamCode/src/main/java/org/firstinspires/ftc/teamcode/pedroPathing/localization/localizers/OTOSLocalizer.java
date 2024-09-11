@@ -64,11 +64,10 @@ public class OTOSLocalizer extends Localizer {
         otos.setLinearUnit(DistanceUnit.INCH);
         otos.setAngularUnit(AngleUnit.RADIANS);
 
-        otos.setOffset(new SparkFunOTOS.Pose2D(0.43307,0,Math.PI / 2));
+        otos.setOffset(new SparkFunOTOS.Pose2D(0.3125,0.0,0.0));
 
-        // TODO: replace these with your tuned multipliers
-        otos.setLinearScalar(0.9661514204689636);
-        otos.setAngularScalar(1.2803020800427601);
+        otos.setLinearScalar(0.9865);
+        otos.setAngularScalar(1.2591);
 
         otos.calibrateImu();
         otos.resetTracking();
