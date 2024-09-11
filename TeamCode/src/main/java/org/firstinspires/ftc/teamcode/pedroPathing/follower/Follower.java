@@ -154,6 +154,7 @@ public class Follower {
     public void initialize(Pose initialPose) {
         driveVectorScaler = new DriveVectorScaler(FollowerConstants.frontLeftVector);
         poseUpdater = new PoseUpdater(new OTOSLocalizer(initialPose));
+        setStartingPose(initialPose);
 
         leftFront = RobotMap.getInstance().MOTOR_FL;
         leftRear = RobotMap.getInstance().MOTOR_BL;
@@ -416,6 +417,9 @@ public class Follower {
      */
     public void startTeleopDrive() {
         breakFollowing();
+        for (DcMotorEx m: motors) {
+            m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        }
         teleopDrive = true;
     }
 
@@ -492,8 +496,21 @@ public class Follower {
 
             calculateAveragedVelocityAndAcceleration();
 
-            drivePowers = driveVectorScaler.getDrivePowers(getCentripetalForceCorrection(), teleopHeadingVector, teleopDriveVector, poseUpdater.getPose().getHeading());
+            // drivePowers = driveVectorScaler.getDrivePowers(getCentripetalForceCorrection(), teleopHeadingVector, teleopDriveVector, poseUpdater.getPose().getHeading());
 
+            // Don't wanna use pedro's driving as it can get silly
+            double[] wheelPowers = new double[4];
+            double fwd = teleopDriveVector.getXComponent();
+            double lat = teleopDriveVector.getYComponent();
+            double rot = teleopDriveValues[2];
+
+            double denominator = Math.max(Math.abs(fwd) + Math.abs(lat) + Math.abs(rot), 1);
+            wheelPowers[0] = (fwd + lat + rot) / denominator;
+            wheelPowers[1] = (fwd - lat + rot) / denominator;
+            wheelPowers[2] = (fwd - lat - rot) / denominator;
+            wheelPowers[3] = (fwd + lat - rot) / denominator;
+
+            drivePowers = wheelPowers;
             limitDrivePowers();
 
             for (int i = 0; i < motors.size(); i++) {
@@ -532,7 +549,7 @@ public class Follower {
         teleopDriveVector.setOrthogonalComponents(teleopDriveValues[0], teleopDriveValues[1]);
         teleopDriveVector.setMagnitude(MathFunctions.clamp(teleopDriveVector.getMagnitude(), 0, 1));
 
-        if (robotCentric) {
+        if (!robotCentric) {
             teleopDriveVector.rotateVector(getPose().getHeading());
         }
 
@@ -594,6 +611,9 @@ public class Follower {
      * This resets the PIDFs and stops following the current Path.
      */
     public void breakFollowing() {
+        for (DcMotorEx m : motors) {
+            m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        }
         teleopDrive = false;
         holdingPosition = false;
         isBusy = false;
