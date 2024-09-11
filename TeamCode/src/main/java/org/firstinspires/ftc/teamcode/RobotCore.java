@@ -9,7 +9,6 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.arcrobotics.ftclib.command.button.Trigger;
-import com.arcrobotics.ftclib.gamepad.GamepadEx;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.chassis.Chassis;
@@ -18,9 +17,6 @@ import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 import org.firstinspires.ftc.teamcode.util.opmode.AutoPath;
 import org.firstinspires.ftc.teamcode.vision.ATVision;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Config
 public class RobotCore extends Robot {
@@ -100,7 +96,7 @@ public class RobotCore extends Robot {
         }
         switch (type) {
             case TELEOP:
-                chassis.startTeleOpDrive();
+                chassis.startTeleopDrive();
                 setDriveControls();
                 break;
             // TODO: add auto path generation here
