@@ -7,6 +7,8 @@ import com.arcrobotics.ftclib.command.Robot;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.arcrobotics.ftclib.command.button.Trigger;
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.chassis.Chassis;
@@ -24,6 +26,7 @@ public class RobotCore extends Robot {
     Telemetry telemetry;
     GamepadEx driveController;
     GamepadEx manipController;
+
     Pose initialPose;
     ATVision atVision;
 
@@ -38,7 +41,10 @@ public class RobotCore extends Robot {
     public static double ROTATIONAL_SENSITIVITY = 2.0;
     public static double JOYSTICK_DEADZONE = 0.09;
     public static double TRIGGER_DEADZONE = 0.05;
-
+    
+    // Touchpad button
+    Trigger touchpadTrigger;
+  
     // Loop times
     private double loopTime = 0.0;
     private final ElapsedTime timer = new ElapsedTime();
@@ -54,6 +60,7 @@ public class RobotCore extends Robot {
 
     public RobotCore(OpModeType type, Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2) {
         this.telemetry = telemetry;
+        touchpadTrigger = new Trigger(() -> getTouchpad(driveController));
 
         telemetry.addData("Status", "Initializing AprilTag detection");
         telemetry.update();
@@ -142,5 +149,16 @@ public class RobotCore extends Robot {
 
     public double getFPS() {
         return atVision.getFPS();
+
+    public void rumbleGamepad(GamepadEx gamepad, double rumble1, double rumble2, int ms) {
+        gamepad.gamepad.rumble(rumble1, rumble2, ms);
+    }
+
+    public boolean getTouchpad(GamepadEx gamepad) {
+        return gamepad.gamepad.touchpad;
+    }
+
+    public boolean getPS(GamepadEx gamepad) {
+        return gamepad.gamepad.ps;
     }
 }
