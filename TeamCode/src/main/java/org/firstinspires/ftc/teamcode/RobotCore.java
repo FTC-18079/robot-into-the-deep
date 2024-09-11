@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.Robot;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.arcrobotics.ftclib.command.button.Trigger;
@@ -119,6 +120,12 @@ public class RobotCore extends Robot {
                 () -> -responseCurve(driveController.getLeftX(), DRIVE_SENSITIVITY),
                 () -> -responseCurve(driveController.getRightX(), ROTATIONAL_SENSITIVITY)
         );
+
+        driveController.getGamepadButton(GamepadKeys.Button.Y)
+                .whenPressed(chassis::resetHeading);
+        driveController.getGamepadButton(GamepadKeys.Button.X)
+                .whenPressed(chassis::toggleRobotCentric);
+
         chassis.setDefaultCommand(driveCommand);
     }
 
@@ -149,6 +156,7 @@ public class RobotCore extends Robot {
 
     public double getFPS() {
         return atVision.getFPS();
+    }
 
     public void rumbleGamepad(GamepadEx gamepad, double rumble1, double rumble2, int ms) {
         gamepad.gamepad.rumble(rumble1, rumble2, ms);
