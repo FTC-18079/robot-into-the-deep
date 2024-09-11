@@ -5,10 +5,10 @@ import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.Robot;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.arcrobotics.ftclib.command.button.Trigger;
-import com.arcrobotics.ftclib.gamepad.GamepadEx;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.chassis.Chassis;
@@ -17,9 +17,6 @@ import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 import org.firstinspires.ftc.teamcode.util.opmode.AutoPath;
 import org.firstinspires.ftc.teamcode.vision.ATVision;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Config
 public class RobotCore extends Robot {
@@ -99,7 +96,7 @@ public class RobotCore extends Robot {
         }
         switch (type) {
             case TELEOP:
-                chassis.startTeleOpDrive();
+                chassis.startTeleopDrive();
                 setDriveControls();
                 break;
             // TODO: add auto path generation here
@@ -116,9 +113,15 @@ public class RobotCore extends Robot {
         driveCommand = new TeleOpDriveCommand(
                 chassis,
                 () -> responseCurve(driveController.getLeftY(), DRIVE_SENSITIVITY),
-                () -> -responseCurve(driveController.getLeftX(), DRIVE_SENSITIVITY),
-                () -> -responseCurve(driveController.getRightX(), ROTATIONAL_SENSITIVITY)
+                () -> responseCurve(driveController.getLeftX(), DRIVE_SENSITIVITY),
+                () -> responseCurve(driveController.getRightX(), ROTATIONAL_SENSITIVITY)
         );
+
+        driveController.getGamepadButton(GamepadKeys.Button.Y)
+                .whenPressed(chassis::resetHeading);
+        driveController.getGamepadButton(GamepadKeys.Button.B)
+                .whenPressed(chassis::toggleRobotCentric);
+
         chassis.setDefaultCommand(driveCommand);
     }
 
@@ -149,6 +152,7 @@ public class RobotCore extends Robot {
 
     public double getFPS() {
         return atVision.getFPS();
+    }
 
     public void rumbleGamepad(GamepadEx gamepad, double rumble1, double rumble2, int ms) {
         gamepad.gamepad.rumble(rumble1, rumble2, ms);
