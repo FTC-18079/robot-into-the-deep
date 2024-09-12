@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.auto;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.arcrobotics.ftclib.command.Command;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -13,6 +14,9 @@ import static org.firstinspires.ftc.teamcode.auto.AutoConstants.ParkingPose.*;
 import static org.firstinspires.ftc.teamcode.util.RobotGlobal.Alliance.*;
 
 public abstract class AutoTemplate extends LinearOpMode {
+    public RobotCore.OpModeType type = RobotCore.OpModeType.EMPTY;
+    protected RobotCore robot;
+
     boolean lastUp;
     boolean lastDown;
     boolean lastSquare;
@@ -36,8 +40,8 @@ public abstract class AutoTemplate extends LinearOpMode {
 
         // Create robot
         setStartPose();
-        RobotCore robot = new RobotCore(
-                RobotCore.OpModeType.EMPTY,
+        robot = new RobotCore(
+                type,
                 telemetry,
                 gamepad1,
                 gamepad2
@@ -53,6 +57,7 @@ public abstract class AutoTemplate extends LinearOpMode {
 
         // Don't run anything without an alliance
         if (RobotGlobal.alliance == NONE) requestOpModeStop();
+        else robot.schedule(makeAutoPath());
 
         // Run robot
         while (opModeIsActive() && !isStopRequested()) {
@@ -104,4 +109,6 @@ public abstract class AutoTemplate extends LinearOpMode {
 
     // Method must be overwritten to set robot starting pose
     protected abstract void setStartPose();
+
+    protected abstract Command makeAutoPath();
 }

@@ -16,6 +16,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.chassis.Chassis;
 import org.firstinspires.ftc.teamcode.chassis.commands.TeleOpDriveCommand;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
+import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 import org.firstinspires.ftc.teamcode.util.opmode.AutoPath;
 import org.firstinspires.ftc.teamcode.vision.ATVision;
@@ -48,9 +49,6 @@ public class RobotCore extends Robot {
     private double loopTime = 0.0;
     private final ElapsedTime timer = new ElapsedTime();
     private double endTime = 0;
-
-    // Autonomous path sequence
-    AutoPath pathSequence;
 
     // OpMode type enumerator
     public enum OpModeType {
@@ -101,14 +99,10 @@ public class RobotCore extends Robot {
                 chassis.startTeleopDrive();
                 setDriveControls();
                 break;
-            case AUTO:
-                schedule(new WaitCommand(RobotGlobal.delayMs));
-                break;
-            default:
+            case EMPTY:
                 schedule(new InstantCommand());
                 break;
         }
-        if (type == OpModeType.AUTO) schedule(pathSequence.generate());
     }
 
     public void setDriveControls() {
@@ -151,6 +145,14 @@ public class RobotCore extends Robot {
 
     public Telemetry getTelemetry() {
         return telemetry;
+    }
+
+    public void followPath(Path path) {
+        chassis.followPath(path);
+    }
+
+    public boolean isBusy() {
+        return chassis.isBusy();
     }
 
     public double getFPS() {

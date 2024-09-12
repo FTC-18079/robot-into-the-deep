@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.auto;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
+import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 
 // Class for storing poses
 public class AutoConstants {
@@ -14,6 +15,7 @@ public class AutoConstants {
     public static final Pose CENTER_STARTING_POSE = new Pose(9, 80, 0);
     public static final Pose BASKET_STARTING_POSE = new Pose(9, 60, 0);
 
+    // Robot parking poses
     public enum ParkingPose {
         OBSERVATION_ZONE, SUBMERSIBLE
     }
@@ -41,4 +43,13 @@ public class AutoConstants {
     public static final Pose RED_LEFT_NEUTRAL_SAMPLE = new Pose(2.5, 2*24-2.5);
     public static final Pose RED_MID_NEUTRAL_SAMPLE = new Pose(2.5+9.75, 2*24-2.5);
     public static final Pose RED_RIGHT_NEUTRAL_SAMPLE = new Pose(2.5+9.75+10.5, 2*24-2.5);
+
+    public static Pose checkAlliance(Pose pose) {
+        if (RobotGlobal.alliance == RobotGlobal.Alliance.RED) return toRed(pose);
+        else return pose;
+    }
+
+    private static Pose toRed(Pose pose) {
+        return new Pose(144 - pose.getX(), pose.getY(), pose.getHeading() + Math.toRadians(180));
+    }
 }
