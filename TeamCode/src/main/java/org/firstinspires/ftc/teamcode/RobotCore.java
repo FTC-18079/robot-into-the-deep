@@ -3,7 +3,9 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.Robot;
+import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -52,7 +54,7 @@ public class RobotCore extends Robot {
 
     // OpMode type enumerator
     public enum OpModeType {
-        TELEOP, RED_AUTO, BLUE_AUTO
+        TELEOP, AUTO, EMPTY
     }
 
     public RobotCore(OpModeType type, Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2) {
@@ -99,13 +101,14 @@ public class RobotCore extends Robot {
                 chassis.startTeleopDrive();
                 setDriveControls();
                 break;
-            // TODO: add auto path generation here
-            case RED_AUTO:
+            case AUTO:
+                schedule(new WaitCommand(RobotGlobal.delayMs));
                 break;
-            case BLUE_AUTO:
+            default:
+                schedule(new InstantCommand());
                 break;
         }
-        if (type != OpModeType.TELEOP) schedule(pathSequence.generate());
+        if (type == OpModeType.AUTO) schedule(pathSequence.generate());
     }
 
     public void setDriveControls() {

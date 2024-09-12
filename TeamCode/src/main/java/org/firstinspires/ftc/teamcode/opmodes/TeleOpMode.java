@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.RobotMap;
 import org.firstinspires.ftc.teamcode.pedroPathing.util.Drawing;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 
-@TeleOp(name = "TeleOp", group = "TeleOp")
+@TeleOp(name = "TeleOp", group = "AAA")
 public class TeleOpMode extends OpMode {
     RobotCore robot;
 

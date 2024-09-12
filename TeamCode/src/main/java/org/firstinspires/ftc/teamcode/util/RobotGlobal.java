@@ -13,4 +13,12 @@ public class RobotGlobal {
     public static boolean liveView = false;
     public static Pose robotPose = new Pose();
     public static AutoConstants.ParkingPose parkingPose = AutoConstants.ParkingPose.SUBMERSIBLE;
+
+    public static void resetValues() {
+        delayMs = 0;
+        alliance = Alliance.NONE;
+        liveView = false;
+        robotPose = new Pose();
+        parkingPose = AutoConstants.ParkingPose.SUBMERSIBLE;
+    }
 }
