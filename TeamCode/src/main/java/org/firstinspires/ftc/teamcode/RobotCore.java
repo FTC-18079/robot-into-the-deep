@@ -3,7 +3,9 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.Robot;
+import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -14,6 +16,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.chassis.Chassis;
 import org.firstinspires.ftc.teamcode.chassis.commands.TeleOpDriveCommand;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
+import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 import org.firstinspires.ftc.teamcode.util.opmode.AutoPath;
 import org.firstinspires.ftc.teamcode.vision.ATVision;
@@ -47,12 +50,9 @@ public class RobotCore extends Robot {
     private final ElapsedTime timer = new ElapsedTime();
     private double endTime = 0;
 
-    // Autonomous path sequence
-    AutoPath pathSequence;
-
     // OpMode type enumerator
     public enum OpModeType {
-        TELEOP, RED_AUTO, BLUE_AUTO
+        TELEOP, AUTO, EMPTY
     }
 
     public RobotCore(OpModeType type, Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2) {
@@ -99,13 +99,10 @@ public class RobotCore extends Robot {
                 chassis.startTeleopDrive();
                 setDriveControls();
                 break;
-            // TODO: add auto path generation here
-            case RED_AUTO:
-                break;
-            case BLUE_AUTO:
+            case EMPTY:
+                schedule(new InstantCommand());
                 break;
         }
-        if (type != OpModeType.TELEOP) schedule(pathSequence.generate());
     }
 
     public void setDriveControls() {
@@ -148,6 +145,14 @@ public class RobotCore extends Robot {
 
     public Telemetry getTelemetry() {
         return telemetry;
+    }
+
+    public void followPath(Path path) {
+        chassis.followPath(path);
+    }
+
+    public boolean isBusy() {
+        return chassis.isBusy();
     }
 
     public double getFPS() {

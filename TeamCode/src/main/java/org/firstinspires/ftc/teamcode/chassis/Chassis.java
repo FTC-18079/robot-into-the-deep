@@ -6,6 +6,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotCore;
 import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
+import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 
 public class Chassis extends SubsystemBase {
@@ -25,6 +26,14 @@ public class Chassis extends SubsystemBase {
 
     public Pose getPoseEstimate() {
         return follower.getPose();
+    }
+
+    public void followPath(Path path) {
+        follower.followPath(path);
+    }
+
+    public boolean isBusy() {
+        return follower.isBusy();
     }
 
     public boolean isRobotCentric() {
