@@ -3,10 +3,14 @@ package org.firstinspires.ftc.teamcode.auto;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 
 // Class for storing poses
-public class FieldConstants {
+public class AutoConstants {
     // Robot start poses
     public enum RobotStart {
-        EXAMPLE
+        OBSERVATION_ZONE, CENTER, BASKET
+    }
+
+    public enum ParkingPose {
+        OBSERVATION_ZONE, SUBMERSIBLE
     }
 
     public static final Pose EXAMPLE_START_POSE = new Pose();
