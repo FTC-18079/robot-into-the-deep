@@ -1,30 +1,44 @@
 package org.firstinspires.ftc.teamcode.opmodes.autos;
 
 import static org.firstinspires.ftc.teamcode.auto.AutoConstants.checkAlliance;
-import static org.firstinspires.ftc.teamcode.util.RobotGlobal.Alliance.RED;
 import static org.firstinspires.ftc.teamcode.util.RobotGlobal.robotPose;
-import static org.firstinspires.ftc.teamcode.util.RobotGlobal.alliance;
 
 import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.WaitCommand;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.RobotCore;
 import org.firstinspires.ftc.teamcode.auto.AutoConstants;
 import org.firstinspires.ftc.teamcode.auto.AutoTemplate;
+import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
+import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierLine;
+import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
+import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
+import org.firstinspires.ftc.teamcode.util.FollowPathCommand;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 
+@Autonomous(name = "OZ 1+3 Alliance Samples")
 public class OZ_1_3_Alliance extends AutoTemplate {
+    // Poses
+    Pose scorePreloadPose = checkAlliance(new Pose(36, 60, Math.toRadians(0)));
 
+    // Paths
+    Path scorePreloadPath = new Path(new BezierLine(new Point(robotPose), new Point(scorePreloadPose)));
 
     @Override
     protected void setStartPose() {
-        robotPose = AutoConstants.OBVZONE_STARTING_POSE;
-        if (alliance == RED) robotPose = checkAlliance(robotPose);
+        robotPose = checkAlliance(AutoConstants.OBVZONE_STARTING_POSE);
         type = RobotCore.OpModeType.AUTO;
     }
 
     @Override
-    protected Command makeAutoPath() {
-        return new WaitCommand(RobotGlobal.delayMs);
+    public void buildPaths() {
+        scorePreloadPath.setConstantHeadingInterpolation(robotPose.getHeading());
+    }
+
+    @Override
+    protected Command makeAutoSequence() {
+        return new WaitCommand(RobotGlobal.delayMs)
+                .andThen(new FollowPathCommand(robot, scorePreloadPath));
     }
 }

@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.auto;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.Command;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.RobotCore;
@@ -40,6 +39,7 @@ public abstract class AutoTemplate extends LinearOpMode {
 
         // Create robot
         setStartPose();
+        buildPaths();
         robot = new RobotCore(
                 type,
                 telemetry,
@@ -57,7 +57,7 @@ public abstract class AutoTemplate extends LinearOpMode {
 
         // Don't run anything without an alliance
         if (RobotGlobal.alliance == NONE) requestOpModeStop();
-        else robot.schedule(makeAutoPath());
+        else robot.schedule(makeAutoSequence());
 
         // Run robot
         while (opModeIsActive() && !isStopRequested()) {
@@ -110,5 +110,7 @@ public abstract class AutoTemplate extends LinearOpMode {
     // Method must be overwritten to set robot starting pose
     protected abstract void setStartPose();
 
-    protected abstract Command makeAutoPath();
+    protected abstract Command makeAutoSequence();
+
+    protected abstract void buildPaths();
 }
