@@ -9,11 +9,18 @@ public class AutoConstants {
         OBSERVATION_ZONE, CENTER, BASKET
     }
 
+    // Starting poses
+    public static final Pose OBVZONE_STARTING_POSE = new Pose(9, 108, 0);
+    public static final Pose CENTER_STARTING_POSE = new Pose(9, 80, 0);
+    public static final Pose BASKET_STARTING_POSE = new Pose(9, 60, 0);
+
     public enum ParkingPose {
         OBSERVATION_ZONE, SUBMERSIBLE
     }
 
-    public static final Pose EXAMPLE_START_POSE = new Pose();
+    // Parking poses
+    public static final Pose OBVZONE_PARKING_POSE = new Pose(16.2, 12, Math.toRadians(90));
+    public static final Pose SUBMERSIBLE_PARKING_POSE = new Pose(60, 97, Math.toRadians(-90));
 
     // Blue Side Alliance-Specific Element Poses
     public static final Pose BLUE_LEFT_ALLIANCE_SAMPLE = new Pose(2.5+9.75+10.5, 4*24+1.5);
