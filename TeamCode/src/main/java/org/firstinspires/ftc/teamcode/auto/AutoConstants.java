@@ -11,9 +11,9 @@ public class AutoConstants {
     }
 
     // Starting poses
-    public static final Pose OBVZONE_STARTING_POSE = new Pose(9, 108, 0);
+    public static final Pose OBVZONE_STARTING_POSE = new Pose(9, 60, 0);
     public static final Pose CENTER_STARTING_POSE = new Pose(9, 80, 0);
-    public static final Pose BASKET_STARTING_POSE = new Pose(9, 60, 0);
+    public static final Pose BASKET_STARTING_POSE = new Pose(9, 108, 0);
 
     // Robot parking poses
     public enum ParkingPose {

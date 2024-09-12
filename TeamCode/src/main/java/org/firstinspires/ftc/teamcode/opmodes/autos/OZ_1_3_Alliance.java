@@ -23,7 +23,7 @@ public class OZ_1_3_Alliance extends AutoTemplate {
     Pose scorePreloadPose = checkAlliance(new Pose(36, 60, Math.toRadians(0)));
 
     // Paths
-    Path scorePreloadPath = new Path(new BezierLine(new Point(robotPose), new Point(scorePreloadPose)));
+    Path scorePreloadPath;
 
     @Override
     protected void setStartPose() {
@@ -33,6 +33,7 @@ public class OZ_1_3_Alliance extends AutoTemplate {
 
     @Override
     public void buildPaths() {
+        scorePreloadPath = new Path(new BezierLine(new Point(robotPose), new Point(scorePreloadPose)));
         scorePreloadPath.setConstantHeadingInterpolation(robotPose.getHeading());
     }
 
