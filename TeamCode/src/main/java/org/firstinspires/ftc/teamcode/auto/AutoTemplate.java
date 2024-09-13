@@ -47,8 +47,17 @@ public abstract class AutoTemplate extends LinearOpMode {
                 gamepad2
         );
 
+        // Schedule auto
+        telemetry.addData("Status", "Scheduling commands");
+        telemetry.update();
+        if (RobotGlobal.alliance != NONE) robot.schedule(makeAutoSequence());
+
         while (opModeInInit()) {
             telemetry.addData("Status", "Initialized, Ready to start");
+            telemetry.addData("Selected auto delay", RobotGlobal.delayMs);
+            telemetry.addData("Live view on", RobotGlobal.liveView);
+            telemetry.addData("Selected alliance", RobotGlobal.alliance);
+            telemetry.addData("Selected parking spot", RobotGlobal.parkingPose);
             telemetry.update();
 
             // Sleep CPU a little
@@ -57,7 +66,6 @@ public abstract class AutoTemplate extends LinearOpMode {
 
         // Don't run anything without an alliance
         if (RobotGlobal.alliance == NONE) requestOpModeStop();
-        else robot.schedule(makeAutoSequence());
 
         // Run robot
         while (opModeIsActive() && !isStopRequested()) {
