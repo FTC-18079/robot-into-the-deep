@@ -86,7 +86,6 @@ public class RobotCore extends Robot {
     public void initSubsystems() {
         chassis = new Chassis(this);
         collector = Collector.getInstance();
-        collector.setUpMotors();
         register(chassis, collector);
     }
 
@@ -121,6 +120,10 @@ public class RobotCore extends Robot {
                 .whenPressed(chassis::toggleRobotCentric);
 
         chassis.setDefaultCommand(driveCommand);
+
+        // TODO: remove this
+        manipController.getGamepadButton(GamepadKeys.Button.A)
+                .whenPressed(new InstantCommand(collector::setUpMotors));
 
         manipController.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
                 .whenPressed(new InstantCommand(() -> collector.setState(Collector.CollectorState.SEEKING)));

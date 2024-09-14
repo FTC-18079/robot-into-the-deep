@@ -4,16 +4,16 @@ import com.acmerobotics.dashboard.config.Config;
 
 @Config
 public class CollectorConstants {
-    public static double MAX_RPM = 200.0;
-    public static double MAX_ACCELERATION = 5.0;
+    public static double MAX_DELTAV = 200.0;
 
     public static int MAX_SLIDE_POS = 1250;
     public static int MIN_SLIDE_POS = 100;
     public static int MIN_VELOCITY = 15;
+    public static int ERROR_TOLERANCE = 20;
 
     public static double kP = 5.0;
     public static double kI = 0.0;
-    public static double kD = 0.02;
+    public static double kD = 0.1;
 
     public static double DEPLOY_DOWN_POS = 0.0;
     public static double DEPLOY_STOW = 0.9;

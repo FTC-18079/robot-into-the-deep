@@ -41,6 +41,8 @@ public class Collector extends SubsystemBase {
     }
 
     public void setUpMotors() {
+        pidfController.setPIDF(CollectorConstants.kP, CollectorConstants.kI, CollectorConstants.kD, 0.0);
+
         rightSlide.setDirection(DcMotorSimple.Direction.FORWARD);
         rightSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -86,13 +88,19 @@ public class Collector extends SubsystemBase {
     public void periodic() {
         stateMachine();
 
+        lastOutput = output;
         output = pidfController.calculate(rightSlide.getCurrentPosition(), targetPose);
-        if (Math.abs(output) < CollectorConstants.MIN_VELOCITY) output = 0.0;
+        double deltaV = output - lastOutput;
+
+        if (Math.abs(deltaV) > CollectorConstants.MAX_DELTAV && Math.signum(output) == Math.signum(deltaV)) output = Math.signum(deltaV) * CollectorConstants.MAX_DELTAV + lastOutput;
+        if (Math.abs(output) < CollectorConstants.MIN_VELOCITY || Math.abs(targetPose - getCurrentPosition()) <= CollectorConstants.ERROR_TOLERANCE) output = 0.0;
 
         leftSlide.setVelocity(output);
         rightSlide.setVelocity(output);
         telemetry.addData("State", state);
-        telemetry.addData("CurrentPos", rightSlide.getCurrentPosition());
+        telemetry.addData("DeltaV", deltaV);
+        telemetry.addData("CurrentPos", getCurrentPosition());
+        telemetry.addData("CurrentVel", getCurrentVelocity());
         telemetry.addData("TargetPos", targetPose);
         telemetry.addData("TargetVel", output);
     }
