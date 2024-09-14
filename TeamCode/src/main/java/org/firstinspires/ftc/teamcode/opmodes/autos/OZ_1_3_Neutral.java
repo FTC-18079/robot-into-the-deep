@@ -22,8 +22,6 @@ import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 
 @Autonomous(name = "OZ 1+3 Alliance Samples")
 public class OZ_1_3_Neutral extends AutoTemplate {
-    Chassis chassis = Chassis.getInstance();
-
     // Poses
     Pose scorePreloadPose = checkAlliance(new Pose(38, 60, Math.toRadians(0)));
     Pose scoreBasketPose = checkAlliance(BASKET_SCORE_POSE);
@@ -54,8 +52,7 @@ public class OZ_1_3_Neutral extends AutoTemplate {
                 .andThen(new WaitCommand(1000))
                 //.andThen(scorePreload())
                 //.andThen(collect())
-                .andThen(new FollowPathCommand(preloadToBasketPath))
-                .andThen(new InstantCommand(chassis::breakFollowing));
+                .andThen(new FollowPathCommand(preloadToBasketPath));
                 //.andThen(scoreBasket())
     }
 }

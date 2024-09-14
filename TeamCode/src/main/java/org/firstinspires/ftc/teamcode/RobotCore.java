@@ -88,10 +88,6 @@ public class RobotCore extends Robot {
     }
 
     public void setupOpMode(OpModeType type) {
-        if (type != OpModeType.TELEOP) {
-            telemetry.addData("Status", "Generating auto path");
-            telemetry.update();
-        }
         switch (type) {
             case TELEOP:
                 chassis.startTeleopDrive();

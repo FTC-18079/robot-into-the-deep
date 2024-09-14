@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.arcrobotics.ftclib.command.InstantCommand;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.RobotCore;
@@ -26,6 +27,11 @@ public abstract class AutoTemplate extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        // Init hardware
+        telemetry.addData("Status", "Initializing hardware");
+        telemetry.update();
+        RobotMap.getInstance().init(hardwareMap);
+
         RobotGlobal.resetValues();
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
@@ -33,11 +39,6 @@ public abstract class AutoTemplate extends LinearOpMode {
         while (opModeInInit() && !gamepad1.options) {
             config();
         }
-
-        // Init hardware
-        telemetry.addData("Status", "Initializing hardware");
-        telemetry.update();
-        RobotMap.getInstance().init(hardwareMap);
 
         // Create robot
         setStartPose();
@@ -48,12 +49,13 @@ public abstract class AutoTemplate extends LinearOpMode {
                 gamepad1,
                 gamepad2
         );
-        Chassis.getInstance().breakFollowing();
+        Chassis.getInstance().setPosition(RobotGlobal.robotPose);
 
         // Schedule auto
         telemetry.addData("Status", "Scheduling commands");
         telemetry.update();
-        if (RobotGlobal.alliance != NONE) robot.schedule(makeAutoSequence());
+        if (RobotGlobal.alliance != NONE) robot.schedule(makeAutoSequence()
+                .andThen(new InstantCommand(Chassis.getInstance()::breakFollowing)));
 
         while (opModeInInit()) {
             telemetry.addData("Status", "Initialized, Ready to start");
@@ -75,7 +77,6 @@ public abstract class AutoTemplate extends LinearOpMode {
             robot.run();
         }
 
-        Chassis.getInstance().breakFollowing();
         CommandScheduler.getInstance().cancelAll();
     }
 
