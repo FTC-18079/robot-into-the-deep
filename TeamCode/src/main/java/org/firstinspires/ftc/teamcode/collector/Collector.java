@@ -12,15 +12,15 @@ import org.firstinspires.ftc.teamcode.RobotMap;
 
 
 public class Collector extends SubsystemBase {
-
-    //left reveresed
-    //use right slide as pid
     DcMotorEx leftSlide;
     DcMotorEx rightSlide;
     Telemetry telemetry;
+
     double targetPose = 0;
     double output = 0;
-    CollectorState state = CollectorState.INACTIVE;
+
+    CollectorState state;
+
     PIDFController pidfController = new PIDFController(CollectorConstants.kP, CollectorConstants.kI, CollectorConstants.kD, 0.0);
 
     private static Collector INSTANCE;
@@ -29,7 +29,8 @@ public class Collector extends SubsystemBase {
         leftSlide = RobotMap.getInstance().LEFT_SLIDE;
         rightSlide = RobotMap.getInstance().RIGHT_SLIDE;
         telemetry = RobotCore.getTelemetry();
-        pidfController.setTolerance(CollectorConstants.MIN_VELOCITY);
+
+        setState(CollectorState.INACTIVE);
         setUpMotors();
     }
 
@@ -50,12 +51,20 @@ public class Collector extends SubsystemBase {
         leftSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
+    public int getCurrentPosition() {
+        return rightSlide.getCurrentPosition();
+    }
+
+    public double getCurrentVelocity() {
+        return rightSlide.getVelocity();
+    }
+
     public enum CollectorState {
         INACTIVE, SEEKING, COLLECTING
     }
 
     public void setState(CollectorState state) {
-       this.state = state;
+        this.state = state;
     }
 
     public void stateMachine() {
