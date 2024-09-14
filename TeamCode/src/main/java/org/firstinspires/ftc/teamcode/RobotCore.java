@@ -106,7 +106,6 @@ public class RobotCore extends Robot {
     public void setDriveControls() {
         // Drive command
         driveCommand = new TeleOpDriveCommand(
-                chassis,
                 () -> responseCurve(driveController.getLeftY(), DRIVE_SENSITIVITY),
                 () -> responseCurve(driveController.getLeftX(), DRIVE_SENSITIVITY),
                 () -> responseCurve(driveController.getRightX(), ROTATIONAL_SENSITIVITY)
@@ -137,20 +136,8 @@ public class RobotCore extends Robot {
         telemetry.update();
     }
 
-    public Pose getPoseEstimate() {
-        return chassis.getPoseEstimate();
-    }
-
     public static Telemetry getTelemetry() {
         return telemetry;
-    }
-
-    public void followPath(Path path) {
-        chassis.followPath(path);
-    }
-
-    public void breakFollowing() {
-        chassis.breakFollowing();
     }
 
     public boolean isBusy() {

@@ -12,15 +12,18 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.RobotCore;
 import org.firstinspires.ftc.teamcode.auto.AutoTemplate;
+import org.firstinspires.ftc.teamcode.chassis.Chassis;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierCurve;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
-import org.firstinspires.ftc.teamcode.util.FollowPathCommand;
+import org.firstinspires.ftc.teamcode.chassis.commands.FollowPathCommand;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 
 @Autonomous(name = "OZ 1+3 Alliance Samples")
 public class OZ_1_3_Neutral extends AutoTemplate {
+    Chassis chassis = Chassis.getInstance();
+
     // Poses
     Pose scorePreloadPose = checkAlliance(new Pose(38, 60, Math.toRadians(0)));
     Pose scoreBasketPose = checkAlliance(BASKET_SCORE_POSE);
@@ -47,12 +50,12 @@ public class OZ_1_3_Neutral extends AutoTemplate {
     @Override
     protected Command makeAutoSequence() {
         return new WaitCommand(RobotGlobal.delayMs)
-                .andThen(new FollowPathCommand(robot, scorePreloadPath))
+                .andThen(new FollowPathCommand(scorePreloadPath))
                 .andThen(new WaitCommand(1000))
                 //.andThen(scorePreload())
                 //.andThen(collect())
-                .andThen(new FollowPathCommand(robot, preloadToBasketPath))
-                .andThen(new InstantCommand(robot::breakFollowing));
+                .andThen(new FollowPathCommand(preloadToBasketPath))
+                .andThen(new InstantCommand(chassis::breakFollowing));
                 //.andThen(scoreBasket())
     }
 }

@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.RobotCore;
 import org.firstinspires.ftc.teamcode.RobotMap;
+import org.firstinspires.ftc.teamcode.chassis.Chassis;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 
 import static org.firstinspires.ftc.teamcode.auto.AutoConstants.ParkingPose.*;
@@ -47,7 +48,7 @@ public abstract class AutoTemplate extends LinearOpMode {
                 gamepad1,
                 gamepad2
         );
-        robot.breakFollowing();
+        Chassis.getInstance().breakFollowing();
 
         // Schedule auto
         telemetry.addData("Status", "Scheduling commands");
@@ -74,7 +75,7 @@ public abstract class AutoTemplate extends LinearOpMode {
             robot.run();
         }
 
-        robot.breakFollowing();
+        Chassis.getInstance().breakFollowing();
         CommandScheduler.getInstance().cancelAll();
     }
 
