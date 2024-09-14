@@ -14,6 +14,7 @@ import com.arcrobotics.ftclib.command.button.Trigger;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.chassis.Chassis;
 import org.firstinspires.ftc.teamcode.chassis.commands.TeleOpDriveCommand;
+import org.firstinspires.ftc.teamcode.collector.Collector;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
@@ -21,7 +22,7 @@ import org.firstinspires.ftc.teamcode.vision.ATVision;
 
 @Config
 public class RobotCore extends Robot {
-    Telemetry telemetry;
+    static Telemetry telemetry;
     GamepadEx driveController;
     GamepadEx manipController;
 
@@ -30,6 +31,7 @@ public class RobotCore extends Robot {
 
     // Subsystems
     Chassis chassis;
+    Collector collector;
 
     // Commands
     TeleOpDriveCommand driveCommand;
@@ -54,7 +56,7 @@ public class RobotCore extends Robot {
     }
 
     public RobotCore(OpModeType type, Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2) {
-        this.telemetry = telemetry;
+        RobotCore.telemetry = telemetry;
         touchpadTrigger = new Trigger(() -> getTouchpad(driveController));
 
         telemetry.addData("Status", "Initializing AprilTag detection");
@@ -83,8 +85,9 @@ public class RobotCore extends Robot {
 
     public void initSubsystems() {
         chassis = new Chassis(this);
-
-        register(chassis);
+        collector = Collector.getInstance();
+        collector.setUpMotors();
+        register(chassis, collector);
     }
 
     public void setupOpMode(OpModeType type) {
@@ -118,6 +121,13 @@ public class RobotCore extends Robot {
                 .whenPressed(chassis::toggleRobotCentric);
 
         chassis.setDefaultCommand(driveCommand);
+
+        manipController.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
+                .whenPressed(new InstantCommand(() -> collector.setState(Collector.CollectorState.SEEKING)));
+        manipController.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
+                .whenPressed(new InstantCommand(() -> collector.setState(Collector.CollectorState.COLLECTING)));
+        manipController.getGamepadButton(GamepadKeys.Button.DPAD_UP)
+                .whenPressed(new InstantCommand(() -> collector.setState(Collector.CollectorState.INACTIVE)));
     }
 
     public double responseCurve(double value, double power) {
@@ -129,19 +139,19 @@ public class RobotCore extends Robot {
         CommandScheduler.getInstance().run();
 
         double loop = System.nanoTime();
-        this.telemetry.addData("AprilTag FPS", atVision.getFPS());
-        this.telemetry.addData("hz", 1000000000 / (loop - loopTime));
-        this.telemetry.addData("Runtime", endTime == 0 ? timer.seconds() : endTime);
+        telemetry.addData("AprilTag FPS", atVision.getFPS());
+        telemetry.addData("hz", 1000000000 / (loop - loopTime));
+        telemetry.addData("Runtime", endTime == 0 ? timer.seconds() : endTime);
         loopTime = loop;
 
-        this.telemetry.update();
+        telemetry.update();
     }
 
     public Pose getPoseEstimate() {
         return chassis.getPoseEstimate();
     }
 
-    public Telemetry getTelemetry() {
+    public static Telemetry getTelemetry() {
         return telemetry;
     }
 
@@ -168,4 +178,5 @@ public class RobotCore extends Robot {
     public boolean getPS(GamepadEx gamepad) {
         return gamepad.gamepad.ps;
     }
+
 }

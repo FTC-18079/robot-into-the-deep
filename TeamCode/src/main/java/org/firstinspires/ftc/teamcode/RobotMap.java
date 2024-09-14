@@ -25,6 +25,9 @@ public class RobotMap {
     public DcMotorEx MOTOR_BL;
     public DcMotorEx MOTOR_BR;
 
+    public DcMotorEx LEFT_SLIDE;
+    public DcMotorEx RIGHT_SLIDE;
+
     private static RobotMap instance = null;
 
     // Returns an instance of this
@@ -55,6 +58,9 @@ public class RobotMap {
         MOTOR_FR = hardwareMap.get(DcMotorEx.class, "rightFront");
         MOTOR_BL = hardwareMap.get(DcMotorEx.class, "leftBack");
         MOTOR_BR = hardwareMap.get(DcMotorEx.class, "rightBack");
+
+        LEFT_SLIDE = hardwareMap.get(DcMotorEx.class, "leftSlide");
+        RIGHT_SLIDE = hardwareMap.get(DcMotorEx.class, "rightSlide");
 
 //        hardwareDevices.add(OTOS);
 //        hardwareDevices.add(APRILTAG_CAMERA);
