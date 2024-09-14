@@ -2,9 +2,11 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 
@@ -13,7 +15,6 @@ import java.util.List;
 
 public class RobotMap {
     private HardwareMap hMap;
-//    private ArrayList<HardwareDevice> hardwareDevices = new ArrayList<HardwareDevice>();
 
     // Sensors
     public SparkFunOTOS OTOS;
@@ -25,26 +26,19 @@ public class RobotMap {
     public DcMotorEx MOTOR_BL;
     public DcMotorEx MOTOR_BR;
 
+    //Slide
     public DcMotorEx LEFT_SLIDE;
     public DcMotorEx RIGHT_SLIDE;
+
+    //Intake
+    public CRServo INTAKE;
+    public Servo DEPLOY;
 
     private static RobotMap instance = null;
 
     // Returns an instance of this
     public static RobotMap getInstance() {
-        // Check that no hardware is null
-
-        /*
-        boolean hasNullHardware = false;
-        for (HardwareDevice h : instance.hardwareDevices) {
-            if (h == null) {
-                hasNullHardware = true;
-                break;
-            }
-        }
-        */
-
-        if (instance == null /*|| hasNullHardware*/) {
+        if (instance == null) {
             instance = new RobotMap();
         }
         return instance;
@@ -62,12 +56,8 @@ public class RobotMap {
         LEFT_SLIDE = hardwareMap.get(DcMotorEx.class, "leftSlide");
         RIGHT_SLIDE = hardwareMap.get(DcMotorEx.class, "rightSlide");
 
-//        hardwareDevices.add(OTOS);
-//        hardwareDevices.add(APRILTAG_CAMERA);
-//        hardwareDevices.add(MOTOR_FL);
-//        hardwareDevices.add(MOTOR_FR);
-//        hardwareDevices.add(MOTOR_BL);
-//        hardwareDevices.add(MOTOR_BR);
+        INTAKE = hardwareMap.get(CRServo.class, "intake");
+        DEPLOY = hardwareMap.get(Servo.class, "deploy");
 
         this.hMap = hardwareMap;
     }

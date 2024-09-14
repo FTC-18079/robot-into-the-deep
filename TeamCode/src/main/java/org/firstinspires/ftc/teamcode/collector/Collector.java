@@ -18,6 +18,7 @@ public class Collector extends SubsystemBase {
 
     double targetPose = 0;
     double output = 0;
+    double lastOutput = 0.0;
 
     CollectorState state;
 
