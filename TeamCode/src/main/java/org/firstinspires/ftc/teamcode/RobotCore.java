@@ -21,7 +21,7 @@ import org.firstinspires.ftc.teamcode.vision.ATVision;
 
 @Config
 public class RobotCore extends Robot {
-    Telemetry telemetry;
+    static Telemetry telemetry;
     GamepadEx driveController;
     GamepadEx manipController;
 
@@ -54,7 +54,7 @@ public class RobotCore extends Robot {
     }
 
     public RobotCore(OpModeType type, Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2) {
-        this.telemetry = telemetry;
+        RobotCore.telemetry = telemetry;
         touchpadTrigger = new Trigger(() -> getTouchpad(driveController));
 
         telemetry.addData("Status", "Initializing AprilTag detection");
@@ -82,7 +82,7 @@ public class RobotCore extends Robot {
     }
 
     public void initSubsystems() {
-        chassis = new Chassis(this);
+        chassis = new Chassis();
 
         register(chassis);
     }
@@ -129,19 +129,19 @@ public class RobotCore extends Robot {
         CommandScheduler.getInstance().run();
 
         double loop = System.nanoTime();
-        this.telemetry.addData("AprilTag FPS", atVision.getFPS());
-        this.telemetry.addData("hz", 1000000000 / (loop - loopTime));
-        this.telemetry.addData("Runtime", endTime == 0 ? timer.seconds() : endTime);
+        telemetry.addData("AprilTag FPS", atVision.getFPS());
+        telemetry.addData("hz", 1000000000 / (loop - loopTime));
+        telemetry.addData("Runtime", endTime == 0 ? timer.seconds() : endTime);
         loopTime = loop;
 
-        this.telemetry.update();
+        telemetry.update();
     }
 
     public Pose getPoseEstimate() {
         return chassis.getPoseEstimate();
     }
 
-    public Telemetry getTelemetry() {
+    public static Telemetry getTelemetry() {
         return telemetry;
     }
 
