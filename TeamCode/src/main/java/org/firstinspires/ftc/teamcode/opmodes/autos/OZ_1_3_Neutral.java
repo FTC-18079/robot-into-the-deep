@@ -6,6 +6,7 @@ import static org.firstinspires.ftc.teamcode.util.RobotGlobal.parkingPose;
 import static org.firstinspires.ftc.teamcode.util.RobotGlobal.robotPose;
 
 import com.arcrobotics.ftclib.command.Command;
+import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
@@ -50,7 +51,8 @@ public class OZ_1_3_Neutral extends AutoTemplate {
                 .andThen(new WaitCommand(1000))
                 //.andThen(scorePreload())
                 //.andThen(collect())
-                .andThen(new FollowPathCommand(robot, preloadToBasketPath));
+                .andThen(new FollowPathCommand(robot, preloadToBasketPath))
+                .andThen(new InstantCommand(robot::breakFollowing));
                 //.andThen(scoreBasket())
     }
 }

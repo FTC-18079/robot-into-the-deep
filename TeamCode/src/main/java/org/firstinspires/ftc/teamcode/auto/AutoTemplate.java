@@ -47,6 +47,7 @@ public abstract class AutoTemplate extends LinearOpMode {
                 gamepad1,
                 gamepad2
         );
+        robot.breakFollowing();
 
         // Schedule auto
         telemetry.addData("Status", "Scheduling commands");
