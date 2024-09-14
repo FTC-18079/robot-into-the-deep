@@ -82,7 +82,7 @@ public class RobotCore extends Robot {
     }
 
     public void initSubsystems() {
-        chassis = new Chassis();
+        chassis = Chassis.getInstance();
 
         register(chassis);
     }
