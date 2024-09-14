@@ -38,6 +38,10 @@ public class Chassis extends SubsystemBase {
         follower.setPose(pose);
     }
 
+    public void resetFollower() {
+        follower = new Follower(new Pose());
+    }
+
     public void setDrivePowers(double fwd, double str, double rot) {
         follower.setTeleOpMovementVectors(fwd, str, rot, isRobotCentric);
     }

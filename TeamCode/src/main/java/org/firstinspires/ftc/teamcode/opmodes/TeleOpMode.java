@@ -21,6 +21,7 @@ public class TeleOpMode extends OpMode {
         RobotMap.getInstance().init(hardwareMap);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         robot = new RobotCore(RobotCore.OpModeType.TELEOP, telemetry, gamepad1, gamepad2);
+        Chassis.getInstance().resetFollower();
         Chassis.getInstance().setPosition(RobotGlobal.robotPose);
     }
 
