@@ -149,6 +149,10 @@ public class RobotCore extends Robot {
         chassis.followPath(path);
     }
 
+    public void breakFollowing() {
+        chassis.breakFollowing();
+    }
+
     public boolean isBusy() {
         return chassis.isBusy();
     }

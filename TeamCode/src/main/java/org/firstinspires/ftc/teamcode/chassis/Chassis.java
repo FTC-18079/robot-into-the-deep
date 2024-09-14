@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.chassis;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -7,6 +9,7 @@ import org.firstinspires.ftc.teamcode.RobotCore;
 import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
+import org.firstinspires.ftc.teamcode.pedroPathing.util.Drawing;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 
 public class Chassis extends SubsystemBase {
@@ -30,6 +33,10 @@ public class Chassis extends SubsystemBase {
 
     public void followPath(Path path) {
         follower.followPath(path);
+    }
+
+    public void breakFollowing() {
+        follower.breakFollowing();
     }
 
     public boolean isBusy() {
@@ -57,6 +64,14 @@ public class Chassis extends SubsystemBase {
     public void periodic() {
         follower.update();
         telemetry.addData("Robot Centric", isRobotCentric);
+
+        Drawing.drawDebug(follower);
+
+        // Draw robot
+//        TelemetryPacket packet = new TelemetryPacket();
+//        packet.fieldOverlay().setStroke("#4CAF50");
+//        Drawing.drawRobotOnCanvas(packet.fieldOverlay(), getPoseEstimate());
+//        FtcDashboard.getInstance().sendTelemetryPacket(packet);
     }
 
 }

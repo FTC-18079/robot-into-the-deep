@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.auto;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.Command;
+import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.RobotCore;
@@ -71,6 +72,9 @@ public abstract class AutoTemplate extends LinearOpMode {
         while (opModeIsActive() && !isStopRequested()) {
             robot.run();
         }
+
+        robot.breakFollowing();
+        CommandScheduler.getInstance().cancelAll();
     }
 
     public void config() {

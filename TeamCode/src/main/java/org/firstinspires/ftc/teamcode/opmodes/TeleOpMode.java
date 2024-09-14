@@ -32,11 +32,5 @@ public class TeleOpMode extends OpMode {
     @Override
     public void loop() {
         robot.run();
-
-        // Draw robot
-        TelemetryPacket packet = new TelemetryPacket();
-        packet.fieldOverlay().setStroke("#4CAF50");
-        Drawing.drawRobotOnCanvas(packet.fieldOverlay(), robot.getPoseEstimate());
-        FtcDashboard.getInstance().sendTelemetryPacket(packet);
     }
 }

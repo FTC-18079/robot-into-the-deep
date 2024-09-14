@@ -45,6 +45,7 @@ public class OZ_1_3_Neutral extends AutoTemplate {
     protected Command makeAutoSequence() {
         return new WaitCommand(RobotGlobal.delayMs)
                 .andThen(new FollowPathCommand(robot, scorePreloadPath))
+                .andThen(new WaitCommand(1000))
                 //.andThen(scorePreload())
                 //.andThen(collect())
                 .andThen(new FollowPathCommand(robot, preloadToBasketPath));
