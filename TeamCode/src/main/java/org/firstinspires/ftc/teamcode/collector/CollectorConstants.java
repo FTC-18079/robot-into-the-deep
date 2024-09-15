@@ -4,9 +4,9 @@ import com.acmerobotics.dashboard.config.Config;
 
 @Config
 public class CollectorConstants {
-    public static double MAX_DELTAV = 200.0;
+    public static double MAX_DELTAV = 415.0;
 
-    public static int MAX_SLIDE_POS = 1250;
+    public static int MAX_SLIDE_POS = 1400;
     public static int MIN_SLIDE_POS = 10;
     public static int MIN_VELOCITY = 15;
     public static int ERROR_TOLERANCE = 20;

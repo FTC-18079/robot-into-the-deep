@@ -73,10 +73,10 @@ public class Collector extends SubsystemBase {
     public void stateMachine() {
         switch (state) {
             case SEEKING:
-                targetPose = CollectorConstants.MAX_SLIDE_POS * 0.6;
+                targetPose = CollectorConstants.MAX_SLIDE_POS * 0.85;
                 break;
             case COLLECTING:
-                targetPose = CollectorConstants.MAX_SLIDE_POS * 0.7;
+                targetPose = CollectorConstants.MAX_SLIDE_POS * 0.90;
                 break;
             case INACTIVE:
                 targetPose = CollectorConstants.MIN_SLIDE_POS;
@@ -92,6 +92,8 @@ public class Collector extends SubsystemBase {
         output = pidfController.calculate(rightSlide.getCurrentPosition(), targetPose);
         double deltaV = output - lastOutput;
 
+        // Limit acceleration, but not deceleration.
+        // This is done to prevent belt skipping. Deceleration is ignored since the PID loop handles that
         if (Math.abs(deltaV) > CollectorConstants.MAX_DELTAV && Math.signum(output) == Math.signum(deltaV)) output = Math.signum(deltaV) * CollectorConstants.MAX_DELTAV + lastOutput;
         if (Math.abs(output) < CollectorConstants.MIN_VELOCITY || Math.abs(targetPose - getCurrentPosition()) <= CollectorConstants.ERROR_TOLERANCE) output = 0.0;
 
