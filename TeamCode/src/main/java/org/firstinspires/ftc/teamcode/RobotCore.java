@@ -16,6 +16,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.chassis.Chassis;
 import org.firstinspires.ftc.teamcode.chassis.commands.TeleOpDriveCommand;
 import org.firstinspires.ftc.teamcode.collector.Collector;
+import org.firstinspires.ftc.teamcode.collector.CollectorConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
@@ -130,6 +131,13 @@ public class RobotCore extends Robot {
                 .whenPressed(chassis::toggleRobotCentric);
 
         // Intake control
+        new Trigger(() -> manipController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > TRIGGER_DEADZONE)
+                .whenActive(new ConditionalCommand(
+                        new InstantCommand(() -> collector.setCollectorState(Collector.CollectorState.COLLECTING)),
+                        // TODO: add eject here
+                        new InstantCommand(),
+                        () -> collector.getCollectorState() == Collector.CollectorState.SEEKING
+                ));
         manipController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                 .whenPressed(new ConditionalCommand(
                         new InstantCommand(() -> collector.setCollectorState(Collector.CollectorState.SEEKING)),
