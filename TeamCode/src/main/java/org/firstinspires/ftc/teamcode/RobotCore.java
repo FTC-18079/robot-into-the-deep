@@ -124,9 +124,9 @@ public class RobotCore extends Robot {
         // Intake control
         manipController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                 .whenPressed(new ConditionalCommand(
-                        new InstantCommand(() -> collector.setState(Collector.CollectorState.SEEKING)),
-                        new InstantCommand(() -> collector.setState(Collector.CollectorState.INACTIVE)),
-                        () -> collector.getState() == Collector.CollectorState.INACTIVE
+                        new InstantCommand(() -> collector.setCollectorState(Collector.CollectorState.SEEKING)),
+                        new InstantCommand(() -> collector.setCollectorState(Collector.CollectorState.INACTIVE)),
+                        () -> collector.getCollectorState() == Collector.CollectorState.INACTIVE
                 ));
 
         chassis.setDefaultCommand(driveCommand);
