@@ -73,7 +73,7 @@ public class Collector extends SubsystemBase {
     public void stateMachine() {
         switch (state) {
             case SEEKING:
-                targetPose = CollectorConstants.MAX_SLIDE_POS * 0.85;
+                targetPose = CollectorConstants.MAX_SLIDE_POS * 0.80;
                 break;
             case COLLECTING:
                 targetPose = CollectorConstants.MAX_SLIDE_POS * 0.90;
