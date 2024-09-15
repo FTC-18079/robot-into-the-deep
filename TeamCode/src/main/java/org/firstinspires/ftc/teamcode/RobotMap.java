@@ -1,16 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class RobotMap {
@@ -19,6 +18,7 @@ public class RobotMap {
     // Sensors
     public SparkFunOTOS OTOS;
     public WebcamName APRILTAG_CAMERA;
+    public RevColorSensorV3 COLOR_SENSOR;
 
     // Drive motors
     public DcMotorEx MOTOR_FL;
@@ -26,11 +26,11 @@ public class RobotMap {
     public DcMotorEx MOTOR_BL;
     public DcMotorEx MOTOR_BR;
 
-    //Slide
+    // Slides
     public DcMotorEx LEFT_SLIDE;
     public DcMotorEx RIGHT_SLIDE;
 
-    //Intake
+    // Intake
     public CRServo INTAKE;
     public Servo DEPLOY;
 
@@ -47,6 +47,7 @@ public class RobotMap {
     public void init(final HardwareMap hardwareMap) {
         OTOS = hardwareMap.get(SparkFunOTOS.class, "otos");
         APRILTAG_CAMERA = hardwareMap.get(WebcamName.class, "arducam");
+        COLOR_SENSOR = hardwareMap.get(RevColorSensorV3.class, "colorSensor");
 
         MOTOR_FL = hardwareMap.get(DcMotorEx.class, "leftFront");
         MOTOR_FR = hardwareMap.get(DcMotorEx.class, "rightFront");

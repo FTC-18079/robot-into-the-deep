@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.Robot;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
@@ -114,23 +115,21 @@ public class RobotCore extends Robot {
                 () -> responseCurve(driveController.getRightX(), ROTATIONAL_SENSITIVITY)
         );
 
+        // Drive buttons
         driveController.getGamepadButton(GamepadKeys.Button.Y)
                 .whenPressed(chassis::resetHeading);
         driveController.getGamepadButton(GamepadKeys.Button.B)
                 .whenPressed(chassis::toggleRobotCentric);
 
+        // Intake control
+        manipController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
+                .whenPressed(new ConditionalCommand(
+                        new InstantCommand(() -> collector.setState(Collector.CollectorState.SEEKING)),
+                        new InstantCommand(() -> collector.setState(Collector.CollectorState.INACTIVE)),
+                        () -> collector.getState() == Collector.CollectorState.INACTIVE
+                ));
+
         chassis.setDefaultCommand(driveCommand);
-
-        // TODO: remove this
-        manipController.getGamepadButton(GamepadKeys.Button.A)
-                .whenPressed(new InstantCommand(collector::setUpMotors));
-
-        manipController.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
-                .whenPressed(new InstantCommand(() -> collector.setState(Collector.CollectorState.SEEKING)));
-        manipController.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
-                .whenPressed(new InstantCommand(() -> collector.setState(Collector.CollectorState.COLLECTING)));
-        manipController.getGamepadButton(GamepadKeys.Button.DPAD_UP)
-                .whenPressed(new InstantCommand(() -> collector.setState(Collector.CollectorState.INACTIVE)));
     }
 
     public double responseCurve(double value, double power) {

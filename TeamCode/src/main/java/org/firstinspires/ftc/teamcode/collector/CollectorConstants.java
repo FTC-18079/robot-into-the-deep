@@ -16,7 +16,7 @@ public class CollectorConstants {
     public static double kD = 0.1;
 
     public static double DEPLOY_DOWN_POS = 0.0;
-    public static double DEPLOY_STOW = 0.9;
+    public static double DEPLOY_STOW_POS = 0.9;
 
     public static double toTicksPerSec(double rpm) {
         return (rpm * 560.0) / 60.0;

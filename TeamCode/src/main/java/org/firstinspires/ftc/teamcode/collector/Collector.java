@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode.collector;
 
+import android.graphics.Color;
+
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDFController;
+import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -21,12 +24,11 @@ public class Collector extends SubsystemBase {
     CRServo intake;
     Servo deploy;
 
+    RevColorSensorV3 colorSensor;
+
     double targetPose = 0;
     double output = 0;
     double lastOutput = 0.0;
-
-    double deployPos = 0.0;
-    double intakePower = 0.0;
 
     CollectorState state;
 
@@ -40,6 +42,8 @@ public class Collector extends SubsystemBase {
 
         intake = RobotMap.getInstance().INTAKE;
         deploy = RobotMap.getInstance().DEPLOY;
+
+        colorSensor = RobotMap.getInstance().COLOR_SENSOR;
 
         telemetry = RobotCore.getTelemetry();
 
@@ -82,22 +86,32 @@ public class Collector extends SubsystemBase {
         this.state = state;
     }
 
+    public CollectorState getState() {
+        return state;
+    }
+
+    public double getColor() {
+        float[] hsv = new float[3];
+        Color.colorToHSV(colorSensor.getNormalizedColors().toColor(), hsv);
+        return hsv[0];
+    }
+
     public void stateMachine() {
         switch (state) {
             case SEEKING:
                 targetPose = CollectorConstants.MAX_SLIDE_POS * 0.80;
-                intakePower = 0.0;
-                deployPos = CollectorConstants.DEPLOY_DOWN_POS;
+                intake.setPower(0.0);
+                deploy.setPosition(CollectorConstants.DEPLOY_DOWN_POS);
                 break;
             case COLLECTING:
                 targetPose = CollectorConstants.MAX_SLIDE_POS * 0.87;
-                intakePower = 1.0;
-                deployPos = CollectorConstants.DEPLOY_DOWN_POS;
+                intake.setPower(1.0);
+                deploy.setPosition(CollectorConstants.DEPLOY_DOWN_POS);
                 break;
             case INACTIVE:
                 targetPose = CollectorConstants.MIN_SLIDE_POS;
-                intakePower = 0.0;
-                deployPos = CollectorConstants.DEPLOY_STOW;
+                intake.setPower(0.0);
+                deploy.setPosition(CollectorConstants.DEPLOY_STOW_POS);
                 break;
         }
     }
@@ -117,9 +131,6 @@ public class Collector extends SubsystemBase {
 
         leftSlide.setVelocity(output);
         rightSlide.setVelocity(output);
-
-        deploy.setPosition(deployPos);
-        intake.setPower(intakePower);
 
         telemetry.addData("State", state);
         telemetry.addData("DeltaV", deltaV);
