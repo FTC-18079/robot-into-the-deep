@@ -152,6 +152,8 @@ public class Collector extends SubsystemBase {
 
                 if (MathUtil.inRange(getCurrentColor(), targetColor.range[0], targetColor.range[1])) {
                     setCollectorState(CollectorState.COLLECTING);
+                    RobotCore.rumbleDrive(250);
+                    RobotCore.rumbleManip(250);
                 }
 
                 break;
@@ -184,11 +186,9 @@ public class Collector extends SubsystemBase {
         leftSlide.setVelocity(output);
         rightSlide.setVelocity(output);
 
-        telemetry.addData("State", collectorState);
-        telemetry.addData("DeltaV", deltaV);
-        telemetry.addData("CurrentPos", getCurrentPosition());
-        telemetry.addData("CurrentVel", getCurrentVelocity());
-        telemetry.addData("TargetPos", targetPose);
-        telemetry.addData("TargetVel", output);
+        telemetry.addLine();
+        telemetry.addData("Collector State", collectorState);
+        telemetry.addData("Intake State", intakeState);
+        telemetry.addData("Target Color", targetColor);
     }
 }

@@ -56,6 +56,12 @@ public class RobotCore extends Robot {
         TELEOP, AUTO, EMPTY
     }
 
+    public static RobotCore INSTANCE = null;
+
+    public static RobotCore getInstance() {
+        return INSTANCE;
+    }
+
     public RobotCore(OpModeType type, Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2) {
         RobotCore.telemetry = telemetry;
         touchpadTrigger = new Trigger(() -> getTouchpad(driveController));
@@ -82,6 +88,8 @@ public class RobotCore extends Robot {
 
         telemetry.addData("Status", "Robot initialized, ready to enable");
         telemetry.update();
+
+        INSTANCE = this;
     }
 
     public void initSubsystems() {
@@ -129,7 +137,17 @@ public class RobotCore extends Robot {
                         () -> collector.getCollectorState() == Collector.CollectorState.INACTIVE
                 ));
         manipController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                .whenPressed(new InstantCommand(collector::toggleTargetColor));
+                .whenPressed(new InstantCommand(collector::toggleTargetColor)
+                        // Set gamepad colors cuz cool
+                            .andThen(new ConditionalCommand(
+                                    new ConditionalCommand(
+                                            new InstantCommand(() -> setControllerColors(1, 0, 0)),
+                                            new InstantCommand(() -> setControllerColors(0, 0, 1)),
+                                            () -> RobotGlobal.alliance == RobotGlobal.Alliance.RED
+                                    ),
+                                    new InstantCommand(() -> setControllerColors(1, 1, 0)),
+                                    () -> collector.getTargetColor() != Collector.SampleColor.YELLOW
+                            )));
 
         chassis.setDefaultCommand(driveCommand);
     }
@@ -171,8 +189,20 @@ public class RobotCore extends Robot {
         return atVision.getFPS();
     }
 
-    public void rumbleGamepad(GamepadEx gamepad, double rumble1, double rumble2, int ms) {
-        gamepad.gamepad.rumble(rumble1, rumble2, ms);
+    // Rumble drive controller
+    public static void rumbleDrive(int ms) {
+        INSTANCE.driveController.gamepad.rumble(1, 1, ms);
+    }
+
+    // Rumble manip controller
+    public static void rumbleManip(int ms) {
+        INSTANCE.manipController.gamepad.rumble(1, 1, ms);
+    }
+
+    // Change controller LEDs
+    public void setControllerColors(double r, double g, double b) {
+        driveController.gamepad.setLedColor(r, g, b, -1);
+        manipController.gamepad.setLedColor(r, g, b, -1);
     }
 
     public boolean getTouchpad(GamepadEx gamepad) {
