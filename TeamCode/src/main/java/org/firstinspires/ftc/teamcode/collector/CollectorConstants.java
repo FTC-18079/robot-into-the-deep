@@ -18,14 +18,9 @@ public class CollectorConstants {
     public static double DEPLOY_DOWN_POS = 0.0;
     public static double DEPLOY_STOW_POS = 0.9;
 
-    public static double RED_LOW_HSV = 10.0;
-    public static double RED_HIGH_HSV = 35.0;
-
-    public static double YELLOW_LOW_HSV = 60.0;
-    public static double YELLOW_HIGH_HSV = 95.0;
-
-    public static double BLUE_LOW_HSV = 215.0;
-    public static double BLUE_HIGH_HSV = 250.0;
+    public static double[] RED_RANGE = {10.0, 35.0};
+    public static double[] YELLOW_RANGE = {60.0, 95.0};
+    public static double[] BLUE_RANGE = {215.0, 250.0};
 
     public static double toTicksPerSec(double rpm) {
         return (rpm * 560.0) / 60.0;

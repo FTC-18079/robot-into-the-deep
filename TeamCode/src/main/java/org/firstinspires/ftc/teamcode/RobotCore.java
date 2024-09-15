@@ -128,6 +128,8 @@ public class RobotCore extends Robot {
                         new InstantCommand(() -> collector.setCollectorState(Collector.CollectorState.INACTIVE)),
                         () -> collector.getCollectorState() == Collector.CollectorState.INACTIVE
                 ));
+        manipController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
+                .whenPressed(new InstantCommand(collector::toggleTargetColor));
 
         chassis.setDefaultCommand(driveCommand);
     }

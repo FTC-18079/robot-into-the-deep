@@ -14,6 +14,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotCore;
 import org.firstinspires.ftc.teamcode.RobotMap;
+import org.firstinspires.ftc.teamcode.util.MathUtil;
+import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 
 
 public class Collector extends SubsystemBase {
@@ -46,7 +48,16 @@ public class Collector extends SubsystemBase {
     }
 
     public enum SampleColor {
-        NONE, YELLOW, RED, BLUE
+        NONE(new double[]{0.0, 0.0}),
+        YELLOW(CollectorConstants.YELLOW_RANGE),
+        RED(CollectorConstants.RED_RANGE),
+        BLUE(CollectorConstants.BLUE_RANGE);
+
+        public final double[] range;
+
+        private SampleColor(double[] range) {
+            this.range = range;
+        }
     }
 
     private static Collector INSTANCE = null;
@@ -68,6 +79,8 @@ public class Collector extends SubsystemBase {
         telemetry = RobotCore.getTelemetry();
 
         setCollectorState(CollectorState.INACTIVE);
+        setIntakeState(IntakeState.INACTIVE);
+        targetColor = SampleColor.YELLOW;
         setUpMotors();
     }
 
@@ -85,6 +98,7 @@ public class Collector extends SubsystemBase {
         leftSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
+    // Getters
     public int getCurrentPosition() {
         return rightSlide.getCurrentPosition();
     }
@@ -93,6 +107,13 @@ public class Collector extends SubsystemBase {
         return rightSlide.getVelocity();
     }
 
+    public double getCurrentColor() {
+        float[] hsv = new float[3];
+        Color.colorToHSV(colorSensor.getNormalizedColors().toColor(), hsv);
+        return hsv[0];
+    }
+
+    // Collector states
     public void setCollectorState(CollectorState collectorState) {
         this.collectorState = collectorState;
     }
@@ -101,18 +122,38 @@ public class Collector extends SubsystemBase {
         return collectorState;
     }
 
-    public double getColor() {
-        float[] hsv = new float[3];
-        Color.colorToHSV(colorSensor.getNormalizedColors().toColor(), hsv);
-        return hsv[0];
+    // Intake states
+    public void setIntakeState(IntakeState intakeState) {
+        this.intakeState = intakeState;
     }
 
+    public IntakeState getIntakeState() {
+        return intakeState;
+    }
+
+    // Color states
+    public void toggleTargetColor() {
+        if (targetColor == SampleColor.YELLOW) {
+            targetColor = (RobotGlobal.alliance == RobotGlobal.Alliance.RED) ? SampleColor.RED : SampleColor.BLUE;
+        } else targetColor = SampleColor.YELLOW;
+    }
+
+    public SampleColor getTargetColor() {
+        return targetColor;
+    }
+
+    // State machine
     public void stateMachine() {
         switch (collectorState) {
             case SEEKING:
                 targetPose = CollectorConstants.MAX_SLIDE_POS * 0.80;
                 intake.setPower(0.0);
                 deploy.setPosition(CollectorConstants.DEPLOY_DOWN_POS);
+
+                if (MathUtil.inRange(getCurrentColor(), targetColor.range[0], targetColor.range[1])) {
+                    setCollectorState(CollectorState.COLLECTING);
+                }
+
                 break;
             case COLLECTING:
                 targetPose = CollectorConstants.MAX_SLIDE_POS * 0.87;
