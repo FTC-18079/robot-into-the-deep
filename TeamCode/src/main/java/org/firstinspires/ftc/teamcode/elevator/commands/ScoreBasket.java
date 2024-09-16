@@ -4,28 +4,29 @@ import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
-import com.arcrobotics.ftclib.command.WaitUntilCommand;
 
 import org.firstinspires.ftc.teamcode.elevator.Elevator;
 import org.firstinspires.ftc.teamcode.elevator.ElevatorConstants;
 
-public class ScoreHighChamber extends SequentialCommandGroup {
+public class ScoreBasket extends SequentialCommandGroup {
     Elevator elevator;
 
-    public ScoreHighChamber() {
+    public ScoreBasket() {
         this.elevator = Elevator.getInstance();
 
         addCommands(
                 new ConditionalCommand(
-                        // Run nothing if not scoring high chamber
+                        // Do nothing of not scoring basket
                         new InstantCommand(),
                         // Otherwise score
-                        new InstantCommand(elevator::scoreChamberHigh)
-                                .andThen(new WaitUntilCommand(elevator::atSetPoint))
-                                .andThen(new InstantCommand(elevator::openClaw))
-                                .andThen(new WaitCommand(100)),
+                        new InstantCommand(/*elevator::scoreBucket*/)
+                                .andThen(new WaitCommand(350))
+                                .andThen(/*elevator::openDoor*/)
+                                .andThen(new WaitCommand(150))
+                                .andThen(/*elevator::closeDoor*/)
+                                .andThen(/*elevator::restBucket*/),
                         // Condition to check whether or not to run the command
-                        () -> elevator.getTargetPos() != ElevatorConstants.LIFT_POS_HIGH_CHAMBER
+                        () -> (elevator.getTargetPos() != ElevatorConstants.LIFT_POS_HIGH_BASKET) || (elevator.getTargetPos() != ElevatorConstants.LIFT_POS_LOW_BASKET)
                 )
         );
 
