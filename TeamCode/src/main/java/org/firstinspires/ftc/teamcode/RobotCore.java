@@ -167,6 +167,7 @@ public class RobotCore extends Robot {
         CommandScheduler.getInstance().run();
 
         double loop = System.nanoTime();
+        telemetry.addLine();
         telemetry.addData("AprilTag FPS", atVision.getFPS());
         telemetry.addData("hz", 1000000000 / (loop - loopTime));
         telemetry.addData("Runtime", endTime == 0 ? timer.seconds() : endTime);

@@ -57,6 +57,10 @@ public class Collector extends SubsystemBase {
 
     private static Collector INSTANCE = null;
 
+    public static void resetInstance() {
+        INSTANCE = null;
+    }
+
     public static Collector getInstance() {
         if (INSTANCE == null) INSTANCE = new Collector();
         return INSTANCE;
@@ -74,13 +78,12 @@ public class Collector extends SubsystemBase {
         telemetry = RobotCore.getTelemetry();
 
         setCollectorState(CollectorState.INACTIVE);
+        setIntakePower(0.0);
         targetColor = SampleColor.YELLOW;
         setUpMotors();
     }
 
     public void setUpMotors() {
-        pidfController.setPIDF(CollectorConstants.kP, CollectorConstants.kI, CollectorConstants.kD, 0.0);
-
         rightSlide.setDirection(DcMotorSimple.Direction.FORWARD);
         rightSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
