@@ -18,7 +18,7 @@ public class ResetRobot extends OpMode {
     public void start() {
         RobotGlobal.resetValues();
         CommandScheduler.getInstance().reset();
-        Chassis.getInstance().resetInstance();
+        Chassis.resetInstance();
         requestOpModeStop();
     }
 

@@ -76,9 +76,6 @@ public class RobotCore extends Robot {
 
         // Set up opmode
         setupOpMode(type);
-
-        telemetry.addData("Status", "Robot initialized, ready to enable");
-        telemetry.update();
     }
 
     public void initSubsystems() {
@@ -90,7 +87,6 @@ public class RobotCore extends Robot {
     public void setupOpMode(OpModeType type) {
         switch (type) {
             case TELEOP:
-                chassis.startTeleopDrive();
                 setDriveControls();
                 break;
             case EMPTY:

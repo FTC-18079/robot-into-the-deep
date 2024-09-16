@@ -19,16 +19,18 @@ public class TeleOpMode extends OpMode {
     @Override
     public void init() {
         RobotMap.getInstance().init(hardwareMap);
+        Chassis.resetInstance();
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         robot = new RobotCore(RobotCore.OpModeType.TELEOP, telemetry, gamepad1, gamepad2);
-        Chassis.getInstance().resetFollower();
         Chassis.getInstance().setPosition(RobotGlobal.robotPose);
+        Chassis.getInstance().startTeleopDrive();
     }
 
     @Override
     public void init_loop() {
         telemetry.addData("Alliance", RobotGlobal.alliance);
         telemetry.addData("AprilTag FPS", robot.getFPS());
+        telemetry.addData("Status", "Robot initialized, ready to enable");
         telemetry.update();
     }
 

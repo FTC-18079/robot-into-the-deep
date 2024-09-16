@@ -24,22 +24,18 @@ public class Chassis extends SubsystemBase {
         return INSTANCE;
     }
 
-    public void resetInstance() {
+    public static void resetInstance() {
         INSTANCE = null;
     }
 
     private Chassis() {
-        this.telemetry = RobotCore.getTelemetry();
         isRobotCentric = false;
         follower = new Follower(new Pose());
+        this.telemetry = RobotCore.getTelemetry();
     }
 
     public void setPosition(Pose pose) {
         follower.setPose(pose);
-    }
-
-    public void resetFollower() {
-        follower = new Follower(new Pose());
     }
 
     public void setDrivePowers(double fwd, double str, double rot) {
@@ -82,16 +78,10 @@ public class Chassis extends SubsystemBase {
     @Override
     public void periodic() {
         follower.update();
+
+        telemetry.addLine();
         telemetry.addData("Robot Centric", isRobotCentric);
         telemetry.addData("Path exists", follower.getCurrentPath() != null);
-
-        Drawing.drawDebug(follower);
-
-        // Draw robot
-//        TelemetryPacket packet = new TelemetryPacket();
-//        packet.fieldOverlay().setStroke("#4CAF50");
-//        Drawing.drawRobotOnCanvas(packet.fieldOverlay(), getPoseEstimate());
-//        FtcDashboard.getInstance().sendTelemetryPacket(packet);
     }
 
 }
