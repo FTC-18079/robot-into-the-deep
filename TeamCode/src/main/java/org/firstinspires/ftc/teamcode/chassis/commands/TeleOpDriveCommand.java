@@ -10,8 +10,8 @@ public class TeleOpDriveCommand extends CommandBase {
     private final Chassis chassis;
     private DoubleSupplier fwd, str, rot;
 
-    public TeleOpDriveCommand(Chassis chassis, DoubleSupplier fwd, DoubleSupplier str, DoubleSupplier rot) {
-        this.chassis = chassis;
+    public TeleOpDriveCommand(DoubleSupplier fwd, DoubleSupplier str, DoubleSupplier rot) {
+        this.chassis = Chassis.getInstance();
         this.fwd = fwd;
         this.str = str;
         this.rot = rot;

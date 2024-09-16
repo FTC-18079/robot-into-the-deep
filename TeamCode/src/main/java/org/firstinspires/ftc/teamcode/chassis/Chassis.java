@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.chassis;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -7,6 +9,7 @@ import org.firstinspires.ftc.teamcode.RobotCore;
 import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
+import org.firstinspires.ftc.teamcode.pedroPathing.util.Drawing;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 
 public class Chassis extends SubsystemBase {
@@ -14,10 +17,25 @@ public class Chassis extends SubsystemBase {
     Telemetry telemetry;
     boolean isRobotCentric;
 
-    public Chassis(RobotCore robot) {
-        this.telemetry = RobotCore.getTelemetry();
+    private static Chassis INSTANCE = null;
+
+    public static Chassis getInstance() {
+        if (INSTANCE == null) INSTANCE = new Chassis();
+        return INSTANCE;
+    }
+
+    public static void resetInstance() {
+        INSTANCE = null;
+    }
+
+    private Chassis() {
         isRobotCentric = false;
-        follower = new Follower(RobotGlobal.robotPose);
+        follower = new Follower(new Pose());
+        this.telemetry = RobotCore.getTelemetry();
+    }
+
+    public void setPosition(Pose pose) {
+        follower.setPose(pose);
     }
 
     public void setDrivePowers(double fwd, double str, double rot) {
@@ -30,6 +48,10 @@ public class Chassis extends SubsystemBase {
 
     public void followPath(Path path) {
         follower.followPath(path);
+    }
+
+    public void breakFollowing() {
+        follower.breakFollowing();
     }
 
     public boolean isBusy() {
@@ -56,7 +78,10 @@ public class Chassis extends SubsystemBase {
     @Override
     public void periodic() {
         follower.update();
+
+        telemetry.addLine();
         telemetry.addData("Robot Centric", isRobotCentric);
+        telemetry.addData("Path exists", follower.getCurrentPath() != null);
     }
 
 }

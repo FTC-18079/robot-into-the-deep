@@ -73,7 +73,7 @@ public class EasyPathBuilder {
         points.addAll(Arrays.asList(controlPoints));
 
         Path path = new Path(new BezierCurve(points));
-        path.setLinearHeadingInterpolation(startHeading, endHeading);
+        path.setLinearHeadingInterpolation(startHeading, endHeading, endTime);
         return path;
     }
 }
