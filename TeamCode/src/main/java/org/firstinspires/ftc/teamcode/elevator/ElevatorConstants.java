@@ -20,10 +20,8 @@ public class ElevatorConstants {
     public static double kI = 0.0;
     public static double kD = 0.0;
 
-    // Feedforward constants
-    public static double kS = 0.0;
-    public static double kV = 1.0;
-    public static double kA = 0.0;
+    // Gravitational constant
+    public static double kG = 0.0;
 
     // CLaw positions
     public static double CLAW_OPEN_POS = 1.0;

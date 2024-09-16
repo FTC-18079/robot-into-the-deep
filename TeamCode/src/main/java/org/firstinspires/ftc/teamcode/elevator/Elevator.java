@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.elevator;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDFController;
-import com.arcrobotics.ftclib.controller.wpilibcontroller.ElevatorFeedforward;
-import com.arcrobotics.ftclib.controller.wpilibcontroller.SimpleMotorFeedforward;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -21,9 +19,14 @@ public class Elevator extends SubsystemBase {
     Servo claw;
     Servo bucket;
 
+    public enum ScoreType {
+        SAMPLE, SPECIMEN
+    }
+
+    ScoreType scoreType;
+
     // Control loop
     PIDFController pidfController = new PIDFController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD, 0.0);
-    SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(ElevatorConstants.kS, ElevatorConstants.kV, ElevatorConstants.kA);
 
     private static Elevator INSTANCE = null;
 
@@ -41,6 +44,8 @@ public class Elevator extends SubsystemBase {
         claw = RobotMap.getInstance().CLAW;
 //        bucket = RobotMap.getInstance().BUCKET;
 
+        scoreType = ScoreType.SAMPLE;
+
         this.telemetry = RobotCore.getTelemetry();
 
         setupMotor();
@@ -51,6 +56,15 @@ public class Elevator extends SubsystemBase {
         elevator.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         elevator.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         elevator.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    public void stateMachine() {
+        switch (scoreType) {
+            case SAMPLE:
+                break;
+            case SPECIMEN:
+                break;
+        }
     }
 
     @Override
