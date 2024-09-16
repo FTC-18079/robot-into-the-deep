@@ -1,26 +1,28 @@
-package org.firstinspires.ftc.teamcode.util;
+package org.firstinspires.ftc.teamcode.chassis.commands;
 
 import com.arcrobotics.ftclib.command.CommandBase;
 
-import org.firstinspires.ftc.teamcode.RobotCore;
+import org.firstinspires.ftc.teamcode.chassis.Chassis;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
 
 public class FollowPathCommand extends CommandBase {
-    private final RobotCore robot;
+    Chassis chassis;
     private final Path path;
 
-    public FollowPathCommand(RobotCore robot, Path path) {
-        this.robot = robot;
+    public FollowPathCommand(Path path) {
+        chassis = Chassis.getInstance();
         this.path = path;
+
+        addRequirements(chassis);
     }
 
     @Override
     public void initialize() {
-        robot.followPath(path);
+        chassis.followPath(path);
     }
 
     @Override
     public boolean isFinished() {
-        return !robot.isBusy();
+        return !chassis.isBusy();
     }
 }

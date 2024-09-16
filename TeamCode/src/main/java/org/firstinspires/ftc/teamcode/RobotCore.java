@@ -87,6 +87,12 @@ public class RobotCore extends Robot {
 
         // Set up opmode
         setupOpMode(type);
+    }
+
+    public void initSubsystems() {
+        chassis = Chassis.getInstance();
+        collector = Collector.getInstance();
+        register(chassis, collector);
 
         telemetry.addData("Status", "Robot initialized, ready to enable");
         telemetry.update();
@@ -94,19 +100,10 @@ public class RobotCore extends Robot {
         INSTANCE = this;
     }
 
-    public void initSubsystems() {
-        chassis = new Chassis(this);
-        collector = Collector.getInstance();
-        register(chassis, collector);
-    }
-
     public void setupOpMode(OpModeType type) {
-        if (type != OpModeType.TELEOP) {
-            telemetry.addData("Status", "Generating auto path");
-            telemetry.update();
-        }
         switch (type) {
             case TELEOP:
+                chassis.setPosition(RobotGlobal.robotPose);
                 chassis.startTeleopDrive();
                 setDriveControls();
                 break;
@@ -119,7 +116,6 @@ public class RobotCore extends Robot {
     public void setDriveControls() {
         // Drive command
         driveCommand = new TeleOpDriveCommand(
-                chassis,
                 () -> responseCurve(driveController.getLeftY(), DRIVE_SENSITIVITY),
                 () -> responseCurve(driveController.getLeftX(), DRIVE_SENSITIVITY),
                 () -> responseCurve(driveController.getRightX(), ROTATIONAL_SENSITIVITY)
@@ -179,16 +175,8 @@ public class RobotCore extends Robot {
         telemetry.update();
     }
 
-    public Pose getPoseEstimate() {
-        return chassis.getPoseEstimate();
-    }
-
     public static Telemetry getTelemetry() {
         return telemetry;
-    }
-
-    public void followPath(Path path) {
-        chassis.followPath(path);
     }
 
     public boolean isBusy() {
@@ -217,10 +205,6 @@ public class RobotCore extends Robot {
 
     public boolean getTouchpad(GamepadEx gamepad) {
         return gamepad.gamepad.touchpad;
-    }
-
-    public boolean getPS(GamepadEx gamepad) {
-        return gamepad.gamepad.ps;
     }
 
 }

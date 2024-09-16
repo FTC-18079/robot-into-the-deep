@@ -3,10 +3,13 @@ package org.firstinspires.ftc.teamcode.auto;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.Command;
+import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.arcrobotics.ftclib.command.InstantCommand;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.RobotCore;
 import org.firstinspires.ftc.teamcode.RobotMap;
+import org.firstinspires.ftc.teamcode.chassis.Chassis;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 
 import static org.firstinspires.ftc.teamcode.auto.AutoConstants.ParkingPose.*;
@@ -24,6 +27,11 @@ public abstract class AutoTemplate extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        // Init hardware
+        telemetry.addData("Status", "Initializing hardware");
+        telemetry.update();
+        RobotMap.getInstance().init(hardwareMap);
+
         RobotGlobal.resetValues();
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
@@ -31,11 +39,6 @@ public abstract class AutoTemplate extends LinearOpMode {
         while (opModeInInit() && !gamepad1.options) {
             config();
         }
-
-        // Init hardware
-        telemetry.addData("Status", "Initializing hardware");
-        telemetry.update();
-        RobotMap.getInstance().init(hardwareMap);
 
         // Create robot
         setStartPose();
@@ -46,9 +49,20 @@ public abstract class AutoTemplate extends LinearOpMode {
                 gamepad1,
                 gamepad2
         );
+        Chassis.getInstance().setPosition(RobotGlobal.robotPose);
+
+        // Schedule auto
+        telemetry.addData("Status", "Scheduling commands");
+        telemetry.update();
+        if (RobotGlobal.alliance != NONE) robot.schedule(makeAutoSequence()
+                .andThen(new InstantCommand(Chassis.getInstance()::breakFollowing)));
 
         while (opModeInInit()) {
             telemetry.addData("Status", "Initialized, Ready to start");
+            telemetry.addData("Selected auto delay", RobotGlobal.delayMs);
+            telemetry.addData("Live view on", RobotGlobal.liveView);
+            telemetry.addData("Selected alliance", RobotGlobal.alliance);
+            telemetry.addData("Selected parking spot", RobotGlobal.parkingPose);
             telemetry.update();
 
             // Sleep CPU a little
@@ -57,12 +71,13 @@ public abstract class AutoTemplate extends LinearOpMode {
 
         // Don't run anything without an alliance
         if (RobotGlobal.alliance == NONE) requestOpModeStop();
-        else robot.schedule(makeAutoSequence());
 
         // Run robot
         while (opModeIsActive() && !isStopRequested()) {
             robot.run();
         }
+
+        CommandScheduler.getInstance().cancelAll();
     }
 
     public void config() {

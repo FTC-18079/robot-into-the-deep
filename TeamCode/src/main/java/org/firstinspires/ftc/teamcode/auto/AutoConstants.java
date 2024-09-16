@@ -11,14 +11,19 @@ public class AutoConstants {
     }
 
     // Starting poses
-    public static final Pose OBVZONE_STARTING_POSE = new Pose(9, 60, 0);
-    public static final Pose CENTER_STARTING_POSE = new Pose(9, 80, 0);
-    public static final Pose BASKET_STARTING_POSE = new Pose(9, 108, 0);
+    public static final Pose OBVZONE_STARTING_POSE = new Pose(8, 60, 0);
+    public static final Pose CENTER_STARTING_POSE = new Pose(8, 80, 0);
+    public static final Pose BASKET_STARTING_POSE = new Pose(8, 108, 0);
 
     // Robot parking poses
     public enum ParkingPose {
         OBSERVATION_ZONE, SUBMERSIBLE
     }
+
+    // Scoring poses
+    public static final Pose BASKET_SCORE_POSE = new Pose(16, 128, Math.toRadians(135));
+    public static final Pose OBV_PRELOAD_SCORE_POSE = new Pose(38, 60, Math.toRadians(0));
+    public static final Pose CENTER_PRELOAD_SCORE_POSE = new Pose(38, 84, Math.toRadians(0));
 
     // Parking poses
     public static final Pose OBVZONE_PARKING_POSE = new Pose(16.2, 12, Math.toRadians(90));
@@ -50,6 +55,6 @@ public class AutoConstants {
     }
 
     private static Pose toRed(Pose pose) {
-        return new Pose(144 - pose.getX(), pose.getY(), pose.getHeading() + Math.toRadians(180));
+        return new Pose(144 - pose.getX(), 144 - pose.getY(), pose.getHeading() + Math.toRadians(180));
     }
 }
