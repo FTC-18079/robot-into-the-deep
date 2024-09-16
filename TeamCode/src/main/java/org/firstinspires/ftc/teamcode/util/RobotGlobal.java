@@ -14,6 +14,10 @@ public class RobotGlobal {
     public static Pose robotPose = new Pose();
     public static AutoConstants.ParkingPose parkingPose = AutoConstants.ParkingPose.SUBMERSIBLE;
 
+    public static void setRobotPose(Pose pose) {
+        robotPose = pose;
+    }
+
     public static void resetValues() {
         delayMs = 0;
         alliance = Alliance.NONE;

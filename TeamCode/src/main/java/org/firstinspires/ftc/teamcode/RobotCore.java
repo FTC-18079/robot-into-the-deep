@@ -87,6 +87,8 @@ public class RobotCore extends Robot {
     public void setupOpMode(OpModeType type) {
         switch (type) {
             case TELEOP:
+                chassis.setPosition(RobotGlobal.robotPose);
+                chassis.startTeleopDrive();
                 setDriveControls();
                 break;
             case EMPTY:

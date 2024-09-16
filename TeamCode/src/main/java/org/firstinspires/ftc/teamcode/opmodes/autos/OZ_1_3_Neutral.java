@@ -52,7 +52,8 @@ public class OZ_1_3_Neutral extends AutoTemplate {
                 .andThen(new WaitCommand(1000))
                 //.andThen(scorePreload())
                 //.andThen(collect())
-                .andThen(new FollowPathCommand(preloadToBasketPath));
+                .andThen(new FollowPathCommand(preloadToBasketPath))
                 //.andThen(scoreBasket())
+                .andThen(new InstantCommand(() -> RobotGlobal.setRobotPose(parkPosition)));
     }
 }
