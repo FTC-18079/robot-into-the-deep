@@ -8,10 +8,10 @@ import com.arcrobotics.ftclib.command.WaitCommand;
 import org.firstinspires.ftc.teamcode.elevator.Elevator;
 import org.firstinspires.ftc.teamcode.elevator.ElevatorConstants;
 
-public class ScoreBasket extends SequentialCommandGroup {
+public class ScoreBasketCommand extends SequentialCommandGroup {
     Elevator elevator;
 
-    public ScoreBasket() {
+    public ScoreBasketCommand() {
         this.elevator = Elevator.getInstance();
 
         addCommands(

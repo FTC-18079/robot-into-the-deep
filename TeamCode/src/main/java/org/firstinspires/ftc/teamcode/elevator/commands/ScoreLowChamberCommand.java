@@ -9,23 +9,23 @@ import com.arcrobotics.ftclib.command.WaitUntilCommand;
 import org.firstinspires.ftc.teamcode.elevator.Elevator;
 import org.firstinspires.ftc.teamcode.elevator.ElevatorConstants;
 
-public class ScoreHighChamber extends SequentialCommandGroup {
+public class ScoreLowChamberCommand extends SequentialCommandGroup {
     Elevator elevator;
 
-    public ScoreHighChamber() {
+    public ScoreLowChamberCommand() {
         this.elevator = Elevator.getInstance();
 
         addCommands(
                 new ConditionalCommand(
-                        // Run nothing if not scoring high chamber
+                        // Run nothing if not scoring low chamber
                         new InstantCommand(),
                         // Otherwise score
-                        new InstantCommand(elevator::scoreChamberHigh)
+                        new InstantCommand(elevator::scoreChamberLow)
                                 .andThen(new WaitUntilCommand(elevator::atSetPoint))
                                 .andThen(new InstantCommand(elevator::openClaw))
                                 .andThen(new WaitCommand(100)),
                         // Condition to check whether or not to run the command
-                        () -> elevator.getTargetPos() != ElevatorConstants.LIFT_POS_HIGH_CHAMBER
+                        () -> elevator.getTargetPos() != ElevatorConstants.LIFT_POS_LOW_CHAMBER
                 )
         );
 

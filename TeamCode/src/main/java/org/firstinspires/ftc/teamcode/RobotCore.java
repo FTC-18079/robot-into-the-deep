@@ -17,10 +17,11 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.chassis.Chassis;
 import org.firstinspires.ftc.teamcode.chassis.commands.TeleOpDriveCommand;
 import org.firstinspires.ftc.teamcode.collector.Collector;
-import org.firstinspires.ftc.teamcode.collector.CollectorConstants;
 import org.firstinspires.ftc.teamcode.elevator.Elevator;
+import org.firstinspires.ftc.teamcode.elevator.commands.ScoreBasketCommand;
+import org.firstinspires.ftc.teamcode.elevator.commands.ScoreHighChamberCommand;
+import org.firstinspires.ftc.teamcode.elevator.commands.ScoreLowChamberCommand;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
-import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 import org.firstinspires.ftc.teamcode.vision.ATVision;
 
@@ -129,6 +130,29 @@ public class RobotCore extends Robot {
                 .whenPressed(chassis::resetHeading);
         driveController.getGamepadButton(GamepadKeys.Button.B)
                 .whenPressed(chassis::toggleRobotCentric);
+
+        // Scoring button
+        manipController.getGamepadButton(GamepadKeys.Button.A)
+                .whenPressed(new ConditionalCommand(
+                        // If scoring sample
+                        new ScoreBasketCommand(),
+                        // If scoring specimen, run both chamber scoring commands together
+                        // These commands have checks individual for running, so only one will ever actually run at once
+                        new ScoreHighChamberCommand().alongWith(new ScoreLowChamberCommand()),
+                        () -> elevator.getScoreType() == Elevator.ScoreType.SAMPLE
+                ));
+
+        // Elevator position buttons
+        manipController.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
+                .whenPressed(elevator::toRest);
+        manipController.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
+                .whenPressed(elevator::toLow);
+        manipController.getGamepadButton(GamepadKeys.Button.DPAD_UP)
+                .whenPressed(elevator::toHigh);
+
+        // Toggle game piece types
+        manipController.getGamepadButton(GamepadKeys.Button.X)
+                .whenPressed(elevator::toggleScoreType);
 
         // Intake control
         new Trigger(() -> manipController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > TRIGGER_DEADZONE)

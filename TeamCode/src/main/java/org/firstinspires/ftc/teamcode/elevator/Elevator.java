@@ -81,6 +81,11 @@ public class Elevator extends SubsystemBase {
         this.scoreType = scoreType;
     }
 
+    public void toggleScoreType() {
+        if (scoreType == ScoreType.SAMPLE) setScoreType(ScoreType.SPECIMEN);
+        else setScoreType(ScoreType.SAMPLE);
+    }
+
     public ScoreType getScoreType() {
         return scoreType;
     }
