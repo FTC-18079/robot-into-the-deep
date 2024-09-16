@@ -15,6 +15,8 @@ public class ElevatorConstants {
     public static double LIFT_POS_LOW_CHAMBER_SCORE = 125.0;
     public static double LIFT_POS_HIGH_CHAMBER_SCORE = 1450.0;
 
+    public static double POSITION_TOLERANCE = 15.0;
+
     // PID constants
     public static double kP = 1.0;
     public static double kI = 0.0;

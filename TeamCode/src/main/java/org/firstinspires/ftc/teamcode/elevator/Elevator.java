@@ -98,6 +98,14 @@ public class Elevator extends SubsystemBase {
         else targetPos = ElevatorConstants.LIFT_POS_HIGH_CHAMBER;
     }
 
+    public double getTargetPos() {
+        return targetPos;
+    }
+
+    public boolean atSetPoint() {
+        return Math.abs(elevator.getTargetPosition() - targetPos) < ElevatorConstants.POSITION_TOLERANCE;
+    }
+
     // Positions for scoring on chambers
     public void scoreChamberLow() {
         targetPos = ElevatorConstants.LIFT_POS_LOW_CHAMBER_SCORE;
@@ -110,6 +118,7 @@ public class Elevator extends SubsystemBase {
     @Override
     public void periodic() {
         output = pidfController.calculate(elevator.getCurrentPosition(), targetPos);
+        if (atSetPoint()) output = 0.0;
         elevator.setVelocity(output);
 
         telemetry.addLine();
