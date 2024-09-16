@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import static org.firstinspires.ftc.teamcode.util.RobotGlobal.Alliance.BLUE;
+import static org.firstinspires.ftc.teamcode.util.RobotGlobal.Alliance.RED;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
@@ -14,6 +17,7 @@ import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 @TeleOp(name = "TeleOp", group = "AAA")
 public class TeleOpMode extends OpMode {
     RobotCore robot;
+    boolean lastSquare = false;
 
     @Override
     public void init() {
@@ -24,6 +28,20 @@ public class TeleOpMode extends OpMode {
 
     @Override
     public void init_loop() {
+        // Allow for manual toggling of alliance
+        if (gamepad1.square != lastSquare && gamepad1.square) {
+            switch(RobotGlobal.alliance) {
+                case NONE:
+                case RED:
+                    RobotGlobal.alliance = BLUE;
+                    break;
+                case BLUE:
+                    RobotGlobal.alliance = RED;
+                    break;
+            }
+        }
+        lastSquare = gamepad1.square;
+
         telemetry.addData("Alliance", RobotGlobal.alliance);
         telemetry.addData("AprilTag FPS", robot.getFPS());
         telemetry.update();
