@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.chassis.Chassis;
 import org.firstinspires.ftc.teamcode.chassis.commands.TeleOpDriveCommand;
 import org.firstinspires.ftc.teamcode.collector.Collector;
 import org.firstinspires.ftc.teamcode.collector.CollectorConstants;
+import org.firstinspires.ftc.teamcode.elevator.Elevator;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
@@ -35,6 +36,7 @@ public class RobotCore extends Robot {
     // Subsystems
     Chassis chassis;
     Collector collector;
+    Elevator elevator;
 
     // Commands
     TeleOpDriveCommand driveCommand;
@@ -92,7 +94,8 @@ public class RobotCore extends Robot {
     public void initSubsystems() {
         chassis = Chassis.getInstance();
         collector = Collector.getInstance();
-        register(chassis, collector);
+        elevator = Elevator.getInstance();
+        register(chassis, collector, elevator);
 
         telemetry.addData("Status", "Robot initialized, ready to enable");
         telemetry.update();
