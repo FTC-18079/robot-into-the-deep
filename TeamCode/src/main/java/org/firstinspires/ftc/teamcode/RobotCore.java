@@ -3,8 +3,10 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.Robot;
+import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -14,6 +16,8 @@ import com.arcrobotics.ftclib.command.button.Trigger;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.chassis.Chassis;
 import org.firstinspires.ftc.teamcode.chassis.commands.TeleOpDriveCommand;
+import org.firstinspires.ftc.teamcode.collector.Collector;
+import org.firstinspires.ftc.teamcode.collector.CollectorConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
@@ -30,6 +34,7 @@ public class RobotCore extends Robot {
 
     // Subsystems
     Chassis chassis;
+    Collector collector;
 
     // Commands
     TeleOpDriveCommand driveCommand;
@@ -51,6 +56,12 @@ public class RobotCore extends Robot {
     // OpMode type enumerator
     public enum OpModeType {
         TELEOP, AUTO, EMPTY
+    }
+
+    public static RobotCore INSTANCE = null;
+
+    public static RobotCore getInstance() {
+        return INSTANCE;
     }
 
     public RobotCore(OpModeType type, Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2) {
@@ -80,8 +91,13 @@ public class RobotCore extends Robot {
 
     public void initSubsystems() {
         chassis = Chassis.getInstance();
+        collector = Collector.getInstance();
+        register(chassis, collector);
 
-        register(chassis);
+        telemetry.addData("Status", "Robot initialized, ready to enable");
+        telemetry.update();
+
+        INSTANCE = this;
     }
 
     public void setupOpMode(OpModeType type) {
@@ -105,10 +121,39 @@ public class RobotCore extends Robot {
                 () -> responseCurve(driveController.getRightX(), ROTATIONAL_SENSITIVITY)
         );
 
+        // Drive buttons
         driveController.getGamepadButton(GamepadKeys.Button.Y)
                 .whenPressed(chassis::resetHeading);
         driveController.getGamepadButton(GamepadKeys.Button.B)
                 .whenPressed(chassis::toggleRobotCentric);
+
+        // Intake control
+        new Trigger(() -> manipController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > TRIGGER_DEADZONE)
+                .whenActive(new ConditionalCommand(
+                        // Manually collect if seeking
+                        new InstantCommand(() -> collector.setCollectorState(Collector.CollectorState.COLLECTING)),
+                        // Eject otherwise
+                        new InstantCommand(() -> collector.setIntakePower(-1.0)).andThen(new WaitCommand(250).andThen(new InstantCommand(() -> collector.setIntakePower(0.0)))),
+                        () -> collector.getCollectorState() == Collector.CollectorState.SEEKING
+                ));
+        manipController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
+                .whenPressed(new ConditionalCommand(
+                        new InstantCommand(() -> collector.setCollectorState(Collector.CollectorState.SEEKING)),
+                        new InstantCommand(() -> collector.setCollectorState(Collector.CollectorState.INACTIVE)),
+                        () -> collector.getCollectorState() == Collector.CollectorState.INACTIVE
+                ));
+        manipController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
+                .whenPressed(new InstantCommand(collector::toggleTargetColor)
+                        // Set gamepad colors cuz cool
+                            .andThen(new ConditionalCommand(
+                                    new ConditionalCommand(
+                                            new InstantCommand(() -> setControllerColors(1, 0, 0)),
+                                            new InstantCommand(() -> setControllerColors(0, 0, 1)),
+                                            () -> RobotGlobal.alliance == RobotGlobal.Alliance.RED
+                                    ),
+                                    new InstantCommand(() -> setControllerColors(1, 1, 0)),
+                                    () -> collector.getTargetColor() != Collector.SampleColor.YELLOW
+                            )));
 
         chassis.setDefaultCommand(driveCommand);
     }
@@ -142,15 +187,24 @@ public class RobotCore extends Robot {
         return atVision.getFPS();
     }
 
-    public void rumbleGamepad(GamepadEx gamepad, double rumble1, double rumble2, int ms) {
-        gamepad.gamepad.rumble(rumble1, rumble2, ms);
+    // Rumble drive controller
+    public static void rumbleDrive(int ms) {
+        INSTANCE.driveController.gamepad.rumble(1, 1, ms);
+    }
+
+    // Rumble manip controller
+    public static void rumbleManip(int ms) {
+        INSTANCE.manipController.gamepad.rumble(1, 1, ms);
+    }
+
+    // Change controller LEDs
+    public void setControllerColors(double r, double g, double b) {
+        driveController.gamepad.setLedColor(r, g, b, -1);
+        manipController.gamepad.setLedColor(r, g, b, -1);
     }
 
     public boolean getTouchpad(GamepadEx gamepad) {
         return gamepad.gamepad.touchpad;
     }
 
-    public boolean getPS(GamepadEx gamepad) {
-        return gamepad.gamepad.ps;
-    }
 }

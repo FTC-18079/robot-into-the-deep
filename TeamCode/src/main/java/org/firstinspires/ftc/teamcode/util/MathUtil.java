@@ -43,4 +43,15 @@ public class MathUtil {
     public static double angleModulus(double angleRadians) {
         return inputModulus(angleRadians, -Math.PI, Math.PI);
     }
+
+    /**
+     * Checks if a value is within a certain range
+     * @param value The value to check
+     * @param low The lower bound
+     * @param high The upper bound
+     * @return Whether the value is in the range
+     */
+    public static boolean inRange(double value, double low, double high) {
+        return (value >= low) && (value <= high);
+    }
 }
