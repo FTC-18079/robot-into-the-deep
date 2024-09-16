@@ -6,6 +6,7 @@ import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.Robot;
+import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -133,9 +134,10 @@ public class RobotCore extends Robot {
         // Intake control
         new Trigger(() -> manipController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > TRIGGER_DEADZONE)
                 .whenActive(new ConditionalCommand(
+                        // Manually collect if seeking
                         new InstantCommand(() -> collector.setCollectorState(Collector.CollectorState.COLLECTING)),
-                        // TODO: add eject here
-                        new InstantCommand(),
+                        // Eject otherwise
+                        new InstantCommand(() -> collector.setIntakePower(-1.0)).andThen(new WaitCommand(250).andThen(new InstantCommand(() -> collector.setIntakePower(0.0)))),
                         () -> collector.getCollectorState() == Collector.CollectorState.SEEKING
                 ));
         manipController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)

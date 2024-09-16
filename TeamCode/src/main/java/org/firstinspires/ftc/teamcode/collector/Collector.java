@@ -36,15 +36,10 @@ public class Collector extends SubsystemBase {
 
     // States
     CollectorState collectorState;
-    IntakeState intakeState;
     SampleColor targetColor;
 
     public enum CollectorState {
         INACTIVE, SEEKING, COLLECTING
-    }
-
-    public enum IntakeState {
-        INACTIVE, COLLECTING, EJECTING
     }
 
     public enum SampleColor {
@@ -79,7 +74,6 @@ public class Collector extends SubsystemBase {
         telemetry = RobotCore.getTelemetry();
 
         setCollectorState(CollectorState.INACTIVE);
-        setIntakeState(IntakeState.INACTIVE);
         targetColor = SampleColor.YELLOW;
         setUpMotors();
     }
@@ -122,13 +116,9 @@ public class Collector extends SubsystemBase {
         return collectorState;
     }
 
-    // Intake states
-    public void setIntakeState(IntakeState intakeState) {
-        this.intakeState = intakeState;
-    }
-
-    public IntakeState getIntakeState() {
-        return intakeState;
+    // Intake control
+    public void setIntakePower(double power) {
+        intake.setPower(power);
     }
 
     // Color states
@@ -147,7 +137,7 @@ public class Collector extends SubsystemBase {
         switch (collectorState) {
             case SEEKING:
                 targetPose = CollectorConstants.MAX_SLIDE_POS * 0.80;
-                intake.setPower(0.0);
+                setIntakePower(0.0);
                 deploy.setPosition(CollectorConstants.DEPLOY_DOWN_POS);
 
                 if (MathUtil.inRange(getCurrentColor(), targetColor.range[0], targetColor.range[1])) {
@@ -159,12 +149,11 @@ public class Collector extends SubsystemBase {
                 break;
             case COLLECTING:
                 targetPose = CollectorConstants.MAX_SLIDE_POS * 0.87;
-                intake.setPower(1.0);
+                setIntakePower(1.0);
                 deploy.setPosition(CollectorConstants.DEPLOY_DOWN_POS);
                 break;
             case INACTIVE:
                 targetPose = CollectorConstants.MIN_SLIDE_POS;
-                intake.setPower(0.0);
                 deploy.setPosition(CollectorConstants.DEPLOY_STOW_POS);
                 break;
         }
@@ -188,7 +177,6 @@ public class Collector extends SubsystemBase {
 
         telemetry.addLine();
         telemetry.addData("Collector State", collectorState);
-        telemetry.addData("Intake State", intakeState);
         telemetry.addData("Target Color", targetColor);
     }
 }
