@@ -36,6 +36,7 @@ public class RobotMap {
     // Scoring
     public Servo CLAW;
     public Servo BUCKET;
+    public Servo DOOR;
 
     // Intake
     public CRServo INTAKE;
@@ -67,8 +68,8 @@ public class RobotMap {
         ELEVATOR = hardwareMap.get(DcMotorEx.class, "elevator");
 
         CLAW = hardwareMap.get(Servo.class, "claw");
-        // TODO: uncomment
-//        BUCKET = hardwareMap.get(Servo.class, "bucket");
+        BUCKET = hardwareMap.get(Servo.class, "bucket");
+        DOOR = hardwareMap.get(Servo.class, "door");
 
         INTAKE = hardwareMap.get(CRServo.class, "intake");
         DEPLOY = hardwareMap.get(Servo.class, "deploy");

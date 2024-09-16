@@ -18,6 +18,7 @@ public class Elevator extends SubsystemBase {
     DcMotorEx elevator;
     Servo claw;
     Servo bucket;
+    Servo door;
 
     public enum ScoreType {
         SAMPLE, SPECIMEN
@@ -44,7 +45,8 @@ public class Elevator extends SubsystemBase {
     private Elevator() {
         elevator = RobotMap.getInstance().ELEVATOR;
         claw = RobotMap.getInstance().CLAW;
-//        bucket = RobotMap.getInstance().BUCKET;
+        bucket = RobotMap.getInstance().BUCKET;
+        door = RobotMap.getInstance().DOOR;
 
         scoreType = ScoreType.SPECIMEN;
 
