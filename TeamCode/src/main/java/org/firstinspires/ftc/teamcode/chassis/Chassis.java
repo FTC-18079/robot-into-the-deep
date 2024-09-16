@@ -15,7 +15,7 @@ public class Chassis extends SubsystemBase {
     boolean isRobotCentric;
 
     public Chassis(RobotCore robot) {
-        this.telemetry = robot.getTelemetry();
+        this.telemetry = RobotCore.getTelemetry();
         isRobotCentric = false;
         follower = new Follower(RobotGlobal.robotPose);
     }

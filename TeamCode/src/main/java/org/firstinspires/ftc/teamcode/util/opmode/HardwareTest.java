@@ -39,8 +39,8 @@ public class HardwareTest extends LinearOpMode {
 
             telemetry.addData("LB", gamepad1.left_bumper);
             telemetry.addData("RB", gamepad1.right_bumper);
-            telemetry.addData("Motor position", motor.getCurrentPosition());
-            telemetry.addData("Motor power", motor.getPower());
+            if (motorExists) telemetry.addData("Motor position", motor.getCurrentPosition());
+            if (motorExists) telemetry.addData("Motor power", motor.getPower());
             telemetry.addData("Motor velocity", motor.getVelocity());
             telemetry.update();
 
@@ -56,6 +56,8 @@ public class HardwareTest extends LinearOpMode {
             motorExists = true;
             motor = hardwareMap.get(DcMotorEx.class, MOTOR_NAME);
             motor.setZeroPowerBehavior(BRAKES_ENABLED ? DcMotor.ZeroPowerBehavior.BRAKE : DcMotor.ZeroPowerBehavior.FLOAT);
+            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         } else motorExists = false;
 
         if (!MOTOR_NAME.isEmpty()) {
