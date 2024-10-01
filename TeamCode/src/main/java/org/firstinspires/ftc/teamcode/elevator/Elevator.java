@@ -125,7 +125,8 @@ public class Elevator extends SubsystemBase {
     @Override
     public void periodic() {
         output = pidfController.calculate(elevator.getCurrentPosition(), targetPos);
-        if (atSetPoint()) output = 0.0;
+        if (atSetPoint() && targetPos != ElevatorConstants.LIFT_POS_REST) output = ElevatorConstants.kG;
+        else if (atSetPoint()) output = 0.0;
         elevator.setVelocity(output);
 
         telemetry.addLine();
