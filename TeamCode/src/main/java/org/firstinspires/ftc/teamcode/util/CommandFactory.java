@@ -9,17 +9,13 @@ import com.arcrobotics.ftclib.command.ParallelDeadlineGroup;
 import com.arcrobotics.ftclib.command.ParallelRaceGroup;
 import com.arcrobotics.ftclib.command.PrintCommand;
 import com.arcrobotics.ftclib.command.RunCommand;
-import com.arcrobotics.ftclib.command.SelectCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.StartEndCommand;
 import com.arcrobotics.ftclib.command.Subsystem;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.command.WaitUntilCommand;
 
-import java.util.Map;
-import java.util.Set;
 import java.util.function.BooleanSupplier;
-import java.util.function.Supplier;
 
 public class CommandFactory {
     public static Command none() {
@@ -42,16 +38,17 @@ public class CommandFactory {
         return new StartEndCommand(start, end, requirements);
     }
 
+    // DO NOT USE, COULD BE BROKEN
     public static Command runEnd(Runnable run, Runnable end, Subsystem... requirements) {
 //        requireNonNullParam(end, "end", "Command.runEnd");
-        return new FunctionalCommand(() -> {}, run, inerrupted -> end.run(), () -> false, requirements);
+        return new FunctionalCommand(() -> {}, run, interrupted -> end.run(), () -> false, requirements);
     }
 
     public static Command print(String message) {
         return new PrintCommand(message);
     }
 
-    public static Command waitSeconds(double seconds) {
+    public static Command waitSeconds(long seconds) {
         return new WaitCommand(seconds);
     }
 
