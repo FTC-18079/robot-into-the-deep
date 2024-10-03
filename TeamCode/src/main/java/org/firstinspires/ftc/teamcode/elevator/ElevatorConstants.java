@@ -29,6 +29,11 @@ public class ElevatorConstants {
     public static double CLAW_OPEN_POS = 1.0;
     public static double CLAW_GRAB_POS = 0.55;
 
+    // Door positions
+    public static double DOOR_CLOSE_POS = 0.0;
+    public static double DOOR_OPEN_POS = 0.6;
+
+    // Bucket positions
     public static double BUCKET_REST_POS = 0.0;
-    public static double BUCKET_SCORE_POS = 0.0;
+    public static double BUCKET_SCORE_POS = 1.0;
 }

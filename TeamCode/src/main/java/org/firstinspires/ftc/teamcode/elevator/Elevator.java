@@ -90,6 +90,24 @@ public class Elevator extends SubsystemBase {
         return scoreType;
     }
 
+    // Door movement
+    public void closeDoor() {
+        door.setPosition(ElevatorConstants.DOOR_CLOSE_POS);
+    }
+
+    public void openDoor() {
+        door.setPosition(ElevatorConstants.DOOR_OPEN_POS);
+    }
+
+    // Bucket poses
+    public void returnBucket() {
+        bucket.setPosition(ElevatorConstants.BUCKET_REST_POS);
+    }
+
+    public void scoreBucket() {
+        bucket.setPosition(ElevatorConstants.BUCKET_SCORE_POS);
+    }
+
     // Elevator pose setting
     public void toRest() {
         targetPos = ElevatorConstants.LIFT_POS_REST;
