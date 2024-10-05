@@ -11,6 +11,7 @@ public class ElevatorConstants {
 
     public static double LIFT_POS_LOW_BASKET = 750.0;
     public static double LIFT_POS_HIGH_BASKET = 1900.0;
+
     public static double LIFT_POS_HIGH_CHAMBER = 1075.0;
     public static double LIFT_POS_HIGH_CHAMBER_SCORE = 750.0;
 
@@ -20,9 +21,6 @@ public class ElevatorConstants {
     public static double kP = 4.0;
     public static double kI = 0.0;
     public static double kD = 0.02;
-
-    // Gravitational constant
-    public static double kG = 0.0;
 
     // CLaw positions
     public static double CLAW_OPEN_POS = 1.0;

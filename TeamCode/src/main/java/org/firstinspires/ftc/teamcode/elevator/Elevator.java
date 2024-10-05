@@ -128,7 +128,7 @@ public class Elevator extends SubsystemBase {
     }
 
     public boolean atSetPoint() {
-        return Math.abs(elevator.getTargetPosition() - targetPos) < ElevatorConstants.POSITION_TOLERANCE;
+        return Math.abs(elevator.getCurrentPosition() - targetPos) < ElevatorConstants.POSITION_TOLERANCE;
     }
 
     public void scoreChamberHigh() {
@@ -144,11 +144,12 @@ public class Elevator extends SubsystemBase {
         // Limit acceleration
         if (Math.abs(deltaV) > ElevatorConstants.MAX_DELTAV && Math.signum(output) == Math.signum(deltaV)) output = Math.signum(deltaV) * ElevatorConstants.MAX_DELTAV + lastOutput;
 
-//        if (atSetPoint() && targetPos != ElevatorConstants.LIFT_POS_REST) output = ElevatorConstants.kG;
-//        else if (atSetPoint()) output = 0.0;
+        // Supply no power if we're at zero
+        if (atSetPoint() && targetPos == 0) output = 0.0;
         elevator.setVelocity(output);
 
         telemetry.addLine();
         telemetry.addData("Scoring Element", scoreType);
+        telemetry.addData("Elevator position", elevator.getCurrentPosition());
     }
 }

@@ -29,7 +29,6 @@ public class ElevatorCommands {
 
         SCORE_HIGH_CHAMBER_COMMAND = () -> Commands.sequence(
                 Commands.runOnce(elevator::scoreChamberHigh),
-                Commands.waitMillis(10),
                 Commands.waitUntil(elevator::atSetPoint),
                 Commands.runOnce(elevator::openClaw),
                 Commands.waitMillis(75),
