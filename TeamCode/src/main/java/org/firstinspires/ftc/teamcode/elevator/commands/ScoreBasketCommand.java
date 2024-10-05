@@ -19,12 +19,12 @@ public class ScoreBasketCommand extends SequentialCommandGroup {
                         // Do nothing of not scoring basket
                         new InstantCommand(),
                         // Otherwise score
-                        new InstantCommand(/*elevator::scoreBucket*/)
+                        new InstantCommand(elevator::scoreBucket)
                                 .andThen(new WaitCommand(350))
-                                .andThen(/*elevator::openDoor*/)
+                                .andThen(new InstantCommand(elevator::openDoor))
                                 .andThen(new WaitCommand(150))
-                                .andThen(/*elevator::closeDoor*/)
-                                .andThen(/*elevator::restBucket*/),
+                                .andThen(new InstantCommand(elevator::closeDoor))
+                                .andThen(new InstantCommand(elevator::returnBucket)),
                         // Condition to check whether or not to run the command
                         () -> (elevator.getTargetPos() != ElevatorConstants.LIFT_POS_HIGH_BASKET) || (elevator.getTargetPos() != ElevatorConstants.LIFT_POS_LOW_BASKET)
                 )

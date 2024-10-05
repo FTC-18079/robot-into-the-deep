@@ -30,6 +30,7 @@ public class Elevator extends SubsystemBase {
     PIDFController pidfController = new PIDFController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD, 0.0);
     double targetPos = 0.0;
     double output = 0.0;
+    double lastOutput = 0.0;
 
     private static Elevator INSTANCE = null;
 
@@ -114,8 +115,7 @@ public class Elevator extends SubsystemBase {
     }
 
     public void toLow() {
-        if (scoreType == ScoreType.SAMPLE) targetPos = ElevatorConstants.LIFT_POS_LOW_BASKET;
-        else targetPos = ElevatorConstants.LIFT_POS_LOW_CHAMBER;
+        targetPos = ElevatorConstants.LIFT_POS_LOW_BASKET;
     }
 
     public void toHigh() {
@@ -131,20 +131,21 @@ public class Elevator extends SubsystemBase {
         return Math.abs(elevator.getTargetPosition() - targetPos) < ElevatorConstants.POSITION_TOLERANCE;
     }
 
-    // Positions for scoring on chambers
-    public void scoreChamberLow() {
-        targetPos = ElevatorConstants.LIFT_POS_LOW_CHAMBER_SCORE;
-    }
-
     public void scoreChamberHigh() {
         targetPos = ElevatorConstants.LIFT_POS_HIGH_CHAMBER_SCORE;
     }
 
     @Override
     public void periodic() {
+        lastOutput = output;
         output = pidfController.calculate(elevator.getCurrentPosition(), targetPos);
-        if (atSetPoint() && targetPos != ElevatorConstants.LIFT_POS_REST) output = ElevatorConstants.kG;
-        else if (atSetPoint()) output = 0.0;
+        double deltaV = output - lastOutput;
+
+        // Limit acceleration
+        if (Math.abs(deltaV) > ElevatorConstants.MAX_DELTAV && Math.signum(output) == Math.signum(deltaV)) output = Math.signum(deltaV) * ElevatorConstants.MAX_DELTAV + lastOutput;
+
+//        if (atSetPoint() && targetPos != ElevatorConstants.LIFT_POS_REST) output = ElevatorConstants.kG;
+//        else if (atSetPoint()) output = 0.0;
         elevator.setVelocity(output);
 
         telemetry.addLine();

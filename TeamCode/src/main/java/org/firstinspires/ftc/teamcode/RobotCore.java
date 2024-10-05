@@ -18,9 +18,7 @@ import org.firstinspires.ftc.teamcode.chassis.Chassis;
 import org.firstinspires.ftc.teamcode.chassis.commands.TeleOpDriveCommand;
 import org.firstinspires.ftc.teamcode.collector.Collector;
 import org.firstinspires.ftc.teamcode.elevator.Elevator;
-import org.firstinspires.ftc.teamcode.elevator.commands.ScoreBasketCommand;
-import org.firstinspires.ftc.teamcode.elevator.commands.ScoreHighChamberCommand;
-import org.firstinspires.ftc.teamcode.elevator.commands.ScoreLowChamberCommand;
+import org.firstinspires.ftc.teamcode.elevator.commands.ElevatorCommands;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 import org.firstinspires.ftc.teamcode.vision.ATVision;
@@ -132,15 +130,21 @@ public class RobotCore extends Robot {
                 .whenPressed(chassis::toggleRobotCentric);
 
         // Scoring button
+//        manipController.getGamepadButton(GamepadKeys.Button.A)
+//                .whenPressed(new ConditionalCommand(
+//                        // If scoring sample
+//                        new ScoreBasketCommand(),
+//                        // If scoring specimen, run both chamber scoring commands together
+//                        // These commands have checks individual for running, so only one will ever actually run at once
+//                        new ScoreHighChamberCommand(),
+//                        () -> elevator.getScoreType() == Elevator.ScoreType.SAMPLE
+//                ));
+
+        // New scoring button with cooler commands
         manipController.getGamepadButton(GamepadKeys.Button.A)
-                .whenPressed(new ConditionalCommand(
-                        // If scoring sample
-                        new ScoreBasketCommand(),
-                        // If scoring specimen, run both chamber scoring commands together
-                        // These commands have checks individual for running, so only one will ever actually run at once
-                        new ScoreHighChamberCommand().alongWith(new ScoreLowChamberCommand()),
-                        () -> elevator.getScoreType() == Elevator.ScoreType.SAMPLE
-                ));
+                .whenPressed(ElevatorCommands.SCORE_COMMAND);
+        manipController.getGamepadButton(GamepadKeys.Button.B)
+                .whenPressed(elevator::closeClaw);
 
         // Elevator position buttons
         manipController.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
