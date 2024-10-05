@@ -115,7 +115,8 @@ public class Elevator extends SubsystemBase {
     }
 
     public void toLow() {
-        targetPos = ElevatorConstants.LIFT_POS_LOW_BASKET;
+        if (scoreType == ScoreType.SAMPLE) targetPos = ElevatorConstants.LIFT_POS_LOW_BASKET;
+        else targetPos = ElevatorConstants.LIFT_POS_HIGH_CHAMBER;
     }
 
     public void toHigh() {

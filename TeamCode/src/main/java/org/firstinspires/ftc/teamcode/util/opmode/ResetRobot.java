@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.chassis.Chassis;
 import org.firstinspires.ftc.teamcode.collector.Collector;
 import org.firstinspires.ftc.teamcode.elevator.Elevator;
-import org.firstinspires.ftc.teamcode.elevator.commands.ElevatorCommands;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 
 @TeleOp(name = "Reset Robot", group = "B")
@@ -26,9 +25,6 @@ public class ResetRobot extends OpMode {
         Chassis.resetInstance();
         Collector.resetInstance();
         Elevator.resetInstance();
-
-        // Reset commands
-        ElevatorCommands.reset();
 
         requestOpModeStop();
     }

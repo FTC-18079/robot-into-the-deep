@@ -16,53 +16,51 @@ public class ElevatorCommands {
     public static Command SCORE_COMMAND;
     public static Command RELEASE_COMMAND;
 
-    static Elevator elevator = Elevator.getInstance();
-
-    public static void reset() {
-        elevator = null;
-    }
-
     static {
+        Supplier<Elevator> elevator = Elevator::getInstance;
+
         SCORE_BASKET_COMMAND = () -> Commands.sequence(
-                Commands.runOnce(elevator::scoreBucket),
+                Commands.runOnce(elevator.get()::scoreBucket),
                 Commands.waitMillis(350),
-                Commands.runOnce(elevator::openDoor)
+                Commands.runOnce(elevator.get()::openDoor)
         );
 
         SCORE_HIGH_CHAMBER_COMMAND = () -> Commands.sequence(
-                Commands.runOnce(elevator::scoreChamberHigh),
-                Commands.waitUntil(elevator::atSetPoint),
-                Commands.runOnce(elevator::openClaw),
+                Commands.runOnce(elevator.get()::scoreChamberHigh),
+                Commands.waitUntil(elevator.get()::atSetPoint),
+                Commands.runOnce(elevator.get()::openClaw),
                 Commands.waitMillis(75),
-                Commands.runOnce(elevator::toRest)
+                Commands.runOnce(elevator.get()::toRest)
         );
 
         RETRACT_COMMAND = () -> Commands.sequence(
-                Commands.runOnce(elevator::returnBucket),
-                Commands.runOnce(elevator::closeDoor),
-                Commands.runOnce(elevator::toRest)
+                Commands.runOnce(elevator.get()::returnBucket),
+                Commands.runOnce(elevator.get()::closeDoor),
+                Commands.runOnce(elevator.get()::toRest)
         );
 
         EJECT_COMMAND = () -> Commands.sequence(
-                Commands.runOnce(elevator::openClaw),
+                Commands.runOnce(elevator.get()::openClaw),
                 Commands.waitMillis(75)
         );
     }
 
     static {
+        Supplier<Elevator> elevator = Elevator::getInstance;
+
         SCORE_COMMAND = Commands.deferredProxy(() -> {
-            if (elevator.getTargetPos() == ElevatorConstants.LIFT_POS_LOW_BASKET || elevator.getTargetPos() == ElevatorConstants.LIFT_POS_HIGH_BASKET) {
-                return Commands.defer(SCORE_BASKET_COMMAND, elevator);
-            } else if (elevator.getTargetPos() == ElevatorConstants.LIFT_POS_HIGH_CHAMBER) {
-                return Commands.defer(SCORE_HIGH_CHAMBER_COMMAND, elevator);
+            if (elevator.get().getTargetPos() == ElevatorConstants.LIFT_POS_LOW_BASKET || elevator.get().getTargetPos() == ElevatorConstants.LIFT_POS_HIGH_BASKET) {
+                return Commands.defer(SCORE_BASKET_COMMAND, elevator.get());
+            } else if (elevator.get().getTargetPos() == ElevatorConstants.LIFT_POS_HIGH_CHAMBER) {
+                return Commands.defer(SCORE_HIGH_CHAMBER_COMMAND, elevator.get());
             } else {
-                return Commands.defer(EJECT_COMMAND, elevator);
+                return Commands.defer(EJECT_COMMAND, elevator.get());
             }
         });
 
         RELEASE_COMMAND = Commands.deferredProxy(() -> {
-            if (elevator.getScoreType() == Elevator.ScoreType.SAMPLE) {
-                return Commands.defer(RETRACT_COMMAND, elevator);
+            if (elevator.get().getScoreType() == Elevator.ScoreType.SAMPLE) {
+                return Commands.defer(RETRACT_COMMAND, elevator.get());
             } else {
                 return Commands.none();
             }
