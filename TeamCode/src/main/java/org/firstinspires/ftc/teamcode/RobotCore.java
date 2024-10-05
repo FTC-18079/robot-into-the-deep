@@ -17,10 +17,11 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.chassis.Chassis;
 import org.firstinspires.ftc.teamcode.chassis.commands.TeleOpDriveCommand;
 import org.firstinspires.ftc.teamcode.collector.Collector;
-import org.firstinspires.ftc.teamcode.collector.CollectorConstants;
+import org.firstinspires.ftc.teamcode.elevator.Elevator;
+import org.firstinspires.ftc.teamcode.elevator.commands.ElevatorCommands;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
-import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
+import org.firstinspires.ftc.teamcode.util.commands.Commands;
 import org.firstinspires.ftc.teamcode.vision.ATVision;
 
 @Config
@@ -35,6 +36,7 @@ public class RobotCore extends Robot {
     // Subsystems
     Chassis chassis;
     Collector collector;
+    Elevator elevator;
 
     // Commands
     TeleOpDriveCommand driveCommand;
@@ -92,7 +94,8 @@ public class RobotCore extends Robot {
     public void initSubsystems() {
         chassis = Chassis.getInstance();
         collector = Collector.getInstance();
-        register(chassis, collector);
+        elevator = Elevator.getInstance();
+        register(chassis, collector, elevator);
 
         telemetry.addData("Status", "Robot initialized, ready to enable");
         telemetry.update();
@@ -104,6 +107,11 @@ public class RobotCore extends Robot {
         switch (type) {
             case TELEOP:
                 chassis.setPosition(RobotGlobal.robotPose);
+                schedule(Commands.sequence(
+                        Commands.runOnce(elevator::openClaw, elevator),
+                        Commands.runOnce(elevator::openDoor, elevator),
+                        Commands.runOnce(elevator::returnBucket, elevator)
+                ));
                 chassis.startTeleopDrive();
                 setDriveControls();
                 break;
@@ -126,6 +134,25 @@ public class RobotCore extends Robot {
                 .whenPressed(chassis::resetHeading);
         driveController.getGamepadButton(GamepadKeys.Button.B)
                 .whenPressed(chassis::toggleRobotCentric);
+
+        // Scoring buttons
+        manipController.getGamepadButton(GamepadKeys.Button.A)
+                .whenPressed(ElevatorCommands.SCORE_COMMAND)
+                .whenReleased(ElevatorCommands.RELEASE_COMMAND);
+        manipController.getGamepadButton(GamepadKeys.Button.B)
+                .whenPressed(elevator::closeClaw);
+
+        // Elevator position buttons
+        manipController.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
+                .whenPressed(elevator::toRest);
+        manipController.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
+                .whenPressed(elevator::toLow);
+        manipController.getGamepadButton(GamepadKeys.Button.DPAD_UP)
+                .whenPressed(elevator::toHigh);
+
+        // Toggle game piece types
+        manipController.getGamepadButton(GamepadKeys.Button.X)
+                .whenPressed(elevator::toggleScoreType);
 
         // Intake control
         new Trigger(() -> manipController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > TRIGGER_DEADZONE)
@@ -167,6 +194,7 @@ public class RobotCore extends Robot {
         CommandScheduler.getInstance().run();
 
         double loop = System.nanoTime();
+        telemetry.addLine();
         telemetry.addData("AprilTag FPS", atVision.getFPS());
         telemetry.addData("hz", 1000000000 / (loop - loopTime));
         telemetry.addData("Runtime", endTime == 0 ? timer.seconds() : endTime);
