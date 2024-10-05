@@ -30,6 +30,14 @@ public class RobotMap {
     public DcMotorEx LEFT_SLIDE;
     public DcMotorEx RIGHT_SLIDE;
 
+    // Elevator
+    public DcMotorEx ELEVATOR;
+
+    // Scoring
+    public Servo CLAW;
+    public Servo BUCKET;
+    public Servo DOOR;
+
     // Intake
     public CRServo INTAKE;
     public Servo DEPLOY;
@@ -56,6 +64,12 @@ public class RobotMap {
 
         LEFT_SLIDE = hardwareMap.get(DcMotorEx.class, "leftSlide");
         RIGHT_SLIDE = hardwareMap.get(DcMotorEx.class, "rightSlide");
+
+        ELEVATOR = hardwareMap.get(DcMotorEx.class, "elevator");
+
+        CLAW = hardwareMap.get(Servo.class, "claw");
+        BUCKET = hardwareMap.get(Servo.class, "bucket");
+        DOOR = hardwareMap.get(Servo.class, "door");
 
         INTAKE = hardwareMap.get(CRServo.class, "intake");
         DEPLOY = hardwareMap.get(Servo.class, "deploy");

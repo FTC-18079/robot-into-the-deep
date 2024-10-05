@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.util;
+package org.firstinspires.ftc.teamcode.util.commands;
 
 import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.ConditionalCommand;
@@ -16,8 +16,9 @@ import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.command.WaitUntilCommand;
 
 import java.util.function.BooleanSupplier;
+import java.util.function.Supplier;
 
-public class CommandFactory {
+public class Commands {
     public static Command none() {
         return new InstantCommand();
     }
@@ -48,8 +49,12 @@ public class CommandFactory {
         return new PrintCommand(message);
     }
 
-    public static Command waitSeconds(long seconds) {
-        return new WaitCommand(seconds);
+    public static Command waitSeconds(double seconds) {
+        return new WaitCommand((long) seconds * 1000);
+    }
+
+    public static Command waitMillis(long millis) {
+        return new WaitCommand(millis);
     }
 
     public static Command waitUntil(BooleanSupplier condition) {
@@ -64,13 +69,13 @@ public class CommandFactory {
 //        return new SelectCommand<>(commands, selector);
 //    }
 
-//    public static Command defer(Supplier<Command> supplier, Set<Subsystem> requirements) {
-//        return new DeferredCommand(supplier, requirements);
-//    }
+    public static Command defer(Supplier<Command> supplier, Subsystem... requirements) {
+        return new DeferredCommand(supplier, requirements);
+    }
 
-//    public static Command deferredProxy(Supplier<Command> supplier) {
-//        return new ProxyCommand(supplier);
-//    }
+    public static Command deferredProxy(Supplier<Command> supplier) {
+        return new ProxyCommand(supplier);
+    }
 
     public static Command sequence(Command... commands) {
         return new SequentialCommandGroup(commands);
@@ -92,7 +97,7 @@ public class CommandFactory {
         return new ParallelDeadlineGroup(deadline, otherCommands);
     }
 
-    private CommandFactory() {
+    private Commands() {
         throw new UnsupportedOperationException("This is a utility class");
     }
 }
