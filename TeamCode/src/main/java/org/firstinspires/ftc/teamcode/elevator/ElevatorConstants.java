@@ -4,7 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 
 @Config
 public class ElevatorConstants {
-    public static double MAX_DELTAV = 600.0;
+    public static double MAX_DELTAV = 700.0;
 
     // Elevator positions
     public static double LIFT_POS_REST = 0.0;
@@ -15,10 +15,10 @@ public class ElevatorConstants {
     public static double LIFT_POS_HIGH_CHAMBER = 1075.0;
     public static double LIFT_POS_HIGH_CHAMBER_SCORE = 750.0;
 
-    public static double POSITION_TOLERANCE = 15.0;
+    public static double POSITION_TOLERANCE = 10.0;
 
     // PID constants
-    public static double kP = 4.0;
+    public static double kP = 5.0;
     public static double kI = 0.0;
     public static double kD = 0.02;
 

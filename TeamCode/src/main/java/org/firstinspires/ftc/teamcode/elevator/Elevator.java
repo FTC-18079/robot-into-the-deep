@@ -144,12 +144,16 @@ public class Elevator extends SubsystemBase {
         // Limit acceleration
         if (Math.abs(deltaV) > ElevatorConstants.MAX_DELTAV && Math.signum(output) == Math.signum(deltaV)) output = Math.signum(deltaV) * ElevatorConstants.MAX_DELTAV + lastOutput;
 
+        // Prevent jittering if we're close enough
+        if (atSetPoint()) output = lastOutput;
+
         // Supply no power if we're at zero
         if (atSetPoint() && targetPos == 0) output = 0.0;
         elevator.setVelocity(output);
 
         telemetry.addLine();
         telemetry.addData("Scoring Element", scoreType);
+        telemetry.addData("Elevator velocity", elevator.getVelocity());
         telemetry.addData("Elevator position", elevator.getCurrentPosition());
     }
 }

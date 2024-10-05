@@ -21,6 +21,7 @@ import org.firstinspires.ftc.teamcode.elevator.Elevator;
 import org.firstinspires.ftc.teamcode.elevator.commands.ElevatorCommands;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
+import org.firstinspires.ftc.teamcode.util.commands.Commands;
 import org.firstinspires.ftc.teamcode.vision.ATVision;
 
 @Config
@@ -106,6 +107,11 @@ public class RobotCore extends Robot {
         switch (type) {
             case TELEOP:
                 chassis.setPosition(RobotGlobal.robotPose);
+                schedule(Commands.sequence(
+                        Commands.runOnce(elevator::openClaw, elevator),
+                        Commands.runOnce(elevator::openDoor, elevator),
+                        Commands.runOnce(elevator::returnBucket, elevator)
+                ));
                 chassis.startTeleopDrive();
                 setDriveControls();
                 break;
@@ -129,20 +135,10 @@ public class RobotCore extends Robot {
         driveController.getGamepadButton(GamepadKeys.Button.B)
                 .whenPressed(chassis::toggleRobotCentric);
 
-        // Scoring button
-//        manipController.getGamepadButton(GamepadKeys.Button.A)
-//                .whenPressed(new ConditionalCommand(
-//                        // If scoring sample
-//                        new ScoreBasketCommand(),
-//                        // If scoring specimen, run both chamber scoring commands together
-//                        // These commands have checks individual for running, so only one will ever actually run at once
-//                        new ScoreHighChamberCommand(),
-//                        () -> elevator.getScoreType() == Elevator.ScoreType.SAMPLE
-//                ));
-
-        // New scoring button with cooler commands
+        // Scoring buttons
         manipController.getGamepadButton(GamepadKeys.Button.A)
-                .whenPressed(ElevatorCommands.SCORE_COMMAND);
+                .whenPressed(ElevatorCommands.SCORE_COMMAND)
+                .whenReleased(ElevatorCommands.RELEASE_COMMAND);
         manipController.getGamepadButton(GamepadKeys.Button.B)
                 .whenPressed(elevator::closeClaw);
 
