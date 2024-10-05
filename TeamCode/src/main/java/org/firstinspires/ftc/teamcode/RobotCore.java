@@ -3,10 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandScheduler;
-import com.arcrobotics.ftclib.command.ConditionalCommand;
-import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.Robot;
-import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -116,7 +113,7 @@ public class RobotCore extends Robot {
                 setDriveControls();
                 break;
             case EMPTY:
-                schedule(new InstantCommand());
+                schedule(Commands.none());
                 break;
         }
     }
@@ -156,29 +153,31 @@ public class RobotCore extends Robot {
 
         // Intake control
         new Trigger(() -> manipController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > TRIGGER_DEADZONE)
-                .whenActive(new ConditionalCommand(
-                        // Manually collect if seeking
-                        new InstantCommand(() -> collector.setCollectorState(Collector.CollectorState.COLLECTING)),
-                        // Eject otherwise
-                        new InstantCommand(() -> collector.setIntakePower(-1.0)).andThen(new WaitCommand(250).andThen(new InstantCommand(() -> collector.setIntakePower(0.0)))),
+                .whenActive(Commands.either(
+                        Commands.runOnce(() -> collector.setCollectorState(Collector.CollectorState.COLLECTING), collector),
+                        Commands.runOnce(collector::out, collector).andThen(Commands.waitMillis(250).andThen(Commands.runOnce(collector::stop, collector))),
                         () -> collector.getCollectorState() == Collector.CollectorState.SEEKING
                 ));
+
+        // Deploy collector
         manipController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
-                .whenPressed(new ConditionalCommand(
-                        new InstantCommand(() -> collector.setCollectorState(Collector.CollectorState.SEEKING)),
-                        new InstantCommand(() -> collector.setCollectorState(Collector.CollectorState.INACTIVE)),
+                .whenPressed(Commands.either(
+                        Commands.runOnce(() -> collector.setCollectorState(Collector.CollectorState.SEEKING), collector),
+                        Commands.runOnce(() -> collector.setCollectorState(Collector.CollectorState.INACTIVE), collector),
                         () -> collector.getCollectorState() == Collector.CollectorState.INACTIVE
                 ));
+
+        // Toggle target color
         manipController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                .whenPressed(new InstantCommand(collector::toggleTargetColor)
+                .whenPressed(Commands.runOnce(collector::toggleTargetColor, collector)
                         // Set gamepad colors cuz cool
-                            .andThen(new ConditionalCommand(
-                                    new ConditionalCommand(
-                                            new InstantCommand(() -> setControllerColors(1, 0, 0)),
-                                            new InstantCommand(() -> setControllerColors(0, 0, 1)),
+                            .andThen(Commands.either(
+                                    Commands.either(
+                                            Commands.runOnce(() -> setControllerColors(1, 0, 0)),
+                                            Commands.runOnce(() -> setControllerColors(0, 0, 1)),
                                             () -> RobotGlobal.alliance == RobotGlobal.Alliance.RED
                                     ),
-                                    new InstantCommand(() -> setControllerColors(1, 1, 0)),
+                                    Commands.runOnce(() -> setControllerColors(1, 1, 0)),
                                     () -> collector.getTargetColor() != Collector.SampleColor.YELLOW
                             )));
 
