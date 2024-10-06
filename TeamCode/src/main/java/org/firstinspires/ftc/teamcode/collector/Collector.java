@@ -78,7 +78,7 @@ public class Collector extends SubsystemBase {
         telemetry = RobotCore.getTelemetry();
 
         setCollectorState(CollectorState.INACTIVE);
-        setIntakePower(0.0);
+        stop();
         targetColor = SampleColor.YELLOW;
         setUpMotors();
     }
@@ -120,8 +120,16 @@ public class Collector extends SubsystemBase {
     }
 
     // Intake control
-    public void setIntakePower(double power) {
-        intake.setPower(power);
+    public void in() {
+        intake.setPower(1.0);
+    }
+
+    public void out() {
+        intake.setPower(-1.0);
+    }
+
+    public void stop() {
+        intake.setPower(0.0);
     }
 
     // Color states
@@ -140,7 +148,7 @@ public class Collector extends SubsystemBase {
         switch (collectorState) {
             case SEEKING:
                 targetPose = CollectorConstants.MAX_SLIDE_POS * 0.80;
-                setIntakePower(0.0);
+                stop();
                 deploy.setPosition(CollectorConstants.DEPLOY_DOWN_POS);
 
                 if (MathUtil.inRange(getCurrentColor(), targetColor.range[0], targetColor.range[1])) {
@@ -152,7 +160,7 @@ public class Collector extends SubsystemBase {
                 break;
             case COLLECTING:
                 targetPose = CollectorConstants.MAX_SLIDE_POS * 0.87;
-                setIntakePower(1.0);
+                in();
                 deploy.setPosition(CollectorConstants.DEPLOY_DOWN_POS);
                 break;
             case INACTIVE:
