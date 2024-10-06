@@ -155,14 +155,17 @@ public class RobotCore extends Robot {
         new Trigger(() -> manipController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > TRIGGER_DEADZONE)
                 .whenActive(Commands.either(
                         Commands.runOnce(() -> collector.setCollectorState(Collector.CollectorState.COLLECTING), collector),
-                        Commands.runOnce(collector::out, collector).andThen(Commands.waitMillis(250).andThen(Commands.runOnce(collector::stop, collector))),
+                        Commands.runOnce(collector::out, collector)
+                                .andThen(Commands.waitMillis(250)
+                                .andThen(Commands.runOnce(collector::stop, collector))
+                                .andThen(Commands.runOnce(elevator::closeDoor, elevator))),
                         () -> collector.getCollectorState() == Collector.CollectorState.SEEKING
                 ));
 
         // Deploy collector
         manipController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                 .whenPressed(Commands.either(
-                        Commands.runOnce(() -> collector.setCollectorState(Collector.CollectorState.SEEKING), collector),
+                        Commands.runOnce(() -> collector.setCollectorState(Collector.CollectorState.SEEKING), collector).andThen(Commands.runOnce(elevator::openDoor, elevator)),
                         Commands.runOnce(() -> collector.setCollectorState(Collector.CollectorState.INACTIVE), collector),
                         () -> collector.getCollectorState() == Collector.CollectorState.INACTIVE
                 ));
