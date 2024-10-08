@@ -1,11 +1,7 @@
 package org.firstinspires.ftc.teamcode.collector;
 
-import android.graphics.Color;
-
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDFController;
-import com.qualcomm.hardware.rev.RevColorSensorV3;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -14,7 +10,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotCore;
 import org.firstinspires.ftc.teamcode.RobotMap;
-import org.firstinspires.ftc.teamcode.util.MathUtil;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 
 
@@ -24,14 +19,15 @@ public class Collector extends SubsystemBase {
     // Hardware
     DcMotorEx leftSlide;
     DcMotorEx rightSlide;
-    CRServo intake;
     Servo deploy;
-    RevColorSensorV3 colorSensor;
+    Servo pivot;
+    Servo intake;
 
     // Control loop
     double targetPose = 0;
     double output = 0;
     double lastOutput = 0.0;
+    double sampleDistance = 0.0;
     PIDFController pidfController = new PIDFController(CollectorConstants.kP, CollectorConstants.kI, CollectorConstants.kD, 0.0);
 
     // States
@@ -39,7 +35,7 @@ public class Collector extends SubsystemBase {
     SampleColor targetColor;
 
     public enum CollectorState {
-        INACTIVE, SEEKING, COLLECTING
+        INACTIVE, TARGETING, COLLECTING
     }
 
     public enum SampleColor {
@@ -70,15 +66,14 @@ public class Collector extends SubsystemBase {
         leftSlide = RobotMap.getInstance().LEFT_SLIDE;
         rightSlide = RobotMap.getInstance().RIGHT_SLIDE;
 
-        intake = RobotMap.getInstance().INTAKE;
         deploy = RobotMap.getInstance().DEPLOY;
-
-        colorSensor = RobotMap.getInstance().COLOR_SENSOR;
+        pivot = RobotMap.getInstance().PIVOT;
+        intake = RobotMap.getInstance().INTAKE;
 
         telemetry = RobotCore.getTelemetry();
 
         setCollectorState(CollectorState.INACTIVE);
-        stop();
+        release();
         targetColor = SampleColor.YELLOW;
         setUpMotors();
     }
@@ -104,12 +99,6 @@ public class Collector extends SubsystemBase {
         return rightSlide.getVelocity();
     }
 
-    public double getCurrentColor() {
-        float[] hsv = new float[3];
-        Color.colorToHSV(colorSensor.getNormalizedColors().toColor(), hsv);
-        return hsv[0];
-    }
-
     // Collector states
     public void setCollectorState(CollectorState collectorState) {
         this.collectorState = collectorState;
@@ -120,16 +109,12 @@ public class Collector extends SubsystemBase {
     }
 
     // Intake control
-    public void in() {
-        intake.setPower(1.0);
+    public void grab() {
+        intake.setPosition(0.0);
     }
 
-    public void out() {
-        intake.setPower(-1.0);
-    }
-
-    public void stop() {
-        intake.setPower(0.0);
+    public void release() {
+        intake.setPosition(0.5);
     }
 
     // Color states
@@ -146,26 +131,18 @@ public class Collector extends SubsystemBase {
     // State machine
     public void stateMachine() {
         switch (collectorState) {
-            case SEEKING:
-                targetPose = CollectorConstants.MAX_SLIDE_POS * 0.80;
-                stop();
-                deploy.setPosition(CollectorConstants.DEPLOY_DOWN_POS);
-
-                if (MathUtil.inRange(getCurrentColor(), targetColor.range[0], targetColor.range[1])) {
-                    setCollectorState(CollectorState.COLLECTING);
-                    RobotCore.rumbleDrive(250);
-                    RobotCore.rumbleManip(250);
-                }
-
-                break;
-            case COLLECTING:
-                targetPose = CollectorConstants.MAX_SLIDE_POS * 0.87;
-                in();
-                deploy.setPosition(CollectorConstants.DEPLOY_DOWN_POS);
-                break;
             case INACTIVE:
                 targetPose = CollectorConstants.MIN_SLIDE_POS;
                 deploy.setPosition(CollectorConstants.DEPLOY_STOW_POS);
+                break;
+            case TARGETING:
+                deploy.setPosition(CollectorConstants.DEPLOY_TARGETING_POS);
+//                sampleDistance = Math.clip(ObjectDetection.getInstance().getSampleDistance());
+                break;
+            case COLLECTING:
+                targetPose = sampleDistance;
+                deploy.setPosition(CollectorConstants.DEPLOY_COLLECTING_POS);
+                pivot.setPosition(0 /* ObjectDetection.getInstance().getSampleAngle() */);
                 break;
         }
     }

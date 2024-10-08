@@ -15,8 +15,10 @@ public class CollectorConstants {
     public static double kI = 0.0;
     public static double kD = 0.1;
 
-    public static double DEPLOY_DOWN_POS = 0.0;
     public static double DEPLOY_STOW_POS = 0.9;
+    public static double DEPLOY_TARGETING_POS = 0.4;
+    public static double DEPLOY_COLLECTING_POS = 0.1;
+    public static double DEPLOY_COLLECT_POS = 0.0;
 
     public static double[] RED_RANGE = {10.0, 35.0};
     public static double[] YELLOW_RANGE = {60.0, 95.0};
