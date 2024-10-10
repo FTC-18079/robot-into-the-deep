@@ -6,10 +6,10 @@ import com.acmerobotics.dashboard.config.Config;
 public class CollectorConstants {
     public static double MAX_DELTAV = 415.0;
 
-    public static int MAX_SLIDE_POS = 1400;
-    public static int MIN_SLIDE_POS = 10;
-    public static int MIN_VELOCITY = 15;
+    public static int SLIDE_MAX_POS = 1400;
+    public static int SLIDE_STOW_POS = 10;
     public static int SLIDE_PASSTHROUGH_POS = 0;
+    public static int MIN_VELOCITY = 15;
     public static int ERROR_TOLERANCE = 20;
 
     public static double kP = 5.15;

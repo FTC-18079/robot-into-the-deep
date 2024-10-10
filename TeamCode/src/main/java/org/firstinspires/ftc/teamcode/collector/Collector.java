@@ -31,12 +31,7 @@ public class Collector extends SubsystemBase {
     PIDFController pidfController = new PIDFController(CollectorConstants.kP, CollectorConstants.kI, CollectorConstants.kD, 0.0);
 
     // States
-    CollectorState collectorState;
     SampleColor targetColor;
-
-    public enum CollectorState {
-        INACTIVE, TARGETING, COLLECTING
-    }
 
     public enum SampleColor {
         NONE(new double[]{0.0, 0.0}),
@@ -72,7 +67,6 @@ public class Collector extends SubsystemBase {
 
         telemetry = RobotCore.getTelemetry();
 
-        setCollectorState(CollectorState.INACTIVE);
         release();
         targetColor = SampleColor.YELLOW;
         setUpMotors();
@@ -91,21 +85,16 @@ public class Collector extends SubsystemBase {
     }
 
     // Getters
+    public double getTargetPose() {
+        return targetPose;
+    }
+
     public int getCurrentPosition() {
         return rightSlide.getCurrentPosition();
     }
 
     public double getCurrentVelocity() {
         return rightSlide.getVelocity();
-    }
-
-    // Collector states
-    public void setCollectorState(CollectorState collectorState) {
-        this.collectorState = collectorState;
-    }
-
-    public CollectorState getCollectorState() {
-        return collectorState;
     }
 
     // Intake control
@@ -115,6 +104,16 @@ public class Collector extends SubsystemBase {
 
     public void release() {
         intake.setPosition(CollectorConstants.INTAKE_RELEASE_POS);
+    }
+
+    // Pivot control
+    public void setPivot(double position) {
+        pivot.setPosition(position);
+    }
+
+    // Deploy control
+    public void setDeploy(double position) {
+        deploy.setPosition(position);
     }
 
     // Color states
@@ -128,29 +127,8 @@ public class Collector extends SubsystemBase {
         return targetColor;
     }
 
-    // State machine
-    public void stateMachine() {
-        switch (collectorState) {
-            case INACTIVE:
-                targetPose = CollectorConstants.MIN_SLIDE_POS;
-                deploy.setPosition(CollectorConstants.DEPLOY_STOW_POS);
-                break;
-            case TARGETING:
-                deploy.setPosition(CollectorConstants.DEPLOY_TARGETING_POS);
-//                sampleDistance = Math.clip(ObjectDetection.getInstance().getSampleDistance());
-                break;
-            case COLLECTING:
-                targetPose = sampleDistance;
-                deploy.setPosition(CollectorConstants.DEPLOY_COLLECTING_POS);
-                pivot.setPosition(0 /* ObjectDetection.getInstance().getSampleAngle() */);
-                break;
-        }
-    }
-
     @Override
     public void periodic() {
-        stateMachine();
-
         lastOutput = output;
         output = pidfController.calculate(rightSlide.getCurrentPosition(), targetPose);
         double deltaV = output - lastOutput;
@@ -164,7 +142,6 @@ public class Collector extends SubsystemBase {
         rightSlide.setVelocity(output);
 
         telemetry.addLine();
-        telemetry.addData("Collector State", collectorState);
         telemetry.addData("Target Color", targetColor);
     }
 }
