@@ -9,8 +9,8 @@ public class ElevatorConstants {
     // Elevator positions
     public static double LIFT_POS_REST = 0.0;
 
-    public static double LIFT_POS_LOW_BASKET = 750.0;
-    public static double LIFT_POS_HIGH_BASKET = 1900.0;
+    public static double LIFT_POS_LOW_BASKET = 550.0;
+    public static double LIFT_POS_HIGH_BASKET = 1700.0;
 
     public static double LIFT_POS_HIGH_CHAMBER = 1075.0;
     public static double LIFT_POS_HIGH_CHAMBER_SCORE = 750.0;
