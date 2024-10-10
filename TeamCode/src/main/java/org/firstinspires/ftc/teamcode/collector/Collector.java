@@ -110,11 +110,11 @@ public class Collector extends SubsystemBase {
 
     // Intake control
     public void grab() {
-        intake.setPosition(0.0);
+        intake.setPosition(CollectorConstants.INTAKE_GRAB_POS);
     }
 
     public void release() {
-        intake.setPosition(0.5);
+        intake.setPosition(CollectorConstants.INTAKE_RELEASE_POS);
     }
 
     // Color states
