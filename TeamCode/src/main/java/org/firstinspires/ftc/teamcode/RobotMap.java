@@ -1,9 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.lynx.LynxModule;
-import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -18,7 +16,6 @@ public class RobotMap {
     // Sensors
     public SparkFunOTOS OTOS;
     public WebcamName APRILTAG_CAMERA;
-    public RevColorSensorV3 COLOR_SENSOR;
 
     // Drive motors
     public DcMotorEx MOTOR_FL;
@@ -38,9 +35,10 @@ public class RobotMap {
     public Servo BUCKET;
     public Servo DOOR;
 
-    // Intake
-    public CRServo INTAKE;
+    // Collector
     public Servo DEPLOY;
+    public Servo PIVOT;
+    public Servo INTAKE;
 
     private static RobotMap instance = null;
 
@@ -55,7 +53,6 @@ public class RobotMap {
     public void init(final HardwareMap hardwareMap) {
         OTOS = hardwareMap.get(SparkFunOTOS.class, "otos");
         APRILTAG_CAMERA = hardwareMap.get(WebcamName.class, "arducam");
-        COLOR_SENSOR = hardwareMap.get(RevColorSensorV3.class, "colorSensor");
 
         MOTOR_FL = hardwareMap.get(DcMotorEx.class, "leftFront");
         MOTOR_FR = hardwareMap.get(DcMotorEx.class, "rightFront");
@@ -71,8 +68,9 @@ public class RobotMap {
         BUCKET = hardwareMap.get(Servo.class, "bucket");
         DOOR = hardwareMap.get(Servo.class, "door");
 
-        INTAKE = hardwareMap.get(CRServo.class, "intake");
         DEPLOY = hardwareMap.get(Servo.class, "deploy");
+        PIVOT = hardwareMap.get(Servo.class, "pivot");
+        INTAKE = hardwareMap.get(Servo.class, "intake");
 
         this.hMap = hardwareMap;
     }

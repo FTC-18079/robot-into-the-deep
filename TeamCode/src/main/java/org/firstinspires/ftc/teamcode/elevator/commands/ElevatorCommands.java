@@ -21,7 +21,7 @@ public class ElevatorCommands {
 
         SCORE_BASKET_COMMAND = () -> Commands.sequence(
                 Commands.runOnce(elevator.get()::scoreBucket),
-                Commands.waitMillis(350),
+                Commands.waitMillis(150),
                 Commands.runOnce(elevator.get()::openDoor)
         );
 
@@ -29,18 +29,19 @@ public class ElevatorCommands {
                 Commands.runOnce(elevator.get()::scoreChamberHigh),
                 Commands.waitUntil(elevator.get()::atSetPoint),
                 Commands.runOnce(elevator.get()::openClaw),
-                Commands.waitMillis(75),
+                Commands.waitMillis(50),
                 Commands.runOnce(elevator.get()::toRest)
         );
 
         RETRACT_COMMAND = () -> Commands.sequence(
-                Commands.runOnce(elevator.get()::returnBucket),
+                Commands.runOnce(elevator.get()::restBucket),
+                Commands.runOnce(elevator.get()::closeDoor),
                 Commands.runOnce(elevator.get()::toRest)
         );
 
         EJECT_COMMAND = () -> Commands.sequence(
                 Commands.runOnce(elevator.get()::openClaw),
-                Commands.waitMillis(75)
+                Commands.waitMillis(50)
         );
     }
 
