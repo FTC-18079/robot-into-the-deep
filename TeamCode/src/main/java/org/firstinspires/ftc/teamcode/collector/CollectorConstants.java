@@ -6,25 +6,28 @@ import com.acmerobotics.dashboard.config.Config;
 public class CollectorConstants {
     public static double MAX_DELTAV = 415.0;
 
+    // Slide poses
     public static int SLIDE_MAX_POS = 1400;
-    public static int SLIDE_STOW_POS = 10;
-    public static int SLIDE_PASSTHROUGH_POS = 0;
+    public static int SLIDE_STOW_POS = 110;
+    public static int SLIDE_PASSTHROUGH_POS = 410;
     public static int MIN_VELOCITY = 15;
-    public static int ERROR_TOLERANCE = 20;
+    public static int ERROR_TOLERANCE = 10;
 
     public static double kP = 5.15;
     public static double kI = 0.0;
     public static double kD = 0.1;
 
-    public static double DEPLOY_STOW_POS = 0.9;
-    public static double DEPLOY_TARGETING_POS = 0.4;
-    public static double DEPLOY_COLLECTING_POS = 0.1;
+    // Deploy poses
+    public static double DEPLOY_STOW_POS = 1.0;
+    public static double DEPLOY_SEEKING_POS = 0.5;
     public static double DEPLOY_COLLECT_POS = 0.0;
 
+    // Pivot poses
     public static double PIVOT_ZERO_POS = 0.0;
     public static double PIVOT_MAX_POS = 1.0;
     public static double PIVOT_PASSTHROUGH_POS = 0.5;
 
+    // Intake poses
     public static double INTAKE_GRAB_POS = 0.55;
     public static double INTAKE_RELEASE_POS = 1.0;
 

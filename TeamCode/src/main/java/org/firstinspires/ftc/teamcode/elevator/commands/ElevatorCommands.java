@@ -34,7 +34,7 @@ public class ElevatorCommands {
         );
 
         RETRACT_COMMAND = () -> Commands.sequence(
-                Commands.runOnce(elevator.get()::returnBucket),
+                Commands.runOnce(elevator.get()::passthroughBucket),
                 Commands.runOnce(elevator.get()::toRest)
         );
 

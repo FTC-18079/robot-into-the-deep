@@ -101,13 +101,19 @@ public class Elevator extends SubsystemBase {
     }
 
     // Bucket poses
-    public void returnBucket() {
+    public void passthroughBucket() {
+        bucket.setPosition(ElevatorConstants.BUCKET_PASSTHROUGH_POS);
+    }
+
+    public void restBucket() {
         bucket.setPosition(ElevatorConstants.BUCKET_REST_POS);
     }
 
     public void scoreBucket() {
         bucket.setPosition(ElevatorConstants.BUCKET_SCORE_POS);
     }
+
+
 
     // Elevator pose setting
     public void toRest() {

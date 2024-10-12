@@ -32,7 +32,7 @@ public class ElevatorConstants {
     public static double DOOR_OPEN_POS = 0.6;
 
     // Bucket positions
-    public static double BUCKET_REST_POS = 0.0;
+    public static double BUCKET_REST_POS = 0.45;
     public static double BUCKET_SCORE_POS = 1.0;
     public static double BUCKET_PASSTHROUGH_POS = 0.0;
 }

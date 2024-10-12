@@ -97,6 +97,23 @@ public class Collector extends SubsystemBase {
         return rightSlide.getVelocity();
     }
 
+    // Extension control
+    public void toRest() {
+        setTargetPose(CollectorConstants.SLIDE_STOW_POS);
+    }
+
+    public void toPassthrough() {
+        setTargetPose(CollectorConstants.SLIDE_PASSTHROUGH_POS);
+    }
+
+    public void setTargetPose(double position) {
+        targetPose = position;
+    }
+
+    public boolean atSetPoint() {
+        return Math.abs(targetPose - getCurrentPosition()) < CollectorConstants.ERROR_TOLERANCE;
+    }
+
     // Intake control
     public void grab() {
         intake.setPosition(CollectorConstants.INTAKE_GRAB_POS);
@@ -112,8 +129,16 @@ public class Collector extends SubsystemBase {
     }
 
     // Deploy control
-    public void setDeploy(double position) {
-        deploy.setPosition(position);
+    public void deploySeek() {
+        deploy.setPosition(CollectorConstants.DEPLOY_SEEKING_POS);
+    }
+
+    public void deployCollect() {
+        deploy.setPosition(CollectorConstants.DEPLOY_COLLECT_POS);
+    }
+
+    public void deployStow() {
+        deploy.setPosition(CollectorConstants.DEPLOY_STOW_POS);
     }
 
     // Color states
@@ -136,7 +161,7 @@ public class Collector extends SubsystemBase {
         // Limit acceleration, but not deceleration.
         // This is done to prevent belt skipping. Deceleration is ignored since the PID loop handles that
         if (Math.abs(deltaV) > CollectorConstants.MAX_DELTAV && Math.signum(output) == Math.signum(deltaV)) output = Math.signum(deltaV) * CollectorConstants.MAX_DELTAV + lastOutput;
-        if (Math.abs(output) < CollectorConstants.MIN_VELOCITY || Math.abs(targetPose - getCurrentPosition()) <= CollectorConstants.ERROR_TOLERANCE) output = 0.0;
+        if (Math.abs(output) < CollectorConstants.MIN_VELOCITY || atSetPoint()) output = 0.0;
 
         leftSlide.setVelocity(output);
         rightSlide.setVelocity(output);

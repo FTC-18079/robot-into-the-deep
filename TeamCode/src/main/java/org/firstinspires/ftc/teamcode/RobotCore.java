@@ -14,6 +14,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.chassis.Chassis;
 import org.firstinspires.ftc.teamcode.chassis.commands.TeleOpDriveCommand;
 import org.firstinspires.ftc.teamcode.collector.Collector;
+import org.firstinspires.ftc.teamcode.collector.commands.CollectorCommands;
 import org.firstinspires.ftc.teamcode.elevator.Elevator;
 import org.firstinspires.ftc.teamcode.elevator.commands.ElevatorCommands;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
@@ -107,7 +108,7 @@ public class RobotCore extends Robot {
                 schedule(Commands.sequence(
                         Commands.runOnce(elevator::openClaw, elevator),
                         Commands.runOnce(elevator::openDoor, elevator),
-                        Commands.runOnce(elevator::returnBucket, elevator)
+                        Commands.runOnce(elevator::passthroughBucket, elevator)
                 ));
                 chassis.startTeleopDrive();
                 setDriveControls();
@@ -153,6 +154,7 @@ public class RobotCore extends Robot {
                 .whenPressed(elevator::toggleScoreType);
 
         // Collector control
+
 //        new Trigger(() -> manipController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > TRIGGER_DEADZONE)
 //                .whenActive(Commands.either(
 //                        Commands.runOnce(() -> collector.setCollectorState(Collector.CollectorState.COLLECTING), collector),
