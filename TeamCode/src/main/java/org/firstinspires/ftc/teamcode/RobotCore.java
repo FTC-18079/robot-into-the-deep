@@ -105,11 +105,6 @@ public class RobotCore extends Robot {
         switch (type) {
             case TELEOP:
                 chassis.setPosition(RobotGlobal.robotPose);
-                schedule(Commands.sequence(
-                        Commands.runOnce(elevator::openClaw, elevator),
-                        Commands.runOnce(elevator::openDoor, elevator),
-                        Commands.runOnce(elevator::passthroughBucket, elevator)
-                ));
                 chassis.startTeleopDrive();
                 setDriveControls();
                 break;
@@ -117,6 +112,13 @@ public class RobotCore extends Robot {
                 schedule(Commands.none());
                 break;
         }
+        // Init servos
+        schedule(Commands.sequence(
+                Commands.runOnce(elevator::closeClaw, elevator),
+                Commands.runOnce(collector::release, collector),
+                Commands.runOnce(elevator::closeDoor, elevator),
+                Commands.runOnce(elevator::restBucket, elevator)
+        ));
     }
 
     public void setDriveControls() {
@@ -154,7 +156,14 @@ public class RobotCore extends Robot {
                 .whenPressed(elevator::toggleScoreType);
 
         // Collector control
-
+        manipController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
+                .whenPressed(CollectorCommands.TO_STOW.get());
+        manipController.getGamepadButton(GamepadKeys.Button.LEFT_STICK_BUTTON)
+                .whenPressed(CollectorCommands.TO_COLLECTING.get());
+        manipController.getGamepadButton(GamepadKeys.Button.RIGHT_STICK_BUTTON)
+                .whenPressed(CollectorCommands.COLLECT.get());
+        manipController.getGamepadButton(GamepadKeys.Button.START)
+                .whenPressed(CollectorCommands.TO_PASSTHROUGH.get());
 //        new Trigger(() -> manipController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > TRIGGER_DEADZONE)
 //                .whenActive(Commands.either(
 //                        Commands.runOnce(() -> collector.setCollectorState(Collector.CollectorState.COLLECTING), collector),

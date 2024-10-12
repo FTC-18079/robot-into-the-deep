@@ -67,7 +67,6 @@ public class Collector extends SubsystemBase {
 
         telemetry = RobotCore.getTelemetry();
 
-        release();
         targetColor = SampleColor.YELLOW;
         setUpMotors();
     }

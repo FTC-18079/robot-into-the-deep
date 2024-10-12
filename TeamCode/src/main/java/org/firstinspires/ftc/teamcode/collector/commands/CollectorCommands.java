@@ -21,9 +21,11 @@ public class CollectorCommands {
 
         TO_STOW = () -> Commands.sequence(
                 Commands.runOnce(elevator.get()::restBucket),
-                Commands.waitMillis(75),
+                Commands.waitMillis(100),
                 Commands.runOnce(() -> collector.get().setPivot(CollectorConstants.PIVOT_PASSTHROUGH_POS)),
-                Commands.runOnce(collector.get()::toRest)
+                Commands.runOnce(collector.get()::toRest),
+                Commands.waitUntil(collector.get()::atSetPoint),
+                Commands.runOnce(collector.get()::deployStow)
         );
 
         TO_COLLECTING = () -> Commands.sequence(
@@ -38,9 +40,9 @@ public class CollectorCommands {
 
         COLLECT = () -> Commands.sequence(
                 Commands.runOnce(collector.get()::deployCollect),
-                Commands.waitMillis(50),
+                Commands.waitMillis(200),
                 Commands.runOnce(collector.get()::grab),
-                Commands.waitMillis(25)
+                Commands.waitMillis(75)
         );
 
         TO_PASSTHROUGH = () -> Commands.sequence(
@@ -49,8 +51,10 @@ public class CollectorCommands {
                 Commands.waitMillis(50),
                 Commands.runOnce(collector.get()::toPassthrough),
                 Commands.waitUntil(collector.get()::atSetPoint),
-                Commands.runOnce(elevator.get()::openDoor),
+                Commands.runOnce(collector.get()::release),
                 Commands.waitMillis(75),
+                Commands.runOnce(elevator.get()::openDoor),
+                Commands.waitMillis(250),
                 Commands.runOnce(elevator.get()::closeDoor),
                 Commands.waitMillis(75)
         );
