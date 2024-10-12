@@ -33,16 +33,17 @@ public class CollectorCommands {
                 Commands.runOnce(() -> collector.get().setTargetPose(1000)),
                 Commands.waitUntil(collector.get()::atSetPoint),
                 Commands.runOnce(collector.get()::deploySeek),
+                Commands.runOnce(collector.get()::release),
                 Commands.waitMillis(50),
                 Commands.runOnce(elevator.get()::passthroughBucket),
-                Commands.runOnce(elevator.get()::closeDoor)
+                Commands.runOnce(elevator.get()::openDoor)
         );
 
         COLLECT = () -> Commands.sequence(
                 Commands.runOnce(collector.get()::deployCollect),
-                Commands.waitMillis(200),
+                Commands.waitMillis(225),
                 Commands.runOnce(collector.get()::grab),
-                Commands.waitMillis(75)
+                Commands.waitMillis(100)
         );
 
         TO_PASSTHROUGH = () -> Commands.sequence(
@@ -53,10 +54,11 @@ public class CollectorCommands {
                 Commands.waitUntil(collector.get()::atSetPoint),
                 Commands.runOnce(collector.get()::release),
                 Commands.waitMillis(75),
-                Commands.runOnce(elevator.get()::openDoor),
-                Commands.waitMillis(250),
-                Commands.runOnce(elevator.get()::closeDoor),
-                Commands.waitMillis(75)
+                Commands.runOnce(elevator.get()::tapBucket),
+                Commands.waitMillis(300),
+                Commands.runOnce(elevator.get()::passthroughBucket),
+                Commands.waitMillis(300),
+                Commands.runOnce(elevator.get()::closeDoor)
         );
     }
 

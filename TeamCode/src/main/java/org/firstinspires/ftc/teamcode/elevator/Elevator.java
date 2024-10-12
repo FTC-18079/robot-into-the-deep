@@ -105,6 +105,10 @@ public class Elevator extends SubsystemBase {
         bucket.setPosition(ElevatorConstants.BUCKET_PASSTHROUGH_POS);
     }
 
+    public void tapBucket() {
+        bucket.setPosition(ElevatorConstants.BUCKET_TAP_POS);
+    }
+
     public void restBucket() {
         bucket.setPosition(ElevatorConstants.BUCKET_REST_POS);
     }

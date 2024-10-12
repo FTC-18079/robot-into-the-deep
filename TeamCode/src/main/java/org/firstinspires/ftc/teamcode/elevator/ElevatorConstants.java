@@ -35,4 +35,5 @@ public class ElevatorConstants {
     public static double BUCKET_REST_POS = 0.45;
     public static double BUCKET_SCORE_POS = 1.0;
     public static double BUCKET_PASSTHROUGH_POS = 0.0;
+    public static double BUCKET_TAP_POS = 0.07;
 }
