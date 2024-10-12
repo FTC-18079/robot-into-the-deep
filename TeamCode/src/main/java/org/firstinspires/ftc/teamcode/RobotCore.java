@@ -14,6 +14,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.chassis.Chassis;
 import org.firstinspires.ftc.teamcode.chassis.commands.TeleOpDriveCommand;
 import org.firstinspires.ftc.teamcode.collector.Collector;
+import org.firstinspires.ftc.teamcode.collector.commands.CollectorCommands;
 import org.firstinspires.ftc.teamcode.elevator.Elevator;
 import org.firstinspires.ftc.teamcode.elevator.commands.ElevatorCommands;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
@@ -104,11 +105,6 @@ public class RobotCore extends Robot {
         switch (type) {
             case TELEOP:
                 chassis.setPosition(RobotGlobal.robotPose);
-                schedule(Commands.sequence(
-                        Commands.runOnce(elevator::openClaw, elevator),
-                        Commands.runOnce(elevator::openDoor, elevator),
-                        Commands.runOnce(elevator::returnBucket, elevator)
-                ));
                 chassis.startTeleopDrive();
                 setDriveControls();
                 break;
@@ -116,6 +112,13 @@ public class RobotCore extends Robot {
                 schedule(Commands.none());
                 break;
         }
+        // Init servos
+        schedule(Commands.sequence(
+                Commands.runOnce(elevator::closeClaw, elevator),
+                Commands.runOnce(collector::release, collector),
+                Commands.runOnce(elevator::closeDoor, elevator),
+                Commands.runOnce(elevator::restBucket, elevator)
+        ));
     }
 
     public void setDriveControls() {
@@ -126,9 +129,10 @@ public class RobotCore extends Robot {
                 () -> responseCurve(driveController.getRightX(), ROTATIONAL_SENSITIVITY)
         );
 
-        // Drive buttons
+        // Reset heading
         driveController.getGamepadButton(GamepadKeys.Button.Y)
                 .whenPressed(chassis::resetHeading);
+        // Toggle drive mode
         driveController.getGamepadButton(GamepadKeys.Button.B)
                 .whenPressed(chassis::toggleRobotCentric);
 
@@ -151,24 +155,32 @@ public class RobotCore extends Robot {
         manipController.getGamepadButton(GamepadKeys.Button.X)
                 .whenPressed(elevator::toggleScoreType);
 
-        // Intake control
-        new Trigger(() -> manipController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > TRIGGER_DEADZONE)
-                .whenActive(Commands.either(
-                        Commands.runOnce(() -> collector.setCollectorState(Collector.CollectorState.COLLECTING), collector),
-                        Commands.runOnce(collector::out, collector)
-                                .andThen(Commands.waitMillis(250)
-                                .andThen(Commands.runOnce(collector::stop, collector))
-                                .andThen(Commands.runOnce(elevator::closeDoor, elevator))),
-                        () -> collector.getCollectorState() == Collector.CollectorState.SEEKING
-                ));
+        // Collector control
+        manipController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
+                .whenPressed(CollectorCommands.TO_STOW.get());
+        manipController.getGamepadButton(GamepadKeys.Button.LEFT_STICK_BUTTON)
+                .whenPressed(CollectorCommands.TO_COLLECTING.get());
+        manipController.getGamepadButton(GamepadKeys.Button.RIGHT_STICK_BUTTON)
+                .whenPressed(CollectorCommands.COLLECT.get());
+        manipController.getGamepadButton(GamepadKeys.Button.START)
+                .whenPressed(CollectorCommands.TO_PASSTHROUGH.get());
+//        new Trigger(() -> manipController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > TRIGGER_DEADZONE)
+//                .whenActive(Commands.either(
+//                        Commands.runOnce(() -> collector.setCollectorState(Collector.CollectorState.COLLECTING), collector),
+//                        Commands.runOnce(collector::out, collector)
+//                                .andThen(Commands.waitMillis(250)
+//                                .andThen(Commands.runOnce(collector::stop, collector))
+//                                .andThen(Commands.runOnce(elevator::closeDoor, elevator))),
+//                        () -> collector.getCollectorState() == Collector.CollectorState.SEEKING
+//                ));
 
         // Deploy collector
-        manipController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
-                .whenPressed(Commands.either(
-                        Commands.runOnce(() -> collector.setCollectorState(Collector.CollectorState.SEEKING), collector).andThen(Commands.runOnce(elevator::openDoor, elevator)),
-                        Commands.runOnce(() -> collector.setCollectorState(Collector.CollectorState.INACTIVE), collector),
-                        () -> collector.getCollectorState() == Collector.CollectorState.INACTIVE
-                ));
+//        manipController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
+//                .whenPressed(Commands.either(
+//                        Commands.runOnce(() -> collector.setCollectorState(Collector.CollectorState.SEEKING), collector).andThen(Commands.runOnce(elevator::openDoor, elevator)),
+//                        Commands.runOnce(() -> collector.setCollectorState(Collector.CollectorState.INACTIVE), collector),
+//                        () -> collector.getCollectorState() == Collector.CollectorState.INACTIVE
+//                ));
 
         // Toggle target color
         manipController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)

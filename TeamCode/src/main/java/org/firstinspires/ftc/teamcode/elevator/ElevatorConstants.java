@@ -9,8 +9,8 @@ public class ElevatorConstants {
     // Elevator positions
     public static double LIFT_POS_REST = 0.0;
 
-    public static double LIFT_POS_LOW_BASKET = 750.0;
-    public static double LIFT_POS_HIGH_BASKET = 1900.0;
+    public static double LIFT_POS_LOW_BASKET = 550.0;
+    public static double LIFT_POS_HIGH_BASKET = 1700.0;
 
     public static double LIFT_POS_HIGH_CHAMBER = 1075.0;
     public static double LIFT_POS_HIGH_CHAMBER_SCORE = 750.0;
@@ -32,6 +32,8 @@ public class ElevatorConstants {
     public static double DOOR_OPEN_POS = 0.6;
 
     // Bucket positions
-    public static double BUCKET_REST_POS = 0.0;
+    public static double BUCKET_REST_POS = 0.45;
     public static double BUCKET_SCORE_POS = 1.0;
+    public static double BUCKET_PASSTHROUGH_POS = 0.0;
+    public static double BUCKET_TAP_POS = 0.07;
 }

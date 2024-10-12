@@ -101,7 +101,15 @@ public class Elevator extends SubsystemBase {
     }
 
     // Bucket poses
-    public void returnBucket() {
+    public void passthroughBucket() {
+        bucket.setPosition(ElevatorConstants.BUCKET_PASSTHROUGH_POS);
+    }
+
+    public void tapBucket() {
+        bucket.setPosition(ElevatorConstants.BUCKET_TAP_POS);
+    }
+
+    public void restBucket() {
         bucket.setPosition(ElevatorConstants.BUCKET_REST_POS);
     }
 
@@ -109,19 +117,19 @@ public class Elevator extends SubsystemBase {
         bucket.setPosition(ElevatorConstants.BUCKET_SCORE_POS);
     }
 
+
+
     // Elevator pose setting
     public void toRest() {
         targetPos = ElevatorConstants.LIFT_POS_REST;
     }
 
     public void toLow() {
-        closeDoor();
         if (scoreType == ScoreType.SAMPLE) targetPos = ElevatorConstants.LIFT_POS_LOW_BASKET;
         else targetPos = ElevatorConstants.LIFT_POS_HIGH_CHAMBER;
     }
 
     public void toHigh() {
-        closeDoor();
         if (scoreType == ScoreType.SAMPLE) targetPos = ElevatorConstants.LIFT_POS_HIGH_BASKET;
         else targetPos = ElevatorConstants.LIFT_POS_HIGH_CHAMBER;
     }
