@@ -2,9 +2,9 @@ package org.firstinspires.ftc.teamcode.collector;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDFController;
+import com.outoftheboxrobotics.photoncore.hardware.servo.PhotonServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotCore;
@@ -19,9 +19,9 @@ public class Collector extends SubsystemBase {
     // Hardware
     SuccessMotor leftSlide;
     SuccessMotor rightSlide;
-    Servo deploy;
-    Servo pivot;
-    Servo intake;
+    PhotonServo deploy;
+    PhotonServo pivot;
+    PhotonServo intake;
 
     // Control loop
     double targetPose = 0;

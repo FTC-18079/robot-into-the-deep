@@ -1,11 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.outoftheboxrobotics.photoncore.hardware.motor.PhotonDcMotor;
+import com.outoftheboxrobotics.photoncore.hardware.servo.PhotonServo;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 
@@ -32,14 +32,14 @@ public class RobotMap {
     public DcMotorEx ELEVATOR;
 
     // Scoring
-    public Servo CLAW;
-    public Servo BUCKET;
-    public Servo DOOR;
+    public PhotonServo CLAW;
+    public PhotonServo BUCKET;
+    public PhotonServo DOOR;
 
     // Collector
-    public Servo DEPLOY;
-    public Servo PIVOT;
-    public Servo INTAKE;
+    public PhotonServo DEPLOY;
+    public PhotonServo PIVOT;
+    public PhotonServo INTAKE;
 
     private static RobotMap instance = null;
 
@@ -67,13 +67,13 @@ public class RobotMap {
 
         ELEVATOR = hardwareMap.get(DcMotorEx.class, "elevator");
 
-        CLAW = hardwareMap.get(Servo.class, "claw");
-        BUCKET = hardwareMap.get(Servo.class, "bucket");
-        DOOR = hardwareMap.get(Servo.class, "door");
+        CLAW = (PhotonServo) hardwareMap.servo.get("claw");
+        BUCKET = (PhotonServo) hardwareMap.servo.get("bucket");
+        DOOR = (PhotonServo) hardwareMap.servo.get("door");
 
-        DEPLOY = hardwareMap.get(Servo.class, "deploy");
-        PIVOT = hardwareMap.get(Servo.class, "pivot");
-        INTAKE = hardwareMap.get(Servo.class, "intake");
+        DEPLOY = (PhotonServo) hardwareMap.servo.get("deploy");
+        PIVOT = (PhotonServo) hardwareMap.servo.get("pivot");
+        INTAKE = (PhotonServo) hardwareMap.servo.get("intake");
 
         for (LynxModule hub : getLynxModules()) {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
