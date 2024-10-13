@@ -17,8 +17,8 @@ import static org.firstinspires.ftc.teamcode.pedroPathing.tuning.FollowerConstan
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.outoftheboxrobotics.photoncore.hardware.motor.PhotonAdvancedDcMotor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
@@ -58,11 +58,12 @@ import java.util.List;
 @Config
 public class Follower {
 
-    private DcMotorEx leftFront;
-    private DcMotorEx leftRear;
-    private DcMotorEx rightFront;
-    private DcMotorEx rightRear;
-    private List<DcMotorEx> motors;
+    private final double TELEOP_MOTOR_THRESHOLD = 0.05;
+    private PhotonAdvancedDcMotor leftFront;
+    private PhotonAdvancedDcMotor leftRear;
+    private PhotonAdvancedDcMotor rightFront;
+    private PhotonAdvancedDcMotor rightRear;
+    private List<PhotonAdvancedDcMotor> motors;
 
     private DriveVectorScaler driveVectorScaler;
 
@@ -156,26 +157,27 @@ public class Follower {
         poseUpdater = new PoseUpdater(new OTOSLocalizer(initialPose));
         setStartingPose(initialPose);
 
-        leftFront = RobotMap.getInstance().MOTOR_FL;
-        leftRear = RobotMap.getInstance().MOTOR_BL;
-        rightRear = RobotMap.getInstance().MOTOR_BR;
-        rightFront = RobotMap.getInstance().MOTOR_FR;
+        leftFront = new PhotonAdvancedDcMotor(RobotMap.getInstance().MOTOR_FL);
+        leftRear = new PhotonAdvancedDcMotor(RobotMap.getInstance().MOTOR_BL);
+        rightRear = new PhotonAdvancedDcMotor(RobotMap.getInstance().MOTOR_BR);
+        rightFront = new PhotonAdvancedDcMotor(RobotMap.getInstance().MOTOR_FR);
 
-        leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
-        leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
-        rightRear.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftFront.getMotor().setDirection(DcMotorSimple.Direction.FORWARD);
+        leftRear.getMotor().setDirection(DcMotorSimple.Direction.REVERSE);
+        rightFront.getMotor().setDirection(DcMotorSimple.Direction.FORWARD);
+        rightRear.getMotor().setDirection(DcMotorSimple.Direction.REVERSE);
 
         motors = Arrays.asList(leftFront, leftRear, rightFront, rightRear);
 
-        for (DcMotorEx motor : motors) {
-            MotorConfigurationType motorConfigurationType = motor.getMotorType().clone();
+        for (PhotonAdvancedDcMotor motor : motors) {
+            motor.setCacheTolerance(0.0);
+            MotorConfigurationType motorConfigurationType = motor.getMotor().getMotorType().clone();
             motorConfigurationType.setAchieveableMaxRPMFraction(1.0);
-            motor.setMotorType(motorConfigurationType);
+            motor.getMotor().setMotorType(motorConfigurationType);
         }
 
-        for (DcMotorEx motor : motors) {
-            motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        for (PhotonAdvancedDcMotor motor : motors) {
+            motor.getMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         }
 
         dashboardPoseTracker = new DashboardPoseTracker(poseUpdater);
@@ -417,8 +419,9 @@ public class Follower {
      */
     public void startTeleopDrive() {
         breakFollowing();
-        for (DcMotorEx m: motors) {
-            m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        for (PhotonAdvancedDcMotor m: motors) {
+            m.setCacheTolerance(TELEOP_MOTOR_THRESHOLD);
+            m.getMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
         teleopDrive = true;
     }
@@ -611,8 +614,8 @@ public class Follower {
      * This resets the PIDFs and stops following the current Path.
      */
     public void breakFollowing() {
-        for (DcMotorEx m : motors) {
-            m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        for (PhotonAdvancedDcMotor m : motors) {
+            m.getMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         }
         teleopDrive = false;
         holdingPosition = false;

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.outoftheboxrobotics.photoncore.hardware.motor.PhotonDcMotor;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -18,10 +19,10 @@ public class RobotMap {
     public WebcamName APRILTAG_CAMERA;
 
     // Drive motors
-    public DcMotorEx MOTOR_FL;
-    public DcMotorEx MOTOR_FR;
-    public DcMotorEx MOTOR_BL;
-    public DcMotorEx MOTOR_BR;
+    public PhotonDcMotor MOTOR_FL;
+    public PhotonDcMotor MOTOR_FR;
+    public PhotonDcMotor MOTOR_BL;
+    public PhotonDcMotor MOTOR_BR;
 
     // Slides
     public DcMotorEx LEFT_SLIDE;
@@ -54,10 +55,10 @@ public class RobotMap {
         OTOS = hardwareMap.get(SparkFunOTOS.class, "otos");
         APRILTAG_CAMERA = hardwareMap.get(WebcamName.class, "arducam");
 
-        MOTOR_FL = hardwareMap.get(DcMotorEx.class, "leftFront");
-        MOTOR_FR = hardwareMap.get(DcMotorEx.class, "rightFront");
-        MOTOR_BL = hardwareMap.get(DcMotorEx.class, "leftBack");
-        MOTOR_BR = hardwareMap.get(DcMotorEx.class, "rightBack");
+        MOTOR_FL = (PhotonDcMotor) hardwareMap.dcMotor.get("leftFront");
+        MOTOR_FR = (PhotonDcMotor) hardwareMap.dcMotor.get("rightFront");
+        MOTOR_BL = (PhotonDcMotor) hardwareMap.dcMotor.get("leftBack");
+        MOTOR_BR = (PhotonDcMotor) hardwareMap.dcMotor.get("rightBack");
 
         LEFT_SLIDE = hardwareMap.get(DcMotorEx.class, "leftSlide");
         RIGHT_SLIDE = hardwareMap.get(DcMotorEx.class, "rightSlide");
