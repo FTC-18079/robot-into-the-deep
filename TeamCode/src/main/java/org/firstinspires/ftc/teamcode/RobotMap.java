@@ -52,6 +52,8 @@ public class RobotMap {
     }
 
     public void init(final HardwareMap hardwareMap) {
+        this.hMap = hardwareMap;
+
         OTOS = hardwareMap.get(SparkFunOTOS.class, "otos");
         APRILTAG_CAMERA = hardwareMap.get(WebcamName.class, "arducam");
 
@@ -73,7 +75,9 @@ public class RobotMap {
         PIVOT = hardwareMap.get(Servo.class, "pivot");
         INTAKE = hardwareMap.get(Servo.class, "intake");
 
-        this.hMap = hardwareMap;
+        for (LynxModule hub : getLynxModules()) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+        }
     }
 
     // Get hubs

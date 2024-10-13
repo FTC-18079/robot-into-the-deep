@@ -6,6 +6,7 @@ import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.Robot;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.arcrobotics.ftclib.command.button.Trigger;
@@ -236,6 +237,10 @@ public class RobotCore extends Robot {
 
     @Override
     public void run() {
+        for (LynxModule hub : RobotMap.getInstance().getLynxModules()) {
+            hub.clearBulkCache();
+        }
+
         CommandScheduler.getInstance().run();
 
         double loop = System.nanoTime();
