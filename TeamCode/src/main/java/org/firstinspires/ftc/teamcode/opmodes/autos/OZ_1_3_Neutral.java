@@ -8,6 +8,7 @@ import static org.firstinspires.ftc.teamcode.util.RobotGlobal.robotPose;
 import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.WaitCommand;
+import com.outoftheboxrobotics.photoncore.Photon;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.RobotCore;
@@ -20,6 +21,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.chassis.commands.FollowPathCommand;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 
+@Photon
 @Autonomous(name = "OZ 1+3 Alliance Samples")
 public class OZ_1_3_Neutral extends AutoTemplate {
     // Poses
