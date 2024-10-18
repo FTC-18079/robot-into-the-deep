@@ -165,9 +165,9 @@ public class Follower {
         setStartingPose(initialPose);
 
         leftFront = RobotMap.getInstance().MOTOR_FL;
-        leftRear = RobotMap.getInstance().MOTOR_FL;
-        rightRear = RobotMap.getInstance().MOTOR_FL;
-        rightFront = RobotMap.getInstance().MOTOR_FL;
+        leftRear = RobotMap.getInstance().MOTOR_BL;
+        rightRear = RobotMap.getInstance().MOTOR_BR;
+        rightFront = RobotMap.getInstance().MOTOR_FR;
 //        leftFront = new PhotonAdvancedDcMotor(RobotMap.getInstance().MOTOR_FL);
 //        leftRear = new PhotonAdvancedDcMotor(RobotMap.getInstance().MOTOR_BL);
 //        rightRear = new PhotonAdvancedDcMotor(RobotMap.getInstance().MOTOR_BR);
