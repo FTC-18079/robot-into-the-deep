@@ -9,19 +9,21 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotCore;
 import org.firstinspires.ftc.teamcode.RobotMap;
 import org.firstinspires.ftc.teamcode.collector.CollectorConstants;
+import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class SampleDetection extends SubsystemBase {
+public class LLVision extends SubsystemBase {
     Limelight3A limelight;
     Telemetry telemetry;
     LLResult result;
     List<LLResultTypes.ColorResult> colorResults;
 
-    private static SampleDetection INSTANCE = null;
+    private static LLVision INSTANCE = null;
 
-    public static SampleDetection getInstance() {
-        if (INSTANCE == null) INSTANCE = new SampleDetection();
+    public static LLVision getInstance() {
+        if (INSTANCE == null) INSTANCE = new LLVision();
         return INSTANCE;
     }
 
@@ -30,7 +32,7 @@ public class SampleDetection extends SubsystemBase {
         INSTANCE = null;
     }
 
-    private SampleDetection() {
+    private LLVision() {
         limelight = RobotMap.getInstance().LIMELIGHT;
         telemetry = RobotCore.getTelemetry();
         result = null;
@@ -71,8 +73,30 @@ public class SampleDetection extends SubsystemBase {
     public double getSampleAngle() {
         if (colorResults == null) return CollectorConstants.PIVOT_PASSTHROUGH_POS;
         List<List<Double>> corners = colorResults.get(0).getTargetCorners();
+        ArrayList<Point> cornerList = new ArrayList<Point>();
+
+        for (int i = 0; i < corners.size(); i ++) {
+            cornerList.add(new Point(corners.get(i).get(0), corners.get(i).get(1), Point.CARTESIAN));
+        }
+
+        Point cornerOne = cornerList.get(getFarthestPointIndex(cornerList));
 
         return 0;
+    }
+
+    private int getFarthestPointIndex(List<Point> list) {
+        double max = 0;
+        int index = 0;
+
+        for (int i = 0; i < list.size(); i++) {
+            double radius = list.get(i).getR();
+            if (radius > max) {
+                max = radius;
+                index = i;
+            }
+        }
+
+        return index;
     }
 
     @Override
