@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.pedroPathing.localization.tuning;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.outoftheboxrobotics.photoncore.Photon;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -27,6 +28,7 @@ import java.util.List;
  * @author Anyi Lin - 10158 Scott's Bots
  * @version 1.0, 5/6/2024
  */
+//@Photon
 @Config
 @TeleOp(group = "Pedro Pathing Tuning", name = "Pedro Localization Test")
 public class LocalizationTest extends OpMode {

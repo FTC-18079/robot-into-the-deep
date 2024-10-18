@@ -6,6 +6,7 @@ import static org.firstinspires.ftc.teamcode.util.RobotGlobal.Alliance.RED;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.outoftheboxrobotics.photoncore.Photon;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -15,6 +16,7 @@ import org.firstinspires.ftc.teamcode.chassis.Chassis;
 import org.firstinspires.ftc.teamcode.pedroPathing.util.Drawing;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 
+//@Photon
 @TeleOp(name = "TeleOp", group = "AAA")
 public class TeleOpMode extends OpMode {
     RobotCore robot;
