@@ -5,6 +5,7 @@ import com.arcrobotics.ftclib.controller.PIDFController;
 import com.outoftheboxrobotics.photoncore.hardware.servo.PhotonServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotCore;
@@ -16,9 +17,12 @@ public class Elevator extends SubsystemBase {
 
     // Hardware
     SuccessMotor elevator;
-    PhotonServo claw;
-    PhotonServo bucket;
-    PhotonServo door;
+//    PhotonServo claw;
+//    PhotonServo bucket;
+//    PhotonServo door;
+    Servo claw;
+    Servo bucket;
+    Servo door;
 
     public enum ScoreType {
         SAMPLE, SPECIMEN
