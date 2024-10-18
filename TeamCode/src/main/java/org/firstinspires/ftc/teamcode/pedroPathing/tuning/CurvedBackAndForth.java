@@ -28,7 +28,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
  * @author Harrison Womack - 10158 Scott's Bots
  * @version 1.0, 3/13/2024
  */
-@Photon
+//@Photon
 @Config
 @Autonomous (name = "Curved Back And Forth", group = "Pedro Autonomous Pathing Tuning")
 public class CurvedBackAndForth extends OpMode {

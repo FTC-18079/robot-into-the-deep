@@ -26,7 +26,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
  * @author Harrison Womack - 10158 Scott's Bots
  * @version 1.0, 3/12/2024
  */
-@Photon
+//@Photon
 @Config
 @Autonomous (name = "Circle", group = "Pedro Autonomous Pathing Tuning")
 public class Circle extends OpMode {

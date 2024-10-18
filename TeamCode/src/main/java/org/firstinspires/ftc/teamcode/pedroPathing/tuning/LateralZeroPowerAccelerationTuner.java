@@ -37,7 +37,7 @@ import java.util.List;
  * @author Harrison Womack - 10158 Scott's Bots
  * @version 1.0, 3/13/2024
  */
-@Photon
+//@Photon
 @Config
 @Autonomous (name = "Lateral Zero Power Acceleration Tuner", group = "Pedro Autonomous Pathing Tuning")
 public class LateralZeroPowerAccelerationTuner extends OpMode {

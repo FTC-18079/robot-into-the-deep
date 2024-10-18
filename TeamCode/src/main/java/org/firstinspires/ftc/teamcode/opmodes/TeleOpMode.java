@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.chassis.Chassis;
 import org.firstinspires.ftc.teamcode.pedroPathing.util.Drawing;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 
-@Photon
+//@Photon
 @TeleOp(name = "TeleOp", group = "AAA")
 public class TeleOpMode extends OpMode {
     RobotCore robot;

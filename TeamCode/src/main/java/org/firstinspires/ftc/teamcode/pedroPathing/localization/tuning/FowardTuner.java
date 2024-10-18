@@ -26,7 +26,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.util.Drawing;
  * @author Anyi Lin - 10158 Scott's Bots
  * @version 1.0, 5/6/2024
  */
-@Photon
+//@Photon
 @Config
 @Autonomous(name = "Forward Localizer Tuner", group = "Pedro Autonomous Pathing Tuning")
 public class FowardTuner extends OpMode {

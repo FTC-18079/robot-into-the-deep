@@ -38,7 +38,7 @@ import java.util.List;
  * @author Harrison Womack - 10158 Scott's Bots
  * @version 1.0, 3/13/2024
  */
-@Photon
+//@Photon
 @Config
 @Autonomous (name = "Forward Velocity Tuner", group = "Pedro Autonomous Pathing Tuning")
 public class ForwardVelocityTuner extends OpMode {
