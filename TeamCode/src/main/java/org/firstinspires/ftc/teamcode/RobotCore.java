@@ -6,6 +6,7 @@ import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.Robot;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.arcrobotics.ftclib.command.button.Trigger;
@@ -51,7 +52,6 @@ public class RobotCore extends Robot {
     // Loop times
     private double loopTime = 0.0;
     private final ElapsedTime timer = new ElapsedTime();
-    private double endTime = 0;
 
     // OpMode type enumerator
     public enum OpModeType {
@@ -203,20 +203,6 @@ public class RobotCore extends Robot {
         return value * Math.pow(Math.abs(value), power - 1);
     }
 
-    @Override
-    public void run() {
-        CommandScheduler.getInstance().run();
-
-        double loop = System.nanoTime();
-        telemetry.addLine();
-        telemetry.addData("AprilTag FPS", atVision.getFPS());
-        telemetry.addData("hz", 1000000000 / (loop - loopTime));
-        telemetry.addData("Runtime", endTime == 0 ? timer.seconds() : endTime);
-        loopTime = loop;
-
-        telemetry.update();
-    }
-
     public static Telemetry getTelemetry() {
         return telemetry;
     }
@@ -249,4 +235,22 @@ public class RobotCore extends Robot {
         return gamepad.gamepad.touchpad;
     }
 
+    @Override
+    public void run() {
+        for (LynxModule hub : RobotMap.getInstance().getLynxModules()) {
+            hub.clearBulkCache();
+        }
+
+        CommandScheduler.getInstance().run();
+
+        double loop = System.nanoTime();
+        telemetry.addLine();
+        telemetry.addData("AprilTag FPS", atVision.getFPS());
+        telemetry.addData("Loop Time", timer.milliseconds());
+        telemetry.addData("hz", 1000000000 / (loop - loopTime));
+        loopTime = loop;
+        timer.reset();
+
+        telemetry.update();
+    }
 }

@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.config.Config;
 @Config
 public class ElevatorConstants {
     public static double MAX_DELTAV = 700.0;
+    public static double VELOCITY_THRESHOLD = 10.0;
 
     // Elevator positions
     public static double LIFT_POS_REST = 0.0;

@@ -2,20 +2,24 @@ package org.firstinspires.ftc.teamcode.elevator;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDFController;
+import com.outoftheboxrobotics.photoncore.hardware.servo.PhotonServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotCore;
 import org.firstinspires.ftc.teamcode.RobotMap;
+import org.firstinspires.ftc.teamcode.util.hardware.SuccessMotor;
 
 public class Elevator extends SubsystemBase {
     Telemetry telemetry;
 
     // Hardware
-    DcMotorEx elevator;
+    SuccessMotor elevator;
+//    PhotonServo claw;
+//    PhotonServo bucket;
+//    PhotonServo door;
     Servo claw;
     Servo bucket;
     Servo door;
@@ -44,7 +48,7 @@ public class Elevator extends SubsystemBase {
     }
 
     private Elevator() {
-        elevator = RobotMap.getInstance().ELEVATOR;
+        elevator = new SuccessMotor(RobotMap.getInstance().ELEVATOR);
         claw = RobotMap.getInstance().CLAW;
         bucket = RobotMap.getInstance().BUCKET;
         door = RobotMap.getInstance().DOOR;
@@ -57,6 +61,8 @@ public class Elevator extends SubsystemBase {
     }
 
     public void setupMotor() {
+        elevator.setVelocityThreshold(ElevatorConstants.VELOCITY_THRESHOLD);
+
         elevator.setDirection(DcMotorSimple.Direction.FORWARD);
         elevator.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         elevator.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

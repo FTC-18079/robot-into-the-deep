@@ -10,7 +10,7 @@ public class CollectorConstants {
     public static int SLIDE_MAX_POS = 1400;
     public static int SLIDE_STOW_POS = 110;
     public static int SLIDE_PASSTHROUGH_POS = 400;
-    public static int MIN_VELOCITY = 15;
+    public static int VELOCITY_THRESHOLD = 15;
     public static int ERROR_TOLERANCE = 10;
 
     public static double kP = 5.15;
