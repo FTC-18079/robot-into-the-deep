@@ -23,7 +23,7 @@ public class LLVision extends SubsystemBase {
     private static LLVision INSTANCE = null;
 
     public static LLVision getInstance() {
-        if (INSTANCE == null) INSTANCE = new LLVision();
+        if (INSTANCE == null) INSTANCE = new LLVision(null);
         return INSTANCE;
     }
 
@@ -32,9 +32,10 @@ public class LLVision extends SubsystemBase {
         INSTANCE = null;
     }
 
-    private LLVision() {
+    public LLVision(Telemetry telemetry) {
         limelight = RobotMap.getInstance().LIMELIGHT;
-        telemetry = RobotCore.getTelemetry();
+        this.telemetry = telemetry;
+//        telemetry = RobotCore.getTelemetry();
         result = null;
         colorResults = null;
 
@@ -61,27 +62,28 @@ public class LLVision extends SubsystemBase {
 
     public void updateResults() {
         result = limelight.getLatestResult();
-        if (result != null) {
-            if (result.isValid()) {
-                colorResults = result.getColorResults();
-            }
-            else colorResults = null;
-        }
-        else colorResults = null;
+        colorResults = result.getColorResults();
+//        if (result != null) {
+//            if (result.isValid()) {
+//                colorResults = result.getColorResults();
+//            }
+//            else colorResults = null;
+//        }
+//        else colorResults = null;
     }
 
     public double getSampleAngle() {
-        if (colorResults == null) return CollectorConstants.PIVOT_PASSTHROUGH_POS;
+        if (colorResults.isEmpty()) return CollectorConstants.PIVOT_PASSTHROUGH_POS;
         List<List<Double>> corners = colorResults.get(0).getTargetCorners();
-        ArrayList<Point> cornerList = new ArrayList<Point>();
 
-        for (int i = 0; i < corners.size(); i ++) {
-            cornerList.add(new Point(corners.get(i).get(0), corners.get(i).get(1), Point.CARTESIAN));
-        }
+        Point corner0 = new Point(corners.get(0).get(0), corners.get(0).get(1), Point.CARTESIAN);
+        Point corner1 = new Point(corners.get(1).get(0), corners.get(1).get(1), Point.CARTESIAN);
 
-        Point cornerOne = cornerList.get(getFarthestPointIndex(cornerList));
+        double angle = Math.toDegrees(Math.atan2(corner1.getY() - corner0.getY(), corner1.getX() - corner0.getX()));
 
-        return 0;
+        angle = (angle + 180) / 360.0;
+
+        return angle;
     }
 
     private int getFarthestPointIndex(List<Point> list) {
@@ -105,7 +107,12 @@ public class LLVision extends SubsystemBase {
 
         telemetry.addLine();
         telemetry.addData("Number of color results", colorResults.size());
-        telemetry.addData("Number of corners", colorResults.size());
-        telemetry.addData("LLResult", "tx: %d, ty: %d", result.getTx(), result.getTy());
+        for (LLResultTypes.ColorResult cr : colorResults) {
+            telemetry.addData("Corner num", cr.getTargetCorners().size());
+            telemetry.addData("Color", "X: %.2f, Y: %.2f", cr.getTargetXDegrees(), cr.getTargetYDegrees());
+        }
+        telemetry.addData("angle", getSampleAngle());
+        telemetry.addData("tx", result.getTx());
+        telemetry.addData("ty", result.getTy());
     }
 }
