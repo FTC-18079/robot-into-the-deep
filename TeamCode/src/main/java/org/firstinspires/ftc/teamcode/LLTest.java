@@ -32,11 +32,18 @@ public class LLTest extends OpMode {
     };
 
     @Override
+    public void init_loop() {
+        telemetry.addData("Is running", limelight.isRunning());
+        telemetry.update();
+    }
+
+    @Override
     public void init() {
+        LLVision.resetInstance();
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 //        RobotMap.getInstance().init(hardwareMap);
         RobotMap.getInstance().LIMELIGHT = hardwareMap.get(Limelight3A.class, "limelight");
-        limelight = new LLVision(telemetry);
+        limelight = LLVision.getInstance();
         limelight.setColorRange(HSV_RANGE_YELLOW);
         pivot = hardwareMap.get(Servo.class, "pivot");
     }
@@ -45,7 +52,7 @@ public class LLTest extends OpMode {
     public void loop() {
         limelight.periodic();
 
-        pos = (limelight.getSampleAngle() / 180.0);
+        pos = limelight.getServoPos();
         pivot.setPosition(pos);
 
         if (gamepad1.dpad_up) limelight.setPipeline(0);
@@ -59,11 +66,8 @@ public class LLTest extends OpMode {
             limelight.setColorRange(HSV_RANGE_YELLOW);
         }
 
+        telemetry.addData("is running", limelight.isRunning());
+        telemetry.addData("Servo Angle", limelight.getServoPos());
         telemetry.update();
-    }
-
-    @Override
-    public void stop() {
-        limelight.stop();
     }
 }

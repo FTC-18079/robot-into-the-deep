@@ -12,23 +12,21 @@ public class LLVision extends SubsystemBase {
     Telemetry telemetry;
     LLResult result;
     double[] pythonOutput;
-    LLResult lastResult;
 
     private static LLVision INSTANCE = null;
 
     public static LLVision getInstance() {
-        if (INSTANCE == null) INSTANCE = new LLVision(null);
+        if (INSTANCE == null) INSTANCE = new LLVision();
         return INSTANCE;
     }
 
     public static void resetInstance() {
-        INSTANCE.stop();
+        if (INSTANCE != null) INSTANCE.stop();
         INSTANCE = null;
     }
 
-    public LLVision(Telemetry telemetry) {
+    private LLVision() {
         limelight = RobotMap.getInstance().LIMELIGHT;
-        this.telemetry = telemetry;
 //        telemetry = RobotCore.getTelemetry();
 
         setPipeline(4);
@@ -65,21 +63,16 @@ public class LLVision extends SubsystemBase {
         return pythonOutput[0];
     }
 
+    public double getServoPos() {
+        return 1 - (getSampleAngle() / 180.0);
+    }
+
+    public boolean isRunning() {
+        return limelight.isRunning();
+    }
+
     @Override
     public void periodic() {
         updateResults();
-
-        telemetry.addLine();
-        telemetry.addData("same?", result.equals(lastResult));
-        telemetry.addData("angle", getSampleAngle());
-        telemetry.addData("time", limelight.getTimeSinceLastUpdate());
-        telemetry.addData("Running?", limelight.isRunning());
-        telemetry.addData("Connected?", limelight.isConnected());
-        telemetry.addData("tx", result.getTx());
-        telemetry.addData("ty", result.getTy());
-        telemetry.addData("LL CPU", limelight.getStatus().getCpu());
-        telemetry.addData("Valid result", result.isValid());
-
-        lastResult = limelight.getLatestResult();
     }
 }
