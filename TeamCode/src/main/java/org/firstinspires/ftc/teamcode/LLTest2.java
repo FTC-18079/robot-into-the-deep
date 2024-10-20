@@ -15,14 +15,11 @@ public class LLTest2 extends OpMode {
 
     @Override
     public void init() {
-        LLVision.resetInstance();
+//        LLVision.resetInstance();
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         RobotMap.getInstance().init(hardwareMap);
         limelight = LLVision.getInstance();
         servo = RobotMap.getInstance().PIVOT;
-
-        limelight.setPipeline(4);
-        limelight.start();
     }
 
     @Override
@@ -33,6 +30,9 @@ public class LLTest2 extends OpMode {
         telemetry.addData("is running", limelight.isRunning());
         telemetry.addData("Servo Angle", limelight.getServoPos());
         telemetry.addData("Sample Angle", limelight.getSampleAngle());
+        telemetry.addData("Result null?", limelight.getResult() == null);
+        telemetry.addData("Color Result exists?", limelight.colorResultExists());
+        telemetry.addData("Result valid?", limelight.getResult().isValid());
         telemetry.update();
     }
 }

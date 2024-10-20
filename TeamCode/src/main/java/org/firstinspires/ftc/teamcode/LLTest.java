@@ -44,7 +44,6 @@ public class LLTest extends OpMode {
 //        RobotMap.getInstance().init(hardwareMap);
         RobotMap.getInstance().LIMELIGHT = hardwareMap.get(Limelight3A.class, "limelight");
         limelight = LLVision.getInstance();
-        limelight.setColorRange(HSV_RANGE_YELLOW);
         pivot = hardwareMap.get(Servo.class, "pivot");
     }
 
@@ -57,14 +56,6 @@ public class LLTest extends OpMode {
 
         if (gamepad1.dpad_up) limelight.setPipeline(0);
         else if (gamepad1.dpad_down) limelight.setPipeline(4);
-
-        if (gamepad1.cross) {
-            limelight.setColorRange(HSV_RANGE_BLUE);
-        } else if (gamepad1.circle) {
-            limelight.setColorRange(HSV_RANGE_RED);
-        } else if (gamepad1.square) {
-            limelight.setColorRange(HSV_RANGE_YELLOW);
-        }
 
         telemetry.addData("is running", limelight.isRunning());
         telemetry.addData("Servo Angle", limelight.getServoPos());
