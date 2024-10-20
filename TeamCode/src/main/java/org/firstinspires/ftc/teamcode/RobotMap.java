@@ -11,6 +11,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 
 import java.util.List;
 
+// TODO: change drive motors back to photon motors
 public class RobotMap {
     private HardwareMap hMap;
 
@@ -24,6 +25,10 @@ public class RobotMap {
     public DcMotorEx MOTOR_FR;
     public DcMotorEx MOTOR_BL;
     public DcMotorEx MOTOR_BR;
+//    public PhotonDcMotor MOTOR_FL;
+//    public PhotonDcMotor MOTOR_FR;
+//    public PhotonDcMotor MOTOR_BL;
+//    public PhotonDcMotor MOTOR_BR;
 
     // Slides
     public DcMotorEx LEFT_SLIDE;
@@ -33,11 +38,17 @@ public class RobotMap {
     public DcMotorEx ELEVATOR;
 
     // Scoring
+//    public PhotonServo CLAW;
+//    public PhotonServo BUCKET;
+//    public PhotonServo DOOR;
     public Servo CLAW;
     public Servo BUCKET;
     public Servo DOOR;
 
     // Collector
+//    public PhotonServo DEPLOY;
+//    public PhotonServo PIVOT;
+//    public PhotonServo INTAKE;
     public Servo DEPLOY;
     public Servo PIVOT;
     public Servo INTAKE;
@@ -53,6 +64,8 @@ public class RobotMap {
     }
 
     public void init(final HardwareMap hardwareMap) {
+        this.hMap = hardwareMap;
+
         OTOS = hardwareMap.get(SparkFunOTOS.class, "otos");
         APRILTAG_CAMERA = hardwareMap.get(WebcamName.class, "arducam");
         LIMELIGHT = hardwareMap.get(Limelight3A.class, "limelight");
@@ -61,21 +74,27 @@ public class RobotMap {
         MOTOR_FR = hardwareMap.get(DcMotorEx.class, "rightFront");
         MOTOR_BL = hardwareMap.get(DcMotorEx.class, "leftBack");
         MOTOR_BR = hardwareMap.get(DcMotorEx.class, "rightBack");
+//        MOTOR_FL = (PhotonDcMotor) hardwareMap.dcMotor.get("leftFront");
+//        MOTOR_FR = (PhotonDcMotor) hardwareMap.dcMotor.get("rightFront");
+//        MOTOR_BL = (PhotonDcMotor) hardwareMap.dcMotor.get("leftBack");
+//        MOTOR_BR = (PhotonDcMotor) hardwareMap.dcMotor.get("rightBack");
 
         LEFT_SLIDE = hardwareMap.get(DcMotorEx.class, "leftSlide");
         RIGHT_SLIDE = hardwareMap.get(DcMotorEx.class, "rightSlide");
 
         ELEVATOR = hardwareMap.get(DcMotorEx.class, "elevator");
 
-        CLAW = hardwareMap.get(Servo.class, "claw");
-        BUCKET = hardwareMap.get(Servo.class, "bucket");
-        DOOR = hardwareMap.get(Servo.class, "door");
+        CLAW = /*(PhotonServo)*/ hardwareMap.servo.get("claw");
+        BUCKET = /*(PhotonServo)*/ hardwareMap.servo.get("bucket");
+        DOOR = /*(PhotonServo)*/ hardwareMap.servo.get("door");
 
-        DEPLOY = hardwareMap.get(Servo.class, "deploy");
-        PIVOT = hardwareMap.get(Servo.class, "pivot");
-        INTAKE = hardwareMap.get(Servo.class, "intake");
+        DEPLOY = /*(PhotonServo)*/ hardwareMap.servo.get("deploy");
+        PIVOT = /*(PhotonServo)*/ hardwareMap.servo.get("pivot");
+        INTAKE = /*(PhotonServo)*/ hardwareMap.servo.get("intake");
 
-        this.hMap = hardwareMap;
+        for (LynxModule hub : getLynxModules()) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+        }
     }
 
     // Get hubs

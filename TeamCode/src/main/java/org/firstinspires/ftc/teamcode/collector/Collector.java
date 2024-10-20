@@ -2,8 +2,8 @@ package org.firstinspires.ftc.teamcode.collector;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDFController;
+import com.outoftheboxrobotics.photoncore.hardware.servo.PhotonServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -11,14 +11,18 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotCore;
 import org.firstinspires.ftc.teamcode.RobotMap;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
+import org.firstinspires.ftc.teamcode.util.hardware.SuccessMotor;
 
 
 public class Collector extends SubsystemBase {
     Telemetry telemetry;
 
     // Hardware
-    DcMotorEx leftSlide;
-    DcMotorEx rightSlide;
+    SuccessMotor leftSlide;
+    SuccessMotor rightSlide;
+//    PhotonServo deploy;
+//    PhotonServo pivot;
+//    PhotonServo intake;
     Servo deploy;
     Servo pivot;
     Servo intake;
@@ -58,8 +62,8 @@ public class Collector extends SubsystemBase {
     }
 
     private Collector() {
-        leftSlide = RobotMap.getInstance().LEFT_SLIDE;
-        rightSlide = RobotMap.getInstance().RIGHT_SLIDE;
+        leftSlide = new SuccessMotor(RobotMap.getInstance().LEFT_SLIDE);
+        rightSlide = new SuccessMotor(RobotMap.getInstance().RIGHT_SLIDE);
 
         deploy = RobotMap.getInstance().DEPLOY;
         pivot = RobotMap.getInstance().PIVOT;
@@ -72,6 +76,9 @@ public class Collector extends SubsystemBase {
     }
 
     public void setUpMotors() {
+        rightSlide.setVelocityThreshold(CollectorConstants.VELOCITY_THRESHOLD);
+        leftSlide.setVelocityThreshold(CollectorConstants.VELOCITY_THRESHOLD);
+
         rightSlide.setDirection(DcMotorSimple.Direction.FORWARD);
         rightSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -160,7 +167,6 @@ public class Collector extends SubsystemBase {
         // Limit acceleration, but not deceleration.
         // This is done to prevent belt skipping. Deceleration is ignored since the PID loop handles that
         if (Math.abs(deltaV) > CollectorConstants.MAX_DELTAV && Math.signum(output) == Math.signum(deltaV)) output = Math.signum(deltaV) * CollectorConstants.MAX_DELTAV + lastOutput;
-        if (Math.abs(output) < CollectorConstants.MIN_VELOCITY || atSetPoint()) output = 0.0;
 
         leftSlide.setVelocity(output);
         rightSlide.setVelocity(output);
