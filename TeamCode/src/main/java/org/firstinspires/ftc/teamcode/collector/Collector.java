@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.RobotMap;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 import org.firstinspires.ftc.teamcode.util.hardware.SuccessMotor;
 import org.firstinspires.ftc.teamcode.util.hardware.SuccessServo;
-
+import org.firstinspires.ftc.teamcode.vision.LLVision;
 
 public class Collector extends SubsystemBase {
     Telemetry telemetry;
@@ -32,7 +32,6 @@ public class Collector extends SubsystemBase {
     double targetPose = 0;
     double output = 0;
     double lastOutput = 0.0;
-    double sampleDistance = 0.0;
     PIDFController pidfController = new PIDFController(CollectorConstants.kP, CollectorConstants.kI, CollectorConstants.kD, 0.0);
 
     // States
@@ -161,6 +160,10 @@ public class Collector extends SubsystemBase {
 
     @Override
     public void periodic() {
+        if (targetPose == CollectorConstants.SLIDE_COLLECTING_POS) {
+            pivot.setPosition(LLVision.getInstance().getServoPos());
+        }
+
         lastOutput = output;
         output = pidfController.calculate(rightSlide.getCurrentPosition(), targetPose);
         double deltaV = output - lastOutput;

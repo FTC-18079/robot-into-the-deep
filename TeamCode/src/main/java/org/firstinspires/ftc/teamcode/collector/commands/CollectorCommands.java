@@ -14,6 +14,7 @@ public class CollectorCommands {
     public static final Supplier<Command> TO_COLLECTING;
     public static final Supplier<Command> COLLECT;
     public static final Supplier<Command> TO_PASSTHROUGH;
+    public static Command COLLECT_SEQUENCE;
 
     static {
         Supplier<Collector> collector = Collector::getInstance;
@@ -30,7 +31,7 @@ public class CollectorCommands {
 
         TO_COLLECTING = () -> Commands.sequence(
                 // TODO: make a method for going to limelight pose
-                Commands.runOnce(() -> collector.get().setTargetPose(1000)),
+                Commands.runOnce(() -> collector.get().setTargetPose(CollectorConstants.SLIDE_COLLECTING_POS)),
                 Commands.waitUntil(collector.get()::atSetPoint),
                 Commands.runOnce(collector.get()::deploySeek),
                 Commands.runOnce(collector.get()::release),
@@ -40,10 +41,12 @@ public class CollectorCommands {
         );
 
         COLLECT = () -> Commands.sequence(
+                Commands.runOnce(() -> collector.get().setTargetPose(CollectorConstants.SLIDE_COLLECT_POS)),
+                Commands.waitUntil(collector.get()::atSetPoint),
                 Commands.runOnce(collector.get()::deployCollect),
-                Commands.waitMillis(225),
+                Commands.waitMillis(400),
                 Commands.runOnce(collector.get()::grab),
-                Commands.waitMillis(100)
+                Commands.waitMillis(275)
         );
 
         TO_PASSTHROUGH = () -> Commands.sequence(
@@ -53,17 +56,21 @@ public class CollectorCommands {
                 Commands.runOnce(collector.get()::toPassthrough),
                 Commands.waitUntil(collector.get()::atSetPoint),
                 Commands.runOnce(collector.get()::release),
-                Commands.waitMillis(75),
-                Commands.runOnce(elevator.get()::tapBucket),
-                Commands.waitMillis(300),
-                Commands.runOnce(elevator.get()::passthroughBucket),
-                Commands.waitMillis(300),
-                Commands.runOnce(elevator.get()::closeDoor)
+                Commands.waitMillis(250),
+                Commands.runOnce(elevator.get()::closeDoor),
+                Commands.runOnce(elevator.get()::restBucket),
+                Commands.waitMillis(200)
         );
     }
 
     static {
         Supplier<Collector> collector = Collector::getInstance;
         Supplier<Elevator> elevator = Elevator::getInstance;
+
+        COLLECT_SEQUENCE = Commands.deferredProxy(() -> Commands.sequence(
+                Commands.defer(COLLECT, collector.get()),
+                Commands.defer(TO_PASSTHROUGH, collector.get(), elevator.get()),
+                Commands.defer(TO_STOW, collector.get(), elevator.get())
+        ));
     }
 }

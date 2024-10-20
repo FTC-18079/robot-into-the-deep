@@ -6,6 +6,7 @@ import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.RobotCore;
 import org.firstinspires.ftc.teamcode.RobotMap;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.MathFunctions;
@@ -33,7 +34,7 @@ public class LLVision extends SubsystemBase {
 
     private LLVision() {
         limelight = RobotMap.getInstance().LIMELIGHT;
-//        telemetry = RobotCore.getTelemetry();
+        telemetry = RobotCore.getTelemetry();
 
         setPipeline(0);
         start();
@@ -56,6 +57,18 @@ public class LLVision extends SubsystemBase {
      */
     public void setPipeline(int index) {
         limelight.pipelineSwitch(index);
+    }
+
+    public void setYellow() {
+        limelight.pipelineSwitch(0);
+    }
+
+    public void setRed() {
+        limelight.pipelineSwitch(1);
+    }
+
+    public void setBlue() {
+        limelight.pipelineSwitch(2);
     }
 
     /**
@@ -101,6 +114,7 @@ public class LLVision extends SubsystemBase {
             }
         }
 
+        // Get angle based off the longest side length
         Pose pose1;
         Pose pose2;
         if (max == distances[0]) {
@@ -119,11 +133,6 @@ public class LLVision extends SubsystemBase {
 
         double angle = Math.atan((pose1.getY() - pose2.getY()) / (pose1.getX() - pose2.getX()));
 
-        // Rotate angle based on orientation
-//        if (dist0to1 < dist1to2) {
-//            angle -= Math.toRadians(90.0);
-//        }
-
         return Math.toDegrees(angle);
     }
 
@@ -132,7 +141,8 @@ public class LLVision extends SubsystemBase {
      * @return A servo position ranging from 0.0 to 1.0
      */
     public double getServoPos() {
-        return (getSampleAngle() / 180) + 0.5;
+        // Convert the angle to a servo position
+        return 1 - (getSampleAngle() / 180 + 0.5);
     }
 
     public LLResult getResult() {
