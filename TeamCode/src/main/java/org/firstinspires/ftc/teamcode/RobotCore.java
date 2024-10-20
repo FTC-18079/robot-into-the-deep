@@ -165,7 +165,7 @@ public class RobotCore extends Robot {
                 .whenActive(Commands.either(
                         Commands.deferredProxy(() -> CollectorCommands.COLLECT_SEQUENCE),
                         new InstantCommand(),
-                        () -> (collector.atSetPoint() && collector.getTargetPose() == CollectorConstants.SLIDE_COLLECTING_POS)
+                        () -> (collector.atSetPoint() && collector.getState() == Collector.CollectorState.COLLECTING)
                 ));
 
         // Toggle target color

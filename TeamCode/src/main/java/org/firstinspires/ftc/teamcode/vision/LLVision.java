@@ -158,7 +158,7 @@ public class LLVision extends SubsystemBase {
 
     public double getSampleTy() {
         if (colorResults.isEmpty()) return 0.0;
-        return colorResults.get(0).getTargetYPixels();
+        return colorResults.get(0).getTargetYDegrees();
     }
 
     /**

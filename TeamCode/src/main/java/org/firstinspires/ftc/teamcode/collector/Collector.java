@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotCore;
 import org.firstinspires.ftc.teamcode.RobotMap;
+import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.MathFunctions;
 import org.firstinspires.ftc.teamcode.util.hardware.SuccessMotor;
 import org.firstinspires.ftc.teamcode.util.hardware.SuccessServo;
 import org.firstinspires.ftc.teamcode.vision.LLVision;
@@ -141,19 +142,23 @@ public class Collector extends SubsystemBase {
         deploy.setPosition(CollectorConstants.DEPLOY_STOW_POS);
     }
 
+    public void toCollect() {
+        double pos = getCurrentPosition();
+        targetPose = pos - CollectorConstants.SLIDE_COLLECT_DISPLACEMENT;
+    }
+
     public void stateMachine() {
         switch (state) {
             case STOW:
             case PASSTHROUGH:
-                output = pidfController.calculate(rightSlide.getCurrentPosition(), targetPose);
                 pivot.setPosition(CollectorConstants.PIVOT_PASSTHROUGH_POS);
                 break;
             case COLLECTING:
-                output = pidfController.calculate(rightSlide.getCurrentPosition(), targetPose);
+                targetPose -= LLVision.getInstance().getSampleTy();
+                targetPose = MathFunctions.clamp(targetPose, 700, CollectorConstants.SLIDE_MAX_POS);
                 pivot.setPosition(LLVision.getInstance().getServoPos());
                 break;
             case COLLECT:
-                output = pidfController.calculate(rightSlide.getCurrentPosition(), targetPose);
                 break;
         }
     }
@@ -162,6 +167,7 @@ public class Collector extends SubsystemBase {
     public void periodic() {
         lastOutput = output;
         stateMachine();
+        output = pidfController.calculate(getCurrentPosition(), targetPose);
 
         // Limit acceleration, but not deceleration.
         // This is done to prevent belt skipping. Deceleration is ignored since the PID loop handles that
@@ -175,5 +181,6 @@ public class Collector extends SubsystemBase {
 
         telemetry.addLine();
         telemetry.addData("Collector state", state);
+        telemetry.addData("Collector pos", getCurrentPosition());
     }
 }

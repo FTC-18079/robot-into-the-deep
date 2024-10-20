@@ -42,7 +42,7 @@ public class CollectorCommands {
 
         COLLECT = () -> Commands.sequence(
                 Commands.runOnce(() -> collector.get().setState(Collector.CollectorState.COLLECT)),
-                Commands.runOnce(() -> collector.get().setTargetPose(CollectorConstants.SLIDE_COLLECT_POS)), // replace for toCollect
+                Commands.runOnce(collector.get()::toCollect),
                 Commands.waitUntil(collector.get()::atSetPoint),
                 Commands.runOnce(collector.get()::deployCollect),
                 Commands.waitMillis(400),
