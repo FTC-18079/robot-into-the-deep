@@ -184,5 +184,8 @@ public class LLVision extends SubsystemBase {
     @Override
     public void periodic() {
         updateResults();
+
+        telemetry.addLine();
+        telemetry.addData("Target color", targetColor);
     }
 }

@@ -33,8 +33,10 @@ public class Collector extends SubsystemBase {
     double lastOutput = 0.0;
     PIDFController pidfController = new PIDFController(CollectorConstants.kP, CollectorConstants.kI, CollectorConstants.kD, 0.0);
 
-    public enum CollectorState {
+    CollectorState state;
 
+    public enum CollectorState {
+        STOW, COLLECTING, COLLECT, PASSTHROUGH
     }
 
     private static Collector INSTANCE = null;
@@ -59,6 +61,7 @@ public class Collector extends SubsystemBase {
         telemetry = RobotCore.getTelemetry();
 
         setUpMotors();
+        setState(CollectorState.STOW);
     }
 
     public void setUpMotors() {
@@ -89,6 +92,16 @@ public class Collector extends SubsystemBase {
         return rightSlide.getVelocity();
     }
 
+    public CollectorState getState() {
+        return state;
+    }
+
+    // SETTERS
+
+    public void setState(CollectorState state) {
+        this.state = state;
+    }
+
     // Extension control
     public void toRest() {
         setTargetPose(CollectorConstants.SLIDE_STOW_POS);
@@ -115,11 +128,6 @@ public class Collector extends SubsystemBase {
         intake.setPosition(CollectorConstants.INTAKE_RELEASE_POS);
     }
 
-    // Pivot control
-    public void setPivot(double position) {
-        pivot.setPosition(position);
-    }
-
     // Deploy control
     public void deploySeek() {
         deploy.setPosition(CollectorConstants.DEPLOY_SEEKING_POS);
@@ -133,24 +141,39 @@ public class Collector extends SubsystemBase {
         deploy.setPosition(CollectorConstants.DEPLOY_STOW_POS);
     }
 
+    public void stateMachine() {
+        switch (state) {
+            case STOW:
+            case PASSTHROUGH:
+                output = pidfController.calculate(rightSlide.getCurrentPosition(), targetPose);
+                pivot.setPosition(CollectorConstants.PIVOT_PASSTHROUGH_POS);
+                break;
+            case COLLECTING:
+                output = pidfController.calculate(rightSlide.getCurrentPosition(), targetPose);
+                pivot.setPosition(LLVision.getInstance().getServoPos());
+                break;
+            case COLLECT:
+                output = pidfController.calculate(rightSlide.getCurrentPosition(), targetPose);
+                break;
+        }
+    }
+
     @Override
     public void periodic() {
-        if (targetPose == CollectorConstants.SLIDE_COLLECTING_POS) {
-            pivot.setPosition(LLVision.getInstance().getServoPos());
-        }
-
         lastOutput = output;
-        output = pidfController.calculate(rightSlide.getCurrentPosition(), targetPose);
-        double deltaV = output - lastOutput;
+        stateMachine();
 
         // Limit acceleration, but not deceleration.
         // This is done to prevent belt skipping. Deceleration is ignored since the PID loop handles that
+        double deltaV = output - lastOutput;
         if (Math.abs(deltaV) > CollectorConstants.MAX_DELTAV && Math.signum(output) == Math.signum(deltaV)) output = Math.signum(deltaV) * CollectorConstants.MAX_DELTAV + lastOutput;
+
+        if (atSetPoint()) output = 0.0;
 
         leftSlide.setVelocity(output);
         rightSlide.setVelocity(output);
 
         telemetry.addLine();
-        telemetry.addData("Target Color", "");
+        telemetry.addData("Collector state", state);
     }
 }

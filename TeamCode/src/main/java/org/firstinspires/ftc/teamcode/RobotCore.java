@@ -112,6 +112,7 @@ public class RobotCore extends Robot {
                 chassis.setPosition(RobotGlobal.robotPose);
                 chassis.startTeleopDrive();
                 setDriveControls();
+                Commands.runOnce(() -> setControllerColors(1, 1, 0)).andThen(new InstantCommand(llVision::setYellow));
                 break;
             case EMPTY:
                 schedule(Commands.none());
