@@ -57,8 +57,9 @@ public class CollectorCommands {
                 Commands.runOnce(collector.get()::toPassthrough),
                 Commands.waitUntil(collector.get()::atSetPoint),
                 Commands.runOnce(collector.get()::release),
-                Commands.waitMillis(250),
+                Commands.waitMillis(150),
                 Commands.runOnce(elevator.get()::closeDoor),
+                Commands.waitMillis(100),
                 Commands.runOnce(elevator.get()::restBucket),
                 Commands.waitMillis(250)
         );
