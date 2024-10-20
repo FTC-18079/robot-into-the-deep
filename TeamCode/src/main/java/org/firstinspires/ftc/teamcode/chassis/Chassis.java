@@ -78,6 +78,7 @@ public class Chassis extends SubsystemBase {
     @Override
     public void periodic() {
         follower.update();
+        RobotGlobal.robotPose = follower.getPose();
 
         telemetry.addLine();
         telemetry.addData("Robot Centric", isRobotCentric);
