@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.chassis.Chassis;
 import org.firstinspires.ftc.teamcode.collector.Collector;
 import org.firstinspires.ftc.teamcode.elevator.Elevator;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
+import org.firstinspires.ftc.teamcode.vision.LLVision;
 
 @TeleOp(name = "Reset Robot", group = "B")
 public class ResetRobot extends OpMode {
@@ -25,6 +26,7 @@ public class ResetRobot extends OpMode {
         Chassis.resetInstance();
         Collector.resetInstance();
         Elevator.resetInstance();
+        LLVision.resetInstance();
 
         requestOpModeStop();
     }

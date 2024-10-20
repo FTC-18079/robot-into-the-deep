@@ -63,7 +63,7 @@ public class Elevator extends SubsystemBase {
     public void setupMotor() {
         elevator.setVelocityThreshold(ElevatorConstants.VELOCITY_THRESHOLD);
 
-        elevator.setDirection(DcMotorSimple.Direction.FORWARD);
+        elevator.setDirection(DcMotorSimple.Direction.REVERSE);
         elevator.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         elevator.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         elevator.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

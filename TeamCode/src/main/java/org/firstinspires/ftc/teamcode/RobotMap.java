@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.outoftheboxrobotics.photoncore.hardware.motor.PhotonDcMotor;
-import com.outoftheboxrobotics.photoncore.hardware.servo.PhotonServo;
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -19,6 +18,7 @@ public class RobotMap {
     // Sensors
     public SparkFunOTOS OTOS;
     public WebcamName APRILTAG_CAMERA;
+    public Limelight3A LIMELIGHT;
 
     // Drive motors
     public DcMotorEx MOTOR_FL;
@@ -68,6 +68,7 @@ public class RobotMap {
 
         OTOS = hardwareMap.get(SparkFunOTOS.class, "otos");
         APRILTAG_CAMERA = hardwareMap.get(WebcamName.class, "arducam");
+        LIMELIGHT = hardwareMap.get(Limelight3A.class, "limelight");
 
         MOTOR_FL = hardwareMap.get(DcMotorEx.class, "leftFront");
         MOTOR_FR = hardwareMap.get(DcMotorEx.class, "rightFront");

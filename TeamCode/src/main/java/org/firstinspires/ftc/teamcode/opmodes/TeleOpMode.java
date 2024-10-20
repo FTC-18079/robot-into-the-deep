@@ -13,8 +13,12 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.RobotCore;
 import org.firstinspires.ftc.teamcode.RobotMap;
 import org.firstinspires.ftc.teamcode.chassis.Chassis;
+import org.firstinspires.ftc.teamcode.collector.Collector;
+import org.firstinspires.ftc.teamcode.collector.commands.CollectorCommands;
+import org.firstinspires.ftc.teamcode.elevator.Elevator;
 import org.firstinspires.ftc.teamcode.pedroPathing.util.Drawing;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
+import org.firstinspires.ftc.teamcode.util.commands.Commands;
 
 //@Photon
 @TeleOp(name = "TeleOp", group = "AAA")
@@ -28,6 +32,7 @@ public class TeleOpMode extends OpMode {
         Chassis.resetInstance();
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         robot = new RobotCore(RobotCore.OpModeType.TELEOP, telemetry, gamepad1, gamepad2);
+        Chassis.getInstance().setPosition(RobotGlobal.robotPose);
     }
 
     @Override
@@ -50,6 +55,17 @@ public class TeleOpMode extends OpMode {
         telemetry.addData("AprilTag FPS", robot.getFPS());
         telemetry.addData("Status", "Robot initialized, ready to enable");
         telemetry.update();
+    }
+
+    @Override
+    public void start() {
+        robot.schedule(
+                Commands.runOnce(Elevator.getInstance()::closeClaw),
+                Commands.runOnce(Collector.getInstance()::release),
+                Commands.runOnce(Elevator.getInstance()::closeDoor),
+                Commands.runOnce(Elevator.getInstance()::restBucket),
+                CollectorCommands.TO_STOW.get()
+        );
     }
 
     @Override

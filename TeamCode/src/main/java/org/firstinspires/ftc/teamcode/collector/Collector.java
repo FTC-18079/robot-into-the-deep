@@ -10,9 +10,10 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotCore;
 import org.firstinspires.ftc.teamcode.RobotMap;
-import org.firstinspires.ftc.teamcode.util.RobotGlobal;
+import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.MathFunctions;
 import org.firstinspires.ftc.teamcode.util.hardware.SuccessMotor;
-
+import org.firstinspires.ftc.teamcode.util.hardware.SuccessServo;
+import org.firstinspires.ftc.teamcode.vision.LLVision;
 
 public class Collector extends SubsystemBase {
     Telemetry telemetry;
@@ -24,30 +25,19 @@ public class Collector extends SubsystemBase {
 //    PhotonServo pivot;
 //    PhotonServo intake;
     Servo deploy;
-    Servo pivot;
+    SuccessServo pivot;
     Servo intake;
 
     // Control loop
     double targetPose = 0;
     double output = 0;
     double lastOutput = 0.0;
-    double sampleDistance = 0.0;
     PIDFController pidfController = new PIDFController(CollectorConstants.kP, CollectorConstants.kI, CollectorConstants.kD, 0.0);
 
-    // States
-    SampleColor targetColor;
+    CollectorState state;
 
-    public enum SampleColor {
-        NONE(new double[]{0.0, 0.0}),
-        YELLOW(CollectorConstants.YELLOW_RANGE),
-        RED(CollectorConstants.RED_RANGE),
-        BLUE(CollectorConstants.BLUE_RANGE);
-
-        public final double[] range;
-
-        private SampleColor(double[] range) {
-            this.range = range;
-        }
+    public enum CollectorState {
+        STOW, COLLECTING, COLLECT, PASSTHROUGH
     }
 
     private static Collector INSTANCE = null;
@@ -66,13 +56,13 @@ public class Collector extends SubsystemBase {
         rightSlide = new SuccessMotor(RobotMap.getInstance().RIGHT_SLIDE);
 
         deploy = RobotMap.getInstance().DEPLOY;
-        pivot = RobotMap.getInstance().PIVOT;
+        pivot = new SuccessServo(RobotMap.getInstance().PIVOT);
         intake = RobotMap.getInstance().INTAKE;
 
         telemetry = RobotCore.getTelemetry();
 
-        targetColor = SampleColor.YELLOW;
         setUpMotors();
+        setState(CollectorState.STOW);
     }
 
     public void setUpMotors() {
@@ -103,6 +93,16 @@ public class Collector extends SubsystemBase {
         return rightSlide.getVelocity();
     }
 
+    public CollectorState getState() {
+        return state;
+    }
+
+    // SETTERS
+
+    public void setState(CollectorState state) {
+        this.state = state;
+    }
+
     // Extension control
     public void toRest() {
         setTargetPose(CollectorConstants.SLIDE_STOW_POS);
@@ -129,11 +129,6 @@ public class Collector extends SubsystemBase {
         intake.setPosition(CollectorConstants.INTAKE_RELEASE_POS);
     }
 
-    // Pivot control
-    public void setPivot(double position) {
-        pivot.setPosition(position);
-    }
-
     // Deploy control
     public void deploySeek() {
         deploy.setPosition(CollectorConstants.DEPLOY_SEEKING_POS);
@@ -147,31 +142,45 @@ public class Collector extends SubsystemBase {
         deploy.setPosition(CollectorConstants.DEPLOY_STOW_POS);
     }
 
-    // Color states
-    public void toggleTargetColor() {
-        if (targetColor == SampleColor.YELLOW) {
-            targetColor = (RobotGlobal.alliance == RobotGlobal.Alliance.RED) ? SampleColor.RED : SampleColor.BLUE;
-        } else targetColor = SampleColor.YELLOW;
+    public void toCollect() {
+        double pos = getCurrentPosition();
+        targetPose = pos - CollectorConstants.SLIDE_COLLECT_DISPLACEMENT;
     }
 
-    public SampleColor getTargetColor() {
-        return targetColor;
+    public void stateMachine() {
+        switch (state) {
+            case STOW:
+            case PASSTHROUGH:
+                pivot.setPosition(CollectorConstants.PIVOT_PASSTHROUGH_POS);
+                break;
+            case COLLECTING:
+                targetPose -= LLVision.getInstance().getSampleTy();
+                targetPose = MathFunctions.clamp(targetPose, 700, CollectorConstants.SLIDE_MAX_POS);
+                pivot.setPosition(LLVision.getInstance().getServoPos());
+                break;
+            case COLLECT:
+                break;
+        }
     }
 
     @Override
     public void periodic() {
         lastOutput = output;
-        output = pidfController.calculate(rightSlide.getCurrentPosition(), targetPose);
-        double deltaV = output - lastOutput;
+        stateMachine();
+        output = pidfController.calculate(getCurrentPosition(), targetPose);
 
         // Limit acceleration, but not deceleration.
         // This is done to prevent belt skipping. Deceleration is ignored since the PID loop handles that
+        double deltaV = output - lastOutput;
         if (Math.abs(deltaV) > CollectorConstants.MAX_DELTAV && Math.signum(output) == Math.signum(deltaV)) output = Math.signum(deltaV) * CollectorConstants.MAX_DELTAV + lastOutput;
+
+        if (atSetPoint()) output = 0.0;
 
         leftSlide.setVelocity(output);
         rightSlide.setVelocity(output);
 
         telemetry.addLine();
-        telemetry.addData("Target Color", targetColor);
+        telemetry.addData("Collector state", state);
+        telemetry.addData("Collector pos", getCurrentPosition());
     }
 }
