@@ -56,19 +56,21 @@ public class LLVision extends SubsystemBase {
      * @param index The index of the pipeline. Yellow = 0, Red = 1, Blue = 2
      */
     public void setPipeline(int index) {
-        limelight.pipelineSwitch(index);
+        if (!limelight.pipelineSwitch(index)) {
+            setPipeline(index);
+        }
     }
 
     public void setYellow() {
-        limelight.pipelineSwitch(0);
+        setPipeline(0);
     }
 
     public void setRed() {
-        limelight.pipelineSwitch(1);
+        setPipeline(1);
     }
 
     public void setBlue() {
-        limelight.pipelineSwitch(2);
+        setPipeline(2);
     }
 
     /**
@@ -86,7 +88,7 @@ public class LLVision extends SubsystemBase {
      * @return The angle of the detected sample
      */
     public double getSampleAngle() {
-        if (colorResults.isEmpty()) return 90.0;
+        if (colorResults.isEmpty()) return 0.0;
 
         // Get sample corners
         List<List<Double>> corners = colorResults.get(0).getTargetCorners();
