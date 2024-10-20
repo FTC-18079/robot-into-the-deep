@@ -49,10 +49,10 @@ public class RobotCore extends Robot {
     public static double ROTATIONAL_SENSITIVITY = 2.0;
     public static double JOYSTICK_DEADZONE = 0.09;
     public static double TRIGGER_DEADZONE = 0.05;
-    
+
     // Touchpad button
     Trigger touchpadTrigger;
-  
+
     // Loop times
     private double loopTime = 0.0;
     private final ElapsedTime timer = new ElapsedTime();
@@ -165,17 +165,15 @@ public class RobotCore extends Robot {
 
         // Toggle target color
         manipController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                .whenPressed(Commands.runOnce(collector::toggleTargetColor, collector)
-                        // Set gamepad colors cuz cool
-                            .andThen(Commands.either(
-                                    Commands.either(
-                                            Commands.runOnce(() -> setControllerColors(1, 0, 0)).andThen(new InstantCommand(llVision::setRed)),
-                                            Commands.runOnce(() -> setControllerColors(0, 0, 1)).andThen(new InstantCommand(llVision::setBlue)),
-                                            () -> RobotGlobal.alliance == RobotGlobal.Alliance.RED
-                                    ),
-                                    Commands.runOnce(() -> setControllerColors(1, 1, 0)).andThen(new InstantCommand(llVision::setYellow)),
-                                    () -> collector.getTargetColor() != Collector.SampleColor.YELLOW
-                            )));
+                .whenPressed(Commands.either(
+                        Commands.either(
+                                Commands.runOnce(() -> setControllerColors(1, 0, 0)).andThen(new InstantCommand(llVision::setRed)),
+                                Commands.runOnce(() -> setControllerColors(0, 0, 1)).andThen(new InstantCommand(llVision::setBlue)),
+                                () -> RobotGlobal.alliance == RobotGlobal.Alliance.RED
+                        ),
+                        Commands.runOnce(() -> setControllerColors(1, 1, 0)).andThen(new InstantCommand(llVision::setYellow)),
+                        () -> llVision.getTargetColor() == LLVision.SampleColor.YELLOW
+                ));
 
         chassis.setDefaultCommand(driveCommand);
     }

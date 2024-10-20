@@ -33,10 +33,6 @@ public class CollectorConstants {
     public static double INTAKE_GRAB_POS = 0.50;
     public static double INTAKE_RELEASE_POS = 1.0;
 
-    public static double[] RED_RANGE = {10.0, 35.0};
-    public static double[] YELLOW_RANGE = {60.0, 95.0};
-    public static double[] BLUE_RANGE = {215.0, 250.0};
-
     public static double toTicksPerSec(double rpm) {
         return (rpm * 560.0) / 60.0;
     }

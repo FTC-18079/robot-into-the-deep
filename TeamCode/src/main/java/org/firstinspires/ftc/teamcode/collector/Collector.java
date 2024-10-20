@@ -10,7 +10,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotCore;
 import org.firstinspires.ftc.teamcode.RobotMap;
-import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 import org.firstinspires.ftc.teamcode.util.hardware.SuccessMotor;
 import org.firstinspires.ftc.teamcode.util.hardware.SuccessServo;
 import org.firstinspires.ftc.teamcode.vision.LLVision;
@@ -34,20 +33,8 @@ public class Collector extends SubsystemBase {
     double lastOutput = 0.0;
     PIDFController pidfController = new PIDFController(CollectorConstants.kP, CollectorConstants.kI, CollectorConstants.kD, 0.0);
 
-    // States
-    SampleColor targetColor;
+    public enum CollectorState {
 
-    public enum SampleColor {
-        NONE(new double[]{0.0, 0.0}),
-        YELLOW(CollectorConstants.YELLOW_RANGE),
-        RED(CollectorConstants.RED_RANGE),
-        BLUE(CollectorConstants.BLUE_RANGE);
-
-        public final double[] range;
-
-        private SampleColor(double[] range) {
-            this.range = range;
-        }
     }
 
     private static Collector INSTANCE = null;
@@ -71,7 +58,6 @@ public class Collector extends SubsystemBase {
 
         telemetry = RobotCore.getTelemetry();
 
-        targetColor = SampleColor.YELLOW;
         setUpMotors();
     }
 
@@ -147,17 +133,6 @@ public class Collector extends SubsystemBase {
         deploy.setPosition(CollectorConstants.DEPLOY_STOW_POS);
     }
 
-    // Color states
-    public void toggleTargetColor() {
-        if (targetColor == SampleColor.YELLOW) {
-            targetColor = (RobotGlobal.alliance == RobotGlobal.Alliance.RED) ? SampleColor.RED : SampleColor.BLUE;
-        } else targetColor = SampleColor.YELLOW;
-    }
-
-    public SampleColor getTargetColor() {
-        return targetColor;
-    }
-
     @Override
     public void periodic() {
         if (targetPose == CollectorConstants.SLIDE_COLLECTING_POS) {
@@ -176,6 +151,6 @@ public class Collector extends SubsystemBase {
         rightSlide.setVelocity(output);
 
         telemetry.addLine();
-        telemetry.addData("Target Color", targetColor);
+        telemetry.addData("Target Color", "");
     }
 }

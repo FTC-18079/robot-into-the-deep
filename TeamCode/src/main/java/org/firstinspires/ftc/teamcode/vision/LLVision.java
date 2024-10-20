@@ -20,6 +20,8 @@ public class LLVision extends SubsystemBase {
     LLResult result;
     List<LLResultTypes.ColorResult> colorResults;
 
+    SampleColor targetColor;
+
     private static LLVision INSTANCE = null;
 
     public static LLVision getInstance() {
@@ -32,11 +34,24 @@ public class LLVision extends SubsystemBase {
         INSTANCE = null;
     }
 
+    public enum SampleColor {
+        YELLOW(0),
+        RED(1),
+        BLUE(2);
+
+        public final int index;
+
+        private SampleColor(int index) {
+            this.index = index;
+        }
+    }
+
     private LLVision() {
         limelight = RobotMap.getInstance().LIMELIGHT;
         telemetry = RobotCore.getTelemetry();
 
-        setPipeline(0);
+        targetColor = SampleColor.YELLOW;
+        setPipeline();
         start();
     }
 
@@ -51,26 +66,29 @@ public class LLVision extends SubsystemBase {
     }
 
     /**
-     * Switches the limelight's active pipeline to the index
+     * Switches the limelight's pipeline
      *
-     * @param index The index of the pipeline. Yellow = 0, Red = 1, Blue = 2
+     * @param color The target sample color
      */
-    public void setPipeline(int index) {
-        if (!limelight.pipelineSwitch(index)) {
-            setPipeline(index);
+    public void setPipeline() {
+        if (!limelight.pipelineSwitch(targetColor.index)) {
+            setPipeline();
         }
     }
 
     public void setYellow() {
-        setPipeline(0);
+        targetColor = SampleColor.YELLOW;
+        setPipeline();
     }
 
     public void setRed() {
-        setPipeline(1);
+        targetColor = SampleColor.RED;
+        setPipeline();
     }
 
     public void setBlue() {
-        setPipeline(2);
+        targetColor = SampleColor.BLUE;
+        setPipeline();
     }
 
     /**
@@ -149,6 +167,10 @@ public class LLVision extends SubsystemBase {
 
     public LLResult getResult() {
         return result;
+    }
+
+    public SampleColor getTargetColor() {
+        return targetColor;
     }
 
     public boolean colorResultExists() {
