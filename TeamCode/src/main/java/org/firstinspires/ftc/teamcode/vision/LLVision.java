@@ -156,6 +156,11 @@ public class LLVision extends SubsystemBase {
         return Math.toDegrees(angle);
     }
 
+    public double getSampleTy() {
+        if (colorResults.isEmpty()) return 0.0;
+        return colorResults.get(0).getTargetYPixels();
+    }
+
     /**
      * Gets the servo position based off the sample angle
      * @return A servo position ranging from 0.0 to 1.0
@@ -187,5 +192,6 @@ public class LLVision extends SubsystemBase {
 
         telemetry.addLine();
         telemetry.addData("Target color", targetColor);
+        telemetry.addData("Sample ty", getSampleTy());
     }
 }

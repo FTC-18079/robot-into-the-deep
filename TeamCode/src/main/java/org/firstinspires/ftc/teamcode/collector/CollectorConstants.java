@@ -22,7 +22,7 @@ public class CollectorConstants {
     // Deploy poses
     public static double DEPLOY_STOW_POS = 0.99;
     public static double DEPLOY_SEEKING_POS = 0.72;
-    public static double DEPLOY_COLLECT_POS = 0.03;
+    public static double DEPLOY_COLLECT_POS = 0.00;
 
     // Pivot poses
     public static double PIVOT_ZERO_POS = 0.0;

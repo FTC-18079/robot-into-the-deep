@@ -156,7 +156,11 @@ public class RobotCore extends Robot {
 
         // Collector control
         manipController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
-                .whenPressed(CollectorCommands.TO_COLLECTING.get());
+                .whenPressed(Commands.either(
+                        CollectorCommands.TO_COLLECTING.get(),
+                        Commands.runOnce(collector::deployStow).andThen(CollectorCommands.TO_STOW.get()),
+                        () -> collector.getState() == Collector.CollectorState.STOW
+                ));
         new Trigger(() -> manipController.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > TRIGGER_DEADZONE)
                 .whenActive(Commands.either(
                         Commands.deferredProxy(() -> CollectorCommands.COLLECT_SEQUENCE),
