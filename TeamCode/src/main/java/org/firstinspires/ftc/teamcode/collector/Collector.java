@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.RobotCore;
 import org.firstinspires.ftc.teamcode.RobotMap;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 import org.firstinspires.ftc.teamcode.util.hardware.SuccessMotor;
+import org.firstinspires.ftc.teamcode.util.hardware.SuccessServo;
 
 
 public class Collector extends SubsystemBase {
@@ -24,7 +25,7 @@ public class Collector extends SubsystemBase {
 //    PhotonServo pivot;
 //    PhotonServo intake;
     Servo deploy;
-    Servo pivot;
+    SuccessServo pivot;
     Servo intake;
 
     // Control loop
@@ -66,7 +67,7 @@ public class Collector extends SubsystemBase {
         rightSlide = new SuccessMotor(RobotMap.getInstance().RIGHT_SLIDE);
 
         deploy = RobotMap.getInstance().DEPLOY;
-        pivot = RobotMap.getInstance().PIVOT;
+        pivot = new SuccessServo(RobotMap.getInstance().PIVOT);
         intake = RobotMap.getInstance().INTAKE;
 
         telemetry = RobotCore.getTelemetry();

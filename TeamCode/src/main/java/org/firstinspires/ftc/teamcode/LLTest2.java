@@ -6,12 +6,13 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.util.hardware.SuccessServo;
 import org.firstinspires.ftc.teamcode.vision.LLVision;
 
 @TeleOp
 public class LLTest2 extends OpMode {
     LLVision limelight;
-    Servo servo;
+    SuccessServo servo;
 
     @Override
     public void init() {
@@ -19,7 +20,7 @@ public class LLTest2 extends OpMode {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         RobotMap.getInstance().init(hardwareMap);
         limelight = LLVision.getInstance();
-        servo = RobotMap.getInstance().PIVOT;
+        servo = new SuccessServo(RobotMap.getInstance().PIVOT);
     }
 
     @Override
