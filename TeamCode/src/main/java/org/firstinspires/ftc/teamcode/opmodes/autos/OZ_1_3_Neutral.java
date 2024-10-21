@@ -14,18 +14,22 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.RobotCore;
 import org.firstinspires.ftc.teamcode.auto.AutoTemplate;
 import org.firstinspires.ftc.teamcode.chassis.Chassis;
+import org.firstinspires.ftc.teamcode.collector.Collector;
+import org.firstinspires.ftc.teamcode.elevator.Elevator;
+import org.firstinspires.ftc.teamcode.elevator.commands.ElevatorCommands;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierCurve;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.chassis.commands.FollowPathCommand;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
+import org.firstinspires.ftc.teamcode.util.commands.Commands;
 
 @Photon
 @Autonomous(name = "OZ 1+3 Alliance Samples")
 public class OZ_1_3_Neutral extends AutoTemplate {
     // Poses
-    Pose scorePreloadPose = checkAlliance(new Pose(38, 60, Math.toRadians(0)));
+    Pose scorePreloadPose = checkAlliance(new Pose(36, 84, Math.toRadians(0)));
     Pose scoreBasketPose = checkAlliance(BASKET_SCORE_POSE);
     Pose parkPosition;
 
@@ -50,12 +54,10 @@ public class OZ_1_3_Neutral extends AutoTemplate {
     @Override
     protected Command makeAutoSequence() {
         return new WaitCommand(RobotGlobal.delayMs)
+                .andThen(Commands.runOnce(() -> Elevator.getInstance().setScoreType(Elevator.ScoreType.SPECIMEN)))
+                .andThen(Commands.runOnce(Elevator.getInstance()::toHigh))
                 .andThen(new FollowPathCommand(scorePreloadPath))
-                .andThen(new WaitCommand(1000))
-                //.andThen(scorePreload())
-                //.andThen(collect())
-                .andThen(new FollowPathCommand(preloadToBasketPath))
-                //.andThen(scoreBasket())
-                .andThen(new InstantCommand(() -> RobotGlobal.setRobotPose(parkPosition)));
+                .andThen(new WaitCommand(200))
+                .andThen(Commands.deferredProxy(() -> ElevatorCommands.SCORE_COMMAND));
     }
 }

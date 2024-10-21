@@ -13,8 +13,8 @@ public class ElevatorConstants {
     public static double LIFT_POS_LOW_BASKET = 900.0;
     public static double LIFT_POS_HIGH_BASKET = 2450.0;
 
-    public static double LIFT_POS_HIGH_CHAMBER = 1750.0;
-    public static double LIFT_POS_HIGH_CHAMBER_SCORE = 1320.0;
+    public static double LIFT_POS_HIGH_CHAMBER = 1650.0;
+    public static double LIFT_POS_HIGH_CHAMBER_SCORE = 1050.0;
 
     public static double POSITION_TOLERANCE = 20.0;
 

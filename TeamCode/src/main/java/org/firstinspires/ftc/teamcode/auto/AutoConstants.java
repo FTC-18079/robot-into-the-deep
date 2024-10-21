@@ -11,7 +11,7 @@ public class AutoConstants {
     }
 
     // Starting poses
-    public static final Pose OBVZONE_STARTING_POSE = new Pose(8, 60, 0);
+    public static final Pose OBVZONE_STARTING_POSE = new Pose(8, 80, 0);
     public static final Pose CENTER_STARTING_POSE = new Pose(8, 80, 0);
     public static final Pose BASKET_STARTING_POSE = new Pose(8, 108, 0);
 

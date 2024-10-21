@@ -10,6 +10,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.RobotCore;
 import org.firstinspires.ftc.teamcode.RobotMap;
 import org.firstinspires.ftc.teamcode.chassis.Chassis;
+import org.firstinspires.ftc.teamcode.collector.Collector;
+import org.firstinspires.ftc.teamcode.elevator.Elevator;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 
 import static org.firstinspires.ftc.teamcode.auto.AutoConstants.ParkingPose.*;
@@ -56,6 +58,11 @@ public abstract class AutoTemplate extends LinearOpMode {
         telemetry.update();
         if (RobotGlobal.alliance != NONE) robot.schedule(makeAutoSequence()
                 .andThen(new InstantCommand(Chassis.getInstance()::breakFollowing)));
+
+        Elevator.getInstance().closeClaw();
+        Elevator.getInstance().closeDoor();
+        Elevator.getInstance().restBucket();
+        Collector.getInstance().release();
 
         while (opModeInInit()) {
             telemetry.addData("Status", "Initialized, Ready to start");
