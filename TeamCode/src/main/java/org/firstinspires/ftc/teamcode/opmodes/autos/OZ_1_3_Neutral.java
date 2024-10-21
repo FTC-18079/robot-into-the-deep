@@ -25,11 +25,11 @@ import org.firstinspires.ftc.teamcode.chassis.commands.FollowPathCommand;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 import org.firstinspires.ftc.teamcode.util.commands.Commands;
 
-@Photon
+//@Photon
 @Autonomous(name = "OZ 1+3 Alliance Samples")
 public class OZ_1_3_Neutral extends AutoTemplate {
     // Poses
-    Pose scorePreloadPose = checkAlliance(new Pose(36, 84, Math.toRadians(0)));
+    Pose scorePreloadPose = checkAlliance(new Pose(37, 72, Math.toRadians(0)));
     Pose scoreBasketPose = checkAlliance(BASKET_SCORE_POSE);
     Pose parkPosition;
 
@@ -49,6 +49,14 @@ public class OZ_1_3_Neutral extends AutoTemplate {
     @Override
     public void buildPaths() {
         scorePreloadPath = constantHeadingPath(robotPose, scorePreloadPose, robotPose.getHeading());
+    }
+
+    @Override
+    protected void initSequence() {
+        Elevator.getInstance().closeClaw();
+        Elevator.getInstance().closeDoor();
+        Elevator.getInstance().restBucket();
+        Collector.getInstance().release();
     }
 
     @Override

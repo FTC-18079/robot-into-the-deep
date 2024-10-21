@@ -59,10 +59,7 @@ public abstract class AutoTemplate extends LinearOpMode {
         if (RobotGlobal.alliance != NONE) robot.schedule(makeAutoSequence()
                 .andThen(new InstantCommand(Chassis.getInstance()::breakFollowing)));
 
-        Elevator.getInstance().closeClaw();
-        Elevator.getInstance().closeDoor();
-        Elevator.getInstance().restBucket();
-        Collector.getInstance().release();
+        initSequence();
 
         while (opModeInInit()) {
             telemetry.addData("Status", "Initialized, Ready to start");
@@ -85,6 +82,7 @@ public abstract class AutoTemplate extends LinearOpMode {
         }
 
         CommandScheduler.getInstance().cancelAll();
+        CommandScheduler.getInstance().reset();
     }
 
     public void config() {
@@ -135,4 +133,6 @@ public abstract class AutoTemplate extends LinearOpMode {
     protected abstract Command makeAutoSequence();
 
     protected abstract void buildPaths();
+
+    protected abstract void initSequence();
 }
