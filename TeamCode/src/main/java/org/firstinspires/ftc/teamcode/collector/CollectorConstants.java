@@ -11,7 +11,7 @@ public class CollectorConstants {
     public static int SLIDE_STOW_POS = 110;
     public static int SLIDE_COLLECTING_POS = 1300;
     public static int SLIDE_COLLECT_DISPLACEMENT = 400;
-    public static int SLIDE_PASSTHROUGH_POS = 300;
+    public static int SLIDE_PASSTHROUGH_POS = 350;
     public static int VELOCITY_THRESHOLD = 10;
     public static int ERROR_TOLERANCE = 10;
 

@@ -61,7 +61,7 @@ public class CollectorCommands {
                 Commands.runOnce(elevator.get()::closeDoor),
                 Commands.waitMillis(100),
                 Commands.runOnce(elevator.get()::restBucket),
-                Commands.waitMillis(250)
+                Commands.waitMillis(350)
         );
     }
 
