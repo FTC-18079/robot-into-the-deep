@@ -6,15 +6,14 @@ import static org.firstinspires.ftc.teamcode.util.RobotGlobal.parkingPose;
 import static org.firstinspires.ftc.teamcode.util.RobotGlobal.robotPose;
 
 import com.arcrobotics.ftclib.command.Command;
-import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.WaitCommand;
-import com.outoftheboxrobotics.photoncore.Photon;
+import com.arcrobotics.ftclib.command.WaitUntilCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.RobotCore;
 import org.firstinspires.ftc.teamcode.auto.AutoTemplate;
-import org.firstinspires.ftc.teamcode.chassis.Chassis;
 import org.firstinspires.ftc.teamcode.collector.Collector;
+import org.firstinspires.ftc.teamcode.collector.commands.CollectorCommands;
 import org.firstinspires.ftc.teamcode.elevator.Elevator;
 import org.firstinspires.ftc.teamcode.elevator.commands.ElevatorCommands;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
@@ -30,12 +29,14 @@ import org.firstinspires.ftc.teamcode.util.commands.Commands;
 public class OZ_1_3_Neutral extends AutoTemplate {
     // Poses
     Pose scorePreloadPose = checkAlliance(new Pose(37, 72, Math.toRadians(0)));
+    Pose sampleOnePose = checkAlliance(new Pose(20, 120, Math.toRadians(180)));
+    Pose sampleOneControl = checkAlliance(new Pose(22, 98));
     Pose scoreBasketPose = checkAlliance(BASKET_SCORE_POSE);
     Pose parkPosition;
 
     // Paths
     Path scorePreloadPath;
-    Path preloadToBasketPath = new Path(new BezierCurve(new Point(scorePreloadPose), new Point(scoreBasketPose)));
+    Path preloadToCollectPath;
 //    Path preloadToBasketPath = linearHeadingPath(scorePreloadPose, scoreBasketPose, scorePreloadPose.getHeading(), scoreBasketPose.getHeading(), 0.8, new Point(new Pose(23, 86)));
 
     @Override
@@ -49,6 +50,9 @@ public class OZ_1_3_Neutral extends AutoTemplate {
     @Override
     public void buildPaths() {
         scorePreloadPath = constantHeadingPath(robotPose, scorePreloadPose, robotPose.getHeading());
+
+        preloadToCollectPath = new Path(new BezierCurve(new Point(scorePreloadPose), new Point(sampleOneControl), new Point(sampleOnePose)));
+        preloadToCollectPath.setLinearHeadingInterpolation(scorePreloadPose.getHeading(), sampleOnePose.getHeading());
     }
 
     @Override
@@ -66,6 +70,14 @@ public class OZ_1_3_Neutral extends AutoTemplate {
                 .andThen(Commands.runOnce(Elevator.getInstance()::toHigh))
                 .andThen(new FollowPathCommand(scorePreloadPath))
                 .andThen(new WaitCommand(200))
-                .andThen(Commands.deferredProxy(() -> ElevatorCommands.SCORE_COMMAND));
+                .andThen(Commands.deferredProxy(() -> ElevatorCommands.SCORE_COMMAND))
+                .andThen(Commands.parallel(
+                        Commands.runOnce(Collector.getInstance()::deployStow).andThen(CollectorCommands.TO_STOW.get()),
+                        new FollowPathCommand(preloadToCollectPath)
+                ))
+                .andThen(CollectorCommands.TO_COLLECTING.get())
+                .andThen(Commands.waitMillis(200))
+                .andThen(new WaitUntilCommand(() -> Collector.getInstance().atSetPoint() && Collector.getInstance().getState() == Collector.CollectorState.COLLECTING))
+                .andThen(Commands.deferredProxy(() -> CollectorCommands.COLLECT_SEQUENCE));
     }
 }
