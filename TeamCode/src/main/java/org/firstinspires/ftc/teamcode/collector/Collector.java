@@ -147,6 +147,13 @@ public class Collector extends SubsystemBase {
         targetPose = pos - CollectorConstants.SLIDE_COLLECT_DISPLACEMENT;
     }
 
+    public void toTeleop() {
+        targetPose = CollectorConstants.SLIDE_STOW_POS;
+        lastOutput = 0;
+        output = 0;
+        state = CollectorState.STOW;
+    }
+
     public void stateMachine() {
         switch (state) {
             case STOW:
@@ -161,6 +168,10 @@ public class Collector extends SubsystemBase {
             case COLLECT:
                 break;
         }
+    }
+
+    public double getOutput() {
+        return output;
     }
 
     @Override
@@ -182,5 +193,8 @@ public class Collector extends SubsystemBase {
         telemetry.addLine();
         telemetry.addData("Collector state", state);
         telemetry.addData("Collector pos", getCurrentPosition());
+        telemetry.addData("COLLECTOR POS", getCurrentPosition());
+        telemetry.addData("COLLECTOR TARGET POS", getTargetPose());
+        telemetry.addData("COLLECTOR OUTPUT", getOutput());
     }
 }

@@ -30,9 +30,9 @@ public class TeleOpMode extends OpMode {
     public void init() {
         RobotMap.getInstance().init(hardwareMap);
         Chassis.resetInstance();
-        Collector.resetInstance();
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         robot = new RobotCore(RobotCore.OpModeType.TELEOP, telemetry, gamepad1, gamepad2);
+        Collector.getInstance().toTeleop();
         Chassis.getInstance().setPosition(RobotGlobal.robotPose);
     }
 
@@ -55,6 +55,10 @@ public class TeleOpMode extends OpMode {
         telemetry.addData("Alliance", RobotGlobal.alliance);
         telemetry.addData("AprilTag FPS", robot.getFPS());
         telemetry.addData("Status", "Robot initialized, ready to enable");
+
+        telemetry.addData("COLLECTOR POS", Collector.getInstance().getCurrentPosition());
+        telemetry.addData("COLLECTOR TARGET POS", Collector.getInstance().getTargetPose());
+        telemetry.addData("COLLECTOR OUTPUT", Collector.getInstance().getOutput());
         telemetry.update();
     }
 

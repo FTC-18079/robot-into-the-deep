@@ -17,7 +17,7 @@ public class AutoConstants {
 
     // Robot parking poses
     public enum ParkingPose {
-        OBSERVATION_ZONE, SUBMERSIBLE
+        OBSERVATION_ZONE, ASCENT_ZONE
     }
 
     // Scoring poses
@@ -27,27 +27,17 @@ public class AutoConstants {
 
     // Parking poses
     public static final Pose OBVZONE_PARKING_POSE = new Pose(16.2, 12, Math.toRadians(90));
-    public static final Pose SUBMERSIBLE_PARKING_POSE = new Pose(60, 97, Math.toRadians(-90));
+    public static final Pose ASCENT_PARKING_POSE = new Pose(60, 98, Math.toRadians(270));
 
-    // Blue Side Alliance-Specific Element Poses
-    public static final Pose BLUE_LEFT_ALLIANCE_SAMPLE = new Pose(2.5+9.75+10.5, 4*24+1.5);
-    public static final Pose BLUE_MID_ALLIANCE_SAMPLE = new Pose(2.5+9.75, 4*24+1.5);
-    public static final Pose BLUE_RIGHT_ALLIANCE_SAMPLE = new Pose(2.5, 4*24+1.5);
+    // Alliance alliance poses
+    public static final Pose LEFT_ALLIANCE_SAMPLE = new Pose(46, 22.75);
+    public static final Pose MIDDLE_ALLIANCE_SAMPLE = new Pose(46, 12.5);
+    public static final Pose RIGHT_ALLIANCE_SAMPLE = new Pose(46, 2.25);
 
-    // Blue Side Neutral Element Poses
-    public static final Pose BLUE_LEFT_NEUTRAL_SAMPLE = new Pose(144-2.5, 4*24+1.5);
-    public static final Pose BLUE_MID_NEUTRAL_SAMPLE = new Pose(144-2.5-9.75, 4*24+1.5);
-    public static final Pose BLUE_RIGHT_NEUTRAL_SAMPLE = new Pose(144-2.5-9.75-10.5, 4*24+1.5);
-
-    // Red Side Alliance-Specific Element Poses
-    public static final Pose RED_LEFT_ALLIANCE_SAMPLE = new Pose(144-2.5-9.75-10.5, 2*24-2.5);
-    public static final Pose RED_MID_ALLIANCE_SAMPLE = new Pose(144-2.5-9.75, 2*24-2.5);
-    public static final Pose RED_RIGHT_ALLIANCE_SAMPLE = new Pose(144-2.5, 2*24-2.5);
-
-    // Red Side Neutral Element Poses
-    public static final Pose RED_LEFT_NEUTRAL_SAMPLE = new Pose(2.5, 2*24-2.5);
-    public static final Pose RED_MID_NEUTRAL_SAMPLE = new Pose(2.5+9.75, 2*24-2.5);
-    public static final Pose RED_RIGHT_NEUTRAL_SAMPLE = new Pose(2.5+9.75+10.5, 2*24-2.5);
+    // Alliance sample poses
+    public static final Pose LEFT_NEUTRAL_SAMPLE = new Pose(46, 141.75);
+    public static final Pose MIDDLE_NEUTRAL_SAMPLE = new Pose(46, 131.5);
+    public static final Pose RIGHT_NEUTRAL_SAMPLE = new Pose(46, 121.25);
 
     public static Pose checkAlliance(Pose pose) {
         if (RobotGlobal.alliance == RobotGlobal.Alliance.RED) return toRed(pose);
