@@ -32,7 +32,7 @@ public class MeetOneAuto extends AutoTemplate {
     // Poses
     Pose scorePreloadPose = checkAlliance(new Pose(37, 72, Math.toRadians(0)));
     Pose sampleOnePose = checkAlliance(new Pose(65, 120, Math.toRadians(0)));
-    Pose scoreOnePose = checkAlliance(new Pose(10, 120, 0));
+    Pose scoreOnePose = checkAlliance(new Pose(10.5, 120, 0));
     Pose parkPosition;
 
     // Paths
@@ -53,7 +53,7 @@ public class MeetOneAuto extends AutoTemplate {
     public void buildPaths() {
         scorePreloadPath = constantHeadingPath(robotPose, scorePreloadPose, robotPose.getHeading());
 
-        preloadToSampleOnePath = new Path(new BezierCurve(new Point(scorePreloadPose), new Point(17, 121, Point.CARTESIAN), new Point(70, 94, Point.CARTESIAN), new Point(sampleOnePose)));
+        preloadToSampleOnePath = new Path(new BezierCurve(new Point(scorePreloadPose), new Point(17, 125, Point.CARTESIAN), new Point(70, 94, Point.CARTESIAN), new Point(sampleOnePose)));
         preloadToSampleOnePath.setConstantHeadingInterpolation(0);
 
         scoreOnePath = new Path(new BezierLine(new Point(sampleOnePose), new Point(scoreOnePose)));
@@ -88,7 +88,6 @@ public class MeetOneAuto extends AutoTemplate {
                 .andThen(Commands.waitMillis(500))
                 .andThen(new FollowPathCommand(scoreOnePath))
                 .andThen(Commands.waitMillis(500))
-                .andThen(new FollowPathCommand(scoreToParkPath))
-                .andThen(Commands.runOnce(Elevator.getInstance()::scoreBucket));
+                .andThen(new FollowPathCommand(scoreToParkPath));
     }
 }
