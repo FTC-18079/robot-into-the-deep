@@ -7,6 +7,7 @@ import static org.firstinspires.ftc.teamcode.util.RobotGlobal.robotPose;
 
 import com.arcrobotics.ftclib.command.Command;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.RobotCore;
 import org.firstinspires.ftc.teamcode.auto.AutoTemplate;
@@ -24,12 +25,13 @@ import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 import org.firstinspires.ftc.teamcode.util.commands.Commands;
 
 //@Photon
+@Disabled
 @Autonomous(name = "OZ 1+3 Alliance Samples")
 public class OZ_1_3_Neutral extends AutoTemplate {
     // Poses
     Pose scoreBasketPose = checkAlliance(BASKET_SCORE_POSE);
     Pose scorePreloadPose = checkAlliance(new Pose(37, 72, Math.toRadians(0)));
-    Pose sampleOnePose = checkAlliance(new Pose(32, 106, Math.toRadians(45)));
+    Pose sampleOnePose = checkAlliance(new Pose(32, 106, Math.toRadians(225)));
     Pose sampleOneControl = checkAlliance(new Pose(28, 98));
     Pose sampleTwoPose = checkAlliance(new Pose(45, 108.25, Math.toRadians(270)));
     Pose sampleTwoControl = checkAlliance(new Pose(28, 106));
@@ -108,18 +110,26 @@ public class OZ_1_3_Neutral extends AutoTemplate {
                 ))
                 .andThen(Commands.runOnce(() -> Elevator.getInstance().setScoreType(Elevator.ScoreType.SAMPLE)))
                 .andThen(CollectorCommands.TO_COLLECTING.get())
-                .andThen(Commands.waitMillis(1000))
+                .andThen(Commands.waitMillis(300))
                 .andThen(Commands.waitUntil(() -> Collector.getInstance().atSetPoint() && Collector.getInstance().getState() == Collector.CollectorState.COLLECTING))
-                .andThen(Commands.waitMillis(500))
+                .andThen(Commands.waitMillis(200))
                 .andThen(Commands.deferredProxy(() -> CollectorCommands.COLLECT_SEQUENCE))
-                .andThen(Commands.waitMillis(1500))
+                .andThen(Commands.waitMillis(150))
                 .andThen(Commands.runOnce(Elevator.getInstance()::toHigh))
                 .andThen(new FollowPathCommand(collectOneToBasketPath))
                 .andThen(Commands.deferredProxy(() -> ElevatorCommands.SCORE_COMMAND))
-                .andThen(Commands.waitMillis(1000))
+                .andThen(Commands.waitMillis(500))
                 .andThen(Commands.parallel(
                         Commands.deferredProxy(ElevatorCommands.RETRACT_COMMAND),
                         new FollowPathCommand(basketToCollectTwoPath)
-                ));
+                ))
+                .andThen(CollectorCommands.TO_COLLECTING.get())
+                .andThen(Commands.waitMillis(300))
+                .andThen(Commands.waitUntil(() -> Collector.getInstance().atSetPoint() && Collector.getInstance().getState() == Collector.CollectorState.COLLECTING))
+                .andThen(Commands.waitMillis(200))
+                .andThen(Commands.deferredProxy(() -> CollectorCommands.COLLECT_SEQUENCE))
+                .andThen(Commands.waitMillis(150))
+                .andThen(Commands.runOnce(Elevator.getInstance()::toHigh))
+                .andThen(new FollowPathCommand(collectTwoToBasketPath));
     }
 }
