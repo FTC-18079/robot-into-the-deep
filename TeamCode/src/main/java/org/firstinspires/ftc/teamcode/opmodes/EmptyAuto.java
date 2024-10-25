@@ -26,4 +26,9 @@ public class EmptyAuto extends AutoTemplate {
     protected void buildPaths() {
 
     }
+
+    @Override
+    protected void initSequence() {
+
+    }
 }

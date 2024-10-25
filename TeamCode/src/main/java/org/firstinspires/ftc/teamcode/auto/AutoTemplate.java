@@ -57,6 +57,8 @@ public abstract class AutoTemplate extends LinearOpMode {
         if (RobotGlobal.alliance != NONE) robot.schedule(makeAutoSequence()
                 .andThen(new InstantCommand(Chassis.getInstance()::breakFollowing)));
 
+        initSequence();
+
         while (opModeInInit()) {
             telemetry.addData("Status", "Initialized, Ready to start");
             telemetry.addData("Selected auto delay", RobotGlobal.delayMs);
@@ -78,6 +80,7 @@ public abstract class AutoTemplate extends LinearOpMode {
         }
 
         CommandScheduler.getInstance().cancelAll();
+        CommandScheduler.getInstance().reset();
     }
 
     public void config() {
@@ -99,7 +102,7 @@ public abstract class AutoTemplate extends LinearOpMode {
         // Toggle live view
         if (checkInputs(gamepad1.cross, lastCross)) RobotGlobal.liveView = !RobotGlobal.liveView;
         // Toggle parking pose
-        if (checkInputs(gamepad1.circle, lastCircle)) RobotGlobal.parkingPose = RobotGlobal.parkingPose == SUBMERSIBLE ? OBSERVATION_ZONE : SUBMERSIBLE;
+        if (checkInputs(gamepad1.circle, lastCircle)) RobotGlobal.parkingPose = RobotGlobal.parkingPose == ASCENT_ZONE ? OBSERVATION_ZONE : ASCENT_ZONE;
 
         // Set old inputs
         lastUp = gamepad1.dpad_up;
@@ -128,4 +131,6 @@ public abstract class AutoTemplate extends LinearOpMode {
     protected abstract Command makeAutoSequence();
 
     protected abstract void buildPaths();
+
+    protected abstract void initSequence();
 }

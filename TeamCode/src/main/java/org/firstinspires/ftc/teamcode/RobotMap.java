@@ -67,7 +67,7 @@ public class RobotMap {
         this.hMap = hardwareMap;
 
         OTOS = hardwareMap.get(SparkFunOTOS.class, "otos");
-        APRILTAG_CAMERA = hardwareMap.get(WebcamName.class, "arducam");
+//        APRILTAG_CAMERA = hardwareMap.get(WebcamName.class, "arducam");
         LIMELIGHT = hardwareMap.get(Limelight3A.class, "limelight");
 
         MOTOR_FL = hardwareMap.get(DcMotorEx.class, "leftFront");

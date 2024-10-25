@@ -30,6 +30,8 @@ public class TeleOpMode extends OpMode {
     public void init() {
         RobotMap.getInstance().init(hardwareMap);
         Chassis.resetInstance();
+        Collector.resetInstance();
+        Elevator.resetInstance();
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         robot = new RobotCore(RobotCore.OpModeType.TELEOP, telemetry, gamepad1, gamepad2);
         Chassis.getInstance().setPosition(RobotGlobal.robotPose);
@@ -52,17 +54,23 @@ public class TeleOpMode extends OpMode {
         lastSquare = gamepad1.square;
 
         telemetry.addData("Alliance", RobotGlobal.alliance);
-        telemetry.addData("AprilTag FPS", robot.getFPS());
+//        telemetry.addData("AprilTag FPS", robot.getFPS());
         telemetry.addData("Status", "Robot initialized, ready to enable");
+
+        telemetry.addData("COLLECTOR POS", Collector.getInstance().getCurrentPosition());
+        telemetry.addData("COLLECTOR TARGET POS", Collector.getInstance().getTargetPose());
+        telemetry.addData("COLLECTOR OUTPUT", Collector.getInstance().getOutput());
         telemetry.update();
     }
 
     @Override
     public void start() {
+        Chassis.getInstance().setPosition(RobotGlobal.robotPose);
         robot.schedule(
                 Commands.runOnce(Elevator.getInstance()::closeClaw),
                 Commands.runOnce(Collector.getInstance()::release),
                 Commands.runOnce(Elevator.getInstance()::closeDoor),
+                Commands.runOnce(Elevator.getInstance()::restBucket),
                 Commands.runOnce(Elevator.getInstance()::restBucket),
                 CollectorCommands.TO_STOW.get()
         );

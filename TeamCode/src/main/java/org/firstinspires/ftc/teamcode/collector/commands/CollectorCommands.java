@@ -47,7 +47,7 @@ public class CollectorCommands {
                 Commands.runOnce(collector.get()::deployCollect),
                 Commands.waitMillis(400),
                 Commands.runOnce(collector.get()::grab),
-                Commands.waitMillis(275)
+                Commands.waitMillis(300)
         );
 
         TO_PASSTHROUGH = () -> Commands.sequence(
@@ -61,7 +61,7 @@ public class CollectorCommands {
                 Commands.runOnce(elevator.get()::closeDoor),
                 Commands.waitMillis(100),
                 Commands.runOnce(elevator.get()::restBucket),
-                Commands.waitMillis(250)
+                Commands.waitMillis(300)
         );
     }
 
