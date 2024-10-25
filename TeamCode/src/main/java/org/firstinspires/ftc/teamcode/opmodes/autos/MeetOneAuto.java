@@ -30,13 +30,13 @@ import org.firstinspires.ftc.teamcode.util.commands.Commands;
 @Autonomous(name = "X PCH I321 SN", group = "Auto")
 public class MeetOneAuto extends AutoTemplate {
     // Poses
-    Pose scorePreloadPose = checkAlliance(new Pose(37, 72, Math.toRadians(0)));
-    Pose sampleOnePose = checkAlliance(new Pose(65, 120, Math.toRadians(0)));
-    Pose scoreOnePose = checkAlliance(new Pose(11, 120, 0));
-    Pose sampleTwoPose = checkAlliance(new Pose(62, 130, 0));
-    Pose scoreTwoPose = checkAlliance(new Pose(18, 130, 0));
-    Pose sampleThreePose = checkAlliance(new Pose(62, 134.5, 0));
-    Pose scoreThreePose = checkAlliance(new Pose(22, 134.5, 0));
+    Pose scorePreloadPose = new Pose(37, 72, Math.toRadians(0));
+    Pose sampleOnePose = new Pose(65, 120, Math.toRadians(0));
+    Pose scoreOnePose = new Pose(11, 120, 0);
+    Pose sampleTwoPose = new Pose(62, 130, 0);
+    Pose scoreTwoPose = new Pose(18, 130, 0);
+    Pose sampleThreePose = new Pose(62, 134.5, 0);
+    Pose scoreThreePose = new Pose(22, 134.5, 0);
     Pose parkPosition;
 
     // Paths
@@ -55,6 +55,17 @@ public class MeetOneAuto extends AutoTemplate {
         type = RobotCore.OpModeType.AUTO;
         parkPosition = (parkingPose == AutoConstants.ParkingPose.OBSERVATION_ZONE) ? OBVZONE_PARKING_POSE : ASCENT_PARKING_POSE;
         parkPosition = checkAlliance(parkPosition);
+    }
+
+    @Override
+    public void rotatePoses() {
+        scorePreloadPose = checkAlliance(scorePreloadPose);
+        sampleOnePose = checkAlliance(sampleOnePose);
+        scoreOnePose = checkAlliance(scoreOnePose);
+        sampleTwoPose = checkAlliance(sampleTwoPose);
+        scoreTwoPose = checkAlliance(scoreTwoPose);
+        sampleThreePose = checkAlliance(sampleThreePose);
+        scoreThreePose = checkAlliance(scoreThreePose);
     }
 
     @Override

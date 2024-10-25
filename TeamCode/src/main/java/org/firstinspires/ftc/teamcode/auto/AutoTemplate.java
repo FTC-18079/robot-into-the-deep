@@ -41,6 +41,7 @@ public abstract class AutoTemplate extends LinearOpMode {
         }
 
         // Create robot
+        rotatePoses();
         setStartPose();
         buildPaths();
         robot = new RobotCore(
@@ -133,4 +134,6 @@ public abstract class AutoTemplate extends LinearOpMode {
     protected abstract void buildPaths();
 
     protected abstract void initSequence();
+
+    protected abstract void rotatePoses();
 }

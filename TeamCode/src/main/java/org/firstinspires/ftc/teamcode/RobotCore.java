@@ -152,7 +152,8 @@ public class RobotCore extends Robot {
 
         // Toggle game piece types
         manipController.getGamepadButton(GamepadKeys.Button.X)
-                .whenPressed(elevator::toggleScoreType);
+                .whenPressed(elevator::toggleScoreType)
+                .whenPressed(Commands.runOnce(() -> rumbleManip(100)));
 
         // Collector control
         manipController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
