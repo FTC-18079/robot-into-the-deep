@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes.autos;
 
 import static org.firstinspires.ftc.teamcode.auto.AutoConstants.ASCENT_PARKING_POSE;
-import static org.firstinspires.ftc.teamcode.auto.AutoConstants.BASKET_SCORE_POSE;
 import static org.firstinspires.ftc.teamcode.auto.AutoConstants.OBVZONE_PARKING_POSE;
 import static org.firstinspires.ftc.teamcode.auto.AutoConstants.OBVZONE_STARTING_POSE;
 import static org.firstinspires.ftc.teamcode.auto.AutoConstants.checkAlliance;
@@ -11,6 +10,7 @@ import static org.firstinspires.ftc.teamcode.util.RobotGlobal.robotPose;
 
 import com.arcrobotics.ftclib.command.Command;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.RobotCore;
 import org.firstinspires.ftc.teamcode.auto.AutoConstants;
@@ -27,16 +27,17 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 import org.firstinspires.ftc.teamcode.util.commands.Commands;
 
-@Autonomous(name = "X PCH I321 SN", group = "Auto")
-public class MeetOneAuto extends AutoTemplate {
+@Disabled
+@Autonomous(name = "X PCH I321 SN I456 O")
+public class X_PCH_I321_SN_I456_O extends AutoTemplate {
     // Poses
     Pose scorePreloadPose = checkAlliance(new Pose(37, 72, Math.toRadians(0)));
     Pose sampleOnePose = checkAlliance(new Pose(65, 120, Math.toRadians(0)));
-    Pose scoreOnePose = checkAlliance(new Pose(11, 120, 0));
+    Pose scoreOnePose = checkAlliance(new Pose(10.5, 120, 0));
     Pose sampleTwoPose = checkAlliance(new Pose(62, 130, 0));
     Pose scoreTwoPose = checkAlliance(new Pose(18, 130, 0));
-    Pose sampleThreePose = checkAlliance(new Pose(62, 134.5, 0));
-    Pose scoreThreePose = checkAlliance(new Pose(22, 134.5, 0));
+    Pose sampleThreePose = checkAlliance(new Pose(62, 135.5, 0));
+    Pose scoreThreePose = checkAlliance(new Pose(22, 135.5, 0));
     Pose parkPosition;
 
     // Paths
@@ -61,7 +62,7 @@ public class MeetOneAuto extends AutoTemplate {
     public void buildPaths() {
         scorePreloadPath = constantHeadingPath(robotPose, scorePreloadPose, robotPose.getHeading());
 
-        preloadToSampleOnePath = new Path(new BezierCurve(new Point(scorePreloadPose), new Point(17, 134, Point.CARTESIAN), new Point(70, 94, Point.CARTESIAN), new Point(sampleOnePose)));
+        preloadToSampleOnePath = new Path(new BezierCurve(new Point(scorePreloadPose), new Point(17, 125, Point.CARTESIAN), new Point(70, 94, Point.CARTESIAN), new Point(sampleOnePose)));
         preloadToSampleOnePath.setConstantHeadingInterpolation(0);
 
         scoreOnePath = new Path(new BezierLine(new Point(sampleOnePose), new Point(scoreOnePose)));
@@ -102,14 +103,12 @@ public class MeetOneAuto extends AutoTemplate {
                 .andThen(Commands.runOnce(() -> Elevator.getInstance().setScoreType(Elevator.ScoreType.SPECIMEN)))
                 .andThen(Commands.runOnce(Elevator.getInstance()::toHigh))
                 .andThen(new FollowPathCommand(scorePreloadPath))
-                .andThen(Commands.waitMillis(50))
+                .andThen(Commands.waitMillis(200))
                 .andThen(Commands.deferredProxy(() -> ElevatorCommands.SCORE_COMMAND))
                 .andThen(new FollowPathCommand(preloadToSampleOnePath))
+                .andThen(Commands.waitMillis(500))
                 .andThen(new FollowPathCommand(scoreOnePath))
-                .andThen(new FollowPathCommand(sampleTwoPath))
-                .andThen(new FollowPathCommand(scoreTwoPath))
-                .andThen(new FollowPathCommand(sampleThreePath))
-                .andThen(new FollowPathCommand(scoreThreePath))
+                .andThen(Commands.waitMillis(500))
                 .andThen(new FollowPathCommand(scoreToParkPath));
     }
 }

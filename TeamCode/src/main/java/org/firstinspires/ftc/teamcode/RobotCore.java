@@ -33,7 +33,7 @@ public class RobotCore extends Robot {
     GamepadEx manipController;
 
     Pose initialPose;
-    ATVision atVision;
+//    ATVision atVision;
 
     // Subsystems
     Chassis chassis;
@@ -74,11 +74,11 @@ public class RobotCore extends Robot {
 
         telemetry.addData("Status", "Initializing AprilTag detection");
         telemetry.update();
-        atVision = new ATVision(true);
+//        atVision = new ATVision(true);
 
         telemetry.addData("Status", "Starting camera livestream");
         telemetry.update();
-        FtcDashboard.getInstance().startCameraStream(atVision.livestream, 15);
+//        FtcDashboard.getInstance().startCameraStream(atVision.livestream, 15);
 
         this.driveController = new GamepadEx(gamepad1);
         this.manipController = new GamepadEx(gamepad2);
@@ -140,7 +140,7 @@ public class RobotCore extends Robot {
                 .whenPressed(ElevatorCommands.SCORE_COMMAND)
                 .whenReleased(ElevatorCommands.RELEASE_COMMAND);
         manipController.getGamepadButton(GamepadKeys.Button.B)
-                .whenPressed(elevator::closeClaw);
+                .whenPressed(elevator::toggleClaw);
 
         // Elevator position buttons
         manipController.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
@@ -161,7 +161,7 @@ public class RobotCore extends Robot {
                         Commands.runOnce(collector::deployStow).andThen(CollectorCommands.TO_STOW.get()),
                         () -> collector.getState() == Collector.CollectorState.STOW
                 ));
-        new Trigger(() -> manipController.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > TRIGGER_DEADZONE)
+        new Trigger(() -> manipController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > TRIGGER_DEADZONE)
                 .whenActive(Commands.either(
                         Commands.deferredProxy(() -> CollectorCommands.COLLECT_SEQUENCE),
                         new InstantCommand(),
@@ -195,9 +195,9 @@ public class RobotCore extends Robot {
         return chassis.isBusy();
     }
 
-    public double getFPS() {
-        return atVision.getFPS();
-    }
+//    public double getFPS() {
+//        return atVision.getFPS();
+//    }
 
     // Rumble drive controller
     public static void rumbleDrive(int ms) {
@@ -229,7 +229,7 @@ public class RobotCore extends Robot {
 
         double loop = System.nanoTime();
         telemetry.addLine();
-        telemetry.addData("AprilTag FPS", atVision.getFPS());
+//        telemetry.addData("AprilTag FPS", atVision.getFPS());
         telemetry.addData("Loop Time", timer.milliseconds());
         telemetry.addData("hz", 1000000000 / (loop - loopTime));
         loopTime = loop;
