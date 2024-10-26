@@ -93,7 +93,7 @@ public class MeetOneAuto extends AutoTemplate {
 
         if (parkingPose == AutoConstants.ParkingPose.OBSERVATION_ZONE) {
             scoreToParkPath = new Path(new BezierCurve(new Point(scoreThreePose), new Point(50, 70, Point.CARTESIAN), new Point(parkPosition)));
-            scoreToParkPath.setLinearHeadingInterpolation(scoreThreePose.getHeading(), parkPosition.getHeading());
+            scoreToParkPath.setLinearHeadingInterpolation(scoreThreePose.getHeading(), parkPosition.getHeading(), 0.6);
         } else {
             scoreToParkPath = new Path(new BezierCurve(new Point(scoreThreePose), new Point(65, 125, Point.CARTESIAN), new Point(parkPosition)));
             scoreToParkPath.setLinearHeadingInterpolation(scoreThreePose.getHeading(), parkPosition.getHeading());

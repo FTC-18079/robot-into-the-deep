@@ -97,8 +97,8 @@ public class RobotCore extends Robot {
         chassis = Chassis.getInstance();
         collector = Collector.getInstance();
         elevator = Elevator.getInstance();
-        llVision = LLVision.getInstance();
-        register(chassis, collector, elevator, llVision);
+        //llVision = LLVision.getInstance();
+        register(chassis, collector, elevator);
 
         telemetry.addData("Status", "Robot initialized, ready to enable");
         telemetry.update();
@@ -112,7 +112,7 @@ public class RobotCore extends Robot {
                 chassis.setPosition(RobotGlobal.robotPose);
                 chassis.startTeleopDrive();
                 setDriveControls();
-                Commands.runOnce(() -> setControllerColors(1, 1, 0)).andThen(new InstantCommand(llVision::setYellow));
+                //Commands.runOnce(() -> setControllerColors(1, 1, 0)).andThen(new InstantCommand(llVision::setYellow));
                 break;
             case EMPTY:
                 schedule(Commands.none());
@@ -181,16 +181,16 @@ public class RobotCore extends Robot {
                 .whenPressed(collector::down);
 
         // Toggle target color
-        manipController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                .whenPressed(Commands.either(
-                        Commands.either(
-                                Commands.runOnce(() -> setControllerColors(1, 0, 0)).andThen(new InstantCommand(llVision::setRed)),
-                                Commands.runOnce(() -> setControllerColors(0, 0, 1)).andThen(new InstantCommand(llVision::setBlue)),
-                                () -> RobotGlobal.alliance == RobotGlobal.Alliance.RED
-                        ),
-                        Commands.runOnce(() -> setControllerColors(1, 1, 0)).andThen(new InstantCommand(llVision::setYellow)),
-                        () -> llVision.getTargetColor() == LLVision.SampleColor.YELLOW
-                ));
+//        manipController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
+//                .whenPressed(Commands.either(
+//                        Commands.either(
+//                                Commands.runOnce(() -> setControllerColors(1, 0, 0)).andThen(new InstantCommand(llVision::setRed)),
+//                                Commands.runOnce(() -> setControllerColors(0, 0, 1)).andThen(new InstantCommand(llVision::setBlue)),
+//                                () -> RobotGlobal.alliance == RobotGlobal.Alliance.RED
+//                        ),
+//                        Commands.runOnce(() -> setControllerColors(1, 1, 0)).andThen(new InstantCommand(llVision::setYellow)),
+//                        () -> llVision.getTargetColor() == LLVision.SampleColor.YELLOW
+//                ));
 
         chassis.setDefaultCommand(driveCommand);
     }

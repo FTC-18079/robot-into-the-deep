@@ -77,7 +77,7 @@ public class Chassis extends SubsystemBase {
     }
 
     public void enableSlowMode() {
-        m = 0.25;
+        m = 0.30;
     }
 
     public void disableSlowMode() {
