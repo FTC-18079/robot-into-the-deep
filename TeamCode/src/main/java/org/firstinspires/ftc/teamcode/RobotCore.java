@@ -127,9 +127,9 @@ public class RobotCore extends Robot {
                 () -> responseCurve(driveController.getLeftX(), DRIVE_SENSITIVITY),
                 () -> responseCurve(driveController.getRightX(), ROTATIONAL_SENSITIVITY)
         );
-        driveController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
-                .whenPressed(chassis::enableSlowMode)
-                .whenReleased(chassis::disableSlowMode);
+        new Trigger(() -> driveController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > TRIGGER_DEADZONE)
+                .whenActive(chassis::enableSlowMode)
+                .whenInactive(chassis::disableSlowMode);
 
         // Reset heading
         driveController.getGamepadButton(GamepadKeys.Button.Y)
@@ -169,7 +169,7 @@ public class RobotCore extends Robot {
                 .whenActive(Commands.either(
                         Commands.deferredProxy(() -> CollectorCommands.COLLECT_SEQUENCE),
                         new InstantCommand(),
-                        () -> (collector.atSetPoint() /*&& collector.getState() == Collector.CollectorState.COLLECTING*/)
+                        () -> (collector.atSetPoint() && collector.getState() == Collector.CollectorState.COLLECTING)
                 ));
         manipController.getGamepadButton(GamepadKeys.Button.LEFT_STICK_BUTTON)
                 .whenPressed(Commands.runOnce(collector::vertical));

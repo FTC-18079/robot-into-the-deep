@@ -35,8 +35,8 @@ public class CollectorCommands {
                 Commands.runOnce(collector.get()::down),
                 Commands.runOnce(collector.get()::release),
                 Commands.runOnce(elevator.get()::passthroughBucket),
-                Commands.runOnce(elevator.get()::openDoor)
-                //Commands.runOnce(() -> collector.get().setState(Collector.CollectorState.COLLECTING))
+                Commands.runOnce(elevator.get()::openDoor),
+                Commands.runOnce(() -> collector.get().setState(Collector.CollectorState.COLLECTING))
         );
 
         COLLECT = () -> Commands.sequence(
@@ -60,6 +60,8 @@ public class CollectorCommands {
                 Commands.waitMillis(150),
                 Commands.runOnce(elevator.get()::closeDoor),
                 Commands.waitMillis(100),
+                Commands.runOnce(() -> collector.get().setTargetPose(625)),
+                Commands.waitUntil(collector.get()::atSetPoint),
                 Commands.runOnce(elevator.get()::restBucket),
                 Commands.waitMillis(300)
         );

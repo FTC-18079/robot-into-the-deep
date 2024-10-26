@@ -32,7 +32,7 @@ public class MeetOneAuto extends AutoTemplate {
     // Poses
     Pose scorePreloadPose = new Pose(37, 72, Math.toRadians(0));
     Pose sampleOnePose = new Pose(65, 120, Math.toRadians(0));
-    Pose scoreOnePose = new Pose(11, 120, 0);
+    Pose scoreOnePose = new Pose(12, 120, 0);
     Pose sampleTwoPose = new Pose(62, 130, 0);
     Pose scoreTwoPose = new Pose(18, 130, 0);
     Pose sampleThreePose = new Pose(62, 134.5, 0);

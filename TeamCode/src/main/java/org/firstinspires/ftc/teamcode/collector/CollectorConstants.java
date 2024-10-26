@@ -25,7 +25,7 @@ public class CollectorConstants {
     public static double DEPLOY_COLLECT_POS = 0.00;
 
     // Pivot poses
-    public static double PIVOT_PASSTHROUGH_POS = 0.5;
+    public static double PIVOT_PASSTHROUGH_POS = 0.54;
 
     // Intake poses
     public static double INTAKE_GRAB_POS = 0.50;

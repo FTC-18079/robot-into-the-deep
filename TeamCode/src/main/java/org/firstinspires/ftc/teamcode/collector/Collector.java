@@ -161,9 +161,9 @@ public class Collector extends SubsystemBase {
 //                pivot.setPosition(CollectorConstants.PIVOT_PASSTHROUGH_POS);
                 break;
             case COLLECTING:
-                targetPose -= LLVision.getInstance().getSampleTy();
-                targetPose = MathFunctions.clamp(targetPose, 700, CollectorConstants.SLIDE_MAX_POS);
-                pivot.setPosition(LLVision.getInstance().getServoPos());
+//                targetPose -= LLVision.getInstance().getSampleTy();
+//                targetPose = MathFunctions.clamp(targetPose, 700, CollectorConstants.SLIDE_MAX_POS);
+//                pivot.setPosition(LLVision.getInstance().getServoPos());
                 break;
             case COLLECT:
                 break;
@@ -181,7 +181,7 @@ public class Collector extends SubsystemBase {
     }
 
     public void horizontal() {
-        pivot.setPosition(0.5);
+        pivot.setPosition(CollectorConstants.PIVOT_PASSTHROUGH_POS);
     }
 
     public void down() {

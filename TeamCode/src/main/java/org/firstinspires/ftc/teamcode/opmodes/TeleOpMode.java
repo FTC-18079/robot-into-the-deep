@@ -67,7 +67,6 @@ public class TeleOpMode extends OpMode {
     public void start() {
         Chassis.getInstance().setPosition(RobotGlobal.robotPose);
         robot.schedule(
-                Commands.runOnce(Elevator.getInstance()::closeClaw),
                 Commands.runOnce(Collector.getInstance()::release),
                 Commands.runOnce(Elevator.getInstance()::closeDoor),
                 Commands.runOnce(Elevator.getInstance()::restBucket),
