@@ -127,6 +127,9 @@ public class RobotCore extends Robot {
                 () -> responseCurve(driveController.getLeftX(), DRIVE_SENSITIVITY),
                 () -> responseCurve(driveController.getRightX(), ROTATIONAL_SENSITIVITY)
         );
+        driveController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
+                .whenPressed(chassis::enableSlowMode)
+                .whenReleased(chassis::disableSlowMode);
 
         // Reset heading
         driveController.getGamepadButton(GamepadKeys.Button.Y)

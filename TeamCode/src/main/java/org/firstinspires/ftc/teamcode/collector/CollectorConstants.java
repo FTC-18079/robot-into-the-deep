@@ -13,7 +13,7 @@ public class CollectorConstants {
     public static int SLIDE_COLLECT_DISPLACEMENT = 385;
     public static int SLIDE_PASSTHROUGH_POS = 510;
     public static int VELOCITY_THRESHOLD = 10;
-    public static int ERROR_TOLERANCE = 10;
+    public static int ERROR_TOLERANCE = 5;
 
     public static double kP = 5.15;
     public static double kI = 0.0;
