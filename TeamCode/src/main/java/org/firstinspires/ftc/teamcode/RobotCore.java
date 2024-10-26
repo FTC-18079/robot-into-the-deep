@@ -160,14 +160,22 @@ public class RobotCore extends Robot {
                 .whenPressed(Commands.either(
                         CollectorCommands.TO_COLLECTING.get(),
                         Commands.runOnce(collector::deployStow).andThen(CollectorCommands.TO_STOW.get()),
-                        () -> collector.getState() == Collector.CollectorState.STOW
+                        () -> collector.getTargetPose() == CollectorConstants.SLIDE_STOW_POS
                 ));
         new Trigger(() -> manipController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > TRIGGER_DEADZONE)
                 .whenActive(Commands.either(
                         Commands.deferredProxy(() -> CollectorCommands.COLLECT_SEQUENCE),
                         new InstantCommand(),
-                        () -> (collector.atSetPoint() && collector.getState() == Collector.CollectorState.COLLECTING)
+                        () -> (collector.atSetPoint() /*&& collector.getState() == Collector.CollectorState.COLLECTING*/)
                 ));
+        manipController.getGamepadButton(GamepadKeys.Button.LEFT_STICK_BUTTON)
+                .whenPressed(Commands.runOnce(collector::vertical));
+        manipController.getGamepadButton(GamepadKeys.Button.RIGHT_STICK_BUTTON)
+                .whenPressed(Commands.runOnce(collector::horizontal));
+        manipController.getGamepadButton(GamepadKeys.Button.START)
+                .whenPressed(collector::deployCollect);
+        manipController.getGamepadButton(GamepadKeys.Button.BACK)
+                .whenPressed(collector::down);
 
         // Toggle target color
         manipController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)

@@ -70,7 +70,8 @@ public class MeetOneAuto extends AutoTemplate {
 
     @Override
     public void buildPaths() {
-        scorePreloadPath = constantHeadingPath(robotPose, scorePreloadPose, robotPose.getHeading());
+        scorePreloadPath = new Path(new BezierLine(new Point(robotPose), new Point(scorePreloadPose)));
+        scorePreloadPath.setConstantHeadingInterpolation(scorePreloadPose.getHeading());
 
         preloadToSampleOnePath = new Path(new BezierCurve(new Point(scorePreloadPose), new Point(17, 134, Point.CARTESIAN), new Point(70, 94, Point.CARTESIAN), new Point(sampleOnePose)));
         preloadToSampleOnePath.setConstantHeadingInterpolation(0);

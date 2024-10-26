@@ -158,7 +158,7 @@ public class Collector extends SubsystemBase {
         switch (state) {
             case STOW:
             case PASSTHROUGH:
-                pivot.setPosition(CollectorConstants.PIVOT_PASSTHROUGH_POS);
+//                pivot.setPosition(CollectorConstants.PIVOT_PASSTHROUGH_POS);
                 break;
             case COLLECTING:
                 targetPose -= LLVision.getInstance().getSampleTy();
@@ -172,6 +172,20 @@ public class Collector extends SubsystemBase {
 
     public double getOutput() {
         return output;
+    }
+
+    // TEMPORARY
+
+    public void vertical() {
+        pivot.setPosition(0.0);
+    }
+
+    public void horizontal() {
+        pivot.setPosition(0.5);
+    }
+
+    public void down() {
+        deploy.setPosition(0.1);
     }
 
     @Override

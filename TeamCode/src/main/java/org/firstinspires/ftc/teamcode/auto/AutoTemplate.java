@@ -39,6 +39,7 @@ public abstract class AutoTemplate extends LinearOpMode {
         while (opModeInInit() && !gamepad1.options) {
             config();
         }
+        sleep(500);
 
         // Create robot
         rotatePoses();
