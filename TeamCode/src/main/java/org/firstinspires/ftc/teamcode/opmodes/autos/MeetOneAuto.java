@@ -35,8 +35,8 @@ public class MeetOneAuto extends AutoTemplate {
     Pose scoreOnePose = new Pose(12, 120, 0);
     Pose sampleTwoPose = new Pose(62, 130, 0);
     Pose scoreTwoPose = new Pose(18, 130, 0);
-    Pose sampleThreePose = new Pose(62, 134.5, 0);
-    Pose scoreThreePose = new Pose(22, 134.5, 0);
+    Pose sampleThreePose = new Pose(62, 134, 0);
+    Pose scoreThreePose = new Pose(22, 134, 0);
     Pose parkPosition;
 
     // Paths
