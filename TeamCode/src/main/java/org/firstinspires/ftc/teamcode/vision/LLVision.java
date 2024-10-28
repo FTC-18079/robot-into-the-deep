@@ -71,9 +71,7 @@ public class LLVision extends SubsystemBase {
      * @param color The target sample color
      */
     public void setPipeline() {
-        if (!limelight.pipelineSwitch(targetColor.index)) {
-            setPipeline();
-        }
+        limelight.pipelineSwitch(targetColor.index);
     }
 
     public void setYellow() {

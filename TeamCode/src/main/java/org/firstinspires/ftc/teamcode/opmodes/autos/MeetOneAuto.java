@@ -30,13 +30,13 @@ import org.firstinspires.ftc.teamcode.util.commands.Commands;
 @Autonomous(name = "X PCH I321 SN", group = "Auto")
 public class MeetOneAuto extends AutoTemplate {
     // Poses
-    Pose scorePreloadPose = checkAlliance(new Pose(37, 72, Math.toRadians(0)));
-    Pose sampleOnePose = checkAlliance(new Pose(65, 120, Math.toRadians(0)));
-    Pose scoreOnePose = checkAlliance(new Pose(11, 120, 0));
-    Pose sampleTwoPose = checkAlliance(new Pose(62, 130, 0));
-    Pose scoreTwoPose = checkAlliance(new Pose(18, 130, 0));
-    Pose sampleThreePose = checkAlliance(new Pose(62, 134.5, 0));
-    Pose scoreThreePose = checkAlliance(new Pose(22, 134.5, 0));
+    Pose scorePreloadPose = new Pose(37, 72, Math.toRadians(0));
+    Pose sampleOnePose = new Pose(65, 120, Math.toRadians(0));
+    Pose scoreOnePose = new Pose(12, 120, 0);
+    Pose sampleTwoPose = new Pose(62, 130, 0);
+    Pose scoreTwoPose = new Pose(18, 130, 0);
+    Pose sampleThreePose = new Pose(62, 134, 0);
+    Pose scoreThreePose = new Pose(22, 134, 0);
     Pose parkPosition;
 
     // Paths
@@ -58,8 +58,20 @@ public class MeetOneAuto extends AutoTemplate {
     }
 
     @Override
+    public void rotatePoses() {
+        scorePreloadPose = checkAlliance(scorePreloadPose);
+        sampleOnePose = checkAlliance(sampleOnePose);
+        scoreOnePose = checkAlliance(scoreOnePose);
+        sampleTwoPose = checkAlliance(sampleTwoPose);
+        scoreTwoPose = checkAlliance(scoreTwoPose);
+        sampleThreePose = checkAlliance(sampleThreePose);
+        scoreThreePose = checkAlliance(scoreThreePose);
+    }
+
+    @Override
     public void buildPaths() {
-        scorePreloadPath = constantHeadingPath(robotPose, scorePreloadPose, robotPose.getHeading());
+        scorePreloadPath = new Path(new BezierLine(new Point(robotPose), new Point(scorePreloadPose)));
+        scorePreloadPath.setConstantHeadingInterpolation(scorePreloadPose.getHeading());
 
         preloadToSampleOnePath = new Path(new BezierCurve(new Point(scorePreloadPose), new Point(17, 134, Point.CARTESIAN), new Point(70, 94, Point.CARTESIAN), new Point(sampleOnePose)));
         preloadToSampleOnePath.setConstantHeadingInterpolation(0);
@@ -81,7 +93,7 @@ public class MeetOneAuto extends AutoTemplate {
 
         if (parkingPose == AutoConstants.ParkingPose.OBSERVATION_ZONE) {
             scoreToParkPath = new Path(new BezierCurve(new Point(scoreThreePose), new Point(50, 70, Point.CARTESIAN), new Point(parkPosition)));
-            scoreToParkPath.setLinearHeadingInterpolation(scoreThreePose.getHeading(), parkPosition.getHeading());
+            scoreToParkPath.setLinearHeadingInterpolation(scoreThreePose.getHeading(), parkPosition.getHeading(), 0.6);
         } else {
             scoreToParkPath = new Path(new BezierCurve(new Point(scoreThreePose), new Point(65, 125, Point.CARTESIAN), new Point(parkPosition)));
             scoreToParkPath.setLinearHeadingInterpolation(scoreThreePose.getHeading(), parkPosition.getHeading());

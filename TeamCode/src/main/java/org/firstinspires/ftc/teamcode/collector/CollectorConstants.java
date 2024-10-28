@@ -9,11 +9,11 @@ public class CollectorConstants {
     // Slide poses
     public static int SLIDE_MAX_POS = 1350;
     public static int SLIDE_STOW_POS = 110;
-    public static int SLIDE_COLLECTING_POS = 1300;
+    public static int SLIDE_COLLECTING_POS = 1270;
     public static int SLIDE_COLLECT_DISPLACEMENT = 385;
-    public static int SLIDE_PASSTHROUGH_POS = 500;
+    public static int SLIDE_PASSTHROUGH_POS = 480;
     public static int VELOCITY_THRESHOLD = 10;
-    public static int ERROR_TOLERANCE = 10;
+    public static int ERROR_TOLERANCE = 5;
 
     public static double kP = 5.15;
     public static double kI = 0.0;
@@ -21,11 +21,11 @@ public class CollectorConstants {
 
     // Deploy poses
     public static double DEPLOY_STOW_POS = 1.0;
-    public static double DEPLOY_SEEKING_POS = 0.71;
+    public static double DEPLOY_SEEKING_POS = 0.60;
     public static double DEPLOY_COLLECT_POS = 0.00;
 
     // Pivot poses
-    public static double PIVOT_PASSTHROUGH_POS = 0.5;
+    public static double PIVOT_PASSTHROUGH_POS = 0.54;
 
     // Intake poses
     public static double INTAKE_GRAB_POS = 0.50;

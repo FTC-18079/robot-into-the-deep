@@ -96,6 +96,11 @@ public class OZ_1_3_Neutral extends AutoTemplate {
     }
 
     @Override
+    protected void rotatePoses() {
+
+    }
+
+    @Override
     protected Command makeAutoSequence() {
         return Commands.waitMillis(RobotGlobal.delayMs)
                 .andThen(Commands.runOnce(Elevator.getInstance()::restBucket))

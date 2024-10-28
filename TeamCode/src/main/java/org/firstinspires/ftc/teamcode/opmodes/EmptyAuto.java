@@ -31,4 +31,9 @@ public class EmptyAuto extends AutoTemplate {
     protected void initSequence() {
 
     }
+
+    @Override
+    protected void rotatePoses() {
+
+    }
 }

@@ -97,6 +97,11 @@ public class X_PCH_I321_SN_I456_O extends AutoTemplate {
     }
 
     @Override
+    protected void rotatePoses() {
+
+    }
+
+    @Override
     protected Command makeAutoSequence() {
         return Commands.waitMillis(RobotGlobal.delayMs)
                 .andThen(Commands.runOnce(Elevator.getInstance()::restBucket))

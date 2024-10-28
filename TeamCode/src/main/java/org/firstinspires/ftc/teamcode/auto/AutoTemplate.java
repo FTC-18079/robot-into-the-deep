@@ -39,8 +39,11 @@ public abstract class AutoTemplate extends LinearOpMode {
         while (opModeInInit() && !gamepad1.options) {
             config();
         }
+        sleep(500);
 
         // Create robot
+        rotatePoses();
+        sleep(100);
         setStartPose();
         buildPaths();
         robot = new RobotCore(
@@ -133,4 +136,6 @@ public abstract class AutoTemplate extends LinearOpMode {
     protected abstract void buildPaths();
 
     protected abstract void initSequence();
+
+    protected abstract void rotatePoses();
 }

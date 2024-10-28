@@ -97,8 +97,8 @@ public class RobotCore extends Robot {
         chassis = Chassis.getInstance();
         collector = Collector.getInstance();
         elevator = Elevator.getInstance();
-        llVision = LLVision.getInstance();
-        register(chassis, collector, elevator, llVision);
+        //llVision = LLVision.getInstance();
+        register(chassis, collector, elevator);
 
         telemetry.addData("Status", "Robot initialized, ready to enable");
         telemetry.update();
@@ -112,7 +112,7 @@ public class RobotCore extends Robot {
                 chassis.setPosition(RobotGlobal.robotPose);
                 chassis.startTeleopDrive();
                 setDriveControls();
-                Commands.runOnce(() -> setControllerColors(1, 1, 0)).andThen(new InstantCommand(llVision::setYellow));
+                //Commands.runOnce(() -> setControllerColors(1, 1, 0)).andThen(new InstantCommand(llVision::setYellow));
                 break;
             case EMPTY:
                 schedule(Commands.none());
@@ -127,6 +127,9 @@ public class RobotCore extends Robot {
                 () -> responseCurve(driveController.getLeftX(), DRIVE_SENSITIVITY),
                 () -> responseCurve(driveController.getRightX(), ROTATIONAL_SENSITIVITY)
         );
+        new Trigger(() -> driveController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > TRIGGER_DEADZONE)
+                .whenActive(chassis::enableSlowMode)
+                .whenInactive(chassis::disableSlowMode);
 
         // Reset heading
         driveController.getGamepadButton(GamepadKeys.Button.Y)
@@ -152,14 +155,15 @@ public class RobotCore extends Robot {
 
         // Toggle game piece types
         manipController.getGamepadButton(GamepadKeys.Button.X)
-                .whenPressed(elevator::toggleScoreType);
+                .whenPressed(elevator::toggleScoreType)
+                .whenPressed(Commands.runOnce(() -> rumbleManip(100)));
 
         // Collector control
         manipController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                 .whenPressed(Commands.either(
                         CollectorCommands.TO_COLLECTING.get(),
                         Commands.runOnce(collector::deployStow).andThen(CollectorCommands.TO_STOW.get()),
-                        () -> collector.getState() == Collector.CollectorState.STOW
+                        () -> collector.getTargetPose() == CollectorConstants.SLIDE_STOW_POS
                 ));
         new Trigger(() -> manipController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > TRIGGER_DEADZONE)
                 .whenActive(Commands.either(
@@ -167,18 +171,26 @@ public class RobotCore extends Robot {
                         new InstantCommand(),
                         () -> (collector.atSetPoint() && collector.getState() == Collector.CollectorState.COLLECTING)
                 ));
+        manipController.getGamepadButton(GamepadKeys.Button.LEFT_STICK_BUTTON)
+                .whenPressed(Commands.runOnce(collector::vertical));
+        manipController.getGamepadButton(GamepadKeys.Button.RIGHT_STICK_BUTTON)
+                .whenPressed(Commands.runOnce(collector::horizontal));
+        manipController.getGamepadButton(GamepadKeys.Button.START)
+                .whenPressed(collector::deployCollect);
+        manipController.getGamepadButton(GamepadKeys.Button.BACK)
+                .whenPressed(collector::down);
 
         // Toggle target color
-        manipController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                .whenPressed(Commands.either(
-                        Commands.either(
-                                Commands.runOnce(() -> setControllerColors(1, 0, 0)).andThen(new InstantCommand(llVision::setRed)),
-                                Commands.runOnce(() -> setControllerColors(0, 0, 1)).andThen(new InstantCommand(llVision::setBlue)),
-                                () -> RobotGlobal.alliance == RobotGlobal.Alliance.RED
-                        ),
-                        Commands.runOnce(() -> setControllerColors(1, 1, 0)).andThen(new InstantCommand(llVision::setYellow)),
-                        () -> llVision.getTargetColor() == LLVision.SampleColor.YELLOW
-                ));
+//        manipController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
+//                .whenPressed(Commands.either(
+//                        Commands.either(
+//                                Commands.runOnce(() -> setControllerColors(1, 0, 0)).andThen(new InstantCommand(llVision::setRed)),
+//                                Commands.runOnce(() -> setControllerColors(0, 0, 1)).andThen(new InstantCommand(llVision::setBlue)),
+//                                () -> RobotGlobal.alliance == RobotGlobal.Alliance.RED
+//                        ),
+//                        Commands.runOnce(() -> setControllerColors(1, 1, 0)).andThen(new InstantCommand(llVision::setYellow)),
+//                        () -> llVision.getTargetColor() == LLVision.SampleColor.YELLOW
+//                ));
 
         chassis.setDefaultCommand(driveCommand);
     }

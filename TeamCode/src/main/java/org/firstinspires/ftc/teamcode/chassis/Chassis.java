@@ -16,6 +16,7 @@ public class Chassis extends SubsystemBase {
     Follower follower;
     Telemetry telemetry;
     boolean isRobotCentric;
+    double m = 1.0;
 
     private static Chassis INSTANCE = null;
 
@@ -39,7 +40,7 @@ public class Chassis extends SubsystemBase {
     }
 
     public void setDrivePowers(double fwd, double str, double rot) {
-        follower.setTeleOpMovementVectors(fwd, str, rot, isRobotCentric);
+        follower.setTeleOpMovementVectors(fwd * m, str * m, rot * m, isRobotCentric);
     }
 
     public Pose getPoseEstimate() {
@@ -73,6 +74,14 @@ public class Chassis extends SubsystemBase {
 
     public void startTeleopDrive() {
         follower.startTeleopDrive();
+    }
+
+    public void enableSlowMode() {
+        m = 0.30;
+    }
+
+    public void disableSlowMode() {
+        m = 1.0;
     }
 
     @Override
