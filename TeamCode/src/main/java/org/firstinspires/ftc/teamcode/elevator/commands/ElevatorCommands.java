@@ -21,7 +21,7 @@ public class ElevatorCommands {
 
         SCORE_BASKET_COMMAND = () -> Commands.sequence(
                 Commands.runOnce(elevator.get()::scoreBucket),
-                Commands.waitMillis(250),
+                Commands.waitMillis(400),
                 Commands.runOnce(elevator.get()::openDoor)
         );
 
