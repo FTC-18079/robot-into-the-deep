@@ -26,7 +26,7 @@ public class AutoConstants {
     public static final Pose CENTER_PRELOAD_SCORE_POSE = new Pose(38, 84, Math.toRadians(0));
 
     // Parking poses
-    public static final Pose OBVZONE_PARKING_POSE = new Pose(14, 14, Math.toRadians(90));
+    public static final Pose OBVZONE_PARKING_POSE = new Pose(14, 14, Math.toRadians(270));
     public static final Pose ASCENT_PARKING_POSE = new Pose(60, 98, Math.toRadians(270));
 
     // Alliance alliance poses
