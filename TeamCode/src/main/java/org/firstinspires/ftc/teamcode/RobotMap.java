@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -33,6 +34,10 @@ public class RobotMap {
     // Slides
     public DcMotorEx LEFT_SLIDE;
     public DcMotorEx RIGHT_SLIDE;
+
+    // Pivot
+    public CRServo LEFT_PIVOT;
+    public CRServo RIGHT_PIVOT;
 
     // Elevator
     public DcMotorEx ELEVATOR;
@@ -81,6 +86,9 @@ public class RobotMap {
 
         LEFT_SLIDE = hardwareMap.get(DcMotorEx.class, "leftSlide");
         RIGHT_SLIDE = hardwareMap.get(DcMotorEx.class, "rightSlide");
+
+        RIGHT_PIVOT = hardwareMap.get(CRServo.class, "rightPivot");
+        LEFT_PIVOT = hardwareMap.get(CRServo.class, "leftPivot");
 
         ELEVATOR = hardwareMap.get(DcMotorEx.class, "elevator");
 
