@@ -44,6 +44,8 @@ public class Arm extends SubsystemBase {
 
         slidePid = new PIDController(SLIDE.kP, SLIDE.kI, SLIDE.kD);
         pivotPid = new PIDController(PIVOT.kP, PIVOT.kI, PIVOT.kD);
+        alignmentPid = new PIDController(SLIDE.alignP, SLIDE.alignI, SLIDE.alignD);
+
         setupMotors();
         INSTANCE = this;
     }
@@ -107,11 +109,11 @@ public class Arm extends SubsystemBase {
     // SETTERS
 
     public void setSlidePos(double pos) {
-        slidePid.setSetPoint(pos);
+        slidePid.setSetPoint(pos - slideOffset);
     }
 
     public void setPivotPos(double pos) {
-        pivotPid.setSetPoint(pos);
+        pivotPid.setSetPoint(pos - pivotOffset);
     }
 
     public void setSlideOffset() {
@@ -120,6 +122,15 @@ public class Arm extends SubsystemBase {
 
     public void setPivotOffset() {
         pivotOffset = getPivotPos();
+    }
+
+    /**
+     * For debugging and pid tuning
+     */
+    public void updatePid() {
+        slidePid.setPID(SLIDE.kP, SLIDE.kI, SLIDE.kD);
+        pivotPid.setPID(PIVOT.kP, PIVOT.kI, PIVOT.kD);
+        alignmentPid.setPID(SLIDE.alignP, SLIDE.alignI, SLIDE.alignD);
     }
 
     // PERIODIC

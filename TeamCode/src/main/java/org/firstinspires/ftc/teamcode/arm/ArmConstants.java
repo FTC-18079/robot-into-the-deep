@@ -11,6 +11,10 @@ public class ArmConstants {
         public double kD = 0.0;
         public double kF = 0.0;
 
+        public double alignP = 0.02;
+        public double alignI = 0.0;
+        public double alignD = 0.0;
+
         // Constants
         public double ERROR_TOLERANCE = 5.0;
         public double TICKS_IN_DEGREES = 0.0;
