@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotMap;
 
+@SuppressWarnings("unused")
 public class Arm extends SubsystemBase {
     Telemetry telemetry;
 
@@ -23,6 +24,7 @@ public class Arm extends SubsystemBase {
 
     PIDController slidePid;
     PIDController pivotPid;
+    PIDController alignmentPid;
 
     static double slideOffset = 0;
     static double pivotOffset = 0;
@@ -44,6 +46,10 @@ public class Arm extends SubsystemBase {
         pivotPid = new PIDController(PIVOT.kP, PIVOT.kI, PIVOT.kD);
         setupMotors();
         INSTANCE = this;
+    }
+
+    public enum State {
+        REST, COLLECTING_SAMPLE, COLLECTING_SPECIMEN, SCORING_SAMPLE, SCORING_SPECIMEN
     }
 
     // MOTOR SETUP
@@ -118,9 +124,16 @@ public class Arm extends SubsystemBase {
 
     // PERIODIC
 
+    public void stateMachine() {
+
+    }
+
     @Override
     public void periodic() {
         double slideOutput = slidePid.calculate(getSlidePos());
+        double slideFeedforward = SLIDE.kF * Math.sin(Math.toRadians(getPivotTarget() / PIVOT.TICKS_IN_DEGREES));
+        slideOutput += slideFeedforward;
+
         double pivotOutput = pivotPid.calculate(getPivotPos());
         double pivotFeedforward = PIVOT.kF * Math.cos(Math.toRadians(getPivotTarget() / PIVOT.TICKS_IN_DEGREES));
         pivotOutput += pivotFeedforward;

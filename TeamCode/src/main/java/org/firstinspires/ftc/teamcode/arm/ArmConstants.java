@@ -6,7 +6,7 @@ import com.acmerobotics.dashboard.config.Config;
 public class ArmConstants {
     public static class Slide {
         // PID coefficients
-        public double kP = 1.0;
+        public double kP = 0.001;
         public double kI = 0.0;
         public double kD = 0.0;
         public double kF = 0.0;
@@ -18,7 +18,7 @@ public class ArmConstants {
 
     public static class Pivot {
         // PID coefficients
-        public double kP = 1.0;
+        public double kP = 0.001;
         public double kI = 0.0;
         public double kD = 0.0;
         public double kF = 0.0;
