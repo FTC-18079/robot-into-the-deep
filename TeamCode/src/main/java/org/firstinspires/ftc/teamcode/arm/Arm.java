@@ -29,6 +29,12 @@ public class Arm extends SubsystemBase {
     static double slideOffset = 0;
     static double pivotOffset = 0;
 
+    public enum State {
+        STOW, COLLECTING_SAMPLE, COLLECTING_SPECIMEN, SCORING_SAMPLE, SCORING_SPECIMEN
+    }
+
+    State state;
+
     private static Arm INSTANCE = null;
 
     public static Arm getInstance() {
@@ -47,11 +53,9 @@ public class Arm extends SubsystemBase {
         alignmentPid = new PIDController(SLIDE.alignP, SLIDE.alignI, SLIDE.alignD);
 
         setupMotors();
-        INSTANCE = this;
-    }
 
-    public enum State {
-        REST, COLLECTING_SAMPLE, COLLECTING_SPECIMEN, SCORING_SAMPLE, SCORING_SPECIMEN
+        state = State.STOW;
+        INSTANCE = this;
     }
 
     // MOTOR SETUP
@@ -104,6 +108,10 @@ public class Arm extends SubsystemBase {
 
     public boolean pivotAtSetPoint() {
         return Math.abs(getPivotPos() - getPivotTarget()) < PIVOT.ERROR_TOLERANCE;
+    }
+
+    public State getState() {
+        return state;
     }
 
     // SETTERS
