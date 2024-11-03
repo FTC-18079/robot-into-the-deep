@@ -37,8 +37,6 @@ public class RobotCore extends Robot {
 
     // Subsystems
     Chassis chassis;
-    Collector collector;
-    Elevator elevator;
     LLVision llVision;
 
     // Commands
@@ -95,10 +93,7 @@ public class RobotCore extends Robot {
 
     public void initSubsystems() {
         chassis = Chassis.getInstance();
-        collector = Collector.getInstance();
-        elevator = Elevator.getInstance();
-        //llVision = LLVision.getInstance();
-        register(chassis, collector, elevator);
+        register(chassis);
 
         telemetry.addData("Status", "Robot initialized, ready to enable");
         telemetry.update();
@@ -137,60 +132,6 @@ public class RobotCore extends Robot {
         // Toggle drive mode
         driveController.getGamepadButton(GamepadKeys.Button.B)
                 .whenPressed(chassis::toggleRobotCentric);
-
-        // Scoring buttons
-        manipController.getGamepadButton(GamepadKeys.Button.A)
-                .whenPressed(ElevatorCommands.SCORE_COMMAND)
-                .whenReleased(ElevatorCommands.RELEASE_COMMAND);
-        manipController.getGamepadButton(GamepadKeys.Button.B)
-                .whenPressed(elevator::toggleClaw);
-
-        // Elevator position buttons
-        manipController.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
-                .whenPressed(elevator::toRest);
-        manipController.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
-                .whenPressed(elevator::toLow);
-        manipController.getGamepadButton(GamepadKeys.Button.DPAD_UP)
-                .whenPressed(elevator::toHigh);
-
-        // Toggle game piece types
-        manipController.getGamepadButton(GamepadKeys.Button.X)
-                .whenPressed(elevator::toggleScoreType)
-                .whenPressed(Commands.runOnce(() -> rumbleManip(100)));
-
-        // Collector control
-        manipController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
-                .whenPressed(Commands.either(
-                        CollectorCommands.TO_COLLECTING.get(),
-                        Commands.runOnce(collector::deployStow).andThen(CollectorCommands.TO_STOW.get()),
-                        () -> collector.getTargetPose() == CollectorConstants.SLIDE_STOW_POS
-                ));
-        new Trigger(() -> manipController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > TRIGGER_DEADZONE)
-                .whenActive(Commands.either(
-                        Commands.deferredProxy(() -> CollectorCommands.COLLECT_SEQUENCE),
-                        new InstantCommand(),
-                        () -> (collector.atSetPoint() && collector.getState() == Collector.CollectorState.COLLECTING)
-                ));
-        manipController.getGamepadButton(GamepadKeys.Button.LEFT_STICK_BUTTON)
-                .whenPressed(Commands.runOnce(collector::vertical));
-        manipController.getGamepadButton(GamepadKeys.Button.RIGHT_STICK_BUTTON)
-                .whenPressed(Commands.runOnce(collector::horizontal));
-        manipController.getGamepadButton(GamepadKeys.Button.START)
-                .whenPressed(collector::deployCollect);
-        manipController.getGamepadButton(GamepadKeys.Button.BACK)
-                .whenPressed(collector::down);
-
-        // Toggle target color
-//        manipController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-//                .whenPressed(Commands.either(
-//                        Commands.either(
-//                                Commands.runOnce(() -> setControllerColors(1, 0, 0)).andThen(new InstantCommand(llVision::setRed)),
-//                                Commands.runOnce(() -> setControllerColors(0, 0, 1)).andThen(new InstantCommand(llVision::setBlue)),
-//                                () -> RobotGlobal.alliance == RobotGlobal.Alliance.RED
-//                        ),
-//                        Commands.runOnce(() -> setControllerColors(1, 1, 0)).andThen(new InstantCommand(llVision::setYellow)),
-//                        () -> llVision.getTargetColor() == LLVision.SampleColor.YELLOW
-//                ));
 
         chassis.setDefaultCommand(driveCommand);
     }

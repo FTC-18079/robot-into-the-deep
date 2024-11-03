@@ -92,14 +92,6 @@ public class RobotMap {
 
         ELEVATOR = hardwareMap.get(DcMotorEx.class, "elevator");
 
-        CLAW = /*(PhotonServo)*/ hardwareMap.servo.get("claw");
-        BUCKET = /*(PhotonServo)*/ hardwareMap.servo.get("bucket");
-        DOOR = /*(PhotonServo)*/ hardwareMap.servo.get("door");
-
-        DEPLOY = /*(PhotonServo)*/ hardwareMap.servo.get("deploy");
-        PIVOT = /*(PhotonServo)*/ hardwareMap.servo.get("pivot");
-        INTAKE = /*(PhotonServo)*/ hardwareMap.servo.get("intake");
-
         for (LynxModule hub : getLynxModules()) {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
         }
