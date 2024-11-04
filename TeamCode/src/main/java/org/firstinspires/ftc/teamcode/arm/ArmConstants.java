@@ -4,34 +4,45 @@ import com.acmerobotics.dashboard.config.Config;
 
 @Config
 public class ArmConstants {
-    public static class Slide {
-        // PID coefficients
-        public double kP = 0.001;
-        public double kI = 0.0;
-        public double kD = 0.0;
-        public double kF = 0.0;
+    /**
+     * SLIDES
+     */
 
-        public double alignP = 0.02;
-        public double alignI = 0.0;
-        public double alignD = 0.0;
+    // PID
+    public static double SLIDE_kP = 0.001;
+    public static double SLIDE_kI = 0.0;
+    public static double SLIDE_kD = 0.0;
+    public static double SLIDE_kF = 0.0;
 
-        // Constants
-        public double ERROR_TOLERANCE = 5.0;
-    }
+    // Alignment PID
+    public static double ALIGN_kP = 0.02;
+    public static double ALIGN_kI = 0.0;
+    public static double ALIGN_kD = 0.0;
+    public static double ALIGN_kF = 0.0;
 
-    public static class Pivot {
-        // PID coefficients
-        public double kP = 0.001;
-        public double kI = 0.0;
-        public double kD = 0.00005;
-        public double kF = 0.0;
+    // Constants
+    public static double SLIDE_ERROR_TOLERANCE = 5.0;
 
-        // Constants
-        public double ERROR_TOLERANCE = 5.0;
-        public double GEAR_RATIO = 40.0 / 15.0;
-        public double COUNTS_PER_REVOLUTION = 8192.0 * GEAR_RATIO;
-    }
+    /**
+     * PIVOT
+     */
 
-    public static Slide SLIDE = new Slide();
-    public static Pivot PIVOT = new Pivot();
+    // PID
+    public static double PIVOT_kP = 0.001;
+    public static double PIVOT_kI = 0.0;
+    public static double PIVOT_kD = 0.00005;
+    public static double PIVOT_kF = 0.0;
+
+    // Constants
+    public static double PIVOT_ERROR_TOLERANCE = 5.0;
+    public static double PIVOT_GEAR_RATIO = 40.0 / 15.0;
+    public static double PIVOT_COUNTS_PER_REVOLUTION = 8192.0 * PIVOT_GEAR_RATIO;
+
+    // Positions
+    public static double PIVOT_STARTING_ANGLE = 12.5;
+    public static double PIVOT_STARTING_POS = (PIVOT_STARTING_ANGLE / 360.0) * PIVOT_COUNTS_PER_REVOLUTION;
+
+    public static double PIVOT_REST_POSITION = 0.0;
+    public static double PIVOT_SCORE_POSITION = (90.0 / 360.0) * PIVOT_COUNTS_PER_REVOLUTION;
+    public static double PIVOT_CLIMB_POSITION = (90.0 / 360.0) * PIVOT_COUNTS_PER_REVOLUTION;
 }

@@ -50,11 +50,15 @@ public class Arm extends SubsystemBase {
         rightPivot = RobotMap.getInstance().RIGHT_PIVOT;
         leftPivot = RobotMap.getInstance().LEFT_PIVOT;
 
-        slidePid = new PIDController(SLIDE.kP, SLIDE.kI, SLIDE.kD);
-        pivotPid = new PIDController(PIVOT.kP, PIVOT.kI, PIVOT.kD);
-        alignmentPid = new PIDController(SLIDE.alignP, SLIDE.alignI, SLIDE.alignD);
+        slidePid = new PIDController(SLIDE_kP, SLIDE_kI, SLIDE_kD);
+        pivotPid = new PIDController(PIVOT_kP, PIVOT_kI, PIVOT_kD);
+        alignmentPid = new PIDController(ALIGN_kP, ALIGN_kI, ALIGN_kD);
 
+        resetSlideEncoder();
+        resetPivotEncoder();
         setupMotors();
+
+        pivotOffset = PIVOT_STARTING_POS;
 
         state = State.STOW;
         INSTANCE = this;
@@ -105,11 +109,11 @@ public class Arm extends SubsystemBase {
     }
 
     public boolean slideAtSetPoint() {
-        return Math.abs(getSlidePos() - getSlideTarget()) < SLIDE.ERROR_TOLERANCE;
+        return Math.abs(getSlidePos() - getSlideTarget()) < SLIDE_ERROR_TOLERANCE;
     }
 
     public boolean pivotAtSetPoint() {
-        return Math.abs(getPivotPos() - getPivotTarget()) < PIVOT.ERROR_TOLERANCE;
+        return Math.abs(getPivotPos() - getPivotTarget()) < PIVOT_ERROR_TOLERANCE;
     }
 
     public State getState() {
@@ -119,28 +123,28 @@ public class Arm extends SubsystemBase {
     // SETTERS
 
     public void setSlidePos(double pos) {
-        slidePid.setSetPoint(pos - slideOffset);
+        slidePid.setSetPoint(pos);
     }
 
     public void setPivotPos(double pos) {
-        pivotPid.setSetPoint(pos - pivotOffset);
+        pivotPid.setSetPoint(pos);
     }
 
     public void setSlideOffset() {
-        slideOffset = getSlidePos();
+        slideOffset += getSlidePos();
     }
 
     public void setPivotOffset() {
-        pivotOffset = getPivotPos();
+        pivotOffset += getPivotPos();
     }
 
     /**
      * For debugging and pid tuning
      */
     public void updatePid() {
-        slidePid.setPID(SLIDE.kP, SLIDE.kI, SLIDE.kD);
-        pivotPid.setPID(PIVOT.kP, PIVOT.kI, PIVOT.kD);
-        alignmentPid.setPID(SLIDE.alignP, SLIDE.alignI, SLIDE.alignD);
+        slidePid.setPID(SLIDE_kP, SLIDE_kI, SLIDE_kD);
+        pivotPid.setPID(PIVOT_kP, PIVOT_kI, PIVOT_kD);
+        alignmentPid.setPID(ALIGN_kP, ALIGN_kI, ALIGN_kD);
     }
 
     // PERIODIC
@@ -152,11 +156,14 @@ public class Arm extends SubsystemBase {
     @Override
     public void periodic() {
         double slideOutput = slidePid.calculate(getSlidePos());
-        double slideFeedforward = SLIDE.kF * Math.sin(Math.toRadians(getPivotTarget() / PIVOT.COUNTS_PER_REVOLUTION * 360.0));
+        double slideFeedforward = SLIDE_kF * Math.sin(Math.toRadians(getPivotTarget() / PIVOT_COUNTS_PER_REVOLUTION * 360.0));
         slideOutput += slideFeedforward;
 
         double pivotOutput = pivotPid.calculate(getPivotPos());
-        double pivotFeedforward = PIVOT.kF * Math.cos(Math.toRadians(getPivotTarget() / PIVOT.COUNTS_PER_REVOLUTION * 360.0));
-        pivotOutput += pivotFeedforward;
+        double pivotFeedforward = PIVOT_kF * Math.cos(Math.toRadians(getPivotTarget() / PIVOT_COUNTS_PER_REVOLUTION * 360.0));
+        //pivotOutput += pivotFeedforward;
+
+        rightPivot.setPower(pivotOutput);
+        leftPivot.setPower(pivotOutput);
     }
 }
