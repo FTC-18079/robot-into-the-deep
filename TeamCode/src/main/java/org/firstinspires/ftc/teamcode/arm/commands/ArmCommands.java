@@ -32,8 +32,7 @@ public class ArmCommands {
     public static Command TO_STOW;
     public static Command TO_BASKET;
     public static Command TO_CHAMBER;
-    public static Command TO_SAMPLE_COLLECT;
-    public static Command TO_SPECIMEN_COLLECT;
+    public static Command TO_COLLECT;
 
     static {
         Supplier<Arm> arm = Arm::getInstance;
@@ -90,6 +89,7 @@ public class ArmCommands {
         });
 
         TO_BASKET = Commands.deferredProxy(() -> {
+            if (arm.get().getScoreType() == Arm.ScoreType.SPECIMEN) return Commands.none();
             switch (arm.get().getState()) {
                 case STOW:
                     return Commands.defer(STOW_TO_BASKET, arm.get());
@@ -101,6 +101,7 @@ public class ArmCommands {
         });
 
         TO_CHAMBER = Commands.deferredProxy(() -> {
+            if (arm.get().getScoreType() == Arm.ScoreType.SAMPLE) return Commands.none();
             switch (arm.get().getState()) {
                 case COLLECTING_SPECIMEN:
                     return Commands.defer(SPECIMEN_COLLECT_TO_CHAMBER, arm.get());
@@ -111,15 +112,13 @@ public class ArmCommands {
             }
         });
 
-        TO_SAMPLE_COLLECT = Commands.deferredProxy(() -> {
+        TO_COLLECT = Commands.deferredProxy(() -> {
             if (arm.get().getState() == Arm.State.STOW) {
-                return Commands.defer(STOW_TO_SAMPLE_COLLECT, arm.get());
-            } else return Commands.none();
-        });
-
-        TO_SPECIMEN_COLLECT = Commands.deferredProxy(() -> {
-            if (arm.get().getState() == Arm.State.STOW) {
-                return Commands.defer(STOW_TO_SPECIMEN_COLLECT, arm.get());
+                if (arm.get().getScoreType() == Arm.ScoreType.SPECIMEN) {
+                    return Commands.defer(STOW_TO_SPECIMEN_COLLECT, arm.get());
+                } else {
+                    return Commands.defer(STOW_TO_SAMPLE_COLLECT, arm.get());
+                }
             } else return Commands.none();
         });
     }

@@ -33,7 +33,12 @@ public class Arm extends SubsystemBase {
         STOW, COLLECTING_SAMPLE, COLLECTING_SPECIMEN, SCORING_SAMPLE, SCORING_SPECIMEN
     }
 
+    public enum ScoreType {
+        SPECIMEN, SAMPLE
+    }
+
     State state;
+    ScoreType scoreType;
 
     private static Arm INSTANCE = null;
 
@@ -59,6 +64,7 @@ public class Arm extends SubsystemBase {
         setupMotors();
 
         state = State.STOW;
+        scoreType = ScoreType.SPECIMEN;
         INSTANCE = this;
     }
 
@@ -118,6 +124,10 @@ public class Arm extends SubsystemBase {
         return state;
     }
 
+    public ScoreType getScoreType() {
+        return scoreType;
+    }
+
     // SETTERS
 
     public void setSlidePos(double pos) {
@@ -134,6 +144,14 @@ public class Arm extends SubsystemBase {
 
     public void setPivotOffset() {
         pivotOffset += getPivotPos();
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
+    public void setScoreType(ScoreType scoreType) {
+        this.scoreType = scoreType;
     }
 
     /**
