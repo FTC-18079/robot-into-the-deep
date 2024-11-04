@@ -44,7 +44,9 @@ public class Arm extends SubsystemBase {
     public Arm() {
         rightSlide = RobotMap.getInstance().RIGHT_SLIDE;
         leftSlide = RobotMap.getInstance().LEFT_SLIDE;
-        pivotEncoder = RobotMap.getInstance().LEFT_SLIDE;
+
+        pivotEncoder = RobotMap.getInstance().MOTOR_BR;
+
         rightPivot = RobotMap.getInstance().RIGHT_PIVOT;
         leftPivot = RobotMap.getInstance().LEFT_PIVOT;
 
@@ -67,8 +69,8 @@ public class Arm extends SubsystemBase {
         rightSlide.setDirection(DcMotorSimple.Direction.FORWARD);
         leftSlide.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        rightPivot.setDirection(DcMotorSimple.Direction.FORWARD);
-        leftPivot.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightPivot.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftPivot.setDirection(DcMotorSimple.Direction.FORWARD);
 
         rightSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -150,11 +152,11 @@ public class Arm extends SubsystemBase {
     @Override
     public void periodic() {
         double slideOutput = slidePid.calculate(getSlidePos());
-        double slideFeedforward = SLIDE.kF * Math.sin(Math.toRadians(getPivotTarget() / PIVOT.TICKS_IN_DEGREES));
+        double slideFeedforward = SLIDE.kF * Math.sin(Math.toRadians(getPivotTarget() / PIVOT.COUNTS_PER_REVOLUTION * 360.0));
         slideOutput += slideFeedforward;
 
         double pivotOutput = pivotPid.calculate(getPivotPos());
-        double pivotFeedforward = PIVOT.kF * Math.cos(Math.toRadians(getPivotTarget() / PIVOT.TICKS_IN_DEGREES));
+        double pivotFeedforward = PIVOT.kF * Math.cos(Math.toRadians(getPivotTarget() / PIVOT.COUNTS_PER_REVOLUTION * 360.0));
         pivotOutput += pivotFeedforward;
     }
 }

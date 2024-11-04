@@ -17,19 +17,19 @@ public class ArmConstants {
 
         // Constants
         public double ERROR_TOLERANCE = 5.0;
-        public double TICKS_IN_DEGREES = 0.0;
     }
 
     public static class Pivot {
         // PID coefficients
         public double kP = 0.001;
         public double kI = 0.0;
-        public double kD = 0.0;
+        public double kD = 0.00005;
         public double kF = 0.0;
 
         // Constants
         public double ERROR_TOLERANCE = 5.0;
-        public double TICKS_IN_DEGREES = 0.0;
+        public double GEAR_RATIO = 40.0 / 15.0;
+        public double COUNTS_PER_REVOLUTION = 8192.0 * GEAR_RATIO;
     }
 
     public static Slide SLIDE = new Slide();

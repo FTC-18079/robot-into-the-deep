@@ -26,10 +26,6 @@ public class RobotMap {
     public DcMotorEx MOTOR_FR;
     public DcMotorEx MOTOR_BL;
     public DcMotorEx MOTOR_BR;
-//    public PhotonDcMotor MOTOR_FL;
-//    public PhotonDcMotor MOTOR_FR;
-//    public PhotonDcMotor MOTOR_BL;
-//    public PhotonDcMotor MOTOR_BR;
 
     // Slides
     public DcMotorEx LEFT_SLIDE;
@@ -43,9 +39,6 @@ public class RobotMap {
     public DcMotorEx ELEVATOR;
 
     // Scoring
-//    public PhotonServo CLAW;
-//    public PhotonServo BUCKET;
-//    public PhotonServo DOOR;
     public Servo CLAW;
     public Servo BUCKET;
     public Servo DOOR;
@@ -79,18 +72,12 @@ public class RobotMap {
         MOTOR_FR = hardwareMap.get(DcMotorEx.class, "rightFront");
         MOTOR_BL = hardwareMap.get(DcMotorEx.class, "leftBack");
         MOTOR_BR = hardwareMap.get(DcMotorEx.class, "rightBack");
-//        MOTOR_FL = (PhotonDcMotor) hardwareMap.dcMotor.get("leftFront");
-//        MOTOR_FR = (PhotonDcMotor) hardwareMap.dcMotor.get("rightFront");
-//        MOTOR_BL = (PhotonDcMotor) hardwareMap.dcMotor.get("leftBack");
-//        MOTOR_BR = (PhotonDcMotor) hardwareMap.dcMotor.get("rightBack");
 
         LEFT_SLIDE = hardwareMap.get(DcMotorEx.class, "leftSlide");
         RIGHT_SLIDE = hardwareMap.get(DcMotorEx.class, "rightSlide");
 
         RIGHT_PIVOT = hardwareMap.get(CRServo.class, "rightPivot");
         LEFT_PIVOT = hardwareMap.get(CRServo.class, "leftPivot");
-
-        ELEVATOR = hardwareMap.get(DcMotorEx.class, "elevator");
 
         for (LynxModule hub : getLynxModules()) {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
