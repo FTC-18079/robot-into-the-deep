@@ -15,7 +15,8 @@ import org.firstinspires.ftc.teamcode.arm.Arm;
 @TeleOp
 public class ArmTest extends OpMode {
     Arm arm;
-    public static double target = 0;
+    public static double pivotTarget = 0;
+    public static double slideTarget = 0;
 
     @Override
     public void init() {
@@ -41,13 +42,17 @@ public class ArmTest extends OpMode {
         for (LynxModule hub : RobotMap.getInstance().getLynxModules()) {
             hub.clearBulkCache();
         }
-        arm.periodic();
-        arm.setPivotPos(target);
 
-        telemetry.addData("Encoder Pos", arm.getPivotPos());
-        telemetry.addData("Encoder angle", arm.getPivotPos() / PIVOT_COUNTS_PER_REVOLUTION * 360.0);
-        telemetry.addData("Target pos", arm.getPivotTarget());
-        telemetry.addData("Target angle", arm.getPivotTarget() / PIVOT_COUNTS_PER_REVOLUTION * 360.0);
+        if (gamepad1.a) {
+            arm.updatePid();
+        }
+
+        arm.periodic();
+        arm.setPivotPos(pivotTarget);
+        arm.setSlidePos(slideTarget);
+
+        telemetry.addData("Encoder Pos", arm.getSlidePos());
+        telemetry.addData("Target pos", arm.getSlideTarget());
         telemetry.update();
     }
 

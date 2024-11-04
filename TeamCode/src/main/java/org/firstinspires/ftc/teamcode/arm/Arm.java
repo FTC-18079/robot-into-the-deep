@@ -58,8 +58,6 @@ public class Arm extends SubsystemBase {
         resetPivotEncoder();
         setupMotors();
 
-        pivotOffset = PIVOT_STARTING_POS;
-
         state = State.STOW;
         INSTANCE = this;
     }
@@ -97,7 +95,7 @@ public class Arm extends SubsystemBase {
     }
 
     public double getPivotPos() {
-        return pivotEncoder.getCurrentPosition() - pivotOffset;
+        return pivotEncoder.getCurrentPosition() - PIVOT_STARTING_POS;
     }
 
     public double getSlideTarget() {
@@ -157,13 +155,14 @@ public class Arm extends SubsystemBase {
     public void periodic() {
         double slideOutput = slidePid.calculate(getSlidePos());
         double slideFeedforward = SLIDE_kF * Math.sin(Math.toRadians(getPivotTarget() / PIVOT_COUNTS_PER_REVOLUTION * 360.0));
-        slideOutput += slideFeedforward;
 
         double pivotOutput = pivotPid.calculate(getPivotPos());
         double pivotFeedforward = PIVOT_kF * Math.cos(Math.toRadians(getPivotTarget() / PIVOT_COUNTS_PER_REVOLUTION * 360.0));
-        //pivotOutput += pivotFeedforward;
 
-        rightPivot.setPower(pivotOutput);
-        leftPivot.setPower(pivotOutput);
+        rightSlide.setPower(slideOutput + slideFeedforward);
+        leftSlide.setPower(slideOutput + slideFeedforward);
+
+        rightPivot.setPower(pivotOutput + pivotFeedforward);
+        leftPivot.setPower(pivotOutput + pivotFeedforward);
     }
 }

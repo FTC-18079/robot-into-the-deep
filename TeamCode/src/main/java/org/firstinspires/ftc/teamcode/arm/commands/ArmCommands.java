@@ -3,9 +3,9 @@ package org.firstinspires.ftc.teamcode.arm.commands;
 import com.arcrobotics.ftclib.command.Command;
 
 import org.firstinspires.ftc.teamcode.arm.Arm;
+import org.firstinspires.ftc.teamcode.arm.ArmConstants;
 import org.firstinspires.ftc.teamcode.util.commands.Commands;
 
-import java.util.Objects;
 import java.util.function.Supplier;
 
 public class ArmCommands {
@@ -38,15 +38,35 @@ public class ArmCommands {
     static {
         Supplier<Arm> arm = Arm::getInstance;
 
-        BASKET_TO_STOW = () -> Commands.sequence();
-        CHAMBER_TO_STOW = () -> Commands.sequence();
+        BASKET_TO_STOW = () -> Commands.sequence(
+                Commands.runOnce(() -> arm.get().setSlidePos(0)),
+                Commands.waitUntil(() -> arm.get().getSlidePos() < 1000.0),
+                Commands.runOnce(() -> arm.get().setPivotPos(0)),
+                Commands.waitUntil(() -> arm.get().slideAtSetPoint() && arm.get().pivotAtSetPoint())
+        );
+        CHAMBER_TO_STOW = () -> Commands.sequence(
+                Commands.runOnce(() -> arm.get().setSlidePos(0)),
+                Commands.runOnce(() -> arm.get().setPivotPos(0)),
+                Commands.waitUntil(() -> arm.get().slideAtSetPoint() && arm.get().pivotAtSetPoint())
+        );
         SAMPLE_COLLECT_TO_STOW = () -> Commands.sequence();
 
-        STOW_TO_BASKET = () -> Commands.sequence();
-        CHAMBER_TO_BASKET = () -> Commands.sequence();
+        STOW_TO_BASKET = () -> Commands.sequence(
+                Commands.runOnce(() -> arm.get().setPivotPos(ArmConstants.PIVOT_SCORE_POSITION)),
+                Commands.waitUntil(() -> arm.get().pivotAtSetPoint()),
+                Commands.runOnce(() -> arm.get().setSlidePos(ArmConstants.SLIDE_BASKET_POSITION)),
+                Commands.waitUntil(() -> arm.get().slideAtSetPoint())
+        );
+        CHAMBER_TO_BASKET = () -> Commands.sequence(
+                Commands.runOnce(() -> arm.get().setSlidePos(ArmConstants.SLIDE_BASKET_POSITION)),
+                Commands.waitUntil(() -> arm.get().slideAtSetPoint())
+        );
 
         SPECIMEN_COLLECT_TO_CHAMBER = () -> Commands.sequence();
-        BASKET_TO_CHAMBER = () -> Commands.sequence();
+        BASKET_TO_CHAMBER = () -> Commands.sequence(
+                Commands.runOnce(() -> arm.get().setSlidePos(ArmConstants.SLIDE_CHAMBER_POSITION)),
+                Commands.waitUntil(() -> arm.get().slideAtSetPoint())
+        );
 
         STOW_TO_SAMPLE_COLLECT = () -> Commands.sequence();
 
