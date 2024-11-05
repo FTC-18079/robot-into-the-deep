@@ -13,10 +13,6 @@ public class Claw extends SubsystemBase {
     Servo wrist;
     Servo joint;
 
-    public enum ClawState {
-        STOW, COLLECTING_SAMPLE, COLLECTING_SPECIMEN, SCORING_SAMPLE, SCORING_SPECIMEN
-    }
-
     ClawState state;
 
     public static Claw INSTANCE = null;
@@ -30,7 +26,7 @@ public class Claw extends SubsystemBase {
         wrist = RobotMap.getInstance().WRIST;
         joint = RobotMap.getInstance().JOINT;
 
-        state = ClawState.STOW;
+        state = new ClawState();
         INSTANCE = this;
     }
 
@@ -64,12 +60,10 @@ public class Claw extends SubsystemBase {
 
     // PERIODIC
 
-    public void stateMachine() {
-
-    }
-
     @Override
     public void periodic() {
-
+        claw.setPosition(state.clawPos);
+        wrist.setPosition(state.wristPos);
+        joint.setPosition(state.jointPos);
     }
 }
