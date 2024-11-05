@@ -113,7 +113,7 @@ public class ArmCommands {
         });
 
         TO_COLLECT = Commands.deferredProxy(() -> {
-            if (arm.get().getState() == Arm.State.STOW) {
+            if (arm.get().getState() == Arm.ArmState.STOW) {
                 if (arm.get().getScoreType() == Arm.ScoreType.SPECIMEN) {
                     return Commands.defer(STOW_TO_SPECIMEN_COLLECT, arm.get());
                 } else {

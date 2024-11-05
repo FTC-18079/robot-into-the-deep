@@ -29,7 +29,7 @@ public class Arm extends SubsystemBase {
     static double slideOffset = 0;
     static double pivotOffset = 0;
 
-    public enum State {
+    public enum ArmState {
         STOW, COLLECTING_SAMPLE, COLLECTING_SPECIMEN, SCORING_SAMPLE, SCORING_SPECIMEN
     }
 
@@ -37,7 +37,7 @@ public class Arm extends SubsystemBase {
         SPECIMEN, SAMPLE
     }
 
-    State state;
+    ArmState state;
     ScoreType scoreType;
 
     private static Arm INSTANCE = null;
@@ -63,7 +63,7 @@ public class Arm extends SubsystemBase {
         resetPivotEncoder();
         setupMotors();
 
-        state = State.STOW;
+        state = ArmState.STOW;
         scoreType = ScoreType.SPECIMEN;
         INSTANCE = this;
     }
@@ -120,7 +120,7 @@ public class Arm extends SubsystemBase {
         return Math.abs(getPivotPos() - getPivotTarget()) < PIVOT_ERROR_TOLERANCE;
     }
 
-    public State getState() {
+    public ArmState getState() {
         return state;
     }
 
@@ -146,7 +146,7 @@ public class Arm extends SubsystemBase {
         pivotOffset += getPivotPos();
     }
 
-    public void setState(State state) {
+    public void setState(ArmState state) {
         this.state = state;
     }
 

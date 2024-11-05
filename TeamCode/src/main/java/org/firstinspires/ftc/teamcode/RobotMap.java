@@ -35,21 +35,10 @@ public class RobotMap {
     public CRServo LEFT_PIVOT;
     public CRServo RIGHT_PIVOT;
 
-    // Elevator
-    public DcMotorEx ELEVATOR;
-
-    // Scoring
+    // Claw
     public Servo CLAW;
-    public Servo BUCKET;
-    public Servo DOOR;
-
-    // Collector
-//    public PhotonServo DEPLOY;
-//    public PhotonServo PIVOT;
-//    public PhotonServo INTAKE;
-    public Servo DEPLOY;
-    public Servo PIVOT;
-    public Servo INTAKE;
+    public Servo WRIST;
+    public Servo JOINT;
 
     private static RobotMap instance = null;
 
@@ -78,6 +67,10 @@ public class RobotMap {
 
         RIGHT_PIVOT = hardwareMap.get(CRServo.class, "rightPivot");
         LEFT_PIVOT = hardwareMap.get(CRServo.class, "leftPivot");
+
+        CLAW = hardwareMap.get(Servo.class, "claw");
+        WRIST = hardwareMap.get(Servo.class, "wrist");
+        JOINT = hardwareMap.get(Servo.class, "joint");
 
         for (LynxModule hub : getLynxModules()) {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);

@@ -48,10 +48,10 @@ public class Elevator extends SubsystemBase {
     }
 
     private Elevator() {
-        elevator = new SuccessMotor(RobotMap.getInstance().ELEVATOR);
-        claw = RobotMap.getInstance().CLAW;
-        bucket = RobotMap.getInstance().BUCKET;
-        door = RobotMap.getInstance().DOOR;
+//        elevator = new SuccessMotor(RobotMap.getInstance().ELEVATOR);
+//        claw = RobotMap.getInstance().CLAW;
+//        bucket = RobotMap.getInstance().BUCKET;
+//        door = RobotMap.getInstance().DOOR;
 
         scoreType = ScoreType.SPECIMEN;
 
