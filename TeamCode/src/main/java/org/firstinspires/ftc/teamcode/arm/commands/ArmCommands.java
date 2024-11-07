@@ -47,6 +47,7 @@ public class ArmCommands {
         Supplier<Claw> claw = Claw::getInstance;
 
         BASKET_TO_STOW = () -> Commands.sequence(
+                Commands.runOnce(() -> arm.get().setState(Arm.ArmState.STOW)),
                 Commands.runOnce(() -> claw.get().setState(ClawConstants.REST_STATE)),
                 Commands.runOnce(() -> arm.get().setSlidePos(0)),
                 Commands.waitUntil(() -> arm.get().getSlidePos() < 1000.0),
@@ -54,33 +55,45 @@ public class ArmCommands {
                 Commands.waitUntil(() -> arm.get().slideAtSetPoint() && arm.get().pivotAtSetPoint())
         );
         CHAMBER_TO_STOW = () -> Commands.sequence(
+                Commands.runOnce(() -> arm.get().setState(Arm.ArmState.STOW)),
                 Commands.runOnce(() -> claw.get().setState(ClawConstants.REST_STATE)),
                 Commands.runOnce(() -> arm.get().setSlidePos(0)),
                 Commands.runOnce(() -> arm.get().setPivotPos(0)),
                 Commands.waitUntil(() -> arm.get().slideAtSetPoint() && arm.get().pivotAtSetPoint())
         );
-        SAMPLE_COLLECT_TO_STOW = () -> Commands.sequence();
+        SAMPLE_COLLECT_TO_STOW = () -> Commands.sequence(
+                Commands.runOnce(() -> arm.get().setState(Arm.ArmState.STOW))
+        );
 
         STOW_TO_BASKET = () -> Commands.sequence(
+                Commands.runOnce(() -> arm.get().setState(Arm.ArmState.SCORING_SAMPLE)),
                 Commands.runOnce(() -> arm.get().setPivotPos(ArmConstants.PIVOT_SCORE_POSITION)),
                 Commands.waitUntil(arm.get()::pivotAtSetPoint),
                 Commands.runOnce(() -> arm.get().setSlidePos(ArmConstants.SLIDE_BASKET_POSITION)),
                 Commands.waitUntil(arm.get()::slideAtSetPoint)
         );
         CHAMBER_TO_BASKET = () -> Commands.sequence(
+                Commands.runOnce(() -> arm.get().setState(Arm.ArmState.SCORING_SAMPLE)),
                 Commands.runOnce(() -> arm.get().setSlidePos(ArmConstants.SLIDE_BASKET_POSITION)),
                 Commands.waitUntil(arm.get()::slideAtSetPoint)
         );
 
-        SPECIMEN_COLLECT_TO_CHAMBER = () -> Commands.sequence();
+        SPECIMEN_COLLECT_TO_CHAMBER = () -> Commands.sequence(
+                Commands.runOnce(() -> arm.get().setState(Arm.ArmState.SCORING_SPECIMEN))
+        );
         BASKET_TO_CHAMBER = () -> Commands.sequence(
+                Commands.runOnce(() -> arm.get().setState(Arm.ArmState.SCORING_SPECIMEN)),
                 Commands.runOnce(() -> arm.get().setSlidePos(ArmConstants.SLIDE_CHAMBER_POSITION)),
                 Commands.waitUntil(arm.get()::slideAtSetPoint)
         );
 
-        STOW_TO_SAMPLE_COLLECT = () -> Commands.sequence();
+        STOW_TO_SAMPLE_COLLECT = () -> Commands.sequence(
+                Commands.runOnce(() -> arm.get().setState(Arm.ArmState.COLLECTING_SAMPLE))
+        );
 
-        STOW_TO_SPECIMEN_COLLECT = () -> Commands.sequence();
+        STOW_TO_SPECIMEN_COLLECT = () -> Commands.sequence(
+                Commands.runOnce(() -> arm.get().setState(Arm.ArmState.COLLECTING_SPECIMEN))
+        );
 
         GRAB = () -> Commands.sequence(
                 Commands.runOnce(claw.get()::closeClaw),
@@ -167,8 +180,14 @@ public class ArmCommands {
                     );
                 case SCORING_SPECIMEN:
                     return Commands.sequence(
-                            Commands.defer(RELEASE, claw.get()),
+                            Commands.defer(SCORE_SPECIMEN, arm.get(), claw.get()),
                             Commands.defer(CHAMBER_TO_STOW, arm.get())
+                    );
+                case STOW:
+                    return Commands.either(
+                            Commands.defer(STOW_TO_SAMPLE_COLLECT),
+                            Commands.defer(STOW_TO_SPECIMEN_COLLECT),
+                            () -> arm.get().getScoreType() == Arm.ScoreType.SAMPLE
                     );
                 default:
                     return Commands.none();

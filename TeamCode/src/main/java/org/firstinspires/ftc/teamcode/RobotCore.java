@@ -1,9 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandScheduler;
-import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.Robot;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -14,18 +12,13 @@ import com.arcrobotics.ftclib.command.button.Trigger;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.arm.Arm;
+import org.firstinspires.ftc.teamcode.arm.commands.ArmCommands;
 import org.firstinspires.ftc.teamcode.chassis.Chassis;
 import org.firstinspires.ftc.teamcode.chassis.commands.TeleOpDriveCommand;
 import org.firstinspires.ftc.teamcode.claw.Claw;
-import org.firstinspires.ftc.teamcode.collector.Collector;
-import org.firstinspires.ftc.teamcode.collector.CollectorConstants;
-import org.firstinspires.ftc.teamcode.collector.commands.CollectorCommands;
-import org.firstinspires.ftc.teamcode.elevator.Elevator;
-import org.firstinspires.ftc.teamcode.elevator.commands.ElevatorCommands;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 import org.firstinspires.ftc.teamcode.util.commands.Commands;
-import org.firstinspires.ftc.teamcode.vision.ATVision;
 import org.firstinspires.ftc.teamcode.vision.LLVision;
 
 @Config
@@ -97,7 +90,9 @@ public class RobotCore extends Robot {
 
     public void initSubsystems() {
         chassis = Chassis.getInstance();
-        register(chassis);
+        arm = Arm.getInstance();
+        claw = Claw.getInstance();
+        register(chassis, arm, claw);
 
         telemetry.addData("Status", "Robot initialized, ready to enable");
         telemetry.update();
@@ -136,6 +131,13 @@ public class RobotCore extends Robot {
         // Toggle drive mode
         driveController.getGamepadButton(GamepadKeys.Button.B)
                 .whenPressed(chassis::toggleRobotCentric);
+
+        manipController.getGamepadButton(GamepadKeys.Button.DPAD_UP)
+                .whenPressed(ArmCommands.TO_BASKET.andThen(ArmCommands.TO_CHAMBER));
+        manipController.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
+                .whenPressed(ArmCommands.TO_STOW);
+        new Trigger(() -> driveController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > TRIGGER_DEADZONE)
+                .whenActive(ArmCommands.ARM_ACTION);
 
         chassis.setDefaultCommand(driveCommand);
     }
