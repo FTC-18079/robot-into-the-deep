@@ -5,21 +5,23 @@ import androidx.annotation.NonNull;
 public class ClawState {
     public double clawPos;
     public double wristPos;
-    public double jointPos;
+    public double jointOnePos;
+    public double jointTwoPos;
 
     public ClawState() {
-        this(0, 0 ,0);
+        this(0, 0 ,0, 0);
     }
 
-    public ClawState(double clawPos, double wristPos, double jointPos) {
+    public ClawState(double clawPos, double wristPos, double jointOnePos, double jointTwoPos) {
         this.clawPos = clawPos;
         this.wristPos = wristPos;
-        this.jointPos = jointPos;
+        this.jointOnePos = jointOnePos;
+        this.jointTwoPos = jointTwoPos;
     }
 
     @NonNull
     @Override
     public String toString() {
-        return "Claw State(Claw: " + clawPos + ", Wrist: " + wristPos + ", Joint: " + jointPos + ")";
+        return "Claw State(Claw: " + clawPos + ", Wrist: " + wristPos + ", Joint One: " + jointOnePos + ", Joint Two: " + jointTwoPos +")";
     }
 }

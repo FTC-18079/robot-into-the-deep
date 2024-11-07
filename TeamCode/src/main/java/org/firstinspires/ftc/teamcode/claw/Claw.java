@@ -11,7 +11,8 @@ public class Claw extends SubsystemBase {
 
     Servo claw;
     Servo wrist;
-    Servo joint;
+    Servo jointOne;
+    Servo jointTwo;
 
     ClawState state;
 
@@ -24,7 +25,8 @@ public class Claw extends SubsystemBase {
     public Claw() {
         claw = RobotMap.getInstance().CLAW;
         wrist = RobotMap.getInstance().WRIST;
-        joint = RobotMap.getInstance().JOINT;
+        jointOne = RobotMap.getInstance().JOINT_ONE;
+        jointTwo = RobotMap.getInstance().JOINT_TWO;
 
         state = new ClawState();
         INSTANCE = this;
@@ -43,19 +45,11 @@ public class Claw extends SubsystemBase {
     }
 
     public void openClaw() {
-        claw.setPosition(0);
+        state.clawPos = 0;
     }
 
     public void closeClaw() {
-        claw.setPosition(1);
-    }
-
-    public void setWrist(double pos) {
-        wrist.setPosition(pos);
-    }
-
-    public void setJoint(double pos) {
-        joint.setPosition(pos);
+        state.clawPos = 1;
     }
 
     // PERIODIC
@@ -64,6 +58,7 @@ public class Claw extends SubsystemBase {
     public void periodic() {
         claw.setPosition(state.clawPos);
         wrist.setPosition(state.wristPos);
-        joint.setPosition(state.jointPos);
+        jointOne.setPosition(state.jointOnePos);
+        jointTwo.setPosition(state.jointTwoPos);
     }
 }

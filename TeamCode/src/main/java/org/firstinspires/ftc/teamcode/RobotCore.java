@@ -13,8 +13,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.arcrobotics.ftclib.command.button.Trigger;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.arm.Arm;
 import org.firstinspires.ftc.teamcode.chassis.Chassis;
 import org.firstinspires.ftc.teamcode.chassis.commands.TeleOpDriveCommand;
+import org.firstinspires.ftc.teamcode.claw.Claw;
 import org.firstinspires.ftc.teamcode.collector.Collector;
 import org.firstinspires.ftc.teamcode.collector.CollectorConstants;
 import org.firstinspires.ftc.teamcode.collector.commands.CollectorCommands;
@@ -37,6 +39,8 @@ public class RobotCore extends Robot {
 
     // Subsystems
     Chassis chassis;
+    Arm arm;
+    Claw claw;
     LLVision llVision;
 
     // Commands

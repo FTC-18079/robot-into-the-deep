@@ -38,7 +38,8 @@ public class RobotMap {
     // Claw
     public Servo CLAW;
     public Servo WRIST;
-    public Servo JOINT;
+    public Servo JOINT_ONE;
+    public Servo JOINT_TWO;
 
     private static RobotMap instance = null;
 
@@ -70,7 +71,8 @@ public class RobotMap {
 
         CLAW = hardwareMap.get(Servo.class, "claw");
         WRIST = hardwareMap.get(Servo.class, "wrist");
-        JOINT = hardwareMap.get(Servo.class, "joint");
+        JOINT_ONE = hardwareMap.get(Servo.class, "jointOne");
+        JOINT_TWO = hardwareMap.get(Servo.class, "jointTwo");
 
         for (LynxModule hub : getLynxModules()) {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
