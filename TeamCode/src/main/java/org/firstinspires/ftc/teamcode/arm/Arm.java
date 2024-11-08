@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.RobotCore;
 import org.firstinspires.ftc.teamcode.RobotMap;
 
 @SuppressWarnings("unused")
@@ -65,6 +66,7 @@ public class Arm extends SubsystemBase {
 
         state = ArmState.STOW;
         scoreType = ScoreType.SPECIMEN;
+        telemetry = RobotCore.getTelemetry();
         INSTANCE = this;
     }
 
@@ -101,7 +103,7 @@ public class Arm extends SubsystemBase {
     }
 
     public double getPivotPos() {
-        return pivotEncoder.getCurrentPosition() - PIVOT_STARTING_POS;
+        return -pivotEncoder.getCurrentPosition() - pivotOffset;
     }
 
     public double getSlideTarget() {
@@ -171,6 +173,13 @@ public class Arm extends SubsystemBase {
 
     @Override
     public void periodic() {
+        telemetry.addData("Arm State", state);
+        telemetry.addData("Scoring Piece", scoreType);
+        telemetry.addData("Pivot target", getPivotTarget());
+        telemetry.addData("Pivot pos", getPivotPos());
+        telemetry.addData("Slide target", getSlideTarget());
+        telemetry.addData("Slide pos", getSlidePos());
+
         double slideOutput = slidePid.calculate(getSlidePos());
         double slideFeedforward = SLIDE_kF * Math.sin(Math.toRadians(getPivotTarget() / PIVOT_COUNTS_PER_REVOLUTION * 360.0));
 

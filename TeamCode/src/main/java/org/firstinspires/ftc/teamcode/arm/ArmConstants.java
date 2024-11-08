@@ -12,7 +12,7 @@ public class ArmConstants {
     public static double SLIDE_kP = 0.008;
     public static double SLIDE_kI = 0.0;
     public static double SLIDE_kD = 0.00005;
-    public static double SLIDE_kF = 0.2;
+    public static double SLIDE_kF = 0.15;
 
     // Alignment PID
     public static double ALIGN_kP = 0.02;
@@ -20,10 +20,11 @@ public class ArmConstants {
     public static double ALIGN_kD = 0.0;
 
     // Constants
-    public static double SLIDE_ERROR_TOLERANCE = 15.0;
+    public static double SLIDE_ERROR_TOLERANCE = 30.0;
 
     // Positions
-    public static double SLIDE_REST_POSITION = 0.0;
+    public static double SLIDE_REST_POSITION = 30.0;
+    public static double SLIDE_SAMPLE_COLLECT_POSITION = 500.0;
     public static double SLIDE_CHAMBER_POSITION = 800.0;
     public static double SLIDE_CHAMBER_SCORE_POSITION = 475.0;
     public static double SLIDE_BASKET_POSITION = 2000.0;
@@ -33,13 +34,13 @@ public class ArmConstants {
      */
 
     // PID
-    public static double PIVOT_kP = 0.001;
+    public static double PIVOT_kP = 0.0015;
     public static double PIVOT_kI = 0.0;
     public static double PIVOT_kD = 0.00005;
     public static double PIVOT_kF = 0.0 ;
 
     // Constants
-    public static double PIVOT_ERROR_TOLERANCE = 5.0;
+    public static double PIVOT_ERROR_TOLERANCE = 50.0;
     public static double PIVOT_GEAR_RATIO = 40.0 / 15.0;
     public static double PIVOT_COUNTS_PER_REVOLUTION = 8192.0 * PIVOT_GEAR_RATIO;
 

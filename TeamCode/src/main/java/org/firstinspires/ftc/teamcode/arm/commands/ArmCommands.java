@@ -49,24 +49,28 @@ public class ArmCommands {
         BASKET_TO_STOW = () -> Commands.sequence(
                 Commands.runOnce(() -> arm.get().setState(Arm.ArmState.STOW)),
                 Commands.runOnce(() -> claw.get().setState(ClawConstants.REST_STATE)),
-                Commands.runOnce(() -> arm.get().setSlidePos(0)),
-                Commands.waitUntil(() -> arm.get().getSlidePos() < 1000.0),
-                Commands.runOnce(() -> arm.get().setPivotPos(0)),
-                Commands.waitUntil(() -> arm.get().slideAtSetPoint() && arm.get().pivotAtSetPoint())
+                Commands.runOnce(() -> arm.get().setSlidePos(ArmConstants.SLIDE_REST_POSITION)),
+                Commands.waitUntil(arm.get()::slideAtSetPoint),
+                Commands.runOnce(() -> arm.get().setPivotPos(ArmConstants.PIVOT_REST_POSITION)),
+                Commands.waitUntil(arm.get()::pivotAtSetPoint)
         );
         CHAMBER_TO_STOW = () -> Commands.sequence(
                 Commands.runOnce(() -> arm.get().setState(Arm.ArmState.STOW)),
                 Commands.runOnce(() -> claw.get().setState(ClawConstants.REST_STATE)),
-                Commands.runOnce(() -> arm.get().setSlidePos(0)),
-                Commands.runOnce(() -> arm.get().setPivotPos(0)),
+                Commands.runOnce(() -> arm.get().setSlidePos(ArmConstants.SLIDE_ERROR_TOLERANCE)),
+                Commands.runOnce(() -> arm.get().setPivotPos(ArmConstants.PIVOT_REST_POSITION)),
                 Commands.waitUntil(() -> arm.get().slideAtSetPoint() && arm.get().pivotAtSetPoint())
         );
         SAMPLE_COLLECT_TO_STOW = () -> Commands.sequence(
-                Commands.runOnce(() -> arm.get().setState(Arm.ArmState.STOW))
+                Commands.runOnce(() -> arm.get().setState(Arm.ArmState.STOW)),
+                Commands.runOnce(() -> claw.get().setState(ClawConstants.REST_STATE)),
+                Commands.runOnce(() -> arm.get().setSlidePos(ArmConstants.SLIDE_REST_POSITION)),
+                Commands.waitUntil(arm.get()::slideAtSetPoint)
         );
 
         STOW_TO_BASKET = () -> Commands.sequence(
                 Commands.runOnce(() -> arm.get().setState(Arm.ArmState.SCORING_SAMPLE)),
+                Commands.waitMillis(150),
                 Commands.runOnce(() -> arm.get().setPivotPos(ArmConstants.PIVOT_SCORE_POSITION)),
                 Commands.waitUntil(arm.get()::pivotAtSetPoint),
                 Commands.runOnce(() -> arm.get().setSlidePos(ArmConstants.SLIDE_BASKET_POSITION)),
@@ -88,6 +92,9 @@ public class ArmCommands {
         );
 
         STOW_TO_SAMPLE_COLLECT = () -> Commands.sequence(
+                Commands.runOnce(() -> claw.get().setState(ClawConstants.SAMPLE_COLLECTING_STATE)),
+                Commands.runOnce(() -> arm.get().setSlidePos(ArmConstants.SLIDE_SAMPLE_COLLECT_POSITION)),
+                Commands.waitUntil(arm.get()::slideAtSetPoint),
                 Commands.runOnce(() -> arm.get().setState(Arm.ArmState.COLLECTING_SAMPLE))
         );
 
@@ -97,11 +104,11 @@ public class ArmCommands {
 
         GRAB = () -> Commands.sequence(
                 Commands.runOnce(claw.get()::closeClaw),
-                Commands.waitMillis(100)
+                Commands.waitMillis(250)
         );
         RELEASE = () -> Commands.sequence(
                 Commands.runOnce(claw.get()::openClaw),
-                Commands.waitMillis(100)
+                Commands.waitMillis(500)
         );
         SCORE_SPECIMEN = () -> Commands.sequence(
                 Commands.runOnce(() -> arm.get().setSlidePos(ArmConstants.SLIDE_CHAMBER_SCORE_POSITION)),

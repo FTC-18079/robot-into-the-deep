@@ -64,6 +64,9 @@ public class RobotCore extends Robot {
     }
 
     public RobotCore(OpModeType type, Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2) {
+        CommandScheduler.getInstance().reset();
+        CommandScheduler.getInstance().cancelAll();
+
         RobotCore.telemetry = telemetry;
         touchpadTrigger = new Trigger(() -> getTouchpad(driveController));
 
@@ -89,9 +92,9 @@ public class RobotCore extends Robot {
     }
 
     public void initSubsystems() {
-        chassis = Chassis.getInstance();
-        arm = Arm.getInstance();
-        claw = Claw.getInstance();
+        chassis = new Chassis();
+        arm = new Arm();
+        claw = new Claw();
         register(chassis, arm, claw);
 
         telemetry.addData("Status", "Robot initialized, ready to enable");
@@ -133,9 +136,14 @@ public class RobotCore extends Robot {
                 .whenPressed(chassis::toggleRobotCentric);
 
         manipController.getGamepadButton(GamepadKeys.Button.DPAD_UP)
-                .whenPressed(ArmCommands.TO_BASKET.andThen(ArmCommands.TO_CHAMBER));
+                .whenPressed(ArmCommands.TO_CHAMBER)
+                .whenPressed(ArmCommands.TO_BASKET);
         manipController.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
                 .whenPressed(ArmCommands.TO_STOW);
+        manipController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
+                .whenPressed(Commands.runOnce(() -> Arm.getInstance().setScoreType(Arm.ScoreType.SAMPLE)));
+        manipController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
+                .whenPressed(Commands.runOnce(() -> Arm.getInstance().setScoreType(Arm.ScoreType.SPECIMEN)));
         new Trigger(() -> driveController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > TRIGGER_DEADZONE)
                 .whenActive(ArmCommands.ARM_ACTION);
 

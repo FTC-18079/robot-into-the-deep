@@ -9,7 +9,7 @@ public class ClawState {
     public double jointTwoPos;
 
     public ClawState() {
-        this(0, 0 ,0, 0);
+        this(0, 0 ,1, 0);
     }
 
     public ClawState(double clawPos, double wristPos, double jointOnePos, double jointTwoPos) {
