@@ -1,9 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandScheduler;
-import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.Robot;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -13,17 +11,14 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.arcrobotics.ftclib.command.button.Trigger;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.arm.Arm;
+import org.firstinspires.ftc.teamcode.arm.commands.ArmCommands;
 import org.firstinspires.ftc.teamcode.chassis.Chassis;
 import org.firstinspires.ftc.teamcode.chassis.commands.TeleOpDriveCommand;
-import org.firstinspires.ftc.teamcode.collector.Collector;
-import org.firstinspires.ftc.teamcode.collector.CollectorConstants;
-import org.firstinspires.ftc.teamcode.collector.commands.CollectorCommands;
-import org.firstinspires.ftc.teamcode.elevator.Elevator;
-import org.firstinspires.ftc.teamcode.elevator.commands.ElevatorCommands;
+import org.firstinspires.ftc.teamcode.claw.Claw;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 import org.firstinspires.ftc.teamcode.util.commands.Commands;
-import org.firstinspires.ftc.teamcode.vision.ATVision;
 import org.firstinspires.ftc.teamcode.vision.LLVision;
 
 @Config
@@ -37,8 +32,8 @@ public class RobotCore extends Robot {
 
     // Subsystems
     Chassis chassis;
-    Collector collector;
-    Elevator elevator;
+    Arm arm;
+    Claw claw;
     LLVision llVision;
 
     // Commands
@@ -69,6 +64,9 @@ public class RobotCore extends Robot {
     }
 
     public RobotCore(OpModeType type, Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2) {
+        CommandScheduler.getInstance().reset();
+        CommandScheduler.getInstance().cancelAll();
+
         RobotCore.telemetry = telemetry;
         touchpadTrigger = new Trigger(() -> getTouchpad(driveController));
 
@@ -94,11 +92,10 @@ public class RobotCore extends Robot {
     }
 
     public void initSubsystems() {
-        chassis = Chassis.getInstance();
-        collector = Collector.getInstance();
-        elevator = Elevator.getInstance();
-        //llVision = LLVision.getInstance();
-        register(chassis, collector, elevator);
+        chassis = new Chassis();
+        arm = new Arm();
+        claw = new Claw();
+        register(chassis, arm, claw);
 
         telemetry.addData("Status", "Robot initialized, ready to enable");
         telemetry.update();
@@ -138,59 +135,17 @@ public class RobotCore extends Robot {
         driveController.getGamepadButton(GamepadKeys.Button.B)
                 .whenPressed(chassis::toggleRobotCentric);
 
-        // Scoring buttons
-        manipController.getGamepadButton(GamepadKeys.Button.A)
-                .whenPressed(ElevatorCommands.SCORE_COMMAND)
-                .whenReleased(ElevatorCommands.RELEASE_COMMAND);
-        manipController.getGamepadButton(GamepadKeys.Button.B)
-                .whenPressed(elevator::toggleClaw);
-
-        // Elevator position buttons
-        manipController.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
-                .whenPressed(elevator::toRest);
-        manipController.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
-                .whenPressed(elevator::toLow);
         manipController.getGamepadButton(GamepadKeys.Button.DPAD_UP)
-                .whenPressed(elevator::toHigh);
-
-        // Toggle game piece types
-        manipController.getGamepadButton(GamepadKeys.Button.X)
-                .whenPressed(elevator::toggleScoreType)
-                .whenPressed(Commands.runOnce(() -> rumbleManip(100)));
-
-        // Collector control
+                .whenPressed(ArmCommands.TO_CHAMBER)
+                .whenPressed(ArmCommands.TO_BASKET);
+        manipController.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
+                .whenPressed(ArmCommands.TO_STOW);
         manipController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
-                .whenPressed(Commands.either(
-                        CollectorCommands.TO_COLLECTING.get(),
-                        Commands.runOnce(collector::deployStow).andThen(CollectorCommands.TO_STOW.get()),
-                        () -> collector.getTargetPose() == CollectorConstants.SLIDE_STOW_POS
-                ));
+                .whenPressed(Commands.runOnce(() -> Arm.getInstance().setScoreType(Arm.ScoreType.SAMPLE)));
+        manipController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
+                .whenPressed(Commands.runOnce(() -> Arm.getInstance().setScoreType(Arm.ScoreType.SPECIMEN)));
         new Trigger(() -> manipController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > TRIGGER_DEADZONE)
-                .whenActive(Commands.either(
-                        Commands.deferredProxy(() -> CollectorCommands.COLLECT_SEQUENCE),
-                        new InstantCommand(),
-                        () -> (collector.atSetPoint() && collector.getState() == Collector.CollectorState.COLLECTING)
-                ));
-        manipController.getGamepadButton(GamepadKeys.Button.LEFT_STICK_BUTTON)
-                .whenPressed(Commands.runOnce(collector::vertical));
-        manipController.getGamepadButton(GamepadKeys.Button.RIGHT_STICK_BUTTON)
-                .whenPressed(Commands.runOnce(collector::horizontal));
-        manipController.getGamepadButton(GamepadKeys.Button.START)
-                .whenPressed(collector::deployCollect);
-        manipController.getGamepadButton(GamepadKeys.Button.BACK)
-                .whenPressed(collector::down);
-
-        // Toggle target color
-//        manipController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-//                .whenPressed(Commands.either(
-//                        Commands.either(
-//                                Commands.runOnce(() -> setControllerColors(1, 0, 0)).andThen(new InstantCommand(llVision::setRed)),
-//                                Commands.runOnce(() -> setControllerColors(0, 0, 1)).andThen(new InstantCommand(llVision::setBlue)),
-//                                () -> RobotGlobal.alliance == RobotGlobal.Alliance.RED
-//                        ),
-//                        Commands.runOnce(() -> setControllerColors(1, 1, 0)).andThen(new InstantCommand(llVision::setYellow)),
-//                        () -> llVision.getTargetColor() == LLVision.SampleColor.YELLOW
-//                ));
+                .whenActive(ArmCommands.ARM_ACTION);
 
         chassis.setDefaultCommand(driveCommand);
     }

@@ -55,9 +55,9 @@ public class Collector extends SubsystemBase {
         leftSlide = new SuccessMotor(RobotMap.getInstance().LEFT_SLIDE);
         rightSlide = new SuccessMotor(RobotMap.getInstance().RIGHT_SLIDE);
 
-        deploy = RobotMap.getInstance().DEPLOY;
-        pivot = new SuccessServo(RobotMap.getInstance().PIVOT);
-        intake = RobotMap.getInstance().INTAKE;
+//        deploy = RobotMap.getInstance().DEPLOY;
+//        pivot = new SuccessServo(RobotMap.getInstance().PIVOT);
+//        intake = RobotMap.getInstance().INTAKE;
 
         telemetry = RobotCore.getTelemetry();
 
