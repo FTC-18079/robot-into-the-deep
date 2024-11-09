@@ -21,7 +21,6 @@ public class Chassis extends SubsystemBase {
     private static Chassis INSTANCE = null;
 
     public static Chassis getInstance() {
-        if (INSTANCE == null) INSTANCE = new Chassis();
         return INSTANCE;
     }
 
@@ -29,10 +28,11 @@ public class Chassis extends SubsystemBase {
         INSTANCE = null;
     }
 
-    private Chassis() {
+    public Chassis() {
         isRobotCentric = false;
         follower = new Follower(new Pose());
         this.telemetry = RobotCore.getTelemetry();
+        INSTANCE = this;
     }
 
     public void setPosition(Pose pose) {
