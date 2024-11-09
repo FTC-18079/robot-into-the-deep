@@ -182,6 +182,7 @@ public class Arm extends SubsystemBase {
 
         double slideOutput = slidePid.calculate(getSlidePos());
         double slideFeedforward = SLIDE_kF * Math.sin(Math.toRadians(getPivotTarget() / PIVOT_COUNTS_PER_REVOLUTION * 360.0));
+        if (state == ArmState.STOW) slideFeedforward = 0;
 
         double pivotOutput = pivotPid.calculate(getPivotPos());
         double pivotFeedforward = PIVOT_kF * Math.cos(Math.toRadians(getPivotTarget() / PIVOT_COUNTS_PER_REVOLUTION * 360.0));

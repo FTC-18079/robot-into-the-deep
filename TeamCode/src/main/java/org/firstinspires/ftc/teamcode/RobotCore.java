@@ -144,7 +144,7 @@ public class RobotCore extends Robot {
                 .whenPressed(Commands.runOnce(() -> Arm.getInstance().setScoreType(Arm.ScoreType.SAMPLE)));
         manipController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
                 .whenPressed(Commands.runOnce(() -> Arm.getInstance().setScoreType(Arm.ScoreType.SPECIMEN)));
-        new Trigger(() -> driveController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > TRIGGER_DEADZONE)
+        new Trigger(() -> manipController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > TRIGGER_DEADZONE)
                 .whenActive(ArmCommands.ARM_ACTION);
 
         chassis.setDefaultCommand(driveCommand);

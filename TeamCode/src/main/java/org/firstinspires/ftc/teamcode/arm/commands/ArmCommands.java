@@ -83,7 +83,13 @@ public class ArmCommands {
         );
 
         SPECIMEN_COLLECT_TO_CHAMBER = () -> Commands.sequence(
-                Commands.runOnce(() -> arm.get().setState(Arm.ArmState.SCORING_SPECIMEN))
+                Commands.runOnce(() -> arm.get().setState(Arm.ArmState.SCORING_SPECIMEN)),
+                Commands.runOnce(() -> arm.get().setSlidePos(ArmConstants.SLIDE_REST_POSITION)),
+                Commands.waitUntil(arm.get()::slideAtSetPoint),
+                Commands.runOnce(() -> arm.get().setPivotPos(ArmConstants.PIVOT_SCORE_POSITION)),
+                Commands.waitUntil(arm.get()::pivotAtSetPoint),
+                Commands.runOnce(() -> arm.get().setSlidePos(ArmConstants.SLIDE_CHAMBER_POSITION)),
+                Commands.waitUntil(arm.get()::slideAtSetPoint)
         );
         BASKET_TO_CHAMBER = () -> Commands.sequence(
                 Commands.runOnce(() -> arm.get().setState(Arm.ArmState.SCORING_SPECIMEN)),
@@ -99,6 +105,8 @@ public class ArmCommands {
         );
 
         STOW_TO_SPECIMEN_COLLECT = () -> Commands.sequence(
+                Commands.runOnce(() -> arm.get().setSlidePos(ArmConstants.SLIDE_SPECIMEN_COLLECT_POSITION)),
+                Commands.waitUntil(arm.get()::slideAtSetPoint),
                 Commands.runOnce(() -> arm.get().setState(Arm.ArmState.COLLECTING_SPECIMEN))
         );
 
@@ -188,6 +196,7 @@ public class ArmCommands {
                 case SCORING_SPECIMEN:
                     return Commands.sequence(
                             Commands.defer(SCORE_SPECIMEN, arm.get(), claw.get()),
+                            Commands.waitMillis(300),
                             Commands.defer(CHAMBER_TO_STOW, arm.get())
                     );
                 case STOW:
