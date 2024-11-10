@@ -4,6 +4,7 @@ import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.RobotCore;
 import org.firstinspires.ftc.teamcode.RobotMap;
 
 public class Claw extends SubsystemBase {
@@ -14,7 +15,7 @@ public class Claw extends SubsystemBase {
     Servo jointOne;
     Servo jointTwo;
 
-    ClawState state;
+    ClawState state = new ClawState();
 
     public static Claw INSTANCE = null;
 
@@ -28,7 +29,11 @@ public class Claw extends SubsystemBase {
         jointOne = RobotMap.getInstance().JOINT_ONE;
         jointTwo = RobotMap.getInstance().JOINT_TWO;
 
-        state = new ClawState();
+        telemetry = RobotCore.getTelemetry();
+        state.clawPos = ClawConstants.REST_STATE.clawPos;
+        state.wristPos = ClawConstants.REST_STATE.wristPos;
+        state.jointOnePos = ClawConstants.REST_STATE.jointOnePos;
+        state.jointTwoPos = ClawConstants.REST_STATE.jointTwoPos;
         INSTANCE = this;
     }
 
@@ -40,8 +45,11 @@ public class Claw extends SubsystemBase {
 
     // SETTERS
 
-    public void setState(ClawState state) {
-        this.state = state;
+    public void setState(ClawState targetState) {
+        state.clawPos = targetState.clawPos;
+        state.wristPos = targetState.wristPos;
+        state.jointOnePos = targetState.jointOnePos;
+        state.jointTwoPos = targetState.jointTwoPos;
     }
 
     public void openClaw() {
@@ -50,6 +58,18 @@ public class Claw extends SubsystemBase {
 
     public void closeClaw() {
         state.clawPos = 1;
+    }
+
+    public void setWrist(double pos) {
+        state.wristPos = pos;
+    }
+
+    public void setJointOne(double pos){
+        state.jointOnePos = pos;
+    }
+
+    public void setJointTwo(double pos){
+        state.jointTwoPos = pos;
     }
 
     // PERIODIC
