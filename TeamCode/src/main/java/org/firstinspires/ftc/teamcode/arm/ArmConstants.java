@@ -26,9 +26,8 @@ public class ArmConstants {
     public static double SLIDE_REST_POSITION = 0.0;
     public static double SLIDE_SAMPLE_COLLECT_POSITION = 1000.0;
     public static double SLIDE_SPECIMEN_COLLECT_POSITION = 500;
-    public static double SLIDE_CHAMBER_POSITION = 800.0;
-    public static double SLIDE_CHAMBER_SCORE_POSITION = 475.0;
-    public static double SLIDE_BASKET_POSITION = 2000.0;
+    public static double SLIDE_CHAMBER_POSITION = 450.0;
+    public static double SLIDE_BASKET_POSITION = 1835.0;
 
     /**
      * PIVOT
