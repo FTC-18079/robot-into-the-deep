@@ -4,7 +4,6 @@ import static org.firstinspires.ftc.teamcode.arm.ArmConstants.*;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDController;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -12,6 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotCore;
 import org.firstinspires.ftc.teamcode.RobotMap;
+import org.firstinspires.ftc.teamcode.util.hardware.SuccessCRServo;
 
 @SuppressWarnings("unused")
 public class Arm extends SubsystemBase {
@@ -20,8 +20,8 @@ public class Arm extends SubsystemBase {
     DcMotorEx rightSlide;
     DcMotorEx leftSlide;
     DcMotorEx pivotEncoder;
-    CRServo rightPivot;
-    CRServo leftPivot;
+    SuccessCRServo rightPivot;
+    SuccessCRServo leftPivot;
 
     PIDController slidePid;
     PIDController pivotPid;
@@ -53,8 +53,8 @@ public class Arm extends SubsystemBase {
 
         pivotEncoder = RobotMap.getInstance().MOTOR_BR;
 
-        rightPivot = RobotMap.getInstance().RIGHT_PIVOT;
-        leftPivot = RobotMap.getInstance().LEFT_PIVOT;
+        rightPivot = new SuccessCRServo(RobotMap.getInstance().RIGHT_PIVOT);
+        leftPivot = new SuccessCRServo(RobotMap.getInstance().LEFT_PIVOT);
 
         slidePid = new PIDController(SLIDE_kP, SLIDE_kI, SLIDE_kD);
         pivotPid = new PIDController(PIVOT_kP, PIVOT_kI, PIVOT_kD);
@@ -186,6 +186,10 @@ public class Arm extends SubsystemBase {
 
         double pivotOutput = pivotPid.calculate(getPivotPos());
         double pivotFeedforward = PIVOT_kF * Math.cos(Math.toRadians(getPivotTarget() / PIVOT_COUNTS_PER_REVOLUTION * 360.0));
+
+        if (pivotAtSetPoint() && getPivotTarget() == PIVOT_REST_POSITION) {
+            pivotOutput = 0.0;
+        }
 
         rightSlide.setPower(slideOutput + slideFeedforward);
         leftSlide.setPower(slideOutput + slideFeedforward);
