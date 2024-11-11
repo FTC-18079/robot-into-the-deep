@@ -103,7 +103,7 @@ public class Arm extends SubsystemBase {
     }
 
     public double getPivotPos() {
-        return -pivotEncoder.getCurrentPosition() - pivotOffset;
+        return -pivotEncoder.getCurrentPosition();
     }
 
     public double getSlideTarget() {
@@ -115,7 +115,7 @@ public class Arm extends SubsystemBase {
     }
 
     public boolean slideAtSetPoint() {
-        return Math.abs(getSlidePos() - getSlideTarget()) < SLIDE_ERROR_TOLERANCE;
+        return Math.abs(slidePid.getPositionError()) < SLIDE_ERROR_TOLERANCE;
     }
 
     public boolean pivotAtSetPoint() {

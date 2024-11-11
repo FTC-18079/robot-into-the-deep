@@ -143,9 +143,9 @@ public class ArmCommands {
         );
 
         COLLECT = () -> Commands.sequence(
-                Commands.runOnce(() -> claw.get().setJointOne(ClawConstants.SAMPLE_COLLECT_JOINT_ONE_POS)),
-                Commands.waitMillis(100),
                 Commands.runOnce(() -> claw.get().setJointTwo(ClawConstants.SAMPLE_COLLECT_JOINT_TWO_POS)),
+                Commands.waitMillis(ClawConstants.COLLECT_DELAY),
+                Commands.runOnce(() -> claw.get().setJointOne(ClawConstants.SAMPLE_COLLECT_JOINT_ONE_POS)),
                 Commands.waitMillis(250)
         );
 

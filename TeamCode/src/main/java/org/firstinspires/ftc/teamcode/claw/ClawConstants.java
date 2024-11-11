@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 
 @Config
 public class ClawConstants {
+    public static long COLLECT_DELAY = 50;
 
     public static ClawState REST_STATE = new ClawState(1.0, 1.0, 0.95, 0.2);
 
