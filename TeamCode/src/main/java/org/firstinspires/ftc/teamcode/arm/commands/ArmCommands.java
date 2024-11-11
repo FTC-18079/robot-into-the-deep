@@ -152,9 +152,9 @@ public class ArmCommands {
                 Commands.runOnce(() -> claw.get().setWrist(limelight.get().getServoPos())),
                 Commands.waitMillis(150),
                 Commands.runOnce(() -> claw.get().setJointTwo(ClawConstants.SAMPLE_COLLECT_JOINT_TWO_POS)),
-                Commands.waitMillis(ClawConstants.COLLECT_DELAY),
+                Commands.waitMillis(ClawConstants.JOINT_DELAY),
                 Commands.runOnce(() -> claw.get().setJointOne(ClawConstants.SAMPLE_COLLECT_JOINT_ONE_POS)),
-                Commands.waitMillis(175)
+                Commands.waitMillis(ClawConstants.COLLECT_DELAY)
         );
 
     }
