@@ -13,7 +13,6 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.MathFunctions;
 
 import java.util.List;
 
-// velo / (buffer * max) (this is for later lol)
 public class LLVision extends SubsystemBase {
     Limelight3A limelight;
     Telemetry telemetry;
@@ -25,13 +24,7 @@ public class LLVision extends SubsystemBase {
     private static LLVision INSTANCE = null;
 
     public static LLVision getInstance() {
-        if (INSTANCE == null) INSTANCE = new LLVision();
         return INSTANCE;
-    }
-
-    public static void resetInstance() {
-        if (INSTANCE != null) INSTANCE.stop();
-        INSTANCE = null;
     }
 
     public enum SampleColor {
@@ -46,13 +39,14 @@ public class LLVision extends SubsystemBase {
         }
     }
 
-    private LLVision() {
+    public LLVision() {
         limelight = RobotMap.getInstance().LIMELIGHT;
         telemetry = RobotCore.getTelemetry();
 
         targetColor = SampleColor.YELLOW;
         setPipeline();
         start();
+        INSTANCE = this;
     }
 
     // LIMELIGHT MANAGEMENT
@@ -151,7 +145,7 @@ public class LLVision extends SubsystemBase {
 
         double angle = Math.atan((pose1.getY() - pose2.getY()) / (pose1.getX() - pose2.getX()));
 
-        return Math.toDegrees(angle);
+        return Math.toDegrees(MathFunctions.normalizeAngle(angle));
     }
 
     public double getSampleTy() {
@@ -164,8 +158,7 @@ public class LLVision extends SubsystemBase {
      * @return A servo position ranging from 0.0 to 1.0
      */
     public double getServoPos() {
-        // Convert the angle to a servo position
-        return 1 - (getSampleAngle() / 180 + 0.5);
+        return VisionConstants.getNearestClawAngle(getSampleAngle());
     }
 
     public LLResult getResult() {
@@ -191,5 +184,7 @@ public class LLVision extends SubsystemBase {
         telemetry.addLine();
         telemetry.addData("Target color", targetColor);
         telemetry.addData("Sample ty", getSampleTy());
+        telemetry.addData("Claw pos", getServoPos());
+        telemetry.addData("Sample angle", getSampleAngle());
     }
 }

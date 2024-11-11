@@ -95,7 +95,8 @@ public class RobotCore extends Robot {
         chassis = new Chassis();
         arm = new Arm();
         claw = new Claw();
-        register(chassis, arm, claw);
+        llVision = new LLVision();
+        register(chassis, arm, claw, llVision);
 
         telemetry.addData("Status", "Robot initialized, ready to enable");
         telemetry.update();

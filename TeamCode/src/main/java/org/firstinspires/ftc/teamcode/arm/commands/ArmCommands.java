@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.arm.ArmConstants;
 import org.firstinspires.ftc.teamcode.claw.Claw;
 import org.firstinspires.ftc.teamcode.claw.ClawConstants;
 import org.firstinspires.ftc.teamcode.util.commands.Commands;
+import org.firstinspires.ftc.teamcode.vision.LLVision;
 
 import java.util.function.Supplier;
 
@@ -47,6 +48,7 @@ public class ArmCommands {
     static {
         Supplier<Arm> arm = Arm::getInstance;
         Supplier<Claw> claw = Claw::getInstance;
+        Supplier<LLVision> limelight = LLVision::getInstance;
 
         BASKET_TO_STOW = () -> Commands.sequence(
                 Commands.runOnce(() -> arm.get().setState(Arm.ArmState.STOW)),
@@ -143,6 +145,8 @@ public class ArmCommands {
         );
 
         COLLECT = () -> Commands.sequence(
+                Commands.runOnce(() -> claw.get().setWrist(limelight.get().getServoPos())),
+                Commands.waitMillis(150),
                 Commands.runOnce(() -> claw.get().setJointTwo(ClawConstants.SAMPLE_COLLECT_JOINT_TWO_POS)),
                 Commands.waitMillis(ClawConstants.COLLECT_DELAY),
                 Commands.runOnce(() -> claw.get().setJointOne(ClawConstants.SAMPLE_COLLECT_JOINT_ONE_POS)),
