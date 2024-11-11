@@ -136,6 +136,7 @@ public class RobotCore extends Robot {
         driveController.getGamepadButton(GamepadKeys.Button.B)
                 .whenPressed(chassis::toggleRobotCentric);
 
+        // Manip control
         manipController.getGamepadButton(GamepadKeys.Button.DPAD_UP)
                 .whenPressed(ArmCommands.TO_CHAMBER)
                 .whenPressed(ArmCommands.TO_BASKET);
@@ -158,6 +159,18 @@ public class RobotCore extends Robot {
                         Commands.runOnce(() -> Claw.getInstance().setWrist(0.45)),
                         Commands.none(),
                         () -> arm.getState() == Arm.ArmState.COLLECTING_SAMPLE
+                ));
+
+        // Color toggle
+        manipController.getGamepadButton(GamepadKeys.Button.A)
+                .whenPressed(Commands.either(
+                        Commands.either(
+                                Commands.runOnce(llVision::setBlue).andThen(Commands.runOnce(() -> setControllerColors(0, 0, 1))),
+                                Commands.runOnce(llVision::setRed).andThen(Commands.runOnce(() -> setControllerColors(1, 0, 0))),
+                                () -> RobotGlobal.alliance == RobotGlobal.Alliance.BLUE
+                        ),
+                        Commands.runOnce(llVision::setYellow).andThen(Commands.runOnce(() -> setControllerColors(1, 1, 0))),
+                        () -> llVision.getTargetColor() == LLVision.SampleColor.YELLOW
                 ));
 
         chassis.setDefaultCommand(driveCommand);

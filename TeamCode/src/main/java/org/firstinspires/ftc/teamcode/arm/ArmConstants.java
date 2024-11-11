@@ -20,11 +20,11 @@ public class ArmConstants {
     public static double ALIGN_kD = 0.0;
 
     // Constants
-    public static double SLIDE_ERROR_TOLERANCE = 25.0;
+    public static double SLIDE_ERROR_TOLERANCE = 35.0;
 
     // Positions
     public static double SLIDE_REST_POSITION = 0.0;
-    public static double SLIDE_SAMPLE_COLLECT_POSITION = 1000.0;
+    public static double SLIDE_SAMPLE_COLLECT_POSITION = 1300.0;
     public static double SLIDE_SPECIMEN_COLLECT_POSITION = 500;
     public static double SLIDE_CHAMBER_POSITION = 450.0;
     public static double SLIDE_BASKET_POSITION = 1835.0;
