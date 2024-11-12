@@ -23,6 +23,7 @@ public class ArmCommands {
     public static final Supplier<Command> CHAMBER_TO_BASKET;
 
     // TO CHAMBER
+    public static final Supplier<Command> STOW_TO_CHAMBER;
     public static final Supplier<Command> SPECIMEN_COLLECT_TO_CHAMBER;
     public static final Supplier<Command> BASKET_TO_CHAMBER;
 
@@ -129,6 +130,14 @@ public class ArmCommands {
                 Commands.runOnce(() -> arm.get().setSlidePos(ArmConstants.SLIDE_SPECIMEN_COLLECT_POSITION)),
                 Commands.waitUntil(arm.get()::slideAtSetPoint),
                 Commands.runOnce(() -> arm.get().setState(Arm.ArmState.COLLECTING_SPECIMEN))
+        );
+
+        STOW_TO_CHAMBER = () -> Commands.sequence(
+                Commands.runOnce(() -> claw.get().setState(ClawConstants.SPECIMEN_SCORING_STATE)),
+                Commands.runOnce(() -> arm.get().setPivotPos(ArmConstants.PIVOT_SCORE_POSITION)),
+                Commands.waitUntil(arm.get()::pivotAtSetPoint),
+                Commands.runOnce(() -> arm.get().setSlidePos(ArmConstants.SLIDE_CHAMBER_POSITION)),
+                Commands.waitUntil(arm.get()::slideAtSetPoint)
         );
 
         GRAB = () -> Commands.sequence(
