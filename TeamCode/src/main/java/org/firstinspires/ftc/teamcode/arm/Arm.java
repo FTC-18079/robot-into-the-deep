@@ -4,7 +4,6 @@ import static org.firstinspires.ftc.teamcode.arm.ArmConstants.*;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDController;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -12,6 +11,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotCore;
 import org.firstinspires.ftc.teamcode.RobotMap;
+import org.firstinspires.ftc.teamcode.util.hardware.SuccessCRServo;
+import org.firstinspires.ftc.teamcode.vision.LLVision;
 
 @SuppressWarnings("unused")
 public class Arm extends SubsystemBase {
@@ -20,8 +21,8 @@ public class Arm extends SubsystemBase {
     DcMotorEx rightSlide;
     DcMotorEx leftSlide;
     DcMotorEx pivotEncoder;
-    CRServo rightPivot;
-    CRServo leftPivot;
+    SuccessCRServo rightPivot;
+    SuccessCRServo leftPivot;
 
     PIDController slidePid;
     PIDController pivotPid;
@@ -53,12 +54,13 @@ public class Arm extends SubsystemBase {
 
         pivotEncoder = RobotMap.getInstance().MOTOR_BR;
 
-        rightPivot = RobotMap.getInstance().RIGHT_PIVOT;
-        leftPivot = RobotMap.getInstance().LEFT_PIVOT;
+        rightPivot = new SuccessCRServo(RobotMap.getInstance().RIGHT_PIVOT);
+        leftPivot = new SuccessCRServo(RobotMap.getInstance().LEFT_PIVOT);
 
         slidePid = new PIDController(SLIDE_kP, SLIDE_kI, SLIDE_kD);
         pivotPid = new PIDController(PIVOT_kP, PIVOT_kI, PIVOT_kD);
         alignmentPid = new PIDController(ALIGN_kP, ALIGN_kI, ALIGN_kD);
+        alignmentPid.setSetPoint(0.0);
 
         resetSlideEncoder();
         resetPivotEncoder();
@@ -103,7 +105,7 @@ public class Arm extends SubsystemBase {
     }
 
     public double getPivotPos() {
-        return -pivotEncoder.getCurrentPosition() - pivotOffset;
+        return -pivotEncoder.getCurrentPosition();
     }
 
     public double getSlideTarget() {
@@ -115,7 +117,7 @@ public class Arm extends SubsystemBase {
     }
 
     public boolean slideAtSetPoint() {
-        return Math.abs(getSlidePos() - getSlideTarget()) < SLIDE_ERROR_TOLERANCE;
+        return Math.abs(slidePid.getPositionError()) < SLIDE_ERROR_TOLERANCE;
     }
 
     public boolean pivotAtSetPoint() {
@@ -173,6 +175,9 @@ public class Arm extends SubsystemBase {
 
     @Override
     public void periodic() {
+        // TEMP
+        updatePid();
+
         telemetry.addData("Arm State", state);
         telemetry.addData("Scoring Piece", scoreType);
         telemetry.addData("Pivot target", getPivotTarget());
@@ -181,11 +186,21 @@ public class Arm extends SubsystemBase {
         telemetry.addData("Slide pos", getSlidePos());
 
         double slideOutput = slidePid.calculate(getSlidePos());
+        if (state == ArmState.COLLECTING_SAMPLE) {
+            double ty = LLVision.getInstance().getSampleTy();
+            slideOutput = alignmentPid.calculate(ty);
+            if (slideOutput > 0 && getSlidePos() >= SLIDE_SAMPLE_COLLECT_POSITION) slideOutput = 0.0;
+            if (Math.abs(ty) < ALIGN_ERROR_TOLERANCE) slideOutput = 0.0;
+        }
         double slideFeedforward = SLIDE_kF * Math.sin(Math.toRadians(getPivotTarget() / PIVOT_COUNTS_PER_REVOLUTION * 360.0));
         if (state == ArmState.STOW) slideFeedforward = 0;
 
         double pivotOutput = pivotPid.calculate(getPivotPos());
         double pivotFeedforward = PIVOT_kF * Math.cos(Math.toRadians(getPivotTarget() / PIVOT_COUNTS_PER_REVOLUTION * 360.0));
+
+        if (pivotAtSetPoint() && getPivotTarget() == PIVOT_REST_POSITION) {
+            pivotOutput = 0.0;
+        }
 
         rightSlide.setPower(slideOutput + slideFeedforward);
         leftSlide.setPower(slideOutput + slideFeedforward);
