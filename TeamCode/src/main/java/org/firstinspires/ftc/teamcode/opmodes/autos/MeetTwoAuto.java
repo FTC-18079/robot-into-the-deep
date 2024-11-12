@@ -133,16 +133,19 @@ public class MeetTwoAuto extends LinearOpMode {
     private Command autoSequence() {
         return Commands.sequence(
                 Commands.waitMillis(RobotGlobal.delayMs),
+                // Drive up to chamber and score
                 Commands.parallel(
                         Commands.waitMillis(1200).andThen(new FollowPathCommand(scorePreloadPath)),
                         Commands.defer(ArmCommands.STOW_TO_CHAMBER, Arm.getInstance())
                 ),
                 Commands.defer(ArmCommands.SCORE_SPECIMEN, Arm.getInstance()),
+                // Drive to first sample
                 Commands.parallel(
                         new FollowPathCommand(collectOnePath),
                         Commands.defer(ArmCommands.CHAMBER_TO_STOW, Arm.getInstance())
                 ),
                 Commands.runOnce(() -> Arm.getInstance().setScoreType(Arm.ScoreType.SAMPLE)),
+                // Collect
                 Commands.defer(ArmCommands.STOW_TO_SAMPLE_COLLECT, Arm.getInstance()),
                 Commands.waitMillis(700),
                 Commands.sequence(
@@ -151,10 +154,14 @@ public class MeetTwoAuto extends LinearOpMode {
                         Commands.defer(ArmCommands.SAMPLE_COLLECT_TO_STOW, Arm.getInstance())
                 ),
                 Commands.waitMillis(500),
+                // Go up to basket and score
                 Commands.defer(ArmCommands.STOW_TO_BASKET),
                 new FollowPathCommand(scoreOnePath),
                 Commands.waitMillis(200),
-                Commands.deferredProxy(() -> ArmCommands.ARM_ACTION)
+                Commands.sequence(
+                        Commands.defer(ArmCommands.RELEASE, Claw.getInstance()),
+                        Commands.defer(ArmCommands.BASKET_TO_STOW, Claw.getInstance())
+                )
         );
     }
 
