@@ -29,7 +29,7 @@ public class ArmCommands {
 
     // TO SAMPLE COLLECT
     public static final Supplier<Command> STOW_TO_SAMPLE_COLLECT;
-    public static final Supplier<Command> COLLECT;
+    public static final Supplier<Command> COLLECT_SAMPLE;
 
     // TO SPECIMEN COLLECT
     public static final Supplier<Command> STOW_TO_SPECIMEN_COLLECT;
@@ -157,7 +157,7 @@ public class ArmCommands {
                 Commands.waitMillis(100)
         );
 
-        COLLECT = () -> Commands.sequence(
+        COLLECT_SAMPLE = () -> Commands.sequence(
                 Commands.runOnce(() -> claw.get().setWrist(limelight.get().getServoPos())),
                 Commands.waitMillis(150),
                 Commands.runOnce(() -> claw.get().setJointTwo(ClawConstants.SAMPLE_COLLECT_JOINT_TWO_POS)),
@@ -228,7 +228,7 @@ public class ArmCommands {
             switch (arm.get().getState()) {
                 case COLLECTING_SAMPLE:
                     return Commands.sequence(
-                            Commands.defer(COLLECT, claw.get()),
+                            Commands.defer(COLLECT_SAMPLE, claw.get()),
                             Commands.defer(GRAB, claw.get()),
                             Commands.defer(SAMPLE_COLLECT_TO_STOW, arm.get())
                     );

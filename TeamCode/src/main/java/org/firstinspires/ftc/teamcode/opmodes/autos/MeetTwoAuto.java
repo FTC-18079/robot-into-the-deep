@@ -21,7 +21,6 @@ import org.firstinspires.ftc.teamcode.chassis.commands.FollowPathCommand;
 import org.firstinspires.ftc.teamcode.claw.Claw;
 import org.firstinspires.ftc.teamcode.claw.ClawConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
-import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierCurve;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierLine;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
@@ -42,8 +41,8 @@ public class MeetTwoAuto extends LinearOpMode {
     // Poses
     private final Pose startingPose = new Pose(8, 80, Math.toRadians(180));
     private final Pose scorePreloadPose = new Pose(32, 80, Math.toRadians(180));
-    private final Pose collectOnePose = new Pose(22.5, 105, Math.toRadians(35));
-    private final Pose scoreOnePose = new Pose();
+    private final Pose collectOnePose = new Pose(24, 106, Math.toRadians(35));
+    private final Pose scoreOnePose = new Pose(14, 126, Math.toRadians(315));
     private final Pose collectTwoPose = new Pose();
     private final Pose scoreTwoPose = new Pose();
     private final Pose collectThreePose = new Pose();
@@ -122,24 +121,40 @@ public class MeetTwoAuto extends LinearOpMode {
     private void buildPaths() {
         scorePreloadPath = new Path(new BezierLine(new Point(startingPose), new Point(scorePreloadPose)));
         scorePreloadPath.setConstantHeadingInterpolation(startingPose.getHeading());
+        scorePreloadPath.setPathEndTimeoutConstraint(300);
 
         collectOnePath = new Path(new BezierLine(new Point(scorePreloadPose), new Point(collectOnePose)));
         collectOnePath.setLinearHeadingInterpolation(scorePreloadPose.getHeading(), collectOnePose.getHeading());
+
+        scoreOnePath = new Path(new BezierLine(new Point(collectOnePose), new Point(scoreOnePose)));
+        scoreOnePath.setLinearHeadingInterpolation(collectOnePose.getHeading(), scoreOnePose.getHeading());
     }
 
     private Command autoSequence() {
         return Commands.sequence(
                 Commands.waitMillis(RobotGlobal.delayMs),
                 Commands.parallel(
-                        Commands.waitMillis(1000).andThen(new FollowPathCommand(scorePreloadPath)),
-                        ArmCommands.STOW_TO_CHAMBER.get()
+                        Commands.waitMillis(1200).andThen(new FollowPathCommand(scorePreloadPath)),
+                        Commands.defer(ArmCommands.STOW_TO_CHAMBER, Arm.getInstance())
                 ),
                 Commands.defer(ArmCommands.SCORE_SPECIMEN, Arm.getInstance()),
                 Commands.parallel(
                         new FollowPathCommand(collectOnePath),
                         Commands.defer(ArmCommands.CHAMBER_TO_STOW, Arm.getInstance())
                 ),
-                Commands.defer(ArmCommands.STOW_TO_SAMPLE_COLLECT, Arm.getInstance())
+                Commands.runOnce(() -> Arm.getInstance().setScoreType(Arm.ScoreType.SAMPLE)),
+                Commands.defer(ArmCommands.STOW_TO_SAMPLE_COLLECT, Arm.getInstance()),
+                Commands.waitMillis(700),
+                Commands.sequence(
+                        Commands.defer(ArmCommands.COLLECT_SAMPLE, Claw.getInstance()),
+                        Commands.defer(ArmCommands.GRAB, Claw.getInstance()),
+                        Commands.defer(ArmCommands.SAMPLE_COLLECT_TO_STOW, Arm.getInstance())
+                ),
+                Commands.waitMillis(500),
+                Commands.defer(ArmCommands.STOW_TO_BASKET),
+                new FollowPathCommand(scoreOnePath),
+                Commands.waitMillis(200),
+                Commands.deferredProxy(() -> ArmCommands.ARM_ACTION)
         );
     }
 
