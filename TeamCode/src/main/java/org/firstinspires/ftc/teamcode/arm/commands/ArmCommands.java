@@ -143,7 +143,7 @@ public class ArmCommands {
 
         SCORE_SPECIMEN = () -> Commands.sequence(
                 Commands.runOnce(() -> claw.get().setState(ClawConstants.SPECIMEN_SCORE_STATE)),
-                Commands.waitMillis(150),
+                Commands.waitMillis(300),
                 Commands.runOnce(claw.get()::openClaw),
                 Commands.waitMillis(100)
         );
