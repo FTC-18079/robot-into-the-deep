@@ -11,9 +11,9 @@ import org.firstinspires.ftc.teamcode.RobotMap;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.MathFunctions;
 
+import java.util.ArrayList;
 import java.util.List;
 
-// velo / (buffer * max) (this is for later lol)
 public class LLVision extends SubsystemBase {
     Limelight3A limelight;
     Telemetry telemetry;
@@ -25,13 +25,7 @@ public class LLVision extends SubsystemBase {
     private static LLVision INSTANCE = null;
 
     public static LLVision getInstance() {
-        if (INSTANCE == null) INSTANCE = new LLVision();
         return INSTANCE;
-    }
-
-    public static void resetInstance() {
-        if (INSTANCE != null) INSTANCE.stop();
-        INSTANCE = null;
     }
 
     public enum SampleColor {
@@ -46,13 +40,14 @@ public class LLVision extends SubsystemBase {
         }
     }
 
-    private LLVision() {
+    public LLVision() {
         limelight = RobotMap.getInstance().LIMELIGHT;
         telemetry = RobotCore.getTelemetry();
 
         targetColor = SampleColor.YELLOW;
         setPipeline();
         start();
+        INSTANCE = this;
     }
 
     // LIMELIGHT MANAGEMENT
@@ -68,9 +63,8 @@ public class LLVision extends SubsystemBase {
     /**
      * Switches the limelight's pipeline
      *
-     * @param color The target sample color
      */
-    public void setPipeline() {
+    private void setPipeline() {
         limelight.pipelineSwitch(targetColor.index);
     }
 
@@ -94,7 +88,11 @@ public class LLVision extends SubsystemBase {
      */
     public void updateResults() {
         result = limelight.getLatestResult();
-        colorResults = result.getColorResults();
+        if (result == null) {
+            colorResults = new ArrayList<>();
+        } else {
+            colorResults = result.getColorResults();
+        }
     }
 
     // GETTERS
@@ -104,7 +102,7 @@ public class LLVision extends SubsystemBase {
      * @return The angle of the detected sample
      */
     public double getSampleAngle() {
-        if (colorResults.isEmpty()) return 0.0;
+        if (colorResults.isEmpty()) return 90.0;
 
         // Get sample corners
         List<List<Double>> corners = colorResults.get(0).getTargetCorners();
@@ -151,7 +149,7 @@ public class LLVision extends SubsystemBase {
 
         double angle = Math.atan((pose1.getY() - pose2.getY()) / (pose1.getX() - pose2.getX()));
 
-        return Math.toDegrees(angle);
+        return Math.toDegrees(MathFunctions.normalizeAngle(angle));
     }
 
     public double getSampleTy() {
@@ -164,8 +162,7 @@ public class LLVision extends SubsystemBase {
      * @return A servo position ranging from 0.0 to 1.0
      */
     public double getServoPos() {
-        // Convert the angle to a servo position
-        return 1 - (getSampleAngle() / 180 + 0.5);
+        return VisionConstants.getNearestClawAngle(getSampleAngle());
     }
 
     public LLResult getResult() {
@@ -191,5 +188,7 @@ public class LLVision extends SubsystemBase {
         telemetry.addLine();
         telemetry.addData("Target color", targetColor);
         telemetry.addData("Sample ty", getSampleTy());
+        telemetry.addData("Claw pos", getServoPos());
+        telemetry.addData("Sample angle", getSampleAngle());
     }
 }

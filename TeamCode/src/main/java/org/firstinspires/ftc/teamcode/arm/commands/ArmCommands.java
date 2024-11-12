@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.arm.ArmConstants;
 import org.firstinspires.ftc.teamcode.claw.Claw;
 import org.firstinspires.ftc.teamcode.claw.ClawConstants;
 import org.firstinspires.ftc.teamcode.util.commands.Commands;
+import org.firstinspires.ftc.teamcode.vision.LLVision;
 
 import java.util.function.Supplier;
 
@@ -47,6 +48,7 @@ public class ArmCommands {
     static {
         Supplier<Arm> arm = Arm::getInstance;
         Supplier<Claw> claw = Claw::getInstance;
+        Supplier<LLVision> limelight = LLVision::getInstance;
 
         BASKET_TO_STOW = () -> Commands.sequence(
                 Commands.runOnce(() -> arm.get().setState(Arm.ArmState.STOW)),
@@ -67,9 +69,13 @@ public class ArmCommands {
         );
         SAMPLE_COLLECT_TO_STOW = () -> Commands.sequence(
                 Commands.runOnce(() -> arm.get().setState(Arm.ArmState.STOW)),
-                Commands.runOnce(() -> claw.get().setState(ClawConstants.REST_STATE)),
+                Commands.runOnce(() -> claw.get().setState(ClawConstants.SPECIMEN_COLLECT_STATE)),
+                Commands.runOnce(claw.get()::closeClaw),
+                Commands.waitMillis(175),
                 Commands.runOnce(() -> arm.get().setSlidePos(ArmConstants.SLIDE_REST_POSITION)),
-                Commands.waitUntil(arm.get()::slideAtSetPoint)
+                Commands.waitUntil(arm.get()::slideAtSetPoint),
+                Commands.runOnce(() -> claw.get().setState(ClawConstants.REST_STATE)),
+                Commands.waitMillis(150)
         );
         SPECIMEN_COLLECT_TO_STOW = () -> Commands.sequence(
                 Commands.runOnce(() -> arm.get().setState(Arm.ArmState.STOW)),
@@ -127,7 +133,7 @@ public class ArmCommands {
 
         GRAB = () -> Commands.sequence(
                 Commands.runOnce(claw.get()::closeClaw),
-                Commands.waitMillis(375)
+                Commands.waitMillis(ClawConstants.GRAB_DELAY)
         );
 
         RELEASE = () -> Commands.sequence(
@@ -137,16 +143,21 @@ public class ArmCommands {
 
         SCORE_SPECIMEN = () -> Commands.sequence(
                 Commands.runOnce(() -> claw.get().setState(ClawConstants.SPECIMEN_SCORE_STATE)),
-                Commands.waitMillis(150),
+                Commands.waitMillis(300),
                 Commands.runOnce(claw.get()::openClaw),
                 Commands.waitMillis(100)
         );
 
         COLLECT = () -> Commands.sequence(
-                Commands.runOnce(() -> claw.get().setJointOne(ClawConstants.SAMPLE_COLLECT_JOINT_ONE_POS)),
-                Commands.waitMillis(100),
+                Commands.runOnce(() -> claw.get().setWrist(limelight.get().getServoPos())),
+                Commands.waitMillis(150),
                 Commands.runOnce(() -> claw.get().setJointTwo(ClawConstants.SAMPLE_COLLECT_JOINT_TWO_POS)),
-                Commands.waitMillis(250)
+                Commands.waitMillis(ClawConstants.JOINT_DELAY),
+                Commands.runOnce(() -> claw.get().setJointOne(ClawConstants.SAMPLE_COLLECT_JOINT_ONE_POS + 0.1)),
+                Commands.waitMillis(125),
+                Commands.runOnce(() ->  claw.get().setJointOne(ClawConstants.SAMPLE_COLLECT_JOINT_ONE_POS)),
+                Commands.waitMillis(100),
+                Commands.waitMillis(ClawConstants.COLLECT_DELAY)
         );
 
     }

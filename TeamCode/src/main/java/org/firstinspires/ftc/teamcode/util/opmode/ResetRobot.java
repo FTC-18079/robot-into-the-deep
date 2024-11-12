@@ -24,10 +24,8 @@ public class ResetRobot extends OpMode {
         CommandScheduler.getInstance().cancelAll();
 
         // Reset all subsystems
-        Chassis.resetInstance();
         Collector.resetInstance();
         Elevator.resetInstance();
-        LLVision.resetInstance();
 
         requestOpModeStop();
     }

@@ -24,10 +24,6 @@ public class Chassis extends SubsystemBase {
         return INSTANCE;
     }
 
-    public static void resetInstance() {
-        INSTANCE = null;
-    }
-
     public Chassis() {
         isRobotCentric = false;
         follower = new Follower(new Pose());

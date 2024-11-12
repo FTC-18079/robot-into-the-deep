@@ -55,9 +55,4 @@ public class ArmTest extends OpMode {
         telemetry.addData("Target pos", arm.getSlideTarget());
         telemetry.update();
     }
-
-    @Override
-    public void stop() {
-        arm.setPivotOffset();
-    }
 }
