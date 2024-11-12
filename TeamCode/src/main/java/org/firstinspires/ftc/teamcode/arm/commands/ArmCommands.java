@@ -133,7 +133,7 @@ public class ArmCommands {
 
         GRAB = () -> Commands.sequence(
                 Commands.runOnce(claw.get()::closeClaw),
-                Commands.waitMillis(375)
+                Commands.waitMillis(ClawConstants.GRAB_DELAY)
         );
 
         RELEASE = () -> Commands.sequence(
@@ -153,7 +153,10 @@ public class ArmCommands {
                 Commands.waitMillis(150),
                 Commands.runOnce(() -> claw.get().setJointTwo(ClawConstants.SAMPLE_COLLECT_JOINT_TWO_POS)),
                 Commands.waitMillis(ClawConstants.JOINT_DELAY),
-                Commands.runOnce(() -> claw.get().setJointOne(ClawConstants.SAMPLE_COLLECT_JOINT_ONE_POS)),
+                Commands.runOnce(() -> claw.get().setJointOne(ClawConstants.SAMPLE_COLLECT_JOINT_ONE_POS + 0.1)),
+                Commands.waitMillis(125),
+                Commands.runOnce(() ->  claw.get().setJointOne(ClawConstants.SAMPLE_COLLECT_JOINT_ONE_POS)),
+                Commands.waitMillis(100),
                 Commands.waitMillis(ClawConstants.COLLECT_DELAY)
         );
 

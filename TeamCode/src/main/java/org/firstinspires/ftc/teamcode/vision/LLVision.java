@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.RobotMap;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.MathFunctions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LLVision extends SubsystemBase {
@@ -62,9 +63,8 @@ public class LLVision extends SubsystemBase {
     /**
      * Switches the limelight's pipeline
      *
-     * @param color The target sample color
      */
-    public void setPipeline() {
+    private void setPipeline() {
         limelight.pipelineSwitch(targetColor.index);
     }
 
@@ -88,7 +88,11 @@ public class LLVision extends SubsystemBase {
      */
     public void updateResults() {
         result = limelight.getLatestResult();
-        colorResults = result.getColorResults();
+        if (result == null) {
+            colorResults = new ArrayList<>();
+        } else {
+            colorResults = result.getColorResults();
+        }
     }
 
     // GETTERS
@@ -98,7 +102,7 @@ public class LLVision extends SubsystemBase {
      * @return The angle of the detected sample
      */
     public double getSampleAngle() {
-        if (colorResults.isEmpty()) return 0.0;
+        if (colorResults.isEmpty()) return 90.0;
 
         // Get sample corners
         List<List<Double>> corners = colorResults.get(0).getTargetCorners();

@@ -12,6 +12,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotCore;
 import org.firstinspires.ftc.teamcode.RobotMap;
 import org.firstinspires.ftc.teamcode.util.hardware.SuccessCRServo;
+import org.firstinspires.ftc.teamcode.vision.LLVision;
 
 @SuppressWarnings("unused")
 public class Arm extends SubsystemBase {
@@ -59,6 +60,7 @@ public class Arm extends SubsystemBase {
         slidePid = new PIDController(SLIDE_kP, SLIDE_kI, SLIDE_kD);
         pivotPid = new PIDController(PIVOT_kP, PIVOT_kI, PIVOT_kD);
         alignmentPid = new PIDController(ALIGN_kP, ALIGN_kI, ALIGN_kD);
+        alignmentPid.setSetPoint(0.0);
 
         resetSlideEncoder();
         resetPivotEncoder();
@@ -173,6 +175,9 @@ public class Arm extends SubsystemBase {
 
     @Override
     public void periodic() {
+        // TEMP
+        updatePid();
+
         telemetry.addData("Arm State", state);
         telemetry.addData("Scoring Piece", scoreType);
         telemetry.addData("Pivot target", getPivotTarget());
@@ -181,6 +186,12 @@ public class Arm extends SubsystemBase {
         telemetry.addData("Slide pos", getSlidePos());
 
         double slideOutput = slidePid.calculate(getSlidePos());
+        if (state == ArmState.COLLECTING_SAMPLE) {
+            double ty = LLVision.getInstance().getSampleTy();
+            slideOutput = alignmentPid.calculate(ty);
+            if (slideOutput > 0 && getSlidePos() >= SLIDE_SAMPLE_COLLECT_POSITION) slideOutput = 0.0;
+            if (Math.abs(ty) < ALIGN_ERROR_TOLERANCE) slideOutput = 0.0;
+        }
         double slideFeedforward = SLIDE_kF * Math.sin(Math.toRadians(getPivotTarget() / PIVOT_COUNTS_PER_REVOLUTION * 360.0));
         if (state == ArmState.STOW) slideFeedforward = 0;
 

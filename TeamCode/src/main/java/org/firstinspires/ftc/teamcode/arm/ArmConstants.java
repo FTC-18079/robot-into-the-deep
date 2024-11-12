@@ -15,12 +15,13 @@ public class ArmConstants {
     public static double SLIDE_kF = 0.15;
 
     // Alignment PID
-    public static double ALIGN_kP = 0.02;
+    public static double ALIGN_kP = 0.025;
     public static double ALIGN_kI = 0.0;
     public static double ALIGN_kD = 0.0;
 
     // Constants
     public static double SLIDE_ERROR_TOLERANCE = 35.0;
+    public static double ALIGN_ERROR_TOLERANCE = 2;
 
     // Positions
     public static double SLIDE_REST_POSITION = 0.0;
