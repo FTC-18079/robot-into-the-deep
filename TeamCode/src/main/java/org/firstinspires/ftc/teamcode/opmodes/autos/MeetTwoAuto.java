@@ -84,7 +84,6 @@ public class MeetTwoAuto extends LinearOpMode {
                 gamepad1,
                 gamepad2
         );
-        Chassis.getInstance().setPosition(RobotGlobal.robotPose);
 
         // Schedule auto
         telemetry.addData("Status", "Scheduling commands");

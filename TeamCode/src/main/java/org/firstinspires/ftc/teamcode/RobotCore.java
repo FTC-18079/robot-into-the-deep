@@ -98,6 +98,8 @@ public class RobotCore extends Robot {
         llVision = new LLVision();
         register(chassis, arm, claw, llVision);
 
+        chassis.setPosition(RobotGlobal.robotPose);
+
         telemetry.addData("Status", "Robot initialized, ready to enable");
         telemetry.update();
 
@@ -107,7 +109,6 @@ public class RobotCore extends Robot {
     public void setupOpMode(OpModeType type) {
         switch (type) {
             case TELEOP:
-                chassis.setPosition(RobotGlobal.robotPose);
                 chassis.startTeleopDrive();
                 setDriveControls();
                 //Commands.runOnce(() -> setControllerColors(1, 1, 0)).andThen(new InstantCommand(llVision::setYellow));
