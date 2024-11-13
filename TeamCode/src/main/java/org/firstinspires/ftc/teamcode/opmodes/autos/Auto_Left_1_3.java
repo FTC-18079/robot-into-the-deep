@@ -28,8 +28,18 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 import org.firstinspires.ftc.teamcode.util.commands.Commands;
 
+/**
+ * Starts facing wall on tile X with edge on the center line
+ * <p>
+ * Scores high chamber, then collects and scores 3 neutral samples on high basket
+ * <p>
+ * Can park wherever
+ */
+
+// TODO: re-enable photon once it's fixed
+//@Photon
 @Autonomous(name = "Left Side 1+3", group = "Auto")
-public class MeetTwoAuto extends LinearOpMode {
+public class Auto_Left_1_3 extends LinearOpMode {
     RobotCore robot;
 
     boolean lastUp;
