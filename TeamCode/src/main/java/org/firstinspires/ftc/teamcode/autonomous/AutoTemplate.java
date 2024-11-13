@@ -10,14 +10,15 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.RobotCore;
 import org.firstinspires.ftc.teamcode.RobotMap;
 import org.firstinspires.ftc.teamcode.chassis.Chassis;
+import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 
 import static org.firstinspires.ftc.teamcode.autonomous.AutoConstants.ParkingLocation.*;
 import static org.firstinspires.ftc.teamcode.util.RobotGlobal.Alliance.*;
 
 public abstract class AutoTemplate extends LinearOpMode {
-    public RobotCore.OpModeType type = RobotCore.OpModeType.EMPTY;
     protected RobotCore robot;
+    protected Pose startingPose;
 
     boolean lastUp;
     boolean lastDown;
@@ -28,12 +29,12 @@ public abstract class AutoTemplate extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         // Init hardware
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         telemetry.addData("Status", "Initializing hardware");
         telemetry.update();
-        RobotMap.getInstance().init(hardwareMap);
 
+        RobotMap.getInstance().init(hardwareMap);
         RobotGlobal.resetValues();
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         // Configure auto variables
         while (opModeInInit() && !gamepad1.options) {
@@ -42,17 +43,15 @@ public abstract class AutoTemplate extends LinearOpMode {
         sleep(500);
 
         // Create robot
-        rotatePoses();
+        RobotGlobal.robotPose = getStartingPose();
         sleep(100);
-        setStartPose();
         buildPaths();
         robot = new RobotCore(
-                type,
+                RobotCore.OpModeType.AUTO,
                 telemetry,
                 gamepad1,
                 gamepad2
         );
-        Chassis.getInstance().setPosition(RobotGlobal.robotPose);
 
         // Schedule auto
         telemetry.addData("Status", "Scheduling commands");
@@ -60,6 +59,7 @@ public abstract class AutoTemplate extends LinearOpMode {
         if (RobotGlobal.alliance != NONE) robot.schedule(makeAutoSequence()
                 .andThen(new InstantCommand(Chassis.getInstance()::breakFollowing)));
 
+        // Move init servos
         initSequence();
 
         while (opModeInInit()) {
@@ -75,7 +75,7 @@ public abstract class AutoTemplate extends LinearOpMode {
         }
 
         // Don't run anything without an alliance
-        if (RobotGlobal.alliance == NONE) requestOpModeStop();
+        if (RobotGlobal.alliance == NONE) RobotGlobal.alliance = RobotGlobal.Alliance.BLUE;
 
         // Run robot
         while (opModeIsActive() && !isStopRequested()) {
@@ -128,14 +128,11 @@ public abstract class AutoTemplate extends LinearOpMode {
         return (last != current) && current;
     }
 
-    // Method must be overwritten to set robot starting pose
-    protected abstract void setStartPose();
-
-    protected abstract Command makeAutoSequence();
-
-    protected abstract void buildPaths();
+    protected abstract Pose getStartingPose();
 
     protected abstract void initSequence();
 
-    protected abstract void rotatePoses();
+    protected abstract void buildPaths();
+
+    protected abstract Command makeAutoSequence();
 }
