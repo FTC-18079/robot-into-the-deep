@@ -4,7 +4,6 @@ import static org.firstinspires.ftc.teamcode.auto.AutoConstants.ParkingPose.*;
 import static org.firstinspires.ftc.teamcode.util.RobotGlobal.Alliance.*;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.CommandScheduler;
@@ -27,7 +26,6 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 import org.firstinspires.ftc.teamcode.util.commands.Commands;
 
-@Config
 @Autonomous(name = "Meet 2 Auto", group = "Auto")
 public class MeetTwoAuto extends LinearOpMode {
     RobotCore robot;
@@ -43,10 +41,10 @@ public class MeetTwoAuto extends LinearOpMode {
     private final Pose scorePreloadPose = new Pose(32, 80, Math.toRadians(180));
     private final Pose collectOnePose = new Pose(24, 106, Math.toRadians(35));
     private final Pose scoreOnePose = new Pose(14, 126, Math.toRadians(315));
-    private final Pose collectTwoPose = new Pose();
-    private final Pose scoreTwoPose = new Pose();
-    private final Pose collectThreePose = new Pose();
-    private final Pose scoreThreePose = new Pose();
+    private final Pose collectTwoPose = new Pose(25, 131, Math.toRadians(0));
+    private final Pose scoreTwoPose = new Pose(14, 126, Math.toRadians(315));
+    private final Pose collectThreePose = new Pose(28, 133, Math.toRadians(26));
+    private final Pose scoreThreePose = new Pose(14, 126, Math.toRadians(315));
 
     // Paths
     private Path scorePreloadPath;
@@ -56,6 +54,7 @@ public class MeetTwoAuto extends LinearOpMode {
     private Path scoreTwoPath;
     private Path collectThreePath;
     private Path scoreThreePath;
+    private Path parkPath;
 
     @Override
     public void runOpMode() {
@@ -128,6 +127,20 @@ public class MeetTwoAuto extends LinearOpMode {
 
         scoreOnePath = new Path(new BezierLine(new Point(collectOnePose), new Point(scoreOnePose)));
         scoreOnePath.setLinearHeadingInterpolation(collectOnePose.getHeading(), scoreOnePose.getHeading());
+
+        collectTwoPath = new Path(new BezierLine(new Point(scoreOnePose), new Point(collectTwoPose)));
+        collectTwoPath.setLinearHeadingInterpolation(scoreOnePose.getHeading(), collectTwoPose.getHeading());
+
+        scoreTwoPath = new Path(new BezierLine(new Point(collectTwoPose), new Point(scoreTwoPose)));
+        scoreTwoPath.setLinearHeadingInterpolation(collectTwoPose.getHeading(), scoreTwoPose.getHeading());
+
+        collectThreePath = new Path(new BezierLine(new Point(scoreTwoPose), new Point(collectThreePose)));
+        collectThreePath.setLinearHeadingInterpolation(scoreTwoPose.getHeading(), collectThreePose.getHeading());
+
+        scoreThreePath = new Path(new BezierLine(new Point(collectThreePose), new Point(scoreThreePose)));
+        scoreThreePath.setLinearHeadingInterpolation(collectThreePose.getHeading(), scoreThreePose.getHeading());
+
+        
     }
 
     private Command autoSequence() {
@@ -139,28 +152,63 @@ public class MeetTwoAuto extends LinearOpMode {
                         Commands.defer(ArmCommands.STOW_TO_CHAMBER, Arm.getInstance())
                 ),
                 Commands.defer(ArmCommands.SCORE_SPECIMEN, Arm.getInstance()),
-                // Drive to first sample
+                // Drive to first sample and extend collector
                 Commands.parallel(
                         new FollowPathCommand(collectOnePath),
-                        Commands.defer(ArmCommands.CHAMBER_TO_STOW, Arm.getInstance())
-                ),
-                Commands.runOnce(() -> Arm.getInstance().setScoreType(Arm.ScoreType.SAMPLE)),
-                // Collect
-                Commands.defer(ArmCommands.STOW_TO_SAMPLE_COLLECT, Arm.getInstance()),
-                Commands.waitMillis(700),
-                Commands.sequence(
-                        Commands.defer(ArmCommands.COLLECT_SAMPLE, Claw.getInstance()),
-                        Commands.defer(ArmCommands.GRAB, Claw.getInstance()),
-                        Commands.defer(ArmCommands.SAMPLE_COLLECT_TO_STOW, Arm.getInstance())
-                ),
-                Commands.waitMillis(500),
+                        Commands.sequence(
+                                Commands.defer(ArmCommands.CHAMBER_TO_STOW, Arm.getInstance()),
+                                Commands.runOnce(() -> Arm.getInstance().setScoreType(Arm.ScoreType.SAMPLE)),
+                                Commands.defer(ArmCommands.STOW_TO_SAMPLE_COLLECT, Arm.getInstance())
+                        )),
+                Commands.waitMillis(900),
+                // Collect sample
+                Commands.defer(ArmCommands.COLLECT_SAMPLE, Claw.getInstance()),
+                Commands.defer(ArmCommands.GRAB, Claw.getInstance()),
+                Commands.defer(ArmCommands.SAMPLE_COLLECT_TO_STOW, Arm.getInstance()),
                 // Go up to basket and score
-                Commands.defer(ArmCommands.STOW_TO_BASKET),
-                new FollowPathCommand(scoreOnePath),
+                Commands.parallel(
+                        Commands.defer(ArmCommands.STOW_TO_BASKET),
+                        new FollowPathCommand(scoreOnePath)
+                ),
+                Commands.defer(ArmCommands.RELEASE, Claw.getInstance()),
+                // Retract and go to collect second
+                Commands.parallel(
+                        Commands.defer(ArmCommands.BASKET_TO_STOW, Arm.getInstance()),
+                        new FollowPathCommand(collectTwoPath)
+                ),
+                // Collect second sample
+                Commands.defer(ArmCommands.STOW_TO_SAMPLE_COLLECT, Arm.getInstance()),
+                Commands.waitMillis(250),
+                Commands.defer(ArmCommands.COLLECT_SAMPLE, Claw.getInstance()),
+                Commands.defer(ArmCommands.GRAB, Claw.getInstance()),
+                Commands.defer(ArmCommands.SAMPLE_COLLECT_TO_STOW, Arm.getInstance()),
+                // Score second sample
+                Commands.parallel(
+                        Commands.defer(ArmCommands.STOW_TO_BASKET, Arm.getInstance()),
+                        new FollowPathCommand(scoreTwoPath)
+                ),
+                Commands.defer(ArmCommands.RELEASE, Claw.getInstance()),
+                // Drive to final sample
+                Commands.parallel(
+                        Commands.defer(ArmCommands.BASKET_TO_STOW, Arm.getInstance()),
+                        new FollowPathCommand(collectThreePath)
+                ),
+                Commands.defer(ArmCommands.STOW_TO_SAMPLE_COLLECT, Arm.getInstance()),
                 Commands.waitMillis(200),
-                Commands.sequence(
-                        Commands.defer(ArmCommands.RELEASE, Claw.getInstance()),
-                        Commands.defer(ArmCommands.BASKET_TO_STOW, Claw.getInstance())
+                // Collect third sample
+                Commands.defer(ArmCommands.COLLECT_SAMPLE, Claw.getInstance()),
+                Commands.defer(ArmCommands.GRAB, Arm.getInstance()),
+                Commands.defer(ArmCommands.SAMPLE_COLLECT_TO_STOW, Arm.getInstance()),
+                // Score third sample
+                Commands.parallel(
+                        Commands.defer(ArmCommands.STOW_TO_BASKET, Arm.getInstance()),
+                        new FollowPathCommand(scoreThreePath)
+                ),
+                Commands.defer(ArmCommands.RELEASE, Claw.getInstance()),
+                // Stow arm and go to park
+                Commands.parallel(
+                        Commands.defer(ArmCommands.BASKET_TO_STOW, Arm.getInstance())
+                        // to park path
                 )
         );
     }

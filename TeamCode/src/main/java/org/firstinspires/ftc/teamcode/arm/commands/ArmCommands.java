@@ -88,10 +88,12 @@ public class ArmCommands {
         STOW_TO_BASKET = () -> Commands.sequence(
                 Commands.runOnce(() -> arm.get().setState(Arm.ArmState.SCORING_SAMPLE)),
                 Commands.runOnce(() -> arm.get().setPivotPos(ArmConstants.PIVOT_SCORE_POSITION)),
-                Commands.runOnce(() -> claw.get().setState(ClawConstants.SAMPLE_SCORING_STATE)),
+                Commands.runOnce(() -> claw.get().setJointOne(0.3)),
                 Commands.waitUntil(arm.get()::pivotAtSetPoint),
                 Commands.runOnce(() -> arm.get().setSlidePos(ArmConstants.SLIDE_BASKET_POSITION)),
-                Commands.waitUntil(arm.get()::slideAtSetPoint)
+                Commands.waitUntil(arm.get()::slideAtSetPoint),
+                Commands.runOnce(() -> claw.get().setState(ClawConstants.SAMPLE_SCORING_STATE)),
+                Commands.waitMillis(200)
         );
         CHAMBER_TO_BASKET = () -> Commands.sequence(
                 Commands.runOnce(() -> arm.get().setState(Arm.ArmState.SCORING_SAMPLE)),

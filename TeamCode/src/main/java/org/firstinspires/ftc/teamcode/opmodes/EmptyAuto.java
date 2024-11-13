@@ -1,39 +1,20 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
-import com.arcrobotics.ftclib.command.Command;
-import com.arcrobotics.ftclib.command.InstantCommand;
-import com.outoftheboxrobotics.photoncore.Photon;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.firstinspires.ftc.teamcode.auto.AutoTemplate;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 
-@Photon
 @Autonomous(name = "Empty Autonomous", group = "Bad Autos")
-public class EmptyAuto extends AutoTemplate {
+public class EmptyAuto extends OpMode {
     @Override
-    protected void setStartPose() {
+    public void init() {
         RobotGlobal.robotPose = new Pose(0, 0, 0);
     }
 
     @Override
-    protected Command makeAutoSequence() {
-        return new InstantCommand();
-    }
-
-    @Override
-    protected void buildPaths() {
-
-    }
-
-    @Override
-    protected void initSequence() {
-
-    }
-
-    @Override
-    protected void rotatePoses() {
+    public void loop() {
 
     }
 }
