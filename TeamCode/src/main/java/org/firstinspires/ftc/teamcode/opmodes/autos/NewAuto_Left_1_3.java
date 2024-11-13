@@ -66,7 +66,7 @@ public class NewAuto_Left_1_3 extends AutoTemplate {
     public void buildPaths() {
         scorePreloadPath = new Path(new BezierLine(new Point(startingPose), new Point(scorePreloadPose)));
         scorePreloadPath.setConstantHeadingInterpolation(startingPose.getHeading());
-        scorePreloadPath.setPathEndTimeoutConstraint(300);
+        scorePreloadPath.setPathEndTimeoutConstraint(200);
 
         collectOnePath = new Path(new BezierLine(new Point(scorePreloadPose), new Point(collectOnePose)));
         collectOnePath.setLinearHeadingInterpolation(scorePreloadPose.getHeading(), collectOnePose.getHeading());
