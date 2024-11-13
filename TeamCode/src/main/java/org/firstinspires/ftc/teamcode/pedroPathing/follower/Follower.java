@@ -374,6 +374,25 @@ public class Follower {
     }
 
     /**
+     * This holds a Point.
+     *
+     * @param point   the Point to stay at.
+     * @param heading the heading to face.
+     */
+    public void holdPoint(Point point, double heading) {
+        holdPoint(new BezierPoint(point), heading);
+    }
+
+    /**
+     * This holds a Point.
+     *
+     * @param pose the Point (as a Pose) to stay at.
+     */
+    public void holdPoint(Pose pose) {
+        holdPoint(new Point(pose), pose.getHeading());
+    }
+
+    /**
      * This follows a Path.
      * This also makes the Follower hold the last Point on the Path.
      *

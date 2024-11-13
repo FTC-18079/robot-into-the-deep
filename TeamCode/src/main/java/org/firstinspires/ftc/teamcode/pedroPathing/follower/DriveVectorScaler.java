@@ -144,9 +144,9 @@ public class DriveVectorScaler {
      * @return returns the scaling factor for the variable Vector.
      */
     public double findNormalizingScaling(Vector staticVector, Vector variableVector) {
-            double a = Math.pow(variableVector.getXComponent(), 2) + Math.pow(variableVector.getYComponent(), 2);
-            double b = staticVector.getXComponent() * variableVector.getXComponent() + staticVector.getYComponent() * variableVector.getYComponent();
-            double c = Math.pow(staticVector.getXComponent(), 2) + Math.pow(staticVector.getYComponent(), 2) - 1.0;
-            return (-b + Math.sqrt(Math.pow(b, 2) - a*c))/(a);
+        double a = Math.pow(variableVector.getXComponent(), 2) + Math.pow(variableVector.getYComponent(), 2);
+        double b = staticVector.getXComponent() * variableVector.getXComponent() + staticVector.getYComponent() * variableVector.getYComponent();
+        double c = Math.pow(staticVector.getXComponent(), 2) + Math.pow(staticVector.getYComponent(), 2) - 1.0;
+        return (-b + Math.sqrt(Math.pow(b, 2) - a*c))/(a);
     }
 }
