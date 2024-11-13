@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.util;
 
-import org.firstinspires.ftc.teamcode.auto.AutoConstants;
+import org.firstinspires.ftc.teamcode.autonomous.AutoConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 
 public class RobotGlobal {

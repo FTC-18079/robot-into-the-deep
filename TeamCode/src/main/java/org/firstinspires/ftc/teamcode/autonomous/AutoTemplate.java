@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto;
+package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.RobotMap;
 import org.firstinspires.ftc.teamcode.chassis.Chassis;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 
-import static org.firstinspires.ftc.teamcode.auto.AutoConstants.ParkingLocation.*;
+import static org.firstinspires.ftc.teamcode.autonomous.AutoConstants.ParkingLocation.*;
 import static org.firstinspires.ftc.teamcode.util.RobotGlobal.Alliance.*;
 
 public abstract class AutoTemplate extends LinearOpMode {

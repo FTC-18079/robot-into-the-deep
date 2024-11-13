@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes.autos;
 
-import static org.firstinspires.ftc.teamcode.auto.AutoConstants.ParkingLocation.*;
+import static org.firstinspires.ftc.teamcode.autonomous.AutoConstants.ParkingLocation.*;
 import static org.firstinspires.ftc.teamcode.util.RobotGlobal.Alliance;
 
 import com.acmerobotics.dashboard.FtcDashboard;
@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.RobotCore;
 import org.firstinspires.ftc.teamcode.RobotMap;
 import org.firstinspires.ftc.teamcode.arm.Arm;
 import org.firstinspires.ftc.teamcode.arm.commands.ArmCommands;
-import org.firstinspires.ftc.teamcode.auto.AutoConstants;
+import org.firstinspires.ftc.teamcode.autonomous.AutoConstants;
 import org.firstinspires.ftc.teamcode.chassis.Chassis;
 import org.firstinspires.ftc.teamcode.chassis.commands.FollowPathCommand;
 import org.firstinspires.ftc.teamcode.claw.Claw;
