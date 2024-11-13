@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes.autos;
 
-import static org.firstinspires.ftc.teamcode.auto.AutoConstants.ParkingPose.*;
+import static org.firstinspires.ftc.teamcode.auto.AutoConstants.ParkingLocation.*;
 import static org.firstinspires.ftc.teamcode.util.RobotGlobal.Alliance;
 
 import com.acmerobotics.dashboard.FtcDashboard;
@@ -21,13 +21,14 @@ import org.firstinspires.ftc.teamcode.chassis.commands.FollowPathCommand;
 import org.firstinspires.ftc.teamcode.claw.Claw;
 import org.firstinspires.ftc.teamcode.claw.ClawConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
+import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierCurve;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierLine;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 import org.firstinspires.ftc.teamcode.util.commands.Commands;
 
-@Autonomous(name = "Meet 2 Auto", group = "Auto")
+@Autonomous(name = "Left Side 1+3", group = "Auto")
 public class MeetTwoAuto extends LinearOpMode {
     RobotCore robot;
 
@@ -99,7 +100,7 @@ public class MeetTwoAuto extends LinearOpMode {
             telemetry.addData("Selected auto delay", RobotGlobal.delayMs);
             telemetry.addData("Live view on", RobotGlobal.liveView);
             telemetry.addData("Selected alliance", RobotGlobal.alliance);
-            telemetry.addData("Selected parking spot", RobotGlobal.parkingPose);
+            telemetry.addData("Selected parking spot", RobotGlobal.parkingLocation);
             telemetry.update();
 
             // Sleep CPU a little
@@ -141,7 +142,13 @@ public class MeetTwoAuto extends LinearOpMode {
         scoreThreePath = new Path(new BezierLine(new Point(collectThreePose), new Point(scoreThreePose)));
         scoreThreePath.setLinearHeadingInterpolation(collectThreePose.getHeading(), scoreThreePose.getHeading());
 
-
+        if (RobotGlobal.parkingLocation == OBSERVATION_ZONE) {
+            parkPath = new Path(new BezierCurve(new Point(scoreThreePose), new Point(AutoConstants.OBVZONE_PARKING_POSE)));
+            parkPath.setLinearHeadingInterpolation(scoreThreePose.getHeading(), AutoConstants.OBVZONE_PARKING_POSE.getHeading());
+        } else {
+            parkPath = new Path(new BezierCurve(new Point(scoreThreePose), new Point(60, 122, Point.CARTESIAN), new Point(AutoConstants.ASCENT_PARKING_POSE)));
+            parkPath.setLinearHeadingInterpolation(scoreThreePose.getHeading(), AutoConstants.ASCENT_PARKING_POSE.getHeading());
+        }
     }
 
     private Command autoSequence() {
@@ -208,8 +215,8 @@ public class MeetTwoAuto extends LinearOpMode {
                 Commands.defer(ArmCommands.RELEASE, Claw.getInstance()),
                 // Stow arm and go to park
                 Commands.parallel(
-                        Commands.defer(ArmCommands.BASKET_TO_STOW, Arm.getInstance())
-                        // to park path
+                        Commands.defer(ArmCommands.BASKET_TO_STOW, Arm.getInstance()),
+                        new FollowPathCommand(parkPath)
                 )
         );
     }
@@ -233,7 +240,7 @@ public class MeetTwoAuto extends LinearOpMode {
         // Toggle live view
         if (checkInputs(gamepad1.cross, lastCross)) RobotGlobal.liveView = !RobotGlobal.liveView;
         // Toggle parking pose
-        if (checkInputs(gamepad1.circle, lastCircle)) RobotGlobal.parkingPose = RobotGlobal.parkingPose == ASCENT_ZONE ? OBSERVATION_ZONE : ASCENT_ZONE;
+        if (checkInputs(gamepad1.circle, lastCircle)) RobotGlobal.parkingLocation = RobotGlobal.parkingLocation == ASCENT_ZONE ? OBSERVATION_ZONE : ASCENT_ZONE;
 
         // Set old inputs
         lastUp = gamepad1.dpad_up;
@@ -248,7 +255,7 @@ public class MeetTwoAuto extends LinearOpMode {
         telemetry.addData("Selected auto delay", RobotGlobal.delayMs);
         telemetry.addData("Live view on", RobotGlobal.liveView);
         telemetry.addData("Selected alliance", RobotGlobal.alliance);
-        telemetry.addData("Selected parking spot", RobotGlobal.parkingPose);
+        telemetry.addData("Selected parking spot", RobotGlobal.parkingLocation);
         telemetry.update();
     }
 

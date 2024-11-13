@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.RobotMap;
 import org.firstinspires.ftc.teamcode.chassis.Chassis;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 
-import static org.firstinspires.ftc.teamcode.auto.AutoConstants.ParkingPose.*;
+import static org.firstinspires.ftc.teamcode.auto.AutoConstants.ParkingLocation.*;
 import static org.firstinspires.ftc.teamcode.util.RobotGlobal.Alliance.*;
 
 public abstract class AutoTemplate extends LinearOpMode {
@@ -67,7 +67,7 @@ public abstract class AutoTemplate extends LinearOpMode {
             telemetry.addData("Selected auto delay", RobotGlobal.delayMs);
             telemetry.addData("Live view on", RobotGlobal.liveView);
             telemetry.addData("Selected alliance", RobotGlobal.alliance);
-            telemetry.addData("Selected parking spot", RobotGlobal.parkingPose);
+            telemetry.addData("Selected parking spot", RobotGlobal.parkingLocation);
             telemetry.update();
 
             // Sleep CPU a little
@@ -105,7 +105,7 @@ public abstract class AutoTemplate extends LinearOpMode {
         // Toggle live view
         if (checkInputs(gamepad1.cross, lastCross)) RobotGlobal.liveView = !RobotGlobal.liveView;
         // Toggle parking pose
-        if (checkInputs(gamepad1.circle, lastCircle)) RobotGlobal.parkingPose = RobotGlobal.parkingPose == ASCENT_ZONE ? OBSERVATION_ZONE : ASCENT_ZONE;
+        if (checkInputs(gamepad1.circle, lastCircle)) RobotGlobal.parkingLocation = RobotGlobal.parkingLocation == ASCENT_ZONE ? OBSERVATION_ZONE : ASCENT_ZONE;
 
         // Set old inputs
         lastUp = gamepad1.dpad_up;
@@ -120,7 +120,7 @@ public abstract class AutoTemplate extends LinearOpMode {
         telemetry.addData("Selected auto delay", RobotGlobal.delayMs);
         telemetry.addData("Live view on", RobotGlobal.liveView);
         telemetry.addData("Selected alliance", RobotGlobal.alliance);
-        telemetry.addData("Selected parking spot", RobotGlobal.parkingPose);
+        telemetry.addData("Selected parking spot", RobotGlobal.parkingLocation);
         telemetry.update();
     }
 

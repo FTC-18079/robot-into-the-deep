@@ -1,12 +1,11 @@
 package org.firstinspires.ftc.teamcode.opmodes.autos;
 
 import static org.firstinspires.ftc.teamcode.auto.AutoConstants.ASCENT_PARKING_POSE;
-import static org.firstinspires.ftc.teamcode.auto.AutoConstants.BASKET_SCORE_POSE;
 import static org.firstinspires.ftc.teamcode.auto.AutoConstants.OBVZONE_PARKING_POSE;
 import static org.firstinspires.ftc.teamcode.auto.AutoConstants.OBVZONE_STARTING_POSE;
 import static org.firstinspires.ftc.teamcode.auto.AutoConstants.checkAlliance;
 import static org.firstinspires.ftc.teamcode.util.EasyPathBuilder.constantHeadingPath;
-import static org.firstinspires.ftc.teamcode.util.RobotGlobal.parkingPose;
+import static org.firstinspires.ftc.teamcode.util.RobotGlobal.parkingLocation;
 import static org.firstinspires.ftc.teamcode.util.RobotGlobal.robotPose;
 
 import com.arcrobotics.ftclib.command.Command;
@@ -53,7 +52,7 @@ public class MeetOneAuto extends AutoTemplate {
     protected void setStartPose() {
         robotPose = checkAlliance(OBVZONE_STARTING_POSE);
         type = RobotCore.OpModeType.AUTO;
-        parkPosition = (parkingPose == AutoConstants.ParkingPose.OBSERVATION_ZONE) ? OBVZONE_PARKING_POSE : ASCENT_PARKING_POSE;
+        parkPosition = (parkingLocation == AutoConstants.ParkingLocation.OBSERVATION_ZONE) ? OBVZONE_PARKING_POSE : ASCENT_PARKING_POSE;
         parkPosition = checkAlliance(parkPosition);
     }
 
@@ -91,7 +90,7 @@ public class MeetOneAuto extends AutoTemplate {
         scoreThreePath = new Path(new BezierLine(new Point(sampleThreePose), new Point(scoreThreePose)));
         scoreThreePath.setConstantHeadingInterpolation(0);
 
-        if (parkingPose == AutoConstants.ParkingPose.OBSERVATION_ZONE) {
+        if (parkingLocation == AutoConstants.ParkingLocation.OBSERVATION_ZONE) {
             scoreToParkPath = new Path(new BezierCurve(new Point(scoreThreePose), new Point(50, 70, Point.CARTESIAN), new Point(parkPosition)));
             scoreToParkPath.setLinearHeadingInterpolation(scoreThreePose.getHeading(), parkPosition.getHeading(), 0.6);
         } else {

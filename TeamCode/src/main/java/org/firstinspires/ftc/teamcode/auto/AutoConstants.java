@@ -12,11 +12,9 @@ public class AutoConstants {
 
     // Starting poses
     public static final Pose OBVZONE_STARTING_POSE = new Pose(8, 80, 0);
-    public static final Pose CENTER_STARTING_POSE = new Pose(8, 80, 0);
-    public static final Pose BASKET_STARTING_POSE = new Pose(8, 108, 0);
 
     // Robot parking poses
-    public enum ParkingPose {
+    public enum ParkingLocation {
         OBSERVATION_ZONE, ASCENT_ZONE
     }
 
@@ -26,8 +24,8 @@ public class AutoConstants {
     public static final Pose CHAMBER_RIGHT_SCORE_POSE = new Pose(32, 80, Math.toRadians(180));
 
     // Parking poses
-    public static final Pose OBVZONE_PARKING_POSE = new Pose(14, 14, Math.toRadians(270));
-    public static final Pose ASCENT_PARKING_POSE = new Pose(60, 98, Math.toRadians(270));
+    public static final Pose OBVZONE_PARKING_POSE = new Pose(14, 10, Math.toRadians(0));
+    public static final Pose ASCENT_PARKING_POSE = new Pose(60, 98, Math.toRadians(90));
 
     // Alliance alliance poses
     public static final Pose LEFT_ALLIANCE_SAMPLE = new Pose(46, 22.75);

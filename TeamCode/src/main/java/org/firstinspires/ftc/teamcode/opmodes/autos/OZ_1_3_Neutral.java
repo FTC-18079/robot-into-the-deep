@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes.autos;
 
 import static org.firstinspires.ftc.teamcode.auto.AutoConstants.*;
 import static org.firstinspires.ftc.teamcode.util.EasyPathBuilder.*;
-import static org.firstinspires.ftc.teamcode.util.RobotGlobal.parkingPose;
+import static org.firstinspires.ftc.teamcode.util.RobotGlobal.parkingLocation;
 import static org.firstinspires.ftc.teamcode.util.RobotGlobal.robotPose;
 
 import com.arcrobotics.ftclib.command.Command;
@@ -53,7 +53,7 @@ public class OZ_1_3_Neutral extends AutoTemplate {
     protected void setStartPose() {
         robotPose = checkAlliance(OBVZONE_STARTING_POSE);
         type = RobotCore.OpModeType.AUTO;
-        parkPosition = (parkingPose == ParkingPose.OBSERVATION_ZONE) ? OBVZONE_PARKING_POSE : ASCENT_PARKING_POSE;
+        parkPosition = (parkingLocation == ParkingLocation.OBSERVATION_ZONE) ? OBVZONE_PARKING_POSE : ASCENT_PARKING_POSE;
         parkPosition = checkAlliance(parkPosition);
     }
 
@@ -79,7 +79,7 @@ public class OZ_1_3_Neutral extends AutoTemplate {
         collectThreeToBasketPath = new Path(new BezierLine(new Point(sampleThreePose), new Point(scoreBasketPose)));
         collectThreeToBasketPath.setLinearHeadingInterpolation(sampleThreePose.getHeading(), scoreBasketPose.getHeading());
 
-        if (parkingPose == ParkingPose.OBSERVATION_ZONE) {
+        if (parkingLocation == ParkingLocation.OBSERVATION_ZONE) {
             basketToParkPath = new Path(new BezierCurve(new Point(scoreBasketPose), new Point(55, 27, Point.CARTESIAN), new Point(10, 24, Point.CARTESIAN)));
             basketToParkPath.setLinearHeadingInterpolation(scoreBasketPose.getHeading(), Math.toRadians(90));
         } else {
