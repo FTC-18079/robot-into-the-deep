@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.autos;
 
 import static org.firstinspires.ftc.teamcode.auto.AutoConstants.ParkingPose.*;
-import static org.firstinspires.ftc.teamcode.util.RobotGlobal.Alliance.*;
+import static org.firstinspires.ftc.teamcode.util.RobotGlobal.Alliance;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.RobotCore;
 import org.firstinspires.ftc.teamcode.RobotMap;
 import org.firstinspires.ftc.teamcode.arm.Arm;
 import org.firstinspires.ftc.teamcode.arm.commands.ArmCommands;
+import org.firstinspires.ftc.teamcode.auto.AutoConstants;
 import org.firstinspires.ftc.teamcode.chassis.Chassis;
 import org.firstinspires.ftc.teamcode.chassis.commands.FollowPathCommand;
 import org.firstinspires.ftc.teamcode.claw.Claw;
@@ -38,13 +39,13 @@ public class MeetTwoAuto extends LinearOpMode {
 
     // Poses
     private final Pose startingPose = new Pose(8, 80, Math.toRadians(180));
-    private final Pose scorePreloadPose = new Pose(32, 80, Math.toRadians(180));
+    private final Pose scorePreloadPose = AutoConstants.CHAMBER_LEFT_SCORE_POSE;
     private final Pose collectOnePose = new Pose(24, 106, Math.toRadians(35));
-    private final Pose scoreOnePose = new Pose(14, 126, Math.toRadians(315));
+    private final Pose scoreOnePose = AutoConstants.BASKET_SCORE_POSE;
     private final Pose collectTwoPose = new Pose(25, 131, Math.toRadians(0));
-    private final Pose scoreTwoPose = new Pose(14, 126, Math.toRadians(315));
+    private final Pose scoreTwoPose = AutoConstants.BASKET_SCORE_POSE;
     private final Pose collectThreePose = new Pose(28, 133, Math.toRadians(26));
-    private final Pose scoreThreePose = new Pose(14, 126, Math.toRadians(315));
+    private final Pose scoreThreePose = AutoConstants.BASKET_SCORE_POSE;
 
     // Paths
     private Path scorePreloadPath;
@@ -87,7 +88,7 @@ public class MeetTwoAuto extends LinearOpMode {
         // Schedule auto
         telemetry.addData("Status", "Scheduling commands");
         telemetry.update();
-        if (RobotGlobal.alliance != NONE) robot.schedule(autoSequence()
+        if (RobotGlobal.alliance != Alliance.NONE) robot.schedule(autoSequence()
                 .andThen(new InstantCommand(Chassis.getInstance()::breakFollowing)));
 
         Claw.getInstance().setState(ClawConstants.REST_STATE);
@@ -106,7 +107,7 @@ public class MeetTwoAuto extends LinearOpMode {
         }
 
         // Set a default alliance
-        if (RobotGlobal.alliance == NONE) RobotGlobal.alliance = BLUE;
+        if (RobotGlobal.alliance == Alliance.NONE) RobotGlobal.alliance = Alliance.BLUE;
 
         // Run robot
         while (opModeIsActive() && !isStopRequested()) {
@@ -140,7 +141,7 @@ public class MeetTwoAuto extends LinearOpMode {
         scoreThreePath = new Path(new BezierLine(new Point(collectThreePose), new Point(scoreThreePose)));
         scoreThreePath.setLinearHeadingInterpolation(collectThreePose.getHeading(), scoreThreePose.getHeading());
 
-        
+
     }
 
     private Command autoSequence() {
@@ -222,10 +223,10 @@ public class MeetTwoAuto extends LinearOpMode {
             switch(RobotGlobal.alliance) {
                 case NONE:
                 case RED:
-                    RobotGlobal.alliance = BLUE;
+                    RobotGlobal.alliance = Alliance.BLUE;
                     break;
                 case BLUE:
-                    RobotGlobal.alliance = RED;
+                    RobotGlobal.alliance = Alliance.RED;
                     break;
             }
         }
