@@ -1,24 +1,14 @@
 package org.firstinspires.ftc.teamcode.opmodes.autos;
 
-import static org.firstinspires.ftc.teamcode.autonomous.AutoConstants.ParkingLocation.ASCENT_ZONE;
 import static org.firstinspires.ftc.teamcode.autonomous.AutoConstants.ParkingLocation.OBSERVATION_ZONE;
-import static org.firstinspires.ftc.teamcode.util.RobotGlobal.Alliance;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.Command;
-import com.arcrobotics.ftclib.command.CommandScheduler;
-import com.arcrobotics.ftclib.command.InstantCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.RobotCore;
-import org.firstinspires.ftc.teamcode.RobotMap;
 import org.firstinspires.ftc.teamcode.arm.Arm;
 import org.firstinspires.ftc.teamcode.arm.commands.ArmCommands;
 import org.firstinspires.ftc.teamcode.autonomous.AutoConstants;
 import org.firstinspires.ftc.teamcode.autonomous.AutoTemplate;
-import org.firstinspires.ftc.teamcode.chassis.Chassis;
 import org.firstinspires.ftc.teamcode.chassis.commands.FollowPathCommand;
 import org.firstinspires.ftc.teamcode.claw.Claw;
 import org.firstinspires.ftc.teamcode.claw.ClawConstants;
@@ -40,8 +30,8 @@ import org.firstinspires.ftc.teamcode.util.commands.Commands;
 
 // TODO: re-enable photon once it's fixed
 //@Photon
-@Autonomous(name = "New Left Side 1+3", group = "Auto")
-public class NewAuto_Left_1_3 extends AutoTemplate {
+@Autonomous(name = "New Left Side 3+1", group = "Auto")
+public class NewAuto_Left_3_1 extends AutoTemplate {
     // Poses
     private final Pose startingPose = new Pose(8, 80, Math.toRadians(180));
     private final Pose scorePreloadPose = AutoConstants.CHAMBER_LEFT_SCORE_POSE;

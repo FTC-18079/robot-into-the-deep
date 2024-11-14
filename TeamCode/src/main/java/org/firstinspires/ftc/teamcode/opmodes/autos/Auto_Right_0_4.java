@@ -14,8 +14,8 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 import org.firstinspires.ftc.teamcode.util.commands.Commands;
 
-@Autonomous(name = "Right Side 4+0")
-public class Auto_Right_4_0 extends AutoTemplate {
+@Autonomous(name = "Right Side 0+4")
+public class Auto_Right_0_4 extends AutoTemplate {
     // Poses
     private final Pose startingPose = new Pose(8, 64, Math.toRadians(180));
     private final Pose scorePreloadPose = AutoConstants.CHAMBER_RIGHT_SCORE_POSE;

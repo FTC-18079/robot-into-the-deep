@@ -38,8 +38,8 @@ import org.firstinspires.ftc.teamcode.util.commands.Commands;
 
 // TODO: re-enable photon once it's fixed
 //@Photon
-@Autonomous(name = "Left Side 1+3", group = "Auto")
-public class Auto_Left_1_3 extends LinearOpMode {
+@Autonomous(name = "Left Side 3+1", group = "Auto")
+public class Auto_Left_3_1 extends LinearOpMode {
     RobotCore robot;
 
     boolean lastUp;
