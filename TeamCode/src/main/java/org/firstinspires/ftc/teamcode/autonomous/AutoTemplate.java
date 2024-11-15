@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.RobotMap;
 import org.firstinspires.ftc.teamcode.chassis.Chassis;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
+import org.firstinspires.ftc.teamcode.util.commands.Commands;
 
 import static org.firstinspires.ftc.teamcode.autonomous.AutoConstants.ParkingLocation.*;
 import static org.firstinspires.ftc.teamcode.util.RobotGlobal.Alliance.*;
@@ -56,8 +57,11 @@ public abstract class AutoTemplate extends LinearOpMode {
         // Schedule auto
         telemetry.addData("Status", "Scheduling commands");
         telemetry.update();
-        if (RobotGlobal.alliance != NONE) robot.schedule(makeAutoSequence()
-                .andThen(new InstantCommand(Chassis.getInstance()::breakFollowing)));
+        if (RobotGlobal.alliance != NONE) robot.schedule(
+                Commands.waitMillis(RobotGlobal.delayMs),
+                makeAutoSequence(),
+                Commands.runOnce(Chassis.getInstance()::breakFollowing)
+        );
 
         // Move init servos
         initSequence();

@@ -94,7 +94,6 @@ public class NewAuto_Left_3_1 extends AutoTemplate {
     @Override
     protected Command makeAutoSequence() {
         return Commands.sequence(
-                Commands.waitMillis(RobotGlobal.delayMs),
                 // Drive up to chamber and score
                 Commands.parallel(
                         Commands.waitMillis(1200).andThen(new FollowPathCommand(scorePreloadPath)),
