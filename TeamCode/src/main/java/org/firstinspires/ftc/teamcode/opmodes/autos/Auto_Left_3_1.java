@@ -27,6 +27,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 import org.firstinspires.ftc.teamcode.util.commands.Commands;
+import org.firstinspires.ftc.teamcode.vision.LLVision;
 
 /**
  * Starts facing wall on tile X with edge on the center line
@@ -53,9 +54,9 @@ public class Auto_Left_3_1 extends LinearOpMode {
     private final Pose scorePreloadPose = AutoConstants.CHAMBER_LEFT_SCORE_POSE;
     private final Pose collectOnePose = new Pose(24, 106, Math.toRadians(35));
     private final Pose scoreOnePose = AutoConstants.BASKET_SCORE_POSE;
-    private final Pose collectTwoPose = new Pose(25, 131, Math.toRadians(0));
+    private final Pose collectTwoPose = new Pose(13, 125, Math.toRadians(0));
     private final Pose scoreTwoPose = AutoConstants.BASKET_SCORE_POSE;
-    private final Pose collectThreePose = new Pose(28, 133, Math.toRadians(26));
+    private final Pose collectThreePose = new Pose(14, 124, Math.toRadians(26));
     private final Pose scoreThreePose = AutoConstants.BASKET_SCORE_POSE;
 
     // Paths
@@ -162,6 +163,7 @@ public class Auto_Left_3_1 extends LinearOpMode {
 
     private Command autoSequence() {
         return Commands.sequence(
+                Commands.runOnce(LLVision.getInstance()::setYellow),
                 Commands.waitMillis(RobotGlobal.delayMs),
                 // Drive up to chamber and score
                 Commands.parallel(
@@ -172,12 +174,11 @@ public class Auto_Left_3_1 extends LinearOpMode {
                 // Drive to first sample and extend collector
                 Commands.parallel(
                         new FollowPathCommand(collectOnePath),
-                        Commands.sequence(
-                                Commands.defer(ArmCommands.CHAMBER_TO_STOW, Arm.getInstance()),
-                                Commands.runOnce(() -> Arm.getInstance().setScoreType(Arm.ScoreType.SAMPLE)),
-                                Commands.defer(ArmCommands.STOW_TO_SAMPLE_COLLECT, Arm.getInstance())
-                        )),
-                Commands.waitMillis(900),
+                        Commands.defer(ArmCommands.CHAMBER_TO_STOW, Arm.getInstance())
+                ),
+                Commands.runOnce(() -> Arm.getInstance().setScoreType(Arm.ScoreType.SAMPLE)),
+                Commands.defer(ArmCommands.STOW_TO_SAMPLE_COLLECT, Arm.getInstance()),
+                Commands.waitMillis(500),
                 // Collect sample
                 Commands.defer(ArmCommands.COLLECT_SAMPLE, Claw.getInstance()),
                 Commands.defer(ArmCommands.GRAB, Claw.getInstance()),

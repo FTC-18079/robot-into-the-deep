@@ -58,8 +58,7 @@ public class ArmCommands {
                 Commands.runOnce(() -> arm.get().setSlidePos(ArmConstants.SLIDE_REST_POSITION)),
                 Commands.waitUntil(arm.get()::slideAtSetPoint),
                 Commands.runOnce(() -> claw.get().setState(ClawConstants.REST_STATE)),
-                Commands.runOnce(() -> arm.get().setPivotPos(ArmConstants.PIVOT_REST_POSITION)),
-                Commands.waitUntil(arm.get()::pivotAtSetPoint)
+                new MovePivotCommand(ArmConstants.PIVOT_REST_POSITION)
         );
         CHAMBER_TO_STOW = () -> Commands.sequence(
                 Commands.runOnce(() -> arm.get().setState(Arm.ArmState.STOW)),
@@ -87,9 +86,8 @@ public class ArmCommands {
 
         STOW_TO_BASKET = () -> Commands.sequence(
                 Commands.runOnce(() -> arm.get().setState(Arm.ArmState.SCORING_SAMPLE)),
-                Commands.runOnce(() -> arm.get().setPivotPos(ArmConstants.PIVOT_SCORE_POSITION)),
                 Commands.runOnce(() -> claw.get().setJointOne(0.3)),
-                Commands.waitUntil(arm.get()::pivotAtSetPoint),
+                new MovePivotCommand(ArmConstants.PIVOT_SCORE_POSITION),
                 Commands.runOnce(() -> arm.get().setSlidePos(ArmConstants.SLIDE_BASKET_POSITION)),
                 Commands.waitUntil(arm.get()::slideAtSetPoint),
                 Commands.runOnce(() -> claw.get().setState(ClawConstants.SAMPLE_SCORING_STATE)),
@@ -108,8 +106,7 @@ public class ArmCommands {
                 Commands.runOnce(() -> arm.get().setSlidePos(ArmConstants.SLIDE_REST_POSITION)),
                 Commands.waitUntil(arm.get()::slideAtSetPoint),
                 Commands.runOnce(() -> claw.get().setState(ClawConstants.SPECIMEN_SCORING_STATE)),
-                Commands.runOnce(() -> arm.get().setPivotPos(ArmConstants.PIVOT_SCORE_POSITION)),
-                Commands.waitUntil(arm.get()::pivotAtSetPoint),
+                new MovePivotCommand(ArmConstants.PIVOT_SCORE_POSITION),
                 Commands.runOnce(() -> arm.get().setSlidePos(ArmConstants.SLIDE_CHAMBER_POSITION)),
                 Commands.waitUntil(arm.get()::slideAtSetPoint)
         );
@@ -136,8 +133,7 @@ public class ArmCommands {
 
         STOW_TO_CHAMBER = () -> Commands.sequence(
                 Commands.runOnce(() -> claw.get().setState(ClawConstants.SPECIMEN_SCORING_STATE)),
-                Commands.runOnce(() -> arm.get().setPivotPos(ArmConstants.PIVOT_SCORE_POSITION)),
-                Commands.waitUntil(arm.get()::pivotAtSetPoint),
+                new MovePivotCommand(ArmConstants.PIVOT_SCORE_POSITION),
                 Commands.runOnce(() -> arm.get().setSlidePos(ArmConstants.SLIDE_CHAMBER_POSITION)),
                 Commands.waitUntil(arm.get()::slideAtSetPoint)
         );

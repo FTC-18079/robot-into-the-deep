@@ -35,15 +35,16 @@ public class ArmConstants {
      */
 
     // PID
-    public static double PIVOT_kP = 0.002;
+    public static double PIVOT_kP = 0.0025;
     public static double PIVOT_kI = 0.0;
     public static double PIVOT_kD = 0.00008;
     public static double PIVOT_kF = 0.0 ;
 
     // Constants
-    public static double PIVOT_ERROR_TOLERANCE = 85.0;
+    public static double PIVOT_ERROR_TOLERANCE = 100.0;
     public static double PIVOT_GEAR_RATIO = 40.0 / 15.0;
     public static double PIVOT_COUNTS_PER_REVOLUTION = 8192.0 * PIVOT_GEAR_RATIO;
+    public static double PIVOT_TIMEOUT = 2000;
 
     // Positions
     public static double PIVOT_STARTING_ANGLE = 10.0;

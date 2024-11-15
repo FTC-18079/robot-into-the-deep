@@ -3,8 +3,11 @@ package org.firstinspires.ftc.teamcode.opmodes.autos;
 import com.arcrobotics.ftclib.command.Command;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.teamcode.arm.Arm;
+import org.firstinspires.ftc.teamcode.arm.commands.ArmCommands;
 import org.firstinspires.ftc.teamcode.autonomous.AutoConstants;
 import org.firstinspires.ftc.teamcode.autonomous.AutoTemplate;
+import org.firstinspires.ftc.teamcode.chassis.commands.FollowPathCommand;
 import org.firstinspires.ftc.teamcode.claw.Claw;
 import org.firstinspires.ftc.teamcode.claw.ClawConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
@@ -13,6 +16,14 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 import org.firstinspires.ftc.teamcode.util.commands.Commands;
+
+/**
+ * Starts facing wall on tile Y with edge on the center line
+ * <p>
+ * Scores high chamber, then pushes three samples into observation zones and starts cycling specimens
+ * <p>
+ * Must park in observation zone
+ */
 
 @Autonomous(name = "Right Side 0+4")
 public class Auto_Right_0_4 extends AutoTemplate {
@@ -54,7 +65,17 @@ public class Auto_Right_0_4 extends AutoTemplate {
     @Override
     protected Command makeAutoSequence() {
         return Commands.sequence(
-                Commands.waitMillis(RobotGlobal.delayMs)
+                Commands.waitMillis(RobotGlobal.delayMs),
+                // Drive up to high chamber and score
+                Commands.parallel(
+                        Commands.waitMillis(1200).andThen(new FollowPathCommand(scorePreloadPath)),
+                        Commands.defer(ArmCommands.STOW_TO_CHAMBER, Arm.getInstance())
+                ),
+                Commands.defer(ArmCommands.SCORE_SPECIMEN, Arm.getInstance()),
+                // Drive to sample and bring arm to stow
+                Commands.parallel(
+                        Commands.defer(ArmCommands.CHAMBER_TO_STOW, Arm.getInstance())
+                )
         );
     }
 }
