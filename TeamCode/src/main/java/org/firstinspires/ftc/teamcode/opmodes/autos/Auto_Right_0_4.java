@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.chassis.commands.FollowPathCommand;
 import org.firstinspires.ftc.teamcode.claw.Claw;
 import org.firstinspires.ftc.teamcode.claw.ClawConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
+import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierCurve;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierLine;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
@@ -60,6 +61,9 @@ public class Auto_Right_0_4 extends AutoTemplate {
         scorePreloadPath = new Path(new BezierLine(new Point(startingPose), new Point(scorePreloadPose)));
         scorePreloadPath.setConstantHeadingInterpolation(scorePreloadPose.getHeading());
         scorePreloadPath.setPathEndTimeoutConstraint(200);
+
+        behindOnePath = new Path(new BezierCurve(new Point(scorePreloadPose), new Point(30, 20, Point.CARTESIAN), new Point(64, 42, Point.CARTESIAN), new Point(behindOnePose)));
+        behindOnePath.setLinearHeadingInterpolation(scorePreloadPose.getHeading(), behindOnePose.getHeading());
     }
 
     @Override
@@ -73,7 +77,8 @@ public class Auto_Right_0_4 extends AutoTemplate {
                 Commands.defer(ArmCommands.SCORE_SPECIMEN, Arm.getInstance()),
                 // Drive to sample and bring arm to stow
                 Commands.parallel(
-                        Commands.defer(ArmCommands.CHAMBER_TO_STOW, Arm.getInstance())
+                        Commands.defer(ArmCommands.CHAMBER_TO_STOW, Arm.getInstance()),
+                        new FollowPathCommand(behindOnePath)
                 )
         );
     }

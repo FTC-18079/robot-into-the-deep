@@ -26,4 +26,11 @@ public class MovePivotCommand extends CommandBase {
     public boolean isFinished() {
         return arm.pivotAtSetPoint() || timer.milliseconds() > ArmConstants.PIVOT_TIMEOUT;
     }
+
+    @Override
+    public void end(boolean interrupted) {
+        if (targetPos == ArmConstants.PIVOT_REST_POSITION && arm.pivotAtSetPoint()) {
+            arm.resetPivotEncoder();
+        }
+    }
 }

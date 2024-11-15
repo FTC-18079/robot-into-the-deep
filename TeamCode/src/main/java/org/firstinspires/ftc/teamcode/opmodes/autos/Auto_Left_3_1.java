@@ -176,7 +176,6 @@ public class Auto_Left_3_1 extends LinearOpMode {
                         new FollowPathCommand(collectOnePath),
                         Commands.defer(ArmCommands.CHAMBER_TO_STOW, Arm.getInstance())
                 ),
-                Commands.runOnce(Arm.getInstance()::resetPivotEncoder),
                 Commands.runOnce(() -> Arm.getInstance().setScoreType(Arm.ScoreType.SAMPLE)),
                 Commands.defer(ArmCommands.STOW_TO_SAMPLE_COLLECT, Arm.getInstance()),
                 Commands.waitMillis(500),
@@ -195,7 +194,6 @@ public class Auto_Left_3_1 extends LinearOpMode {
                         Commands.defer(ArmCommands.BASKET_TO_STOW, Arm.getInstance()),
                         new FollowPathCommand(collectTwoPath)
                 ),
-                Commands.runOnce(Arm.getInstance()::resetPivotEncoder),
                 // Collect second sample
                 Commands.defer(ArmCommands.STOW_TO_SAMPLE_COLLECT, Arm.getInstance()),
                 Commands.waitMillis(250),
@@ -213,7 +211,6 @@ public class Auto_Left_3_1 extends LinearOpMode {
                         Commands.defer(ArmCommands.BASKET_TO_STOW, Arm.getInstance()),
                         new FollowPathCommand(collectThreePath)
                 ),
-                Commands.runOnce(Arm.getInstance()::resetPivotEncoder),
                 Commands.defer(ArmCommands.STOW_TO_SAMPLE_COLLECT, Arm.getInstance()),
                 Commands.waitMillis(200),
                 // Collect third sample
@@ -230,8 +227,7 @@ public class Auto_Left_3_1 extends LinearOpMode {
                 Commands.parallel(
                         Commands.defer(ArmCommands.BASKET_TO_STOW, Arm.getInstance()),
                         new FollowPathCommand(parkPath)
-                ),
-                Commands.runOnce(Arm.getInstance()::resetPivotEncoder)
+                )
         );
     }
 
