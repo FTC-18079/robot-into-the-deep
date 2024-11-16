@@ -14,6 +14,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.arm.Arm;
 import org.firstinspires.ftc.teamcode.arm.commands.ArmCommands;
 import org.firstinspires.ftc.teamcode.arm.commands.PivotZeroCommand;
+import org.firstinspires.ftc.teamcode.arm.commands.SlideZeroCommand;
 import org.firstinspires.ftc.teamcode.chassis.Chassis;
 import org.firstinspires.ftc.teamcode.chassis.commands.TeleOpDriveCommand;
 import org.firstinspires.ftc.teamcode.claw.Claw;
@@ -165,7 +166,8 @@ public class RobotCore extends Robot {
 
         // Zeroing
         manipController.getGamepadButton(GamepadKeys.Button.START)
-                .whenPressed(new PivotZeroCommand());
+                .whenPressed(new PivotZeroCommand())
+                .whenReleased(new SlideZeroCommand());
 
         // Color toggle
         manipController.getGamepadButton(GamepadKeys.Button.A)

@@ -32,6 +32,7 @@ public class Arm extends SubsystemBase {
     static double slideOffset = 0;
     static double pivotOffset = 0;
 
+    public boolean slideZeroing = false;
     public boolean pivotZeroing = false;
 
     public enum ArmState {
@@ -142,6 +143,11 @@ public class Arm extends SubsystemBase {
         leftPivot.setPower(power);
     }
 
+    public void setSlidePower(double power) {
+        rightSlide.setPower(power);
+        leftSlide.setPower(power);
+    }
+
     public void setSlidePos(double pos) {
         slidePid.setSetPoint(pos);
     }
@@ -207,8 +213,8 @@ public class Arm extends SubsystemBase {
             pivotOutput = 0.0;
         }
 
-        rightSlide.setPower(slideOutput + slideFeedforward);
-        leftSlide.setPower(slideOutput + slideFeedforward);
+        if (!slideZeroing) rightSlide.setPower(slideOutput + slideFeedforward);
+        if (!slideZeroing) leftSlide.setPower(slideOutput + slideFeedforward);
 
         if (!pivotZeroing) rightPivot.setPower(pivotOutput + pivotFeedforward);
         if (!pivotZeroing) leftPivot.setPower(pivotOutput + pivotFeedforward);
