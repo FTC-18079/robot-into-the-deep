@@ -11,17 +11,24 @@ public class FollowPathCommand extends CommandBase {
     Telemetry telemetry;
     Chassis chassis;
     private final Path path;
+    private final double maxPower;
 
     public FollowPathCommand(Path path) {
+        this(path, 1.0);
+    }
+
+    public FollowPathCommand(Path path, double maxPower) {
         telemetry = RobotCore.getTelemetry();
         chassis = Chassis.getInstance();
         this.path = path;
+        this.maxPower = maxPower;
 
         addRequirements(chassis);
     }
 
     @Override
     public void initialize() {
+        chassis.setMaxPower(maxPower);
         chassis.followPath(path);
     }
 

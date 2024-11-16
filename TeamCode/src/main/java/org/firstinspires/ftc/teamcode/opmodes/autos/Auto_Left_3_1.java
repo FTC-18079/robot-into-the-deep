@@ -4,6 +4,7 @@ import static org.firstinspires.ftc.teamcode.autonomous.AutoConstants.ParkingLoc
 import static org.firstinspires.ftc.teamcode.util.RobotGlobal.Alliance;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.CommandScheduler;
@@ -39,6 +40,7 @@ import org.firstinspires.ftc.teamcode.vision.LLVision;
 
 // TODO: re-enable photon once it's fixed
 //@Photon
+@Config
 @Autonomous(name = "Left Side 3+1", group = "Auto")
 public class Auto_Left_3_1 extends LinearOpMode {
     RobotCore robot;
@@ -54,9 +56,9 @@ public class Auto_Left_3_1 extends LinearOpMode {
     private final Pose scorePreloadPose = AutoConstants.CHAMBER_LEFT_SCORE_POSE;
     private final Pose collectOnePose = new Pose(24, 106, Math.toRadians(35));
     private final Pose scoreOnePose = AutoConstants.BASKET_SCORE_POSE;
-    private final Pose collectTwoPose = new Pose(15, 124, Math.toRadians(0));
+    private final Pose collectTwoPose = new Pose(17, 128, Math.toRadians(0));
     private final Pose scoreTwoPose = AutoConstants.BASKET_SCORE_POSE;
-    private final Pose collectThreePose = new Pose(16, 127, Math.toRadians(26));
+    private final Pose collectThreePose = new Pose(19, 129, Math.toRadians(26));
     private final Pose scoreThreePose = AutoConstants.BASKET_SCORE_POSE;
 
     // Paths
@@ -68,6 +70,11 @@ public class Auto_Left_3_1 extends LinearOpMode {
     private Path collectThreePath;
     private Path scoreThreePath;
     private Path parkPath;
+
+    // Constants
+    public static double preloadMaxSpeed = 0.7; // Speed reduction on the preload path
+    public static long preloadPathDelay = 850; // Delay to allow for pivot to move before following first path
+    public static long collectDelay = 300; // Delay in ms between extending and grabbing to allow for vision to align
 
     @Override
     public void runOpMode() {
@@ -167,7 +174,7 @@ public class Auto_Left_3_1 extends LinearOpMode {
                 Commands.waitMillis(RobotGlobal.delayMs),
                 // Drive up to chamber and score
                 Commands.parallel(
-                        Commands.waitMillis(1000).andThen(new FollowPathCommand(scorePreloadPath)),
+                        Commands.waitMillis(preloadPathDelay).andThen(new FollowPathCommand(scorePreloadPath, preloadMaxSpeed)),
                         Commands.defer(ArmCommands.STOW_TO_CHAMBER, Arm.getInstance())
                 ),
                 Commands.defer(ArmCommands.SCORE_SPECIMEN, Arm.getInstance()),
@@ -178,7 +185,7 @@ public class Auto_Left_3_1 extends LinearOpMode {
                 ),
                 Commands.runOnce(() -> Arm.getInstance().setScoreType(Arm.ScoreType.SAMPLE)),
                 Commands.defer(ArmCommands.STOW_TO_SAMPLE_COLLECT, Arm.getInstance()),
-                Commands.waitMillis(500),
+                Commands.waitMillis(collectDelay),
                 // Collect sample
                 Commands.defer(ArmCommands.COLLECT_SAMPLE, Claw.getInstance()),
                 Commands.defer(ArmCommands.GRAB, Claw.getInstance()),
@@ -196,7 +203,7 @@ public class Auto_Left_3_1 extends LinearOpMode {
                 ),
                 // Collect second sample
                 Commands.defer(ArmCommands.STOW_TO_SAMPLE_COLLECT, Arm.getInstance()),
-                Commands.waitMillis(250),
+                Commands.waitMillis(collectDelay),
                 Commands.defer(ArmCommands.COLLECT_SAMPLE, Claw.getInstance()),
                 Commands.defer(ArmCommands.GRAB, Claw.getInstance()),
                 Commands.defer(ArmCommands.SAMPLE_COLLECT_TO_STOW, Arm.getInstance()),
@@ -212,7 +219,7 @@ public class Auto_Left_3_1 extends LinearOpMode {
                         new FollowPathCommand(collectThreePath)
                 ),
                 Commands.defer(ArmCommands.STOW_TO_SAMPLE_COLLECT, Arm.getInstance()),
-                Commands.waitMillis(200),
+                Commands.waitMillis(collectDelay),
                 // Collect third sample
                 Commands.defer(ArmCommands.COLLECT_SAMPLE, Claw.getInstance()),
                 Commands.defer(ArmCommands.GRAB, Arm.getInstance()),
