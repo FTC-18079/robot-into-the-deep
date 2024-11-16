@@ -22,7 +22,7 @@ public class PivotZeroCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return timer.milliseconds() > 750;
+        return timer.milliseconds() > 300;
     }
 
     @Override

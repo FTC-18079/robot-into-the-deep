@@ -38,7 +38,7 @@ public class ArmConstants {
     public static double PIVOT_kP = 0.003;
     public static double PIVOT_kI = 0.0;
     public static double PIVOT_kD = 0.00008;
-    public static double PIVOT_kF = 0.0 ;
+    public static double PIVOT_kF = 0.0;
 
     // Constants
     public static double PIVOT_ERROR_TOLERANCE = 100.0;
@@ -51,6 +51,7 @@ public class ArmConstants {
     public static double PIVOT_STARTING_POS = (PIVOT_STARTING_ANGLE / 360.0) * PIVOT_COUNTS_PER_REVOLUTION;
 
     public static double PIVOT_REST_POSITION = 0.0;
-    public static double PIVOT_SCORE_POSITION = ((90.0 + 5) / 360.0) * PIVOT_COUNTS_PER_REVOLUTION; // TODO: remove the extra 5 once pivot is fixed
-    public static double PIVOT_CLIMB_POSITION = (90.0 / 360.0) * PIVOT_COUNTS_PER_REVOLUTION;
+    public static double PIVOT_FUDGE = 7.25;
+    public static double PIVOT_SCORE_POSITION = ((90.0 + PIVOT_FUDGE) / 360.0) * PIVOT_COUNTS_PER_REVOLUTION; // TODO: remove the extra 5 once pivot is fixed
+    public static double PIVOT_AUTO_ASCENT_POSITION = (70.0 / 360.0) * PIVOT_COUNTS_PER_REVOLUTION;
 }

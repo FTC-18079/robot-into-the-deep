@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
+import com.acmerobotics.dashboard.config.Config;
+
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 
 // Class for storing poses
+@Config
 public class AutoConstants {
     // Robot start poses
     public enum RobotStart {
@@ -19,13 +22,15 @@ public class AutoConstants {
     }
 
     // Scoring poses
-    public static final Pose BASKET_SCORE_POSE = new Pose(14.5, 125.5, Math.toRadians(315));
-    public static final Pose CHAMBER_LEFT_SCORE_POSE = new Pose(33, 82, Math.toRadians(180));
-    public static final Pose CHAMBER_RIGHT_SCORE_POSE = new Pose(33, 62, Math.toRadians(180));
+    public static double CHAMBER_X_POSITION = 30.5;
+
+    public static final Pose BASKET_SCORE_POSE = new Pose(13.5, 126.5, Math.toRadians(315));
+    public static final Pose CHAMBER_LEFT_SCORE_POSE = new Pose(CHAMBER_X_POSITION, 82, Math.toRadians(180));
+    public static final Pose CHAMBER_RIGHT_SCORE_POSE = new Pose(CHAMBER_X_POSITION, 62, Math.toRadians(180));
 
     // Parking poses
     public static final Pose OBVZONE_PARKING_POSE = new Pose(14, 10, Math.toRadians(0));
-    public static final Pose ASCENT_PARKING_POSE = new Pose(60, 98, Math.toRadians(90));
+    public static final Pose ASCENT_PARKING_POSE = new Pose(60, 98, Math.toRadians(270));
 
     // Alliance alliance poses
     public static final Pose LEFT_ALLIANCE_SAMPLE = new Pose(46, 22.75);

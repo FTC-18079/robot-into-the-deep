@@ -170,7 +170,7 @@ public class RobotCore extends Robot {
                 .whenReleased(new SlideZeroCommand());
 
         // Color toggle
-        manipController.getGamepadButton(GamepadKeys.Button.A)
+        manipController.getGamepadButton(GamepadKeys.Button.B)
                 .whenPressed(Commands.either(
                         Commands.either(
                                 Commands.runOnce(llVision::setBlue).andThen(Commands.runOnce(() -> setControllerColors(0, 0, 1))),

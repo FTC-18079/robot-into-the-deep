@@ -54,11 +54,11 @@ public class Auto_Left_3_1 extends LinearOpMode {
     // Poses
     private final Pose startingPose = new Pose(8, 80, Math.toRadians(180));
     private final Pose scorePreloadPose = AutoConstants.CHAMBER_LEFT_SCORE_POSE;
-    private final Pose collectOnePose = new Pose(25, 108, Math.toRadians(35));
+    private final Pose collectOnePose = new Pose(23.5, 107, Math.toRadians(35));
     private final Pose scoreOnePose = AutoConstants.BASKET_SCORE_POSE;
-    private final Pose collectTwoPose = new Pose(18, 129, Math.toRadians(0));
+    private final Pose collectTwoPose = new Pose(17.5, 129.5, Math.toRadians(0));
     private final Pose scoreTwoPose = AutoConstants.BASKET_SCORE_POSE;
-    private final Pose collectThreePose = new Pose(20, 129, Math.toRadians(26));
+    private final Pose collectThreePose = new Pose(17.5, 128.25, Math.toRadians(26));
     private final Pose scoreThreePose = AutoConstants.BASKET_SCORE_POSE;
 
     // Paths
@@ -72,9 +72,12 @@ public class Auto_Left_3_1 extends LinearOpMode {
     private Path parkPath;
 
     // Constants
-    public static double preloadMaxSpeed = 0.7; // Speed reduction on the preload path
+    public static double preloadMaxSpeed = 0.65; // Speed reduction on the preload path
     public static long preloadPathDelay = 850; // Delay to allow for pivot to move before following first path
-    public static long collectDelay = 350; // Delay in ms between extending and grabbing to allow for vision to align
+    public static long collectDelay = 50; // Delay in ms between extending and grabbing to allow for vision to align
+    public static double collectOneAlignment = 0.7; // Claw alignment for sample collection
+    public static double collectTwoAlignment = 1.0;
+    public static double collectThreeAlignment = 0.7;
 
     @Override
     public void runOpMode() {
@@ -140,7 +143,7 @@ public class Auto_Left_3_1 extends LinearOpMode {
     private void buildPaths() {
         scorePreloadPath = new Path(new BezierLine(new Point(startingPose), new Point(scorePreloadPose)));
         scorePreloadPath.setConstantHeadingInterpolation(startingPose.getHeading());
-        scorePreloadPath.setPathEndTimeoutConstraint(450);
+        scorePreloadPath.setPathEndTimeoutConstraint(600);
 
         collectOnePath = new Path(new BezierLine(new Point(scorePreloadPose), new Point(collectOnePose)));
         collectOnePath.setLinearHeadingInterpolation(scorePreloadPose.getHeading(), collectOnePose.getHeading());
@@ -188,6 +191,7 @@ public class Auto_Left_3_1 extends LinearOpMode {
                 Commands.defer(ArmCommands.STOW_TO_SAMPLE_COLLECT, Arm.getInstance()),
                 Commands.waitMillis(collectDelay),
                 // Collect sample
+                Commands.runOnce(() -> LLVision.getInstance().setClawOverride(collectOneAlignment)),
                 Commands.defer(ArmCommands.COLLECT_SAMPLE, Claw.getInstance()),
                 Commands.defer(ArmCommands.GRAB, Claw.getInstance()),
                 Commands.defer(ArmCommands.SAMPLE_COLLECT_TO_STOW, Arm.getInstance()),
@@ -203,6 +207,7 @@ public class Auto_Left_3_1 extends LinearOpMode {
                         new FollowPathCommand(collectTwoPath)
                 ),
                 // Collect second sample
+                Commands.runOnce(() -> LLVision.getInstance().setClawOverride(collectTwoAlignment)),
                 Commands.defer(ArmCommands.STOW_TO_SAMPLE_COLLECT, Arm.getInstance()),
                 Commands.waitMillis(collectDelay),
                 Commands.defer(ArmCommands.COLLECT_SAMPLE, Claw.getInstance()),
@@ -222,6 +227,7 @@ public class Auto_Left_3_1 extends LinearOpMode {
                 Commands.defer(ArmCommands.STOW_TO_SAMPLE_COLLECT, Arm.getInstance()),
                 Commands.waitMillis(collectDelay),
                 // Collect third sample
+                Commands.runOnce(() -> LLVision.getInstance().setClawOverride(collectThreeAlignment)),
                 Commands.defer(ArmCommands.COLLECT_SAMPLE, Claw.getInstance()),
                 Commands.defer(ArmCommands.GRAB, Arm.getInstance()),
                 Commands.defer(ArmCommands.SAMPLE_COLLECT_TO_STOW, Arm.getInstance()),
@@ -231,9 +237,10 @@ public class Auto_Left_3_1 extends LinearOpMode {
                         new FollowPathCommand(scoreThreePath)
                 ),
                 Commands.defer(ArmCommands.RELEASE, Claw.getInstance()),
+                Commands.runOnce(LLVision.getInstance()::disableClawOverride),
                 // Stow arm and go to park
                 Commands.parallel(
-                        Commands.defer(ArmCommands.BASKET_TO_STOW, Arm.getInstance()),
+                        Commands.defer(ArmCommands.BASKET_TO_AUTO_ASCENT, Arm.getInstance()),
                         new FollowPathCommand(parkPath)
                 )
         );

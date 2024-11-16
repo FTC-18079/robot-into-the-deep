@@ -33,7 +33,7 @@ public class SlideZeroCommand extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         arm.setSlidePower(0);
-        arm.resetPivotEncoder();
+        arm.resetSlideEncoder();
         arm.setSlidePos(0);
         arm.slideZeroing = false;
     }

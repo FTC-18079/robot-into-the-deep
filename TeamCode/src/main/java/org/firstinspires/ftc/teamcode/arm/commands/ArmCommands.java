@@ -12,6 +12,9 @@ import org.firstinspires.ftc.teamcode.vision.LLVision;
 import java.util.function.Supplier;
 
 public class ArmCommands {
+    // TO ASCENT
+    public static final Supplier<Command> BASKET_TO_AUTO_ASCENT;
+
     // TO STOW
     public static final Supplier<Command> BASKET_TO_STOW;
     public static final Supplier<Command> CHAMBER_TO_STOW;
@@ -136,6 +139,13 @@ public class ArmCommands {
                 Commands.runOnce(() -> claw.get().setState(ClawConstants.SPECIMEN_SCORING_STATE)),
                 new MovePivotCommand(ArmConstants.PIVOT_SCORE_POSITION),
                 Commands.runOnce(() -> arm.get().setSlidePos(ArmConstants.SLIDE_CHAMBER_POSITION)),
+                Commands.waitUntil(arm.get()::slideAtSetPoint)
+        );
+
+        BASKET_TO_AUTO_ASCENT = () -> Commands.sequence(
+                Commands.runOnce(() -> claw.get().setState(ClawConstants.REST_STATE)),
+                Commands.runOnce(() -> arm.get().setSlidePos(900)),
+                new MovePivotCommand(ArmConstants.PIVOT_AUTO_ASCENT_POSITION),
                 Commands.waitUntil(arm.get()::slideAtSetPoint)
         );
 
