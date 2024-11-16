@@ -54,11 +54,11 @@ public class Auto_Left_3_1 extends LinearOpMode {
     // Poses
     private final Pose startingPose = new Pose(8, 80, Math.toRadians(180));
     private final Pose scorePreloadPose = AutoConstants.CHAMBER_LEFT_SCORE_POSE;
-    private final Pose collectOnePose = new Pose(24, 107, Math.toRadians(35));
+    private final Pose collectOnePose = new Pose(25, 108, Math.toRadians(35));
     private final Pose scoreOnePose = AutoConstants.BASKET_SCORE_POSE;
-    private final Pose collectTwoPose = new Pose(17, 129, Math.toRadians(0));
+    private final Pose collectTwoPose = new Pose(18, 129, Math.toRadians(0));
     private final Pose scoreTwoPose = AutoConstants.BASKET_SCORE_POSE;
-    private final Pose collectThreePose = new Pose(19, 129, Math.toRadians(26));
+    private final Pose collectThreePose = new Pose(20, 129, Math.toRadians(26));
     private final Pose scoreThreePose = AutoConstants.BASKET_SCORE_POSE;
 
     // Paths
@@ -74,7 +74,7 @@ public class Auto_Left_3_1 extends LinearOpMode {
     // Constants
     public static double preloadMaxSpeed = 0.7; // Speed reduction on the preload path
     public static long preloadPathDelay = 850; // Delay to allow for pivot to move before following first path
-    public static long collectDelay = 400; // Delay in ms between extending and grabbing to allow for vision to align
+    public static long collectDelay = 350; // Delay in ms between extending and grabbing to allow for vision to align
 
     @Override
     public void runOpMode() {
@@ -140,7 +140,7 @@ public class Auto_Left_3_1 extends LinearOpMode {
     private void buildPaths() {
         scorePreloadPath = new Path(new BezierLine(new Point(startingPose), new Point(scorePreloadPose)));
         scorePreloadPath.setConstantHeadingInterpolation(startingPose.getHeading());
-        scorePreloadPath.setPathEndTimeoutConstraint(400);
+        scorePreloadPath.setPathEndTimeoutConstraint(450);
 
         collectOnePath = new Path(new BezierLine(new Point(scorePreloadPose), new Point(collectOnePose)));
         collectOnePath.setLinearHeadingInterpolation(scorePreloadPose.getHeading(), collectOnePose.getHeading());

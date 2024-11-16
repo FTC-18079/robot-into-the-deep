@@ -51,6 +51,6 @@ public class ArmConstants {
     public static double PIVOT_STARTING_POS = (PIVOT_STARTING_ANGLE / 360.0) * PIVOT_COUNTS_PER_REVOLUTION;
 
     public static double PIVOT_REST_POSITION = 0.0;
-    public static double PIVOT_SCORE_POSITION = ((90.0 + 5) / 360.0) * PIVOT_COUNTS_PER_REVOLUTION;
+    public static double PIVOT_SCORE_POSITION = ((90.0 + 5) / 360.0) * PIVOT_COUNTS_PER_REVOLUTION; // TODO: remove the extra 5 once pivot is fixed
     public static double PIVOT_CLIMB_POSITION = (90.0 / 360.0) * PIVOT_COUNTS_PER_REVOLUTION;
 }

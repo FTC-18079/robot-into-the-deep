@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.teamcode.autonomous.AutoConstants.ParkingLoc
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.Command;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.arm.Arm;
 import org.firstinspires.ftc.teamcode.arm.commands.ArmCommands;
@@ -33,6 +34,7 @@ import org.firstinspires.ftc.teamcode.vision.LLVision;
 // TODO: re-enable photon once it's fixed
 //@Photon
 @Config
+@Disabled
 @Autonomous(name = "New Left Side 3+1", group = "Auto")
 public class NewAuto_Left_3_1 extends AutoTemplate {
     // Poses

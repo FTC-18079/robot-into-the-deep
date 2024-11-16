@@ -19,6 +19,7 @@ public class MovePivotCommand extends CommandBase {
 
     @Override
     public void initialize() {
+        timer.reset();
         arm.setPivotPos(targetPos);
     }
 

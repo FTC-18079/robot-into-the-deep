@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes.autos;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.Command;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.arm.Arm;
 import org.firstinspires.ftc.teamcode.arm.commands.ArmCommands;
@@ -27,6 +28,7 @@ import org.firstinspires.ftc.teamcode.util.commands.Commands;
  * Must park in observation zone
  */
 
+@Disabled
 @Config
 @Autonomous(name = "Right Side 0+4")
 public class Auto_Right_0_4 extends AutoTemplate {
