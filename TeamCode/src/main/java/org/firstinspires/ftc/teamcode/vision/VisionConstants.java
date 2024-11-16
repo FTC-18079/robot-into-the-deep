@@ -8,7 +8,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Position;
 @Config
 public class VisionConstants {
     // AprilTag camera position
-    public static final Position cameraPose = new Position(DistanceUnit.MM, 8.0315, 5.3871 ,3.3625, 0);
+    public static final Position cameraPose = new Position(DistanceUnit.INCH, 8.0315, 5.3871 ,3.3625, 0);
 
     // Arducam lens intrinsics
     public static final double arducam_fx = 549.535;
