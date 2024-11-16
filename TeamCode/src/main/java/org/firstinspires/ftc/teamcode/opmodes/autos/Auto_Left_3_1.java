@@ -56,9 +56,9 @@ public class Auto_Left_3_1 extends LinearOpMode {
     private final Pose scorePreloadPose = AutoConstants.CHAMBER_LEFT_SCORE_POSE;
     private final Pose collectOnePose = new Pose(23.5, 107, Math.toRadians(35));
     private final Pose scoreOnePose = AutoConstants.BASKET_SCORE_POSE;
-    private final Pose collectTwoPose = new Pose(17.5, 129.5, Math.toRadians(0));
+    private final Pose collectTwoPose = new Pose(18, 129.5, Math.toRadians(0));
     private final Pose scoreTwoPose = AutoConstants.BASKET_SCORE_POSE;
-    private final Pose collectThreePose = new Pose(17.5, 128.25, Math.toRadians(26));
+    private final Pose collectThreePose = new Pose(18, 128.5, Math.toRadians(26));
     private final Pose scoreThreePose = AutoConstants.BASKET_SCORE_POSE;
 
     // Paths
@@ -73,7 +73,7 @@ public class Auto_Left_3_1 extends LinearOpMode {
 
     // Constants
     public static double preloadMaxSpeed = 0.65; // Speed reduction on the preload path
-    public static long preloadPathDelay = 850; // Delay to allow for pivot to move before following first path
+    public static long preloadPathDelay = 1000; // Delay to allow for pivot to move before following first path
     public static long collectDelay = 50; // Delay in ms between extending and grabbing to allow for vision to align
     public static double collectOneAlignment = 0.7; // Claw alignment for sample collection
     public static double collectTwoAlignment = 1.0;
