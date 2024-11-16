@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.RobotMap;
 import org.firstinspires.ftc.teamcode.util.hardware.SuccessCRServo;
 import org.firstinspires.ftc.teamcode.vision.LLVision;
 
+// TODO: clean up the janky zeroing
 @SuppressWarnings("unused")
 public class Arm extends SubsystemBase {
     Telemetry telemetry;
@@ -30,6 +31,9 @@ public class Arm extends SubsystemBase {
 
     static double slideOffset = 0;
     static double pivotOffset = 0;
+
+    public boolean slideZeroing = false;
+    public boolean pivotZeroing = false;
 
     public enum ArmState {
         STOW, COLLECTING_SAMPLE, COLLECTING_SPECIMEN, SCORING_SAMPLE, SCORING_SPECIMEN
@@ -134,6 +138,16 @@ public class Arm extends SubsystemBase {
 
     // SETTERS
 
+    public void setPivotPower(double power) {
+        rightPivot.setPower(power);
+        leftPivot.setPower(power);
+    }
+
+    public void setSlidePower(double power) {
+        rightSlide.setPower(power);
+        leftSlide.setPower(power);
+    }
+
     public void setSlidePos(double pos) {
         slidePid.setSetPoint(pos);
     }
@@ -175,9 +189,6 @@ public class Arm extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // TEMP
-        updatePid();
-
         telemetry.addData("Arm State", state);
         telemetry.addData("Scoring Piece", scoreType);
         telemetry.addData("Pivot target", getPivotTarget());
@@ -189,7 +200,7 @@ public class Arm extends SubsystemBase {
         if (state == ArmState.COLLECTING_SAMPLE) {
             double ty = LLVision.getInstance().getSampleTy();
             slideOutput = alignmentPid.calculate(ty);
-            if (slideOutput > 0 && getSlidePos() >= SLIDE_SAMPLE_COLLECT_POSITION) slideOutput = 0.0;
+            if (slideOutput > 0 && getSlidePos() >= SLIDE_SAMPLE_COLLECT_POSITION + 50) slideOutput = 0.0;
             if (Math.abs(ty) < ALIGN_ERROR_TOLERANCE) slideOutput = 0.0;
         }
         double slideFeedforward = SLIDE_kF * Math.sin(Math.toRadians(getPivotTarget() / PIVOT_COUNTS_PER_REVOLUTION * 360.0));
@@ -202,10 +213,10 @@ public class Arm extends SubsystemBase {
             pivotOutput = 0.0;
         }
 
-        rightSlide.setPower(slideOutput + slideFeedforward);
-        leftSlide.setPower(slideOutput + slideFeedforward);
+        if (!slideZeroing) rightSlide.setPower(slideOutput + slideFeedforward);
+        if (!slideZeroing) leftSlide.setPower(slideOutput + slideFeedforward);
 
-        rightPivot.setPower(pivotOutput + pivotFeedforward);
-        leftPivot.setPower(pivotOutput + pivotFeedforward);
+        if (!pivotZeroing) rightPivot.setPower(pivotOutput + pivotFeedforward);
+        if (!pivotZeroing) leftPivot.setPower(pivotOutput + pivotFeedforward);
     }
 }

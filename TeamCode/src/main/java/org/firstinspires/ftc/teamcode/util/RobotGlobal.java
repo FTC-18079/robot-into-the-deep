@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.util;
 
-import org.firstinspires.ftc.teamcode.auto.AutoConstants;
+import org.firstinspires.ftc.teamcode.autonomous.AutoConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 
 public class RobotGlobal {
@@ -12,7 +12,7 @@ public class RobotGlobal {
     public static Alliance alliance = Alliance.NONE;
     public static boolean liveView = false;
     public static Pose robotPose = new Pose();
-    public static AutoConstants.ParkingPose parkingPose = AutoConstants.ParkingPose.ASCENT_ZONE;
+    public static AutoConstants.ParkingLocation parkingLocation = AutoConstants.ParkingLocation.ASCENT_ZONE;
 
     public static void setRobotPose(Pose pose) {
         robotPose = pose;
@@ -23,6 +23,6 @@ public class RobotGlobal {
         alliance = Alliance.NONE;
         liveView = false;
         robotPose = new Pose();
-        parkingPose = AutoConstants.ParkingPose.ASCENT_ZONE;
+        parkingLocation = AutoConstants.ParkingLocation.ASCENT_ZONE;
     }
 }

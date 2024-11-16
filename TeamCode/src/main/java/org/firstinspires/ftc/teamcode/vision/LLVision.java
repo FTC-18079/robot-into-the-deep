@@ -21,6 +21,7 @@ public class LLVision extends SubsystemBase {
     List<LLResultTypes.ColorResult> colorResults;
 
     SampleColor targetColor;
+    double clawOverride = -1;
 
     private static LLVision INSTANCE = null;
 
@@ -95,6 +96,14 @@ public class LLVision extends SubsystemBase {
         }
     }
 
+    public void setClawOverride(double pos) {
+        clawOverride = pos;
+    }
+
+    public void disableClawOverride() {
+        setClawOverride(-1);
+    }
+
     // GETTERS
 
     /**
@@ -162,7 +171,10 @@ public class LLVision extends SubsystemBase {
      * @return A servo position ranging from 0.0 to 1.0
      */
     public double getServoPos() {
-        return VisionConstants.getNearestClawAngle(getSampleAngle());
+        if (clawOverride == -1) {
+            return VisionConstants.getNearestClawAngle(getSampleAngle());
+        }
+        return clawOverride;
     }
 
     public LLResult getResult() {

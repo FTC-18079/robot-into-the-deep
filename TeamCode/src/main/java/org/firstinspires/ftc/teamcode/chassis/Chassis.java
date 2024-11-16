@@ -31,6 +31,10 @@ public class Chassis extends SubsystemBase {
         INSTANCE = this;
     }
 
+    public void setMaxPower(double power) {
+        follower.setMaxPower(power);
+    }
+
     public void setPosition(Pose pose) {
         follower.setPose(pose);
     }

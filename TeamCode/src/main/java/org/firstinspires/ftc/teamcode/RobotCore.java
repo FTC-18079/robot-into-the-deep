@@ -13,6 +13,8 @@ import com.arcrobotics.ftclib.command.button.Trigger;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.arm.Arm;
 import org.firstinspires.ftc.teamcode.arm.commands.ArmCommands;
+import org.firstinspires.ftc.teamcode.arm.commands.PivotZeroCommand;
+import org.firstinspires.ftc.teamcode.arm.commands.SlideZeroCommand;
 import org.firstinspires.ftc.teamcode.chassis.Chassis;
 import org.firstinspires.ftc.teamcode.chassis.commands.TeleOpDriveCommand;
 import org.firstinspires.ftc.teamcode.claw.Claw;
@@ -98,6 +100,8 @@ public class RobotCore extends Robot {
         llVision = new LLVision();
         register(chassis, arm, claw, llVision);
 
+        chassis.setPosition(RobotGlobal.robotPose);
+
         telemetry.addData("Status", "Robot initialized, ready to enable");
         telemetry.update();
 
@@ -107,7 +111,6 @@ public class RobotCore extends Robot {
     public void setupOpMode(OpModeType type) {
         switch (type) {
             case TELEOP:
-                chassis.setPosition(RobotGlobal.robotPose);
                 chassis.startTeleopDrive();
                 setDriveControls();
                 //Commands.runOnce(() -> setControllerColors(1, 1, 0)).andThen(new InstantCommand(llVision::setYellow));
@@ -161,8 +164,13 @@ public class RobotCore extends Robot {
                         () -> arm.getState() == Arm.ArmState.COLLECTING_SAMPLE
                 ));
 
+        // Zeroing
+        manipController.getGamepadButton(GamepadKeys.Button.START)
+                .whenPressed(new PivotZeroCommand())
+                .whenReleased(new SlideZeroCommand());
+
         // Color toggle
-        manipController.getGamepadButton(GamepadKeys.Button.A)
+        manipController.getGamepadButton(GamepadKeys.Button.B)
                 .whenPressed(Commands.either(
                         Commands.either(
                                 Commands.runOnce(llVision::setBlue).andThen(Commands.runOnce(() -> setControllerColors(0, 0, 1))),

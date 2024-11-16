@@ -1,9 +1,12 @@
-package org.firstinspires.ftc.teamcode.auto;
+package org.firstinspires.ftc.teamcode.autonomous;
+
+import com.acmerobotics.dashboard.config.Config;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 
 // Class for storing poses
+@Config
 public class AutoConstants {
     // Robot start poses
     public enum RobotStart {
@@ -12,21 +15,21 @@ public class AutoConstants {
 
     // Starting poses
     public static final Pose OBVZONE_STARTING_POSE = new Pose(8, 80, 0);
-    public static final Pose CENTER_STARTING_POSE = new Pose(8, 80, 0);
-    public static final Pose BASKET_STARTING_POSE = new Pose(8, 108, 0);
 
     // Robot parking poses
-    public enum ParkingPose {
+    public enum ParkingLocation {
         OBSERVATION_ZONE, ASCENT_ZONE
     }
 
     // Scoring poses
-    public static final Pose BASKET_SCORE_POSE = new Pose(16, 128, Math.toRadians(135));
-    public static final Pose OBV_PRELOAD_SCORE_POSE = new Pose(38, 60, Math.toRadians(0));
-    public static final Pose CENTER_PRELOAD_SCORE_POSE = new Pose(38, 84, Math.toRadians(0));
+    public static double CHAMBER_X_POSITION = 30.5;
+
+    public static final Pose BASKET_SCORE_POSE = new Pose(13.5, 126.5, Math.toRadians(315));
+    public static final Pose CHAMBER_LEFT_SCORE_POSE = new Pose(CHAMBER_X_POSITION, 82, Math.toRadians(180));
+    public static final Pose CHAMBER_RIGHT_SCORE_POSE = new Pose(CHAMBER_X_POSITION, 62, Math.toRadians(180));
 
     // Parking poses
-    public static final Pose OBVZONE_PARKING_POSE = new Pose(14, 14, Math.toRadians(270));
+    public static final Pose OBVZONE_PARKING_POSE = new Pose(14, 10, Math.toRadians(0));
     public static final Pose ASCENT_PARKING_POSE = new Pose(60, 98, Math.toRadians(270));
 
     // Alliance alliance poses

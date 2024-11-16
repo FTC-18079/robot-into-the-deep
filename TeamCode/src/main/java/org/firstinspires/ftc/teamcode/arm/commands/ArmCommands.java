@@ -12,6 +12,9 @@ import org.firstinspires.ftc.teamcode.vision.LLVision;
 import java.util.function.Supplier;
 
 public class ArmCommands {
+    // TO ASCENT
+    public static final Supplier<Command> BASKET_TO_AUTO_ASCENT;
+
     // TO STOW
     public static final Supplier<Command> BASKET_TO_STOW;
     public static final Supplier<Command> CHAMBER_TO_STOW;
@@ -23,12 +26,13 @@ public class ArmCommands {
     public static final Supplier<Command> CHAMBER_TO_BASKET;
 
     // TO CHAMBER
+    public static final Supplier<Command> STOW_TO_CHAMBER;
     public static final Supplier<Command> SPECIMEN_COLLECT_TO_CHAMBER;
     public static final Supplier<Command> BASKET_TO_CHAMBER;
 
     // TO SAMPLE COLLECT
     public static final Supplier<Command> STOW_TO_SAMPLE_COLLECT;
-    public static final Supplier<Command> COLLECT;
+    public static final Supplier<Command> COLLECT_SAMPLE;
 
     // TO SPECIMEN COLLECT
     public static final Supplier<Command> STOW_TO_SPECIMEN_COLLECT;
@@ -55,10 +59,10 @@ public class ArmCommands {
                 Commands.runOnce(() -> claw.get().setJointOne(0.3)),
                 Commands.waitMillis(100),
                 Commands.runOnce(() -> arm.get().setSlidePos(ArmConstants.SLIDE_REST_POSITION)),
-                Commands.waitUntil(arm.get()::slideAtSetPoint),
+                Commands.waitUntil(() -> arm.get().getSlidePos() < ArmConstants.SLIDE_CHAMBER_POSITION),
                 Commands.runOnce(() -> claw.get().setState(ClawConstants.REST_STATE)),
-                Commands.runOnce(() -> arm.get().setPivotPos(ArmConstants.PIVOT_REST_POSITION)),
-                Commands.waitUntil(arm.get()::pivotAtSetPoint)
+                new MovePivotCommand(ArmConstants.PIVOT_REST_POSITION),
+                Commands.waitUntil(arm.get()::slideAtSetPoint)
         );
         CHAMBER_TO_STOW = () -> Commands.sequence(
                 Commands.runOnce(() -> arm.get().setState(Arm.ArmState.STOW)),
@@ -86,11 +90,12 @@ public class ArmCommands {
 
         STOW_TO_BASKET = () -> Commands.sequence(
                 Commands.runOnce(() -> arm.get().setState(Arm.ArmState.SCORING_SAMPLE)),
-                Commands.runOnce(() -> arm.get().setPivotPos(ArmConstants.PIVOT_SCORE_POSITION)),
-                Commands.runOnce(() -> claw.get().setState(ClawConstants.SAMPLE_SCORING_STATE)),
-                Commands.waitUntil(arm.get()::pivotAtSetPoint),
+                Commands.runOnce(() -> claw.get().setJointOne(0.3)),
+                new MovePivotCommand(ArmConstants.PIVOT_SCORE_POSITION),
                 Commands.runOnce(() -> arm.get().setSlidePos(ArmConstants.SLIDE_BASKET_POSITION)),
-                Commands.waitUntil(arm.get()::slideAtSetPoint)
+                Commands.waitUntil(arm.get()::slideAtSetPoint),
+                Commands.runOnce(() -> claw.get().setState(ClawConstants.SAMPLE_SCORING_STATE)),
+                Commands.waitMillis(200)
         );
         CHAMBER_TO_BASKET = () -> Commands.sequence(
                 Commands.runOnce(() -> arm.get().setState(Arm.ArmState.SCORING_SAMPLE)),
@@ -105,8 +110,7 @@ public class ArmCommands {
                 Commands.runOnce(() -> arm.get().setSlidePos(ArmConstants.SLIDE_REST_POSITION)),
                 Commands.waitUntil(arm.get()::slideAtSetPoint),
                 Commands.runOnce(() -> claw.get().setState(ClawConstants.SPECIMEN_SCORING_STATE)),
-                Commands.runOnce(() -> arm.get().setPivotPos(ArmConstants.PIVOT_SCORE_POSITION)),
-                Commands.waitUntil(arm.get()::pivotAtSetPoint),
+                new MovePivotCommand(ArmConstants.PIVOT_SCORE_POSITION),
                 Commands.runOnce(() -> arm.get().setSlidePos(ArmConstants.SLIDE_CHAMBER_POSITION)),
                 Commands.waitUntil(arm.get()::slideAtSetPoint)
         );
@@ -118,10 +122,10 @@ public class ArmCommands {
         );
 
         STOW_TO_SAMPLE_COLLECT = () -> Commands.sequence(
+                Commands.runOnce(() -> claw.get().setState(ClawConstants.SAMPLE_COLLECTING_STATE)),
                 Commands.runOnce(() -> arm.get().setSlidePos(ArmConstants.SLIDE_SAMPLE_COLLECT_POSITION)),
                 Commands.waitUntil(arm.get()::slideAtSetPoint),
-                Commands.runOnce(() -> arm.get().setState(Arm.ArmState.COLLECTING_SAMPLE)),
-                Commands.runOnce(() -> claw.get().setState(ClawConstants.SAMPLE_COLLECTING_STATE))
+                Commands.runOnce(() -> arm.get().setState(Arm.ArmState.COLLECTING_SAMPLE))
         );
 
         STOW_TO_SPECIMEN_COLLECT = () -> Commands.sequence(
@@ -129,6 +133,20 @@ public class ArmCommands {
                 Commands.runOnce(() -> arm.get().setSlidePos(ArmConstants.SLIDE_SPECIMEN_COLLECT_POSITION)),
                 Commands.waitUntil(arm.get()::slideAtSetPoint),
                 Commands.runOnce(() -> arm.get().setState(Arm.ArmState.COLLECTING_SPECIMEN))
+        );
+
+        STOW_TO_CHAMBER = () -> Commands.sequence(
+                Commands.runOnce(() -> claw.get().setState(ClawConstants.SPECIMEN_SCORING_STATE)),
+                new MovePivotCommand(ArmConstants.PIVOT_SCORE_POSITION),
+                Commands.runOnce(() -> arm.get().setSlidePos(ArmConstants.SLIDE_CHAMBER_POSITION)),
+                Commands.waitUntil(arm.get()::slideAtSetPoint)
+        );
+
+        BASKET_TO_AUTO_ASCENT = () -> Commands.sequence(
+                Commands.runOnce(() -> claw.get().setState(ClawConstants.REST_STATE)),
+                Commands.runOnce(() -> arm.get().setSlidePos(900)),
+                new MovePivotCommand(ArmConstants.PIVOT_AUTO_ASCENT_POSITION),
+                Commands.waitUntil(arm.get()::slideAtSetPoint)
         );
 
         GRAB = () -> Commands.sequence(
@@ -148,7 +166,7 @@ public class ArmCommands {
                 Commands.waitMillis(100)
         );
 
-        COLLECT = () -> Commands.sequence(
+        COLLECT_SAMPLE = () -> Commands.sequence(
                 Commands.runOnce(() -> claw.get().setWrist(limelight.get().getServoPos())),
                 Commands.waitMillis(150),
                 Commands.runOnce(() -> claw.get().setJointTwo(ClawConstants.SAMPLE_COLLECT_JOINT_TWO_POS)),
@@ -219,7 +237,7 @@ public class ArmCommands {
             switch (arm.get().getState()) {
                 case COLLECTING_SAMPLE:
                     return Commands.sequence(
-                            Commands.defer(COLLECT, claw.get()),
+                            Commands.defer(COLLECT_SAMPLE, claw.get()),
                             Commands.defer(GRAB, claw.get()),
                             Commands.defer(SAMPLE_COLLECT_TO_STOW, arm.get())
                     );
