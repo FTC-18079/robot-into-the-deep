@@ -54,9 +54,9 @@ public class Auto_Left_3_1 extends LinearOpMode {
     // Poses
     private final Pose startingPose = new Pose(8, 80, Math.toRadians(180));
     private final Pose scorePreloadPose = AutoConstants.CHAMBER_LEFT_SCORE_POSE;
-    private final Pose collectOnePose = new Pose(24, 106, Math.toRadians(35));
+    private final Pose collectOnePose = new Pose(24, 107, Math.toRadians(35));
     private final Pose scoreOnePose = AutoConstants.BASKET_SCORE_POSE;
-    private final Pose collectTwoPose = new Pose(17, 128, Math.toRadians(0));
+    private final Pose collectTwoPose = new Pose(17, 129, Math.toRadians(0));
     private final Pose scoreTwoPose = AutoConstants.BASKET_SCORE_POSE;
     private final Pose collectThreePose = new Pose(19, 129, Math.toRadians(26));
     private final Pose scoreThreePose = AutoConstants.BASKET_SCORE_POSE;
@@ -74,7 +74,7 @@ public class Auto_Left_3_1 extends LinearOpMode {
     // Constants
     public static double preloadMaxSpeed = 0.7; // Speed reduction on the preload path
     public static long preloadPathDelay = 850; // Delay to allow for pivot to move before following first path
-    public static long collectDelay = 300; // Delay in ms between extending and grabbing to allow for vision to align
+    public static long collectDelay = 400; // Delay in ms between extending and grabbing to allow for vision to align
 
     @Override
     public void runOpMode() {
@@ -106,7 +106,8 @@ public class Auto_Left_3_1 extends LinearOpMode {
         // Schedule auto
         telemetry.addData("Status", "Scheduling commands");
         telemetry.update();
-        if (RobotGlobal.alliance != Alliance.NONE) robot.schedule(autoSequence()
+        if (RobotGlobal.alliance != Alliance.NONE) robot.schedule(
+                autoSequence()
                 .andThen(new InstantCommand(Chassis.getInstance()::breakFollowing)));
 
         Claw.getInstance().setState(ClawConstants.REST_STATE);
@@ -139,7 +140,7 @@ public class Auto_Left_3_1 extends LinearOpMode {
     private void buildPaths() {
         scorePreloadPath = new Path(new BezierLine(new Point(startingPose), new Point(scorePreloadPose)));
         scorePreloadPath.setConstantHeadingInterpolation(startingPose.getHeading());
-        scorePreloadPath.setPathEndTimeoutConstraint(300);
+        scorePreloadPath.setPathEndTimeoutConstraint(400);
 
         collectOnePath = new Path(new BezierLine(new Point(scorePreloadPose), new Point(collectOnePose)));
         collectOnePath.setLinearHeadingInterpolation(scorePreloadPose.getHeading(), collectOnePose.getHeading());

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes.autos;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.Command;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
@@ -26,6 +27,7 @@ import org.firstinspires.ftc.teamcode.util.commands.Commands;
  * Must park in observation zone
  */
 
+@Config
 @Autonomous(name = "Right Side 0+4")
 public class Auto_Right_0_4 extends AutoTemplate {
     // Poses
@@ -44,6 +46,11 @@ public class Auto_Right_0_4 extends AutoTemplate {
     private Path pushTwoPath;
     private Path behindThreePath;
     private Path pushThreePath;
+
+    // Constants
+    public static double preloadMaxSpeed = 0.7; // Speed reduction on the preload path
+    public static long preloadPathDelay = 850; // Delay to allow for pivot to move before following first path
+    public static long collectDelay = 400; // Delay in ms between extending and grabbing to allow for vision to align
 
     @Override
     protected Pose getStartingPose() {

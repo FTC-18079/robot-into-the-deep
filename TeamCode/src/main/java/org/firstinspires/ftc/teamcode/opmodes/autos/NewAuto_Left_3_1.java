@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes.autos;
 
 import static org.firstinspires.ftc.teamcode.autonomous.AutoConstants.ParkingLocation.OBSERVATION_ZONE;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.Command;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
@@ -19,6 +20,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 import org.firstinspires.ftc.teamcode.util.commands.Commands;
+import org.firstinspires.ftc.teamcode.vision.LLVision;
 
 /**
  * Starts facing wall on tile X with edge on the center line
@@ -30,6 +32,7 @@ import org.firstinspires.ftc.teamcode.util.commands.Commands;
 
 // TODO: re-enable photon once it's fixed
 //@Photon
+@Config
 @Autonomous(name = "New Left Side 3+1", group = "Auto")
 public class NewAuto_Left_3_1 extends AutoTemplate {
     // Poses
@@ -37,9 +40,9 @@ public class NewAuto_Left_3_1 extends AutoTemplate {
     private final Pose scorePreloadPose = AutoConstants.CHAMBER_LEFT_SCORE_POSE;
     private final Pose collectOnePose = new Pose(24, 106, Math.toRadians(35));
     private final Pose scoreOnePose = AutoConstants.BASKET_SCORE_POSE;
-    private final Pose collectTwoPose = new Pose(25, 131, Math.toRadians(0));
+    private final Pose collectTwoPose = new Pose(17, 128, Math.toRadians(0));
     private final Pose scoreTwoPose = AutoConstants.BASKET_SCORE_POSE;
-    private final Pose collectThreePose = new Pose(28, 133, Math.toRadians(26));
+    private final Pose collectThreePose = new Pose(19, 129, Math.toRadians(26));
     private final Pose scoreThreePose = AutoConstants.BASKET_SCORE_POSE;
 
     // Paths
@@ -52,11 +55,16 @@ public class NewAuto_Left_3_1 extends AutoTemplate {
     private Path scoreThreePath;
     private Path parkPath;
 
+    // Constants
+    public static double preloadMaxSpeed = 0.7; // Speed reduction on the preload path
+    public static long preloadPathDelay = 850; // Delay to allow for pivot to move before following first path
+    public static long collectDelay = 400; // Delay in ms between extending and grabbing to allow for vision to align
+
     @Override
     public void buildPaths() {
         scorePreloadPath = new Path(new BezierLine(new Point(startingPose), new Point(scorePreloadPose)));
         scorePreloadPath.setConstantHeadingInterpolation(startingPose.getHeading());
-        scorePreloadPath.setPathEndTimeoutConstraint(200);
+        scorePreloadPath.setPathEndTimeoutConstraint(300);
 
         collectOnePath = new Path(new BezierLine(new Point(scorePreloadPose), new Point(collectOnePose)));
         collectOnePath.setLinearHeadingInterpolation(scorePreloadPose.getHeading(), collectOnePose.getHeading());
@@ -96,19 +104,18 @@ public class NewAuto_Left_3_1 extends AutoTemplate {
         return Commands.sequence(
                 // Drive up to chamber and score
                 Commands.parallel(
-                        Commands.waitMillis(1200).andThen(new FollowPathCommand(scorePreloadPath)),
+                        Commands.waitMillis(preloadPathDelay).andThen(new FollowPathCommand(scorePreloadPath, preloadMaxSpeed)),
                         Commands.defer(ArmCommands.STOW_TO_CHAMBER, Arm.getInstance())
                 ),
                 Commands.defer(ArmCommands.SCORE_SPECIMEN, Arm.getInstance()),
                 // Drive to first sample and extend collector
                 Commands.parallel(
                         new FollowPathCommand(collectOnePath),
-                        Commands.sequence(
-                                Commands.defer(ArmCommands.CHAMBER_TO_STOW, Arm.getInstance()),
-                                Commands.runOnce(() -> Arm.getInstance().setScoreType(Arm.ScoreType.SAMPLE)),
-                                Commands.defer(ArmCommands.STOW_TO_SAMPLE_COLLECT, Arm.getInstance())
-                        )),
-                Commands.waitMillis(900),
+                        Commands.defer(ArmCommands.CHAMBER_TO_STOW, Arm.getInstance())
+                ),
+                Commands.runOnce(() -> Arm.getInstance().setScoreType(Arm.ScoreType.SAMPLE)),
+                Commands.defer(ArmCommands.STOW_TO_SAMPLE_COLLECT, Arm.getInstance()),
+                Commands.waitMillis(collectDelay),
                 // Collect sample
                 Commands.defer(ArmCommands.COLLECT_SAMPLE, Claw.getInstance()),
                 Commands.defer(ArmCommands.GRAB, Claw.getInstance()),
@@ -126,7 +133,7 @@ public class NewAuto_Left_3_1 extends AutoTemplate {
                 ),
                 // Collect second sample
                 Commands.defer(ArmCommands.STOW_TO_SAMPLE_COLLECT, Arm.getInstance()),
-                Commands.waitMillis(250),
+                Commands.waitMillis(collectDelay),
                 Commands.defer(ArmCommands.COLLECT_SAMPLE, Claw.getInstance()),
                 Commands.defer(ArmCommands.GRAB, Claw.getInstance()),
                 Commands.defer(ArmCommands.SAMPLE_COLLECT_TO_STOW, Arm.getInstance()),
@@ -142,7 +149,7 @@ public class NewAuto_Left_3_1 extends AutoTemplate {
                         new FollowPathCommand(collectThreePath)
                 ),
                 Commands.defer(ArmCommands.STOW_TO_SAMPLE_COLLECT, Arm.getInstance()),
-                Commands.waitMillis(200),
+                Commands.waitMillis(collectDelay),
                 // Collect third sample
                 Commands.defer(ArmCommands.COLLECT_SAMPLE, Claw.getInstance()),
                 Commands.defer(ArmCommands.GRAB, Arm.getInstance()),

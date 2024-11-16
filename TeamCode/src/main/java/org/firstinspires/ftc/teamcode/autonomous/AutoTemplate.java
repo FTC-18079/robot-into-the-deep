@@ -58,9 +58,9 @@ public abstract class AutoTemplate extends LinearOpMode {
         telemetry.addData("Status", "Scheduling commands");
         telemetry.update();
         if (RobotGlobal.alliance != NONE) robot.schedule(
-                Commands.waitMillis(RobotGlobal.delayMs),
-                makeAutoSequence(),
-                Commands.runOnce(Chassis.getInstance()::breakFollowing)
+                Commands.waitMillis(RobotGlobal.delayMs)
+                .andThen(makeAutoSequence())
+                .andThen(Commands.runOnce(Chassis.getInstance()::breakFollowing))
         );
 
         // Move init servos
