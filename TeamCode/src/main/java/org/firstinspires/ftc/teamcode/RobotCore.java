@@ -135,6 +135,7 @@ public class RobotCore extends Robot {
         // Reset heading
         driveController.getGamepadButton(GamepadKeys.Button.Y)
                 .whenPressed(chassis::resetHeading);
+
         // Toggle drive mode
         driveController.getGamepadButton(GamepadKeys.Button.B)
                 .whenPressed(chassis::toggleRobotCentric);
@@ -148,19 +149,25 @@ public class RobotCore extends Robot {
         new Trigger(() -> manipController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > TRIGGER_DEADZONE)
                 .whenActive(ArmCommands.ARM_ACTION);
 
+        // Pivot bias
+        manipController.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
+                .whenPressed(arm::biasPivotDown);
+        manipController.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
+                .whenPressed(arm::biasPivotUp);
+
         // Game piece switching
         manipController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
-                .whenPressed(() -> Arm.getInstance().setScoreType(Arm.ScoreType.SAMPLE));
+                .whenPressed(() -> arm.setScoreType(Arm.ScoreType.SAMPLE));
         manipController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                .whenPressed(() -> Arm.getInstance().setScoreType(Arm.ScoreType.SPECIMEN));
+                .whenPressed(() -> arm.setScoreType(Arm.ScoreType.SPECIMEN));
 
         // Manual claw control
         manipController.getGamepadButton(GamepadKeys.Button.LEFT_STICK_BUTTON)
-                .whenPressed(() -> LLVision.getInstance().setClawOverride(1.0));
+                .whenPressed(() -> llVision.setClawOverride(1.0));
         manipController.getGamepadButton(GamepadKeys.Button.RIGHT_STICK_BUTTON)
-                .whenPressed(() -> LLVision.getInstance().setClawOverride(0.43));
+                .whenPressed(() -> llVision.setClawOverride(0.43));
         manipController.getGamepadButton(GamepadKeys.Button.BACK)
-                .whenPressed(LLVision.getInstance()::disableClawOverride);
+                .whenPressed(llVision::disableClawOverride);
 
         // Zeroing
         manipController.getGamepadButton(GamepadKeys.Button.START)
@@ -179,6 +186,7 @@ public class RobotCore extends Robot {
                         () -> llVision.getTargetColor() == LLVision.SampleColor.YELLOW
                 ));
 
+        // Default commands
         chassis.setDefaultCommand(driveCommand);
     }
 

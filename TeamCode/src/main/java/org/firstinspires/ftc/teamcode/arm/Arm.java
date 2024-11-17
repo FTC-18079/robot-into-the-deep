@@ -156,6 +156,14 @@ public class Arm extends SubsystemBase {
         pivotPid.setSetPoint(pos);
     }
 
+    public void biasPivotUp() {
+        pivotPid.setSetPoint(getPivotTarget() + 150);
+    }
+
+    public void biasPivotDown() {
+        pivotPid.setSetPoint(getPivotTarget() - 150);
+    }
+
     public void setSlideOffset() {
         slideOffset += getSlidePos();
     }
