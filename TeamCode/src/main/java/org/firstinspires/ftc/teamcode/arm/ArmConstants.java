@@ -22,7 +22,7 @@ public class ArmConstants {
     // Constants
     public static double SLIDE_ERROR_TOLERANCE = 35.0;
     public static double ALIGN_ERROR_TOLERANCE = 2;
-    public static double SLIDE_TIMEOUT = 1000;
+    public static double SLIDE_TIMEOUT = 2000;
 
     // Positions
     public static double SLIDE_REST_POSITION = 0.0;

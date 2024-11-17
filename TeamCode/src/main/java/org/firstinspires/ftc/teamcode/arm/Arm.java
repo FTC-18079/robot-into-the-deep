@@ -12,6 +12,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotCore;
 import org.firstinspires.ftc.teamcode.RobotMap;
 import org.firstinspires.ftc.teamcode.util.hardware.SuccessCRServo;
+import org.firstinspires.ftc.teamcode.util.hardware.SuccessMotor;
 import org.firstinspires.ftc.teamcode.vision.LLVision;
 
 // TODO: clean up the janky zeroing
@@ -19,8 +20,8 @@ import org.firstinspires.ftc.teamcode.vision.LLVision;
 public class Arm extends SubsystemBase {
     Telemetry telemetry;
 
-    DcMotorEx rightSlide;
-    DcMotorEx leftSlide;
+    SuccessMotor rightSlide;
+    SuccessMotor leftSlide;
     DcMotorEx pivotEncoder;
     SuccessCRServo rightPivot;
     SuccessCRServo leftPivot;
@@ -53,8 +54,8 @@ public class Arm extends SubsystemBase {
     }
 
     public Arm() {
-        rightSlide = RobotMap.getInstance().RIGHT_SLIDE;
-        leftSlide = RobotMap.getInstance().LEFT_SLIDE;
+        rightSlide = new SuccessMotor(RobotMap.getInstance().RIGHT_SLIDE);
+        leftSlide = new SuccessMotor(RobotMap.getInstance().LEFT_SLIDE);
 
         pivotEncoder = RobotMap.getInstance().MOTOR_BR;
 
