@@ -139,30 +139,28 @@ public class RobotCore extends Robot {
         driveController.getGamepadButton(GamepadKeys.Button.B)
                 .whenPressed(chassis::toggleRobotCentric);
 
-        // Manip control
+        // Arm movement
         manipController.getGamepadButton(GamepadKeys.Button.DPAD_UP)
                 .whenPressed(ArmCommands.TO_CHAMBER)
                 .whenPressed(ArmCommands.TO_BASKET);
         manipController.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
                 .whenPressed(ArmCommands.TO_STOW);
-        manipController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
-                .whenPressed(Commands.runOnce(() -> Arm.getInstance().setScoreType(Arm.ScoreType.SAMPLE)));
-        manipController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                .whenPressed(Commands.runOnce(() -> Arm.getInstance().setScoreType(Arm.ScoreType.SPECIMEN)));
         new Trigger(() -> manipController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > TRIGGER_DEADZONE)
                 .whenActive(ArmCommands.ARM_ACTION);
+
+        // Game piece switching
+        manipController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
+                .whenPressed(() -> Arm.getInstance().setScoreType(Arm.ScoreType.SAMPLE));
+        manipController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
+                .whenPressed(() -> Arm.getInstance().setScoreType(Arm.ScoreType.SPECIMEN));
+
+        // Manual claw control
         manipController.getGamepadButton(GamepadKeys.Button.LEFT_STICK_BUTTON)
-                .whenPressed(Commands.either(
-                        Commands.runOnce(() -> Claw.getInstance().setWrist(1)),
-                        Commands.none(),
-                        () -> arm.getState() == Arm.ArmState.COLLECTING_SAMPLE
-                ));
+                .whenPressed(() -> LLVision.getInstance().setClawOverride(1.0));
         manipController.getGamepadButton(GamepadKeys.Button.RIGHT_STICK_BUTTON)
-                .whenPressed(Commands.either(
-                        Commands.runOnce(() -> Claw.getInstance().setWrist(0.45)),
-                        Commands.none(),
-                        () -> arm.getState() == Arm.ArmState.COLLECTING_SAMPLE
-                ));
+                .whenPressed(() -> LLVision.getInstance().setClawOverride(0.43));
+        manipController.getGamepadButton(GamepadKeys.Button.BACK)
+                .whenPressed(LLVision.getInstance()::disableClawOverride);
 
         // Zeroing
         manipController.getGamepadButton(GamepadKeys.Button.START)

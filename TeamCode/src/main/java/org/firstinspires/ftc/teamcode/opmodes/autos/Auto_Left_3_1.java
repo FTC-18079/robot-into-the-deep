@@ -174,6 +174,7 @@ public class Auto_Left_3_1 extends LinearOpMode {
 
     private Command autoSequence() {
         return Commands.sequence(
+                Commands.runOnce(() -> Arm.getInstance().setScoreType(Arm.ScoreType.SPECIMEN)),
                 Commands.runOnce(LLVision.getInstance()::setYellow),
                 Commands.waitMillis(RobotGlobal.delayMs),
                 // Drive up to chamber and score

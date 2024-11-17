@@ -71,7 +71,7 @@ public class Arm extends SubsystemBase {
         setupMotors();
 
         state = ArmState.STOW;
-        scoreType = ScoreType.SPECIMEN;
+        scoreType = ScoreType.SAMPLE;
         telemetry = RobotCore.getTelemetry();
         INSTANCE = this;
     }
