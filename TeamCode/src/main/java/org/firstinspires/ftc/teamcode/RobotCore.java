@@ -13,6 +13,7 @@ import com.arcrobotics.ftclib.command.button.Trigger;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.arm.Arm;
 import org.firstinspires.ftc.teamcode.arm.commands.ArmCommands;
+import org.firstinspires.ftc.teamcode.arm.commands.MovePivotCommand;
 import org.firstinspires.ftc.teamcode.arm.commands.PivotZeroCommand;
 import org.firstinspires.ftc.teamcode.arm.commands.SlideZeroCommand;
 import org.firstinspires.ftc.teamcode.chassis.Chassis;
@@ -152,10 +153,10 @@ public class RobotCore extends Robot {
                 .whenActive(ArmCommands.ARM_ACTION);
 
         // Pivot bias
-//        manipController.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
-//                .whenPressed(arm::biasPivotDown);
-//        manipController.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
-//                .whenPressed(arm::biasPivotUp);
+        manipController.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
+                .whenPressed(new MovePivotCommand(arm.getPivotPos() - 45));
+        manipController.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
+                .whenPressed(new MovePivotCommand(arm.getPivotPos() + 45));
 
         // Game piece switching
         manipController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)

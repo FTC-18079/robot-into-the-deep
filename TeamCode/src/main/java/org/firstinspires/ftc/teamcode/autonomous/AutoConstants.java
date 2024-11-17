@@ -22,9 +22,9 @@ public class AutoConstants {
     }
 
     // Scoring poses
-    public static double CHAMBER_X_POSITION = 31;
+    public static double CHAMBER_X_POSITION = 30.5;
 
-    public static final Pose BASKET_SCORE_POSE = new Pose(14.5, 127, Math.toRadians(315));
+    public static final Pose BASKET_SCORE_POSE = new Pose(14, 124, Math.toRadians(315));
     public static final Pose CHAMBER_LEFT_SCORE_POSE = new Pose(CHAMBER_X_POSITION, 82, Math.toRadians(180));
     public static final Pose CHAMBER_RIGHT_SCORE_POSE = new Pose(CHAMBER_X_POSITION, 62, Math.toRadians(180));
 
