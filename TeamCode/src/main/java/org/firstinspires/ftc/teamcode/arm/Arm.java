@@ -157,11 +157,21 @@ public class Arm extends SubsystemBase {
     }
 
     public void biasPivotUp() {
-        pivotPid.setSetPoint(getPivotTarget() + 150);
+        PIVOT_FUDGE += 0.25;
+        PIVOT_SCORE_POSITION += (PIVOT_FUDGE / 360.0) * PIVOT_COUNTS_PER_REVOLUTION;
+
+        if (state == ArmState.SCORING_SAMPLE) {
+            pivotPid.setSetPoint(PIVOT_SCORE_POSITION);
+        }
     }
 
     public void biasPivotDown() {
-        pivotPid.setSetPoint(getPivotTarget() - 150);
+        PIVOT_FUDGE -= 0.25;
+        PIVOT_SCORE_POSITION += (PIVOT_FUDGE / 360.0) * PIVOT_COUNTS_PER_REVOLUTION;
+
+        if (state == ArmState.SCORING_SAMPLE) {
+            pivotPid.setSetPoint(PIVOT_SCORE_POSITION);
+        }
     }
 
     public void setSlideOffset() {

@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.arm.commands.SlideZeroCommand;
 import org.firstinspires.ftc.teamcode.chassis.Chassis;
 import org.firstinspires.ftc.teamcode.chassis.commands.TeleOpDriveCommand;
 import org.firstinspires.ftc.teamcode.claw.Claw;
+import org.firstinspires.ftc.teamcode.claw.ClawConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 import org.firstinspires.ftc.teamcode.util.commands.Commands;
@@ -150,10 +151,10 @@ public class RobotCore extends Robot {
                 .whenActive(ArmCommands.ARM_ACTION);
 
         // Pivot bias
-        manipController.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
-                .whenPressed(arm::biasPivotDown);
-        manipController.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
-                .whenPressed(arm::biasPivotUp);
+//        manipController.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
+//                .whenPressed(arm::biasPivotDown);
+//        manipController.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
+//                .whenPressed(arm::biasPivotUp);
 
         // Game piece switching
         manipController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
@@ -171,8 +172,10 @@ public class RobotCore extends Robot {
 
         // Zeroing
         manipController.getGamepadButton(GamepadKeys.Button.START)
-                .whenPressed(new PivotZeroCommand())
-                .whenReleased(new SlideZeroCommand());
+                .whenPressed(arm::resetPivotEncoder)
+                .whenPressed(arm::resetSlideEncoder);
+//                .whenPressed(new PivotZeroCommand())
+//                .whenReleased(new SlideZeroCommand());
 
         // Color toggle
         manipController.getGamepadButton(GamepadKeys.Button.B)
@@ -184,6 +187,17 @@ public class RobotCore extends Robot {
                         ),
                         Commands.runOnce(llVision::setYellow).andThen(Commands.runOnce(() -> setControllerColors(1, 1, 0))),
                         () -> llVision.getTargetColor() == LLVision.SampleColor.YELLOW
+                ));
+
+        // Release sample
+        manipController.getGamepadButton(GamepadKeys.Button.X)
+                .whenPressed(Commands.sequence(
+                        Commands.runOnce(() -> claw.setState(ClawConstants.SPECIMEN_COLLECT_STATE)),
+                        Commands.runOnce(claw::closeClaw),
+                        Commands.waitMillis(400),
+                        Commands.runOnce(claw::openClaw),
+                        Commands.waitMillis(200),
+                        Commands.runOnce(() -> claw.setState(ClawConstants.REST_STATE))
                 ));
 
         // Default commands

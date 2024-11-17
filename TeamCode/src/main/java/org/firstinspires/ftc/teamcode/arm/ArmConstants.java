@@ -22,12 +22,13 @@ public class ArmConstants {
     // Constants
     public static double SLIDE_ERROR_TOLERANCE = 35.0;
     public static double ALIGN_ERROR_TOLERANCE = 2;
+    public static double SLIDE_TIMEOUT = 1000;
 
     // Positions
     public static double SLIDE_REST_POSITION = 0.0;
     public static double SLIDE_SAMPLE_COLLECT_POSITION = 1300.0;
     public static double SLIDE_SPECIMEN_COLLECT_POSITION = 500;
-    public static double SLIDE_CHAMBER_POSITION = 450.0;
+    public static double SLIDE_CHAMBER_POSITION = 400.0;
     public static double SLIDE_BASKET_POSITION = 1835.0;
 
     /**
@@ -51,7 +52,7 @@ public class ArmConstants {
     public static double PIVOT_STARTING_POS = (PIVOT_STARTING_ANGLE / 360.0) * PIVOT_COUNTS_PER_REVOLUTION;
 
     public static double PIVOT_REST_POSITION = 0.0;
-    public static double PIVOT_FUDGE = 7.25;
+    public static double PIVOT_FUDGE = 6.0;
     public static double PIVOT_SCORE_POSITION = ((90.0 + PIVOT_FUDGE) / 360.0) * PIVOT_COUNTS_PER_REVOLUTION; // TODO: remove the extra 5 once pivot is fixed
-    public static double PIVOT_AUTO_ASCENT_POSITION = (70.0 / 360.0) * PIVOT_COUNTS_PER_REVOLUTION;
+    public static double PIVOT_AUTO_ASCENT_POSITION = (65.0 / 360.0) * PIVOT_COUNTS_PER_REVOLUTION;
 }
