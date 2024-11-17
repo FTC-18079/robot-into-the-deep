@@ -135,6 +135,7 @@ public class RobotCore extends Robot {
 
         // Reset heading
         driveController.getGamepadButton(GamepadKeys.Button.Y)
+                .whenPressed(() -> rumbleDrive(300))
                 .whenPressed(chassis::resetHeading);
 
         // Toggle drive mode
@@ -158,8 +159,10 @@ public class RobotCore extends Robot {
 
         // Game piece switching
         manipController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
+                .whenPressed(() -> rumbleManip(300))
                 .whenPressed(() -> arm.setScoreType(Arm.ScoreType.SAMPLE));
         manipController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
+                .whenPressed(() -> rumbleManip(300))
                 .whenPressed(() -> arm.setScoreType(Arm.ScoreType.SPECIMEN));
 
         // Manual claw control
@@ -179,6 +182,7 @@ public class RobotCore extends Robot {
 
         // Color toggle
         manipController.getGamepadButton(GamepadKeys.Button.B)
+                .whenPressed(() -> rumbleManip(300))
                 .whenPressed(Commands.either(
                         Commands.either(
                                 Commands.runOnce(llVision::setBlue).andThen(Commands.runOnce(() -> setControllerColors(0, 0, 1))),
