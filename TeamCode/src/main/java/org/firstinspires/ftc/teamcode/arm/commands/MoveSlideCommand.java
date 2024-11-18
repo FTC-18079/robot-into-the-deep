@@ -28,10 +28,11 @@ public class MoveSlideCommand extends CommandBase {
         return arm.slideAtSetPoint() || timer.milliseconds() > ArmConstants.SLIDE_TIMEOUT;
     }
 
-    @Override
-    public void end(boolean interrupted) {
-        if (targetPos == ArmConstants.SLIDE_REST_POSITION && arm.slideAtSetPoint()) {
-            arm.resetSlideEncoder();
-        }
-    }
+//    @Override
+//    public void end(boolean interrupted) {
+////        if (targetPos == ArmConstants.SLIDE_REST_POSITION && arm.slideAtSetPoint()) {
+////            arm.setSlidePos(0);
+////            arm.resetSlideEncoder();
+////        }
+//    }
 }

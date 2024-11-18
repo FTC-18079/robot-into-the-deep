@@ -63,7 +63,7 @@ public class ArmCommands {
                 Commands.runOnce(() -> claw.get().setState(ClawConstants.REST_STATE)),
                 Commands.parallel(
                         new MoveSlideCommand(ArmConstants.SLIDE_REST_POSITION),
-                        new MovePivotCommand(ArmConstants.PIVOT_REST_POSITION)
+                        new MovePivotCommand(() -> ArmConstants.PIVOT_REST_POSITION)
                 )
         );
         CHAMBER_TO_STOW = () -> Commands.sequence(
@@ -71,7 +71,7 @@ public class ArmCommands {
                 Commands.runOnce(() -> claw.get().setState(ClawConstants.REST_STATE)),
                 Commands.parallel(
                         new MoveSlideCommand(ArmConstants.SLIDE_REST_POSITION),
-                        new MovePivotCommand(ArmConstants.PIVOT_REST_POSITION)
+                        new MovePivotCommand(() -> ArmConstants.PIVOT_REST_POSITION)
                 )
         );
         SAMPLE_COLLECT_TO_STOW = () -> Commands.sequence(
@@ -93,7 +93,7 @@ public class ArmCommands {
                 Commands.runOnce(() -> arm.get().setState(Arm.ArmState.SCORING_SAMPLE)),
                 Commands.runOnce(() -> claw.get().setJointOne(0.3)),
                 Commands.waitMillis(200),
-                new MovePivotCommand(ArmConstants.PIVOT_SCORE_POSITION),
+                new MovePivotCommand(() -> ArmConstants.PIVOT_SCORE_POSITION),
                 new MoveSlideCommand(ArmConstants.SLIDE_BASKET_POSITION),
                 Commands.runOnce(() -> claw.get().setState(ClawConstants.SAMPLE_SCORING_STATE)),
                 Commands.waitMillis(200)
@@ -109,7 +109,7 @@ public class ArmCommands {
                 Commands.runOnce(() -> arm.get().setState(Arm.ArmState.SCORING_SPECIMEN)),
                 new MoveSlideCommand(ArmConstants.SLIDE_REST_POSITION),
                 Commands.runOnce(() -> claw.get().setState(ClawConstants.SPECIMEN_SCORING_STATE)),
-                new MovePivotCommand(ArmConstants.PIVOT_SCORE_POSITION),
+                new MovePivotCommand(() -> ArmConstants.PIVOT_SCORE_POSITION),
                 new MoveSlideCommand(ArmConstants.SLIDE_CHAMBER_POSITION)
         );
 
@@ -132,14 +132,14 @@ public class ArmCommands {
 
         STOW_TO_CHAMBER = () -> Commands.sequence(
                 Commands.runOnce(() -> claw.get().setState(ClawConstants.SPECIMEN_SCORING_STATE)),
-                new MovePivotCommand(ArmConstants.PIVOT_SCORE_POSITION),
+                new MovePivotCommand(() -> ArmConstants.PIVOT_SCORE_POSITION),
                 new MoveSlideCommand(ArmConstants.SLIDE_CHAMBER_POSITION)
         );
 
         BASKET_TO_AUTO_ASCENT = () -> Commands.sequence(
                 Commands.runOnce(() -> claw.get().setState(ClawConstants.REST_STATE)),
                 Commands.parallel(
-                        new MovePivotCommand(ArmConstants.PIVOT_AUTO_ASCENT_POSITION),
+                        new MovePivotCommand(() -> ArmConstants.PIVOT_AUTO_ASCENT_POSITION),
                         new MoveSlideCommand(900)
                 )
         );
@@ -156,7 +156,7 @@ public class ArmCommands {
 
         SCORE_SPECIMEN = () -> Commands.sequence(
                 Commands.runOnce(() -> claw.get().setState(ClawConstants.SPECIMEN_SCORE_STATE)),
-                Commands.waitMillis(300),
+                Commands.waitMillis(400),
                 Commands.runOnce(claw.get()::openClaw),
                 Commands.waitMillis(100)
         );
