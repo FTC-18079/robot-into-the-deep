@@ -13,11 +13,10 @@ import com.arcrobotics.ftclib.command.button.Trigger;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.arm.Arm;
 import org.firstinspires.ftc.teamcode.arm.commands.ArmCommands;
-import org.firstinspires.ftc.teamcode.arm.commands.PivotZeroCommand;
-import org.firstinspires.ftc.teamcode.arm.commands.SlideZeroCommand;
 import org.firstinspires.ftc.teamcode.chassis.Chassis;
 import org.firstinspires.ftc.teamcode.chassis.commands.TeleOpDriveCommand;
 import org.firstinspires.ftc.teamcode.claw.Claw;
+import org.firstinspires.ftc.teamcode.claw.ClawConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 import org.firstinspires.ftc.teamcode.util.commands.Commands;
@@ -134,43 +133,54 @@ public class RobotCore extends Robot {
 
         // Reset heading
         driveController.getGamepadButton(GamepadKeys.Button.Y)
+                .whenPressed(() -> rumbleDrive(300))
                 .whenPressed(chassis::resetHeading);
+
         // Toggle drive mode
         driveController.getGamepadButton(GamepadKeys.Button.B)
                 .whenPressed(chassis::toggleRobotCentric);
 
-        // Manip control
+        // Arm movement
         manipController.getGamepadButton(GamepadKeys.Button.DPAD_UP)
                 .whenPressed(ArmCommands.TO_CHAMBER)
                 .whenPressed(ArmCommands.TO_BASKET);
         manipController.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
                 .whenPressed(ArmCommands.TO_STOW);
-        manipController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
-                .whenPressed(Commands.runOnce(() -> Arm.getInstance().setScoreType(Arm.ScoreType.SAMPLE)));
-        manipController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                .whenPressed(Commands.runOnce(() -> Arm.getInstance().setScoreType(Arm.ScoreType.SPECIMEN)));
         new Trigger(() -> manipController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > TRIGGER_DEADZONE)
                 .whenActive(ArmCommands.ARM_ACTION);
+
+        // Pivot bias
+//        manipController.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
+//                .whenPressed(new MovePivotCommand(() -> (arm.getPivotPos() - 45)));
+//        manipController.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
+//                .whenPressed(new MovePivotCommand(() -> (arm.getPivotPos() + 45)));
+
+        // Game piece switching
+        manipController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
+                .whenPressed(() -> rumbleManip(300))
+                .whenPressed(() -> arm.setScoreType(Arm.ScoreType.SAMPLE));
+        manipController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
+                .whenPressed(() -> rumbleManip(300))
+                .whenPressed(() -> arm.setScoreType(Arm.ScoreType.SPECIMEN));
+
+        // Manual claw control
         manipController.getGamepadButton(GamepadKeys.Button.LEFT_STICK_BUTTON)
-                .whenPressed(Commands.either(
-                        Commands.runOnce(() -> Claw.getInstance().setWrist(1)),
-                        Commands.none(),
-                        () -> arm.getState() == Arm.ArmState.COLLECTING_SAMPLE
-                ));
+                .whenPressed(() -> llVision.setClawOverride(1.0));
         manipController.getGamepadButton(GamepadKeys.Button.RIGHT_STICK_BUTTON)
-                .whenPressed(Commands.either(
-                        Commands.runOnce(() -> Claw.getInstance().setWrist(0.45)),
-                        Commands.none(),
-                        () -> arm.getState() == Arm.ArmState.COLLECTING_SAMPLE
-                ));
+                .whenPressed(() -> llVision.setClawOverride(0.43));
+        manipController.getGamepadButton(GamepadKeys.Button.BACK)
+                .whenPressed(llVision::disableClawOverride);
 
         // Zeroing
         manipController.getGamepadButton(GamepadKeys.Button.START)
-                .whenPressed(new PivotZeroCommand())
-                .whenReleased(new SlideZeroCommand());
+                .whenPressed(arm::resetPivotEncoder);
+//                .whenPressed(arm::resetSlideEncoder);
+//                .whenPressed(new PivotZeroCommand())
+//                .whenReleased(new SlideZeroCommand());
 
         // Color toggle
         manipController.getGamepadButton(GamepadKeys.Button.B)
+                .whenPressed(() -> rumbleManip(300))
                 .whenPressed(Commands.either(
                         Commands.either(
                                 Commands.runOnce(llVision::setBlue).andThen(Commands.runOnce(() -> setControllerColors(0, 0, 1))),
@@ -181,6 +191,18 @@ public class RobotCore extends Robot {
                         () -> llVision.getTargetColor() == LLVision.SampleColor.YELLOW
                 ));
 
+        // Release sample
+        manipController.getGamepadButton(GamepadKeys.Button.X)
+                .whenPressed(Commands.sequence(
+                        Commands.runOnce(() -> claw.setState(ClawConstants.SPECIMEN_COLLECT_STATE)),
+                        Commands.runOnce(claw::closeClaw),
+                        Commands.waitMillis(400),
+                        Commands.runOnce(claw::openClaw),
+                        Commands.waitMillis(200),
+                        Commands.runOnce(() -> claw.setState(ClawConstants.REST_STATE))
+                ));
+
+        // Default commands
         chassis.setDefaultCommand(driveCommand);
     }
 

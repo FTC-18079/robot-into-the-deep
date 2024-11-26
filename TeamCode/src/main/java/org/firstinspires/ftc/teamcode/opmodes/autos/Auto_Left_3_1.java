@@ -15,7 +15,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.RobotCore;
 import org.firstinspires.ftc.teamcode.RobotMap;
 import org.firstinspires.ftc.teamcode.arm.Arm;
+import org.firstinspires.ftc.teamcode.arm.ArmConstants;
 import org.firstinspires.ftc.teamcode.arm.commands.ArmCommands;
+import org.firstinspires.ftc.teamcode.arm.commands.MovePivotCommand;
 import org.firstinspires.ftc.teamcode.autonomous.AutoConstants;
 import org.firstinspires.ftc.teamcode.chassis.Chassis;
 import org.firstinspires.ftc.teamcode.chassis.commands.FollowPathCommand;
@@ -54,11 +56,11 @@ public class Auto_Left_3_1 extends LinearOpMode {
     // Poses
     private final Pose startingPose = new Pose(8, 80, Math.toRadians(180));
     private final Pose scorePreloadPose = AutoConstants.CHAMBER_LEFT_SCORE_POSE;
-    private final Pose collectOnePose = new Pose(23.5, 107, Math.toRadians(35));
+    private final Pose collectOnePose = new Pose(24, 105, Math.toRadians(35));
     private final Pose scoreOnePose = AutoConstants.BASKET_SCORE_POSE;
-    private final Pose collectTwoPose = new Pose(18, 129.5, Math.toRadians(0));
+    private final Pose collectTwoPose = new Pose(18, 127.5, Math.toRadians(0));
     private final Pose scoreTwoPose = AutoConstants.BASKET_SCORE_POSE;
-    private final Pose collectThreePose = new Pose(18, 128.5, Math.toRadians(26));
+    private final Pose collectThreePose = new Pose(19, 126.5, Math.toRadians(26));
     private final Pose scoreThreePose = AutoConstants.BASKET_SCORE_POSE;
 
     // Paths
@@ -174,6 +176,7 @@ public class Auto_Left_3_1 extends LinearOpMode {
 
     private Command autoSequence() {
         return Commands.sequence(
+                Commands.runOnce(() -> Arm.getInstance().setScoreType(Arm.ScoreType.SPECIMEN)),
                 Commands.runOnce(LLVision.getInstance()::setYellow),
                 Commands.waitMillis(RobotGlobal.delayMs),
                 // Drive up to chamber and score
@@ -240,7 +243,10 @@ public class Auto_Left_3_1 extends LinearOpMode {
                 Commands.runOnce(LLVision.getInstance()::disableClawOverride),
                 // Stow arm and go to park
                 Commands.parallel(
-                        Commands.defer(ArmCommands.BASKET_TO_AUTO_ASCENT, Arm.getInstance()),
+                        Commands.sequence(
+                                Commands.waitMillis(500),
+                                Commands.defer(ArmCommands.BASKET_TO_STOW, Arm.getInstance())
+                        ),
                         new FollowPathCommand(parkPath)
                 )
         );

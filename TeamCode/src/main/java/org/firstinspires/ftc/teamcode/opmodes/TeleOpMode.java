@@ -51,6 +51,8 @@ public class TeleOpMode extends OpMode {
 
     @Override
     public void start() {
+        gamepad1.setLedColor(1, 1, 0, -1);
+        gamepad2.setLedColor(1, 1, 0, -1);
         robot.schedule(
 
         );
