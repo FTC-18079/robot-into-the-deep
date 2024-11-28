@@ -102,7 +102,7 @@ public class Arm extends SubsystemBase {
     // GETTERS
 
     public double getSlidePos() {
-        return rightSlide.getCurrentPosition();
+        return leftSlide.getCurrentPosition();
     }
 
     public double getPivotPos() {
