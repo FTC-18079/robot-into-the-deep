@@ -8,6 +8,10 @@ public class ArmConstants {
      * SLIDES
      */
 
+    // Motion profile constraints
+    public static double MAX_VELOCITY = 182.0;
+    public static double MAX_ACCELERATION = MAX_VELOCITY * 4.0;
+
     // PID
     public static double SLIDE_kP = 0.025;
     public static double SLIDE_kI = 0.0;
