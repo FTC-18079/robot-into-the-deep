@@ -6,14 +6,16 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.arm.Arm;
 import org.firstinspires.ftc.teamcode.arm.ArmConstants;
 
+import java.util.function.DoubleSupplier;
+
 public class MovePivotCommand extends CommandBase {
     private final Arm arm;
     private final double targetPos;
     private final ElapsedTime timer;
 
-    public MovePivotCommand(double targetPos) {
+    public MovePivotCommand(DoubleSupplier targetPos) {
         this.arm = Arm.getInstance();
-        this.targetPos = targetPos;
+        this.targetPos = targetPos.getAsDouble();
         timer = new ElapsedTime();
     }
 
@@ -33,5 +35,6 @@ public class MovePivotCommand extends CommandBase {
         if (targetPos == ArmConstants.PIVOT_REST_POSITION && arm.pivotAtSetPoint()) {
             arm.resetPivotEncoder();
         }
+        arm.setPivotPos(arm.getPivotPos());
     }
 }

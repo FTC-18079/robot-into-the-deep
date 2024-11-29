@@ -7,29 +7,29 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 public class SuccessMotor  {
     private DcMotorEx motor;
 
-    private double velocityThreshold = 10;
-    private double lastVelocity = 0;
+    private double threshold = 0.005;
+    private double lastPower = 0;
 
     public SuccessMotor(DcMotorEx motor) {
         this.motor = motor;
     }
 
-    public void setVelocityThreshold(double velocityThreshold) {
-        this.velocityThreshold = velocityThreshold;
+    public void setThreshold(double threshold) {
+        this.threshold = threshold;
     }
 
-    public double getVelocityThreshold() {
-        return velocityThreshold;
+    public double getThreshold() {
+        return threshold;
     }
 
-    public boolean setVelocity(double velocity) {
-        return setVelocityInternal(velocity);
+    public boolean setPower(double velocity) {
+        return setPowerInternal(velocity);
     }
 
-    private boolean setVelocityInternal(double velocity) {
-        if (Math.abs(velocity - lastVelocity) > velocityThreshold) {
-            lastVelocity = velocity;
-            motor.setVelocity(velocity);
+    private boolean setPowerInternal(double power) {
+        if (Math.abs(power - lastPower) > threshold) {
+            lastPower = power;
+            motor.setPower(power);
             return true;
         }
         return false;

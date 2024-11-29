@@ -12,15 +12,15 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotCore;
 import org.firstinspires.ftc.teamcode.RobotMap;
 import org.firstinspires.ftc.teamcode.util.hardware.SuccessCRServo;
+import org.firstinspires.ftc.teamcode.util.hardware.SuccessMotor;
 import org.firstinspires.ftc.teamcode.vision.LLVision;
 
 // TODO: clean up the janky zeroing
-@SuppressWarnings("unused")
 public class Arm extends SubsystemBase {
     Telemetry telemetry;
 
-    DcMotorEx rightSlide;
-    DcMotorEx leftSlide;
+    SuccessMotor rightSlide;
+    SuccessMotor leftSlide;
     DcMotorEx pivotEncoder;
     SuccessCRServo rightPivot;
     SuccessCRServo leftPivot;
@@ -28,9 +28,6 @@ public class Arm extends SubsystemBase {
     PIDController slidePid;
     PIDController pivotPid;
     PIDController alignmentPid;
-
-    static double slideOffset = 0;
-    static double pivotOffset = 0;
 
     public boolean slideZeroing = false;
     public boolean pivotZeroing = false;
@@ -53,8 +50,8 @@ public class Arm extends SubsystemBase {
     }
 
     public Arm() {
-        rightSlide = RobotMap.getInstance().RIGHT_SLIDE;
-        leftSlide = RobotMap.getInstance().LEFT_SLIDE;
+        rightSlide = new SuccessMotor(RobotMap.getInstance().RIGHT_SLIDE);
+        leftSlide = new SuccessMotor(RobotMap.getInstance().LEFT_SLIDE);
 
         pivotEncoder = RobotMap.getInstance().MOTOR_BR;
 
@@ -71,7 +68,7 @@ public class Arm extends SubsystemBase {
         setupMotors();
 
         state = ArmState.STOW;
-        scoreType = ScoreType.SPECIMEN;
+        scoreType = ScoreType.SAMPLE;
         telemetry = RobotCore.getTelemetry();
         INSTANCE = this;
     }
@@ -105,7 +102,7 @@ public class Arm extends SubsystemBase {
     // GETTERS
 
     public double getSlidePos() {
-        return rightSlide.getCurrentPosition() - slideOffset;
+        return leftSlide.getCurrentPosition();
     }
 
     public double getPivotPos() {
@@ -156,14 +153,6 @@ public class Arm extends SubsystemBase {
         pivotPid.setSetPoint(pos);
     }
 
-    public void setSlideOffset() {
-        slideOffset += getSlidePos();
-    }
-
-    public void setPivotOffset() {
-        pivotOffset += getPivotPos();
-    }
-
     public void setState(ArmState state) {
         this.state = state;
     }
@@ -183,12 +172,11 @@ public class Arm extends SubsystemBase {
 
     // PERIODIC
 
-    public void stateMachine() {
-
-    }
-
     @Override
     public void periodic() {
+        // temp
+        updatePid();
+
         telemetry.addData("Arm State", state);
         telemetry.addData("Scoring Piece", scoreType);
         telemetry.addData("Pivot target", getPivotTarget());
