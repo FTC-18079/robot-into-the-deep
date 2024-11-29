@@ -115,7 +115,7 @@ public abstract class AutoTemplate extends LinearOpMode {
         lastCircle = gamepad1.circle;
 
         telemetry.addData("Status", "Configuring Autonomous");
-        telemetry.addData("Controls", "\nDelay: UP & DOWN \nToggle live view: CROSS \nSelect alliance: SQUARE \nParking pose: CIRCLE");
+        telemetry.addData("Controls", "\nDelay: UP & DOWN \nToggle live view: CROSS \nSelect alliance: SQUARE");
         telemetry.addLine();
         telemetry.addData("Selected auto delay", RobotGlobal.delayMs);
         telemetry.addData("Live view on", RobotGlobal.liveView);

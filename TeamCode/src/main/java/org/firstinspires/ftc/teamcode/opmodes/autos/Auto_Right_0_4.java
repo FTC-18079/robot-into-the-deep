@@ -3,10 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes.autos;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.Command;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
-import org.firstinspires.ftc.teamcode.arm.Arm;
-import org.firstinspires.ftc.teamcode.arm.commands.ArmCommands;
 import org.firstinspires.ftc.teamcode.autonomous.AutoConstants;
 import org.firstinspires.ftc.teamcode.autonomous.AutoTemplate;
 import org.firstinspires.ftc.teamcode.chassis.commands.FollowPathCommand;
@@ -27,7 +24,6 @@ import org.firstinspires.ftc.teamcode.util.commands.Commands;
  * Must park in observation zone
  */
 
-@Disabled
 @Config
 @Autonomous(name = "Right Side 0+4")
 public class Auto_Right_0_4 extends AutoTemplate {
@@ -41,9 +37,9 @@ public class Auto_Right_0_4 extends AutoTemplate {
     private final Pose behindThreePose = new Pose(62, 9, Math.toRadians(180));
     private final Pose pushThreePose = new Pose(16, 9, Math.toRadians(180));
     private final Pose scoreOnePose = new Pose(AutoConstants.CHAMBER_X_POSITION, AutoConstants.CHAMBER_RIGHT_Y_POSITION - 2, Math.toRadians(180));
-    private final Pose collectTwoPose = new Pose();
+    private final Pose collectTwoPose = new Pose(16, 32, Math.toRadians(180));
     private final Pose scoreTwoPose = new Pose(AutoConstants.CHAMBER_X_POSITION, AutoConstants.CHAMBER_RIGHT_Y_POSITION - 4, Math.toRadians(180));
-    private final Pose collectThreePose = new Pose();
+    private final Pose collectThreePose = collectTwoPose;
     private final Pose scoreThreePose = new Pose(AutoConstants.CHAMBER_X_POSITION, AutoConstants.CHAMBER_RIGHT_Y_POSITION - 6, Math.toRadians(180));
     private final Pose parkingPose = AutoConstants.OBVZONE_PARKING_POSE;
 
@@ -83,7 +79,7 @@ public class Auto_Right_0_4 extends AutoTemplate {
         scorePreloadPath.setConstantHeadingInterpolation(scorePreloadPose.getHeading());
         scorePreloadPath.setPathEndTimeoutConstraint(1000);
 
-        behindOnePath = new Path(new BezierCurve(new Point(scorePreloadPose), new Point(30, 20, Point.CARTESIAN), new Point(64, 42, Point.CARTESIAN), new Point(behindOnePose)));
+        behindOnePath = new Path(new BezierCurve(new Point(scorePreloadPose), new Point(27, 16, Point.CARTESIAN), new Point(64, 44, Point.CARTESIAN), new Point(behindOnePose)));
         behindOnePath.setConstantHeadingInterpolation(scorePreloadPose.getHeading());
 
         pushOnePath = new Path(new BezierLine(new Point(behindOnePose), new Point(pushOnePose)));
@@ -125,16 +121,19 @@ public class Auto_Right_0_4 extends AutoTemplate {
     protected Command makeAutoSequence() {
         return Commands.sequence(
                 // Drive up to high chamber and score
-                Commands.parallel(
-                        Commands.waitMillis(1200).andThen(new FollowPathCommand(scorePreloadPath)),
-                        Commands.defer(ArmCommands.STOW_TO_CHAMBER, Arm.getInstance())
-                ),
-                Commands.defer(ArmCommands.SCORE_SPECIMEN, Arm.getInstance()),
-                // Drive to sample and bring arm to stow
-                Commands.parallel(
-                        Commands.defer(ArmCommands.CHAMBER_TO_STOW, Arm.getInstance()),
-                        new FollowPathCommand(behindOnePath)
-                )
+                new FollowPathCommand(scorePreloadPath, preloadMaxSpeed),
+                new FollowPathCommand(behindOnePath),
+                new FollowPathCommand(pushOnePath),
+                new FollowPathCommand(behindTwoPath),
+                new FollowPathCommand(pushTwoPath),
+                new FollowPathCommand(behindThreePath),
+                new FollowPathCommand(pushThreePath),
+                new FollowPathCommand(scoreOnePath),
+                new FollowPathCommand(collectTwoPath),
+                new FollowPathCommand(scoreTwoPath),
+                new FollowPathCommand(collectThreePath),
+                new FollowPathCommand(scoreThreePath),
+                new FollowPathCommand(parkingPath)
         );
     }
 }
