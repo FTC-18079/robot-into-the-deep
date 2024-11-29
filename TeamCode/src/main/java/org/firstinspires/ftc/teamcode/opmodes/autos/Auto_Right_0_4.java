@@ -4,7 +4,6 @@ import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.Command;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.autonomous.AutoConstants;
 import org.firstinspires.ftc.teamcode.autonomous.AutoTemplate;
 import org.firstinspires.ftc.teamcode.chassis.commands.FollowPathCommand;
 import org.firstinspires.ftc.teamcode.claw.Claw;
@@ -16,6 +15,8 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.util.commands.Commands;
 
+import static org.firstinspires.ftc.teamcode.autonomous.AutoConstants.*;
+
 /**
  * Starts facing wall on tile Y with edge on the center line
  * <p>
@@ -25,23 +26,23 @@ import org.firstinspires.ftc.teamcode.util.commands.Commands;
  */
 
 @Config
-@Autonomous(name = "Right Side 0+4")
+@Autonomous(name = "Right Side 0+4", group = "Auto")
 public class Auto_Right_0_4 extends AutoTemplate {
     // Poses
     private final Pose startingPose = new Pose(8, 64, Math.toRadians(180));
-    private final Pose scorePreloadPose = AutoConstants.CHAMBER_RIGHT_SCORE_POSE;
+    private final Pose scorePreloadPose = CHAMBER_RIGHT_SCORE_POSE;
     private final Pose behindOnePose = new Pose(62, 29, Math.toRadians(180));
     private final Pose pushOnePose = new Pose(16, 29, Math.toRadians(180));
     private final Pose behindTwoPose = new Pose(62, 19, Math.toRadians(180));
     private final Pose pushTwoPose = new Pose(16, 19, Math.toRadians(180));
     private final Pose behindThreePose = new Pose(62, 9, Math.toRadians(180));
-    private final Pose pushThreePose = new Pose(16, 9, Math.toRadians(180));
-    private final Pose scoreOnePose = new Pose(AutoConstants.CHAMBER_X_POSITION, AutoConstants.CHAMBER_RIGHT_Y_POSITION - 2, Math.toRadians(180));
-    private final Pose collectTwoPose = new Pose(16, 32, Math.toRadians(180));
-    private final Pose scoreTwoPose = new Pose(AutoConstants.CHAMBER_X_POSITION, AutoConstants.CHAMBER_RIGHT_Y_POSITION - 4, Math.toRadians(180));
+    private final Pose pushThreePose = new Pose(WALL_COLLECT_X_POSITION, 9, Math.toRadians(180));
+    private final Pose scoreOnePose = new Pose(CHAMBER_X_POSITION, CHAMBER_RIGHT_Y_POSITION - 2, Math.toRadians(180));
+    private final Pose collectTwoPose = new Pose(WALL_COLLECT_X_POSITION, WALL_COLLECT_Y_POSITION, Math.toRadians(180));
+    private final Pose scoreTwoPose = new Pose(CHAMBER_X_POSITION, CHAMBER_RIGHT_Y_POSITION - 4, Math.toRadians(180));
     private final Pose collectThreePose = collectTwoPose;
-    private final Pose scoreThreePose = new Pose(AutoConstants.CHAMBER_X_POSITION, AutoConstants.CHAMBER_RIGHT_Y_POSITION - 6, Math.toRadians(180));
-    private final Pose parkingPose = AutoConstants.OBVZONE_PARKING_POSE;
+    private final Pose scoreThreePose = new Pose(CHAMBER_X_POSITION, CHAMBER_RIGHT_Y_POSITION - 6, Math.toRadians(180));
+    private final Pose parkingPose = OBVZONE_PARKING_POSE;
 
     // Paths
     private Path scorePreloadPath;
