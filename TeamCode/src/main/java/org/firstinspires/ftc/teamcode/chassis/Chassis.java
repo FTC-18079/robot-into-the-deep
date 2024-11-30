@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.chassis;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -9,8 +7,7 @@ import org.firstinspires.ftc.teamcode.RobotCore;
 import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
-import org.firstinspires.ftc.teamcode.pedroPathing.util.Drawing;
-import org.firstinspires.ftc.teamcode.util.RobotGlobal;
+import org.firstinspires.ftc.teamcode.RobotStatus;
 import org.firstinspires.ftc.teamcode.util.SubsystemIF;
 
 public class Chassis extends SubsystemBase implements SubsystemIF {
@@ -35,12 +32,12 @@ public class Chassis extends SubsystemBase implements SubsystemIF {
 
     @Override
     public void onAutonomousInit() {
-        follower.initialize(RobotGlobal.robotPose);
+        follower.initialize(RobotStatus.robotPose);
     }
 
     @Override
     public void onTeleopInit() {
-        follower.initialize(RobotGlobal.robotPose);
+        follower.initialize(RobotStatus.robotPose);
         follower.startTeleopDrive();
         setMaxPower(1.0);
     }
@@ -97,7 +94,7 @@ public class Chassis extends SubsystemBase implements SubsystemIF {
     @Override
     public void periodic() {
         follower.update();
-        RobotGlobal.robotPose = follower.getPose();
+        RobotStatus.robotPose = follower.getPose();
 
         telemetry.addLine();
         telemetry.addData("Robot Centric", isRobotCentric);

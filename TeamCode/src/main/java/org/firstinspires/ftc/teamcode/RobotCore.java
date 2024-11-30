@@ -18,7 +18,6 @@ import org.firstinspires.ftc.teamcode.chassis.commands.TeleOpDriveCommand;
 import org.firstinspires.ftc.teamcode.claw.Claw;
 import org.firstinspires.ftc.teamcode.claw.ClawConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
-import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 import org.firstinspires.ftc.teamcode.util.SubsystemIF;
 import org.firstinspires.ftc.teamcode.util.commands.Commands;
 import org.firstinspires.ftc.teamcode.vision.LLVision;
@@ -87,7 +86,7 @@ public class RobotCore extends Robot {
         this.driveController = new GamepadEx(gamepad1);
         this.manipController = new GamepadEx(gamepad2);
 
-        this.initialPose = RobotGlobal.robotPose;
+        this.initialPose = RobotStatus.robotPose;
 
         telemetry.addData("Status", "Initializing subsystems");
         telemetry.update();
@@ -110,7 +109,7 @@ public class RobotCore extends Robot {
 
         register(chassis, arm, claw, llVision);
 
-        chassis.setPosition(RobotGlobal.robotPose);
+        chassis.setPosition(RobotStatus.robotPose);
 
         telemetry.addData("Status", "Robot initialized, ready to enable");
         telemetry.update();
@@ -197,7 +196,7 @@ public class RobotCore extends Robot {
                         Commands.either(
                                 Commands.runOnce(llVision::setBlue).andThen(Commands.runOnce(() -> setControllerColors(0, 0, 1))),
                                 Commands.runOnce(llVision::setRed).andThen(Commands.runOnce(() -> setControllerColors(1, 0, 0))),
-                                () -> RobotGlobal.alliance == RobotGlobal.Alliance.BLUE
+                                () -> RobotStatus.alliance == RobotStatus.Alliance.BLUE
                         ),
                         Commands.runOnce(llVision::setYellow).andThen(Commands.runOnce(() -> setControllerColors(1, 1, 0))),
                         () -> llVision.getTargetColor() == LLVision.SampleColor.YELLOW

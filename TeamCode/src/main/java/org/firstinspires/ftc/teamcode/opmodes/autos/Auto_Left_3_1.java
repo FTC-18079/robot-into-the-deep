@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.autos;
 
 import static org.firstinspires.ftc.teamcode.autonomous.AutoConstants.ParkingLocation.*;
-import static org.firstinspires.ftc.teamcode.util.RobotGlobal.Alliance;
+import static org.firstinspires.ftc.teamcode.RobotStatus.Alliance;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -15,9 +15,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.RobotCore;
 import org.firstinspires.ftc.teamcode.RobotMap;
 import org.firstinspires.ftc.teamcode.arm.Arm;
-import org.firstinspires.ftc.teamcode.arm.ArmConstants;
 import org.firstinspires.ftc.teamcode.arm.commands.ArmCommands;
-import org.firstinspires.ftc.teamcode.arm.commands.MovePivotCommand;
 import org.firstinspires.ftc.teamcode.autonomous.AutoConstants;
 import org.firstinspires.ftc.teamcode.chassis.Chassis;
 import org.firstinspires.ftc.teamcode.chassis.commands.FollowPathCommand;
@@ -28,7 +26,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierCurve;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierLine;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
-import org.firstinspires.ftc.teamcode.util.RobotGlobal;
+import org.firstinspires.ftc.teamcode.RobotStatus;
 import org.firstinspires.ftc.teamcode.util.commands.Commands;
 import org.firstinspires.ftc.teamcode.vision.LLVision;
 
@@ -87,7 +85,7 @@ public class Auto_Left_3_1 extends LinearOpMode {
         telemetry.addData("Status", "Initializing hardware");
         telemetry.update();
         RobotMap.getInstance().init(hardwareMap);
-        RobotGlobal.resetValues();
+        RobotStatus.resetValues();
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
@@ -99,7 +97,7 @@ public class Auto_Left_3_1 extends LinearOpMode {
 
         // Create robot
         sleep(100);
-        RobotGlobal.robotPose = startingPose;
+        RobotStatus.robotPose = startingPose;
         buildPaths();
         robot = new RobotCore(
                 RobotCore.OpModeType.AUTO,
@@ -111,7 +109,7 @@ public class Auto_Left_3_1 extends LinearOpMode {
         // Schedule auto
         telemetry.addData("Status", "Scheduling commands");
         telemetry.update();
-        if (RobotGlobal.alliance != Alliance.NONE) robot.schedule(
+        if (RobotStatus.alliance != Alliance.NONE) robot.schedule(
                 autoSequence()
                 .andThen(new InstantCommand(Chassis.getInstance()::breakFollowing)));
 
@@ -120,10 +118,10 @@ public class Auto_Left_3_1 extends LinearOpMode {
 
         while (opModeInInit()) {
             telemetry.addData("Status", "Initialized, Ready to start");
-            telemetry.addData("Selected auto delay", RobotGlobal.delayMs);
-            telemetry.addData("Live view on", RobotGlobal.liveView);
-            telemetry.addData("Selected alliance", RobotGlobal.alliance);
-            telemetry.addData("Selected parking spot", RobotGlobal.parkingLocation);
+            telemetry.addData("Selected auto delay", RobotStatus.delayMs);
+            telemetry.addData("Live view on", RobotStatus.liveView);
+            telemetry.addData("Selected alliance", RobotStatus.alliance);
+            telemetry.addData("Selected parking spot", RobotStatus.parkingLocation);
             telemetry.update();
 
             // Sleep CPU a little
@@ -131,7 +129,7 @@ public class Auto_Left_3_1 extends LinearOpMode {
         }
 
         // Set a default alliance
-        if (RobotGlobal.alliance == Alliance.NONE) RobotGlobal.alliance = Alliance.BLUE;
+        if (RobotStatus.alliance == Alliance.NONE) RobotStatus.alliance = Alliance.BLUE;
 
         // Run robot
         while (opModeIsActive() && !isStopRequested()) {
@@ -165,7 +163,7 @@ public class Auto_Left_3_1 extends LinearOpMode {
         scoreThreePath = new Path(new BezierLine(new Point(collectThreePose), new Point(scoreThreePose)));
         scoreThreePath.setLinearHeadingInterpolation(collectThreePose.getHeading(), scoreThreePose.getHeading());
 
-        if (RobotGlobal.parkingLocation == OBSERVATION_ZONE) {
+        if (RobotStatus.parkingLocation == OBSERVATION_ZONE) {
             parkPath = new Path(new BezierCurve(new Point(scoreThreePose), new Point(AutoConstants.OBVZONE_PARKING_POSE)));
             parkPath.setLinearHeadingInterpolation(scoreThreePose.getHeading(), AutoConstants.OBVZONE_PARKING_POSE.getHeading());
         } else {
@@ -178,7 +176,7 @@ public class Auto_Left_3_1 extends LinearOpMode {
         return Commands.sequence(
                 Commands.runOnce(() -> Arm.getInstance().setScoreType(Arm.ScoreType.SPECIMEN)),
                 Commands.runOnce(LLVision.getInstance()::setYellow),
-                Commands.waitMillis(RobotGlobal.delayMs),
+                Commands.waitMillis(RobotStatus.delayMs),
                 // Drive up to chamber and score
                 Commands.parallel(
                         Commands.waitMillis(preloadPathDelay).andThen(new FollowPathCommand(scorePreloadPath, preloadMaxSpeed)),
@@ -254,24 +252,24 @@ public class Auto_Left_3_1 extends LinearOpMode {
 
     private void config() {
         // Add or remove delay
-        if (checkInputs(gamepad1.dpad_up, lastUp)) RobotGlobal.delayMs += 100;
-        if (checkInputs(gamepad1.dpad_down, lastDown) && RobotGlobal.delayMs > 0) RobotGlobal.delayMs -= 100;
+        if (checkInputs(gamepad1.dpad_up, lastUp)) RobotStatus.delayMs += 100;
+        if (checkInputs(gamepad1.dpad_down, lastDown) && RobotStatus.delayMs > 0) RobotStatus.delayMs -= 100;
         // Select alliance
         if (checkInputs(gamepad1.square, lastSquare)) {
-            switch(RobotGlobal.alliance) {
+            switch(RobotStatus.alliance) {
                 case NONE:
                 case RED:
-                    RobotGlobal.alliance = Alliance.BLUE;
+                    RobotStatus.alliance = Alliance.BLUE;
                     break;
                 case BLUE:
-                    RobotGlobal.alliance = Alliance.RED;
+                    RobotStatus.alliance = Alliance.RED;
                     break;
             }
         }
         // Toggle live view
-        if (checkInputs(gamepad1.cross, lastCross)) RobotGlobal.liveView = !RobotGlobal.liveView;
+        if (checkInputs(gamepad1.cross, lastCross)) RobotStatus.liveView = !RobotStatus.liveView;
         // Toggle parking pose
-        if (checkInputs(gamepad1.circle, lastCircle)) RobotGlobal.parkingLocation = RobotGlobal.parkingLocation == ASCENT_ZONE ? OBSERVATION_ZONE : ASCENT_ZONE;
+        if (checkInputs(gamepad1.circle, lastCircle)) RobotStatus.parkingLocation = RobotStatus.parkingLocation == ASCENT_ZONE ? OBSERVATION_ZONE : ASCENT_ZONE;
 
         // Set old inputs
         lastUp = gamepad1.dpad_up;
@@ -283,10 +281,10 @@ public class Auto_Left_3_1 extends LinearOpMode {
         telemetry.addData("Status", "Configuring Autonomous");
         telemetry.addData("Controls", "\nDelay: UP & DOWN \nToggle live view: CROSS \nSelect alliance: SQUARE \nParking pose: CIRCLE");
         telemetry.addLine();
-        telemetry.addData("Selected auto delay", RobotGlobal.delayMs);
-        telemetry.addData("Live view on", RobotGlobal.liveView);
-        telemetry.addData("Selected alliance", RobotGlobal.alliance);
-        telemetry.addData("Selected parking spot", RobotGlobal.parkingLocation);
+        telemetry.addData("Selected auto delay", RobotStatus.delayMs);
+        telemetry.addData("Live view on", RobotStatus.liveView);
+        telemetry.addData("Selected alliance", RobotStatus.alliance);
+        telemetry.addData("Selected parking spot", RobotStatus.parkingLocation);
         telemetry.update();
     }
 

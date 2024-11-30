@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.autonomous;
 import com.acmerobotics.dashboard.config.Config;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
-import org.firstinspires.ftc.teamcode.util.RobotGlobal;
+import org.firstinspires.ftc.teamcode.RobotStatus;
 
 // Class for storing poses
 @Config
@@ -43,7 +43,7 @@ public class AutoConstants {
     public static final Pose RIGHT_NEUTRAL_SAMPLE = new Pose(46, 121.25);
 
     public static Pose checkAlliance(Pose pose) {
-        if (RobotGlobal.alliance == RobotGlobal.Alliance.RED) return toRed(pose);
+        if (RobotStatus.alliance == RobotStatus.Alliance.RED) return toRed(pose);
         else return pose;
     }
 

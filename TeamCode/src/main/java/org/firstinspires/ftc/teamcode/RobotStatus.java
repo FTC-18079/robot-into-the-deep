@@ -1,11 +1,15 @@
-package org.firstinspires.ftc.teamcode.util;
+package org.firstinspires.ftc.teamcode;
 
 import org.firstinspires.ftc.teamcode.autonomous.AutoConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 
-public class RobotGlobal {
+public class RobotStatus {
     public enum Alliance {
-        RED, BLUE, NONE
+        NONE, RED, BLUE,
+    }
+
+    public enum RobotState {
+        DISABLED, AUTONOMOUS_INIT, AUTONOMOUS_ENABLED, TELEOP_INIT, TELEOP_ENABLED
     }
 
     public static long delayMs = 0;
@@ -13,10 +17,6 @@ public class RobotGlobal {
     public static boolean liveView = false;
     public static Pose robotPose = new Pose();
     public static AutoConstants.ParkingLocation parkingLocation = AutoConstants.ParkingLocation.ASCENT_ZONE;
-
-    public static void setRobotPose(Pose pose) {
-        robotPose = pose;
-    }
 
     public static void resetValues() {
         delayMs = 0;

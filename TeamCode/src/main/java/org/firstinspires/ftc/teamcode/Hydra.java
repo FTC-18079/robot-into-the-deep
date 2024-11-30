@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.Robot;
@@ -18,7 +20,6 @@ import org.firstinspires.ftc.teamcode.chassis.Chassis;
 import org.firstinspires.ftc.teamcode.chassis.commands.TeleOpDriveCommand;
 import org.firstinspires.ftc.teamcode.claw.Claw;
 import org.firstinspires.ftc.teamcode.claw.ClawConstants;
-import org.firstinspires.ftc.teamcode.util.RobotGlobal;
 import org.firstinspires.ftc.teamcode.util.SubsystemIF;
 import org.firstinspires.ftc.teamcode.util.commands.Commands;
 import org.firstinspires.ftc.teamcode.vision.LLVision;
@@ -44,9 +45,9 @@ public class Hydra extends Robot {
     private GamepadEx driveController;
     private GamepadEx manipController;
 
-    public static double DRIVE_SENSITIVITY = 1.1;
-    public static double ROTATIONAL_SENSITIVITY = 2.0;
-    public static double TRIGGER_DEADZONE = 0.1;
+    private static final double DRIVE_SENSITIVITY = 1.1;
+    private static final double ROTATIONAL_SENSITIVITY = 2.0;
+    private static final double TRIGGER_DEADZONE = 0.1;
 
     private final ElapsedTime timer = new ElapsedTime();
 
@@ -75,7 +76,7 @@ public class Hydra extends Robot {
         reset();
 
         // Update telemetry and hardwareMap objects
-        this.telemetry = telemetry;
+        this.telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         RobotMap.getInstance().init(hardwareMap);
 
         // Run autonomous init
@@ -86,7 +87,7 @@ public class Hydra extends Robot {
         reset();
 
         // Update telemetry and hardwareMap objects
-        this.telemetry = telemetry;
+        this.telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         RobotMap.getInstance().init(hardwareMap);
 
         // Update gamepad objects
@@ -154,7 +155,7 @@ public class Hydra extends Robot {
                         Commands.either(
                                 Commands.runOnce(LLVision.getInstance()::setBlue).andThen(setGamepadColors(0, 0, 1)),
                                 Commands.runOnce(LLVision.getInstance()::setRed).andThen(setGamepadColors(1, 0, 0)),
-                                () -> RobotGlobal.alliance == RobotGlobal.Alliance.BLUE
+                                () -> RobotStatus.alliance == RobotStatus.Alliance.BLUE
                         ),
                         Commands.runOnce(LLVision.getInstance()::setYellow).andThen(setGamepadColors(1, 1, 0)),
                         () -> LLVision.getInstance().getTargetColor() == LLVision.SampleColor.YELLOW

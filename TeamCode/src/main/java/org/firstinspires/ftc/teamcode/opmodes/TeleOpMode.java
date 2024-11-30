@@ -1,18 +1,16 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
-import static org.firstinspires.ftc.teamcode.util.RobotGlobal.Alliance.BLUE;
-import static org.firstinspires.ftc.teamcode.util.RobotGlobal.Alliance.RED;
+import static org.firstinspires.ftc.teamcode.RobotStatus.Alliance.BLUE;
+import static org.firstinspires.ftc.teamcode.RobotStatus.Alliance.RED;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.RobotCore;
 import org.firstinspires.ftc.teamcode.RobotMap;
-import org.firstinspires.ftc.teamcode.chassis.Chassis;
-import org.firstinspires.ftc.teamcode.util.RobotGlobal;
+import org.firstinspires.ftc.teamcode.RobotStatus;
 
 //@Photon
 @TeleOp(name = "TeleOp", group = "AAA")
@@ -31,19 +29,19 @@ public class TeleOpMode extends OpMode {
     public void init_loop() {
         // Allow for manual toggling of alliance
         if (gamepad1.square != lastSquare && gamepad1.square) {
-            switch(RobotGlobal.alliance) {
+            switch(RobotStatus.alliance) {
                 case NONE:
                 case RED:
-                    RobotGlobal.alliance = BLUE;
+                    RobotStatus.alliance = BLUE;
                     break;
                 case BLUE:
-                    RobotGlobal.alliance = RED;
+                    RobotStatus.alliance = RED;
                     break;
             }
         }
         lastSquare = gamepad1.square;
 
-        telemetry.addData("Alliance", RobotGlobal.alliance);
+        telemetry.addData("Alliance", RobotStatus.alliance);
 //        telemetry.addData("AprilTag FPS", robot.getFPS());
         telemetry.addData("Status", "Robot initialized, ready to enable");
         telemetry.update();
