@@ -70,17 +70,6 @@ public class Arm extends SubsystemBase implements SubsystemIF {
     // INITIALIZE
 
     @Override
-    public SubsystemIF initialize() {
-        return this;
-    }
-
-    @Override
-    public void onAutonomousInit() {
-        resetSlideEncoder();
-        resetPivotEncoder();
-    }
-
-    @Override
     public void onTeleopInit() {
         configureHardware();
         Commands.sequence(

@@ -31,17 +31,7 @@ public class Chassis extends SubsystemBase implements SubsystemIF {
         this.telemetry = RobotCore.getTelemetry();
     }
 
-    // INIT
-
-    @Override
-    public SubsystemIF initialize() {
-        return this;
-    }
-
-    @Override
-    public void onAutonomousInit() {
-
-    }
+    // INITIALIZE
 
     @Override
     public void onTeleopInit() {
