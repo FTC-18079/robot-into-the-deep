@@ -82,18 +82,23 @@ public class Auto_Right_0_4 extends AutoTemplate {
 
         behindOnePath = new Path(new BezierCurve(new Point(scorePreloadPose), new Point(27, 16, Point.CARTESIAN), new Point(64, 44, Point.CARTESIAN), new Point(behindOnePose)));
         behindOnePath.setConstantHeadingInterpolation(scorePreloadPose.getHeading());
+        behindOnePath.setPathEndTimeoutConstraint(0);
 
         pushOnePath = new Path(new BezierLine(new Point(behindOnePose), new Point(pushOnePose)));
         pushOnePath.setConstantHeadingInterpolation(behindOnePose.getHeading());
+        pushOnePath.setPathEndTimeoutConstraint(0);
 
         behindTwoPath = new Path(new BezierCurve(new Point(pushOnePose), new Point(64, 28, Point.CARTESIAN), new Point(behindTwoPose)));
         behindTwoPath.setConstantHeadingInterpolation(behindTwoPose.getHeading());
+        behindTwoPath.setPathEndTimeoutConstraint(0);
 
         pushTwoPath = new Path(new BezierLine(new Point(behindTwoPose), new Point(pushTwoPose)));
         pushTwoPath.setConstantHeadingInterpolation(pushTwoPose.getHeading());
+        pushTwoPath.setPathEndTimeoutConstraint(0);
 
         behindThreePath = new Path(new BezierCurve(new Point(pushTwoPose), new Point(64, 18, Point.CARTESIAN), new Point(behindThreePose)));
         behindThreePath.setConstantHeadingInterpolation(behindThreePose.getHeading());
+        behindThreePath.setPathEndTimeoutConstraint(0);
 
         pushThreePath = new Path(new BezierLine(new Point(behindThreePose), new Point(pushThreePose)));
         pushThreePath.setConstantHeadingInterpolation(pushThreePose.getHeading());

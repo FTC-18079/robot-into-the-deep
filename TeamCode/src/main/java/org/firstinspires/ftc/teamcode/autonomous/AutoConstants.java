@@ -32,7 +32,7 @@ public class AutoConstants {
 
     // Specimen collect poses
     public static double WALL_COLLECT_X_POSITION = 20;
-    public static double WALL_COLLECT_Y_POSITION = 32;
+    public static double WALL_COLLECT_Y_POSITION = 35;
 
     public static Pose checkAlliance(Pose pose) {
         if (RobotGlobal.alliance == RobotGlobal.Alliance.RED) return toRed(pose);
