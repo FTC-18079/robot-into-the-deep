@@ -60,6 +60,7 @@ public class Hydra extends Robot {
 
     @Override
     public void reset() {
+        RobotStatus.robotState = RobotStatus.RobotState.DISABLED;
         CommandScheduler.getInstance().reset();
         CommandScheduler.getInstance().cancelAll();
         CommandScheduler.getInstance().clearButtons();
@@ -74,6 +75,7 @@ public class Hydra extends Robot {
 
     public void autonomousInit(Telemetry telemetry, HardwareMap hardwareMap) {
         reset();
+        RobotStatus.robotState = RobotStatus.RobotState.AUTONOMOUS_INIT;
 
         // Update telemetry and hardwareMap objects
         this.telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -85,6 +87,7 @@ public class Hydra extends Robot {
 
     public void teleopInit(Telemetry telemetry, HardwareMap hardwareMap, Gamepad drive, Gamepad manip) {
         reset();
+        RobotStatus.robotState = RobotStatus.RobotState.TELEOP_INIT;
 
         // Update telemetry and hardwareMap objects
         this.telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -215,6 +218,10 @@ public class Hydra extends Robot {
 
     @Override
     public void run() {
+        // Update status out of init into enabled
+        if (!RobotStatus.isEnabled() && RobotStatus.isTeleop()) RobotStatus.robotState = RobotStatus.RobotState.TELEOP_ENABLED;
+        if (!RobotStatus.isEnabled() && !RobotStatus.isTeleop()) RobotStatus.robotState = RobotStatus.RobotState.AUTONOMOUS_ENABLED;
+
         // Clear hardware cache
         for (LynxModule hub : RobotMap.getInstance().getLynxModules()) {
             hub.clearBulkCache();

@@ -31,4 +31,8 @@ public class RobotStatus {
     public static boolean isEnabled() {
         return robotState == RobotState.TELEOP_ENABLED || robotState == RobotState.AUTONOMOUS_ENABLED;
     }
+
+    public static boolean isTeleop() {
+        return robotState == RobotState.TELEOP_INIT || robotState == RobotState.TELEOP_ENABLED;
+    }
 }
