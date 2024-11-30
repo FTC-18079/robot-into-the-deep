@@ -69,6 +69,11 @@ public class Arm extends SubsystemBase implements SubsystemIF {
     // INITIALIZE
 
     @Override
+    public void onAutonomousInit() {
+        configureHardware();
+    }
+
+    @Override
     public void onTeleopInit() {
         configureHardware();
         Commands.sequence(

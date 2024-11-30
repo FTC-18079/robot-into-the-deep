@@ -34,6 +34,11 @@ public class Chassis extends SubsystemBase implements SubsystemIF {
     // INITIALIZE
 
     @Override
+    public void onAutonomousInit() {
+        follower.initialize(RobotGlobal.robotPose);
+    }
+
+    @Override
     public void onTeleopInit() {
         follower.initialize(RobotGlobal.robotPose);
         follower.startTeleopDrive();

@@ -47,16 +47,22 @@ public class LLVision extends SubsystemBase implements SubsystemIF {
         telemetry = RobotCore.getTelemetry();
 
         targetColor = SampleColor.YELLOW;
-        setPipeline();
-        start();
     }
 
     // INITIALIZE
 
     @Override
+    public void onAutonomousInit() {
+        limelight = RobotMap.getInstance().LIMELIGHT;
+        start();
+        setPipeline();
+    }
+
+    @Override
     public void onTeleopInit() {
         limelight = RobotMap.getInstance().LIMELIGHT;
         start();
+        setPipeline();
     }
 
     // LIMELIGHT MANAGEMENT

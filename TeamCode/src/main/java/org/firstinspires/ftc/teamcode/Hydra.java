@@ -74,18 +74,26 @@ public class Hydra extends Robot {
     public void autonomousInit(Telemetry telemetry, HardwareMap hardwareMap) {
         reset();
 
+        // Update telemetry and hardwareMap objects
         this.telemetry = telemetry;
         RobotMap.getInstance().init(hardwareMap);
+
+        // Run autonomous init
+        subsystems.forEach(SubsystemIF::onAutonomousInit);
     }
 
     public void teleopInit(Telemetry telemetry, HardwareMap hardwareMap, Gamepad drive, Gamepad manip) {
         reset();
 
+        // Update telemetry and hardwareMap objects
         this.telemetry = telemetry;
         RobotMap.getInstance().init(hardwareMap);
+
+        // Update gamepad objects
         driveController = new GamepadEx(drive);
         manipController = new GamepadEx(manip);
 
+        // Run teleop init
         subsystems.forEach(SubsystemIF::onTeleopInit);
 
         // Chassis driving

@@ -39,6 +39,13 @@ public class Claw extends SubsystemBase implements SubsystemIF {
     // INIT
 
     @Override
+    public void onAutonomousInit() {
+        configureHardware();
+        setState(ClawConstants.REST_STATE);
+        periodic();
+    }
+
+    @Override
     public void onTeleopInit() {
         configureHardware();
         setState(ClawConstants.REST_STATE);
