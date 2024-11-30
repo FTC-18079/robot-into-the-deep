@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.util.hardware;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 public class SuccessMotor  {
     private DcMotorEx motor;
@@ -53,5 +54,13 @@ public class SuccessMotor  {
 
     public void setMode(DcMotor.RunMode mode) {
         motor.setMode(mode);
+    }
+
+    public MotorConfigurationType getMotorType() {
+        return motor.getMotorType();
+    }
+
+    public void setMotorType(MotorConfigurationType type) {
+        motor.setMotorType(type);
     }
 }

@@ -19,7 +19,7 @@ public class Chassis extends SubsystemBase implements SubsystemIF {
     boolean isRobotCentric;
     double m = 1.0;
 
-    private static Chassis INSTANCE = null;
+    private static final Chassis INSTANCE = new Chassis();
 
     public static Chassis getInstance() {
         return INSTANCE;
@@ -29,7 +29,6 @@ public class Chassis extends SubsystemBase implements SubsystemIF {
         isRobotCentric = false;
         follower = new Follower(new Pose());
         this.telemetry = RobotCore.getTelemetry();
-        INSTANCE = this;
     }
 
     // INIT
@@ -46,7 +45,8 @@ public class Chassis extends SubsystemBase implements SubsystemIF {
 
     @Override
     public void onTeleopInit() {
-        this.follower = new Follower(RobotGlobal.robotPose);
+        follower.initialize(RobotGlobal.robotPose);
+        follower.startTeleopDrive();
     }
 
     @Override
