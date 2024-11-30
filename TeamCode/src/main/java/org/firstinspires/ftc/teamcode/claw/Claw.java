@@ -20,13 +20,13 @@ public class Claw extends SubsystemBase implements SubsystemIF {
 
     ClawState state = new ClawState();
 
-    public static Claw INSTANCE = null;
+    public static Claw INSTANCE = new Claw();
 
     public static Claw getInstance() {
         return INSTANCE;
     }
 
-    public Claw() {
+    private Claw() {
         configureHardware();
 
         telemetry = RobotCore.getTelemetry();

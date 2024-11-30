@@ -19,8 +19,12 @@ import org.firstinspires.ftc.teamcode.claw.Claw;
 import org.firstinspires.ftc.teamcode.claw.ClawConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
+import org.firstinspires.ftc.teamcode.util.SubsystemIF;
 import org.firstinspires.ftc.teamcode.util.commands.Commands;
 import org.firstinspires.ftc.teamcode.vision.LLVision;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Config
 public class RobotCore extends Robot {
@@ -32,6 +36,7 @@ public class RobotCore extends Robot {
 //    ATVision atVision;
 
     // Subsystems
+    List<SubsystemIF> subsystems = new ArrayList<>();
     Chassis chassis;
     Arm arm;
     Claw claw;
@@ -93,10 +98,16 @@ public class RobotCore extends Robot {
     }
 
     public void initSubsystems() {
-        chassis = new Chassis();
-        arm = new Arm();
-        claw = new Claw();
-        llVision = new LLVision();
+        chassis = Chassis.getInstance();
+        arm = Arm.getInstance();
+        claw = Claw.getInstance();
+        llVision = LLVision.getInstance();
+
+        subsystems.add(chassis);
+        subsystems.add(arm);
+        subsystems.add(claw);
+        subsystems.add(llVision);
+
         register(chassis, arm, claw, llVision);
 
         chassis.setPosition(RobotGlobal.robotPose);
@@ -110,9 +121,10 @@ public class RobotCore extends Robot {
     public void setupOpMode(OpModeType type) {
         switch (type) {
             case TELEOP:
-                chassis.startTeleopDrive();
+                for (SubsystemIF s : subsystems) {
+                    s.onTeleopInit();
+                }
                 setDriveControls();
-                //Commands.runOnce(() -> setControllerColors(1, 1, 0)).andThen(new InstantCommand(llVision::setYellow));
                 break;
             case EMPTY:
                 schedule(Commands.none());

@@ -25,7 +25,7 @@ public class Chassis extends SubsystemBase implements SubsystemIF {
         return INSTANCE;
     }
 
-    public Chassis() {
+    private Chassis() {
         isRobotCentric = false;
         follower = new Follower(new Pose());
         this.telemetry = RobotCore.getTelemetry();
@@ -79,10 +79,6 @@ public class Chassis extends SubsystemBase implements SubsystemIF {
     public void resetHeading() {
         Pose oldPose = getPoseEstimate();
         follower.setPose(new Pose(oldPose.getX(), oldPose.getY()));
-    }
-
-    public void startTeleopDrive() {
-        follower.startTeleopDrive();
     }
 
     public void enableSlowMode() {

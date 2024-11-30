@@ -7,7 +7,6 @@ import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.robot.RobotState;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotCore;
@@ -52,7 +51,7 @@ public class Arm extends SubsystemBase implements SubsystemIF {
         return INSTANCE;
     }
 
-    public Arm() {
+    private Arm() {
         slidePid = new PIDController(SLIDE_kP, SLIDE_kI, SLIDE_kD);
         pivotPid = new PIDController(PIVOT_kP, PIVOT_kI, PIVOT_kD);
         alignmentPid = new PIDController(ALIGN_kP, ALIGN_kI, ALIGN_kD);

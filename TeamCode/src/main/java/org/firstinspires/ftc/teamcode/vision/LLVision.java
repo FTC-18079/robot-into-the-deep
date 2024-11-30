@@ -10,11 +10,12 @@ import org.firstinspires.ftc.teamcode.RobotCore;
 import org.firstinspires.ftc.teamcode.RobotMap;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.MathFunctions;
+import org.firstinspires.ftc.teamcode.util.SubsystemIF;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class LLVision extends SubsystemBase {
+public class LLVision extends SubsystemBase implements SubsystemIF {
     Limelight3A limelight;
     Telemetry telemetry;
     LLResult result;
@@ -23,7 +24,7 @@ public class LLVision extends SubsystemBase {
     SampleColor targetColor;
     double clawOverride = -1;
 
-    private static LLVision INSTANCE = null;
+    private static final LLVision INSTANCE = new LLVision();
 
     public static LLVision getInstance() {
         return INSTANCE;
@@ -41,14 +42,21 @@ public class LLVision extends SubsystemBase {
         }
     }
 
-    public LLVision() {
+    private LLVision() {
         limelight = RobotMap.getInstance().LIMELIGHT;
         telemetry = RobotCore.getTelemetry();
 
         targetColor = SampleColor.YELLOW;
         setPipeline();
         start();
-        INSTANCE = this;
+    }
+
+    // INITIALIZE
+
+    @Override
+    public void onTeleopInit() {
+        limelight = RobotMap.getInstance().LIMELIGHT;
+        start();
     }
 
     // LIMELIGHT MANAGEMENT
