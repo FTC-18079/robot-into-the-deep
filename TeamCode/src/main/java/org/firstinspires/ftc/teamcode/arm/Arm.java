@@ -82,6 +82,7 @@ public class Arm extends SubsystemBase implements SubsystemIF {
 
     @Override
     public void onTeleopInit() {
+        configureHardware();
         Commands.sequence(
                 //wait until enabled, then zero
         ).schedule();
@@ -89,7 +90,6 @@ public class Arm extends SubsystemBase implements SubsystemIF {
 
     // MOTOR SETUP
 
-    @Override
     public void configureHardware() {
         rightSlide = new SuccessMotor(RobotMap.getInstance().RIGHT_SLIDE);
         leftSlide = new SuccessMotor(RobotMap.getInstance().LEFT_SLIDE);

@@ -47,11 +47,7 @@ public class Chassis extends SubsystemBase implements SubsystemIF {
     public void onTeleopInit() {
         follower.initialize(RobotGlobal.robotPose);
         follower.startTeleopDrive();
-    }
-
-    @Override
-    public void configureHardware() {
-
+        setMaxPower(1.0);
     }
 
     public void setMaxPower(double power) {
