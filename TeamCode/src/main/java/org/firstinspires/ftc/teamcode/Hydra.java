@@ -232,6 +232,7 @@ public class Hydra extends Robot {
 
         // Log loop times
         telemetry.addLine();
+        telemetry.addData("Status", RobotStatus.robotState);
         telemetry.addData("Loop Time", timer.milliseconds());
         telemetry.update();
         timer.reset();
