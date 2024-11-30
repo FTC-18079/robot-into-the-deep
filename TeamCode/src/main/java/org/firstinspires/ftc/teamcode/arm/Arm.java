@@ -7,16 +7,19 @@ import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.robot.RobotState;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotCore;
 import org.firstinspires.ftc.teamcode.RobotMap;
+import org.firstinspires.ftc.teamcode.util.SubsystemIF;
+import org.firstinspires.ftc.teamcode.util.commands.Commands;
 import org.firstinspires.ftc.teamcode.util.hardware.SuccessCRServo;
 import org.firstinspires.ftc.teamcode.util.hardware.SuccessMotor;
 import org.firstinspires.ftc.teamcode.vision.LLVision;
 
 // TODO: clean up the janky zeroing
-public class Arm extends SubsystemBase {
+public class Arm extends SubsystemBase implements SubsystemIF {
     Telemetry telemetry;
 
     SuccessMotor rightSlide;
@@ -43,13 +46,51 @@ public class Arm extends SubsystemBase {
     ArmState state;
     ScoreType scoreType;
 
-    private static Arm INSTANCE = null;
+    private static final Arm INSTANCE = new Arm();
 
     public static Arm getInstance() {
         return INSTANCE;
     }
 
     public Arm() {
+        slidePid = new PIDController(SLIDE_kP, SLIDE_kI, SLIDE_kD);
+        pivotPid = new PIDController(PIVOT_kP, PIVOT_kI, PIVOT_kD);
+        alignmentPid = new PIDController(ALIGN_kP, ALIGN_kI, ALIGN_kD);
+        alignmentPid.setSetPoint(0.0);
+
+        configureHardware();
+        resetSlideEncoder();
+        resetPivotEncoder();
+
+        state = ArmState.STOW;
+        scoreType = ScoreType.SAMPLE;
+        telemetry = RobotCore.getTelemetry();
+    }
+
+    // INITIALIZE
+
+    @Override
+    public SubsystemIF initialize() {
+        return this;
+    }
+
+    @Override
+    public void onAutonomousInit() {
+        resetSlideEncoder();
+        resetPivotEncoder();
+    }
+
+    @Override
+    public void onTeleopInit() {
+        Commands.sequence(
+                //wait until enabled, then zero
+        ).schedule();
+    }
+
+    // MOTOR SETUP
+
+    @Override
+    public void configureHardware() {
         rightSlide = new SuccessMotor(RobotMap.getInstance().RIGHT_SLIDE);
         leftSlide = new SuccessMotor(RobotMap.getInstance().LEFT_SLIDE);
 
@@ -58,24 +99,6 @@ public class Arm extends SubsystemBase {
         rightPivot = new SuccessCRServo(RobotMap.getInstance().RIGHT_PIVOT);
         leftPivot = new SuccessCRServo(RobotMap.getInstance().LEFT_PIVOT);
 
-        slidePid = new PIDController(SLIDE_kP, SLIDE_kI, SLIDE_kD);
-        pivotPid = new PIDController(PIVOT_kP, PIVOT_kI, PIVOT_kD);
-        alignmentPid = new PIDController(ALIGN_kP, ALIGN_kI, ALIGN_kD);
-        alignmentPid.setSetPoint(0.0);
-
-        resetSlideEncoder();
-        resetPivotEncoder();
-        setupMotors();
-
-        state = ArmState.STOW;
-        scoreType = ScoreType.SAMPLE;
-        telemetry = RobotCore.getTelemetry();
-        INSTANCE = this;
-    }
-
-    // MOTOR SETUP
-
-    public void setupMotors() {
         rightSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 

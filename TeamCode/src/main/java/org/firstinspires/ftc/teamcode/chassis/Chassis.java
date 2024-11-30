@@ -11,8 +11,9 @@ import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.pedroPathing.util.Drawing;
 import org.firstinspires.ftc.teamcode.util.RobotGlobal;
+import org.firstinspires.ftc.teamcode.util.SubsystemIF;
 
-public class Chassis extends SubsystemBase {
+public class Chassis extends SubsystemBase implements SubsystemIF {
     Follower follower;
     Telemetry telemetry;
     boolean isRobotCentric;
@@ -29,6 +30,28 @@ public class Chassis extends SubsystemBase {
         follower = new Follower(new Pose());
         this.telemetry = RobotCore.getTelemetry();
         INSTANCE = this;
+    }
+
+    // INIT
+
+    @Override
+    public SubsystemIF initialize() {
+        return this;
+    }
+
+    @Override
+    public void onAutonomousInit() {
+
+    }
+
+    @Override
+    public void onTeleopInit() {
+        this.follower = new Follower(RobotGlobal.robotPose);
+    }
+
+    @Override
+    public void configureHardware() {
+
     }
 
     public void setMaxPower(double power) {
