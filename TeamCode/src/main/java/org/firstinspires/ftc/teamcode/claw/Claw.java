@@ -7,9 +7,10 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotCore;
 import org.firstinspires.ftc.teamcode.RobotMap;
 import org.firstinspires.ftc.teamcode.arm.Arm;
+import org.firstinspires.ftc.teamcode.util.SubsystemIF;
 import org.firstinspires.ftc.teamcode.vision.LLVision;
 
-public class Claw extends SubsystemBase {
+public class Claw extends SubsystemBase implements SubsystemIF {
     Telemetry telemetry;
 
     Servo claw;
@@ -26,17 +27,40 @@ public class Claw extends SubsystemBase {
     }
 
     public Claw() {
-        claw = RobotMap.getInstance().CLAW;
-        wrist = RobotMap.getInstance().WRIST;
-        jointOne = RobotMap.getInstance().JOINT_ONE;
-        jointTwo = RobotMap.getInstance().JOINT_TWO;
+        configureHardware();
 
         telemetry = RobotCore.getTelemetry();
         state.clawPos = ClawConstants.REST_STATE.clawPos;
         state.wristPos = ClawConstants.REST_STATE.wristPos;
         state.jointOnePos = ClawConstants.REST_STATE.jointOnePos;
         state.jointTwoPos = ClawConstants.REST_STATE.jointTwoPos;
-        INSTANCE = this;
+    }
+
+    // INIT
+
+    @Override
+    public SubsystemIF initialize() {
+        return this;
+    }
+
+    @Override
+    public void onAutonomousInit() {
+
+    }
+
+    @Override
+    public void onTeleopInit() {
+        configureHardware();
+        setState(ClawConstants.REST_STATE);
+    }
+
+    // HARDWARE SETUP
+
+    public void configureHardware() {
+        claw = RobotMap.getInstance().CLAW;
+        wrist = RobotMap.getInstance().WRIST;
+        jointOne = RobotMap.getInstance().JOINT_ONE;
+        jointTwo = RobotMap.getInstance().JOINT_TWO;
     }
 
     // GETTERS
