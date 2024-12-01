@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.RobotCore;
+import org.firstinspires.ftc.teamcode.Hydra;
 import org.firstinspires.ftc.teamcode.RobotMap;
 import org.firstinspires.ftc.teamcode.util.SubsystemIF;
 import org.firstinspires.ftc.teamcode.util.commands.Commands;
@@ -57,24 +57,23 @@ public class Arm extends SubsystemBase implements SubsystemIF {
         alignmentPid = new PIDController(ALIGN_kP, ALIGN_kI, ALIGN_kD);
         alignmentPid.setSetPoint(0.0);
 
-        configureHardware();
-        resetSlideEncoder();
-        resetPivotEncoder();
-
         state = ArmState.STOW;
         scoreType = ScoreType.SAMPLE;
-        telemetry = RobotCore.getTelemetry();
     }
 
     // INITIALIZE
 
     @Override
     public void onAutonomousInit() {
+        telemetry = Hydra.getInstance().getTelemetry();
         configureHardware();
+        resetSlideEncoder();
+        resetPivotEncoder();
     }
 
     @Override
     public void onTeleopInit() {
+        telemetry = Hydra.getInstance().getTelemetry();
         configureHardware();
         Commands.sequence(
                 //wait until enabled, then zero

@@ -6,7 +6,7 @@ import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.RobotCore;
+import org.firstinspires.ftc.teamcode.Hydra;
 import org.firstinspires.ftc.teamcode.RobotMap;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.MathFunctions;
@@ -43,9 +43,6 @@ public class LLVision extends SubsystemBase implements SubsystemIF {
     }
 
     private LLVision() {
-        limelight = RobotMap.getInstance().LIMELIGHT;
-        telemetry = RobotCore.getTelemetry();
-
         targetColor = SampleColor.YELLOW;
     }
 
@@ -53,6 +50,7 @@ public class LLVision extends SubsystemBase implements SubsystemIF {
 
     @Override
     public void onAutonomousInit() {
+        telemetry = Hydra.getInstance().getTelemetry();
         limelight = RobotMap.getInstance().LIMELIGHT;
         start();
         setPipeline();
@@ -60,6 +58,7 @@ public class LLVision extends SubsystemBase implements SubsystemIF {
 
     @Override
     public void onTeleopInit() {
+        telemetry = Hydra.getInstance().getTelemetry();
         limelight = RobotMap.getInstance().LIMELIGHT;
         start();
         setPipeline();
@@ -77,7 +76,6 @@ public class LLVision extends SubsystemBase implements SubsystemIF {
 
     /**
      * Switches the limelight's pipeline
-     *
      */
     private void setPipeline() {
         limelight.pipelineSwitch(targetColor.index);

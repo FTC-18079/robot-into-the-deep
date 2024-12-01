@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.util.Log;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.Command;
@@ -54,6 +56,7 @@ public class Hydra extends Robot {
     private Hydra() {
         reset();
         robotInit();
+        Log.i("Hydra", "ROBOT CREATED SUCCESSFULLY");
     }
 
     // INITIALIZE
@@ -67,6 +70,7 @@ public class Hydra extends Robot {
     }
 
     public void robotInit() {
+        subsystems.clear();
         subsystems.add(Chassis.getInstance());
         subsystems.add(Arm.getInstance());
         subsystems.add(Claw.getInstance());

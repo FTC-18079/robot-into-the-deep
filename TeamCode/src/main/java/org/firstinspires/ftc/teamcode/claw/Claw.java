@@ -4,11 +4,9 @@ import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.RobotCore;
+import org.firstinspires.ftc.teamcode.Hydra;
 import org.firstinspires.ftc.teamcode.RobotMap;
-import org.firstinspires.ftc.teamcode.arm.Arm;
 import org.firstinspires.ftc.teamcode.util.SubsystemIF;
-import org.firstinspires.ftc.teamcode.vision.LLVision;
 
 public class Claw extends SubsystemBase implements SubsystemIF {
     Telemetry telemetry;
@@ -20,16 +18,13 @@ public class Claw extends SubsystemBase implements SubsystemIF {
 
     ClawState state = new ClawState();
 
-    public static Claw INSTANCE = new Claw();
+    private static final Claw INSTANCE = new Claw();
 
     public static Claw getInstance() {
         return INSTANCE;
     }
 
     private Claw() {
-        configureHardware();
-
-        telemetry = RobotCore.getTelemetry();
         state.clawPos = ClawConstants.REST_STATE.clawPos;
         state.wristPos = ClawConstants.REST_STATE.wristPos;
         state.jointOnePos = ClawConstants.REST_STATE.jointOnePos;
@@ -40,6 +35,7 @@ public class Claw extends SubsystemBase implements SubsystemIF {
 
     @Override
     public void onAutonomousInit() {
+        telemetry = Hydra.getInstance().getTelemetry();
         configureHardware();
         setState(ClawConstants.REST_STATE);
         periodic();
@@ -47,6 +43,7 @@ public class Claw extends SubsystemBase implements SubsystemIF {
 
     @Override
     public void onTeleopInit() {
+        telemetry = Hydra.getInstance().getTelemetry();
         configureHardware();
         setState(ClawConstants.REST_STATE);
     }

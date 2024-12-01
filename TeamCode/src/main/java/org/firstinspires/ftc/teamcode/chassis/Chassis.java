@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.chassis;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.RobotCore;
+import org.firstinspires.ftc.teamcode.Hydra;
 import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
@@ -24,20 +24,20 @@ public class Chassis extends SubsystemBase implements SubsystemIF {
 
     private Chassis() {
         isRobotCentric = false;
-        follower = new Follower(new Pose());
-        this.telemetry = RobotCore.getTelemetry();
     }
 
     // INITIALIZE
 
     @Override
     public void onAutonomousInit() {
-        follower.initialize(RobotStatus.robotPose);
+        telemetry = Hydra.getInstance().getTelemetry();
+        follower = new Follower(new Pose());
     }
 
     @Override
     public void onTeleopInit() {
-        follower.initialize(RobotStatus.robotPose);
+        telemetry = Hydra.getInstance().getTelemetry();
+        follower = new Follower(new Pose());
         follower.startTeleopDrive();
         setMaxPower(1.0);
     }
