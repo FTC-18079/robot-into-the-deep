@@ -87,12 +87,6 @@ public class NewAuto_Left_3_1 extends AutoTemplate {
     }
 
     @Override
-    protected void initSequence() {
-        Claw.getInstance().setState(ClawConstants.REST_STATE);
-        Claw.getInstance().periodic();
-    }
-
-    @Override
     protected Command makeAutoSequence() {
         return Commands.sequence(
                 // Drive up to chamber and score

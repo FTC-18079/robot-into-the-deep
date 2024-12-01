@@ -69,12 +69,6 @@ public class Auto_Right_0_4 extends AutoTemplate {
     }
 
     @Override
-    protected void initSequence() {
-        Claw.getInstance().setState(ClawConstants.REST_STATE);
-        Claw.getInstance().periodic();
-    }
-
-    @Override
     protected void buildPaths() {
         scorePreloadPath = new Path(new BezierLine(new Point(startingPose), new Point(scorePreloadPose)));
         scorePreloadPath.setConstantHeadingInterpolation(scorePreloadPose.getHeading());

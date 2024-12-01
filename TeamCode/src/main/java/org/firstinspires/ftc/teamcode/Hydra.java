@@ -87,6 +87,7 @@ public class Hydra extends Robot {
     public void autonomousInit(Telemetry telemetry, HardwareMap hardwareMap) {
         reset();
         registerSubsystems();
+        RobotStatus.resetValues();
         RobotStatus.robotState = RobotStatus.RobotState.AUTONOMOUS_INIT;
 
         // Update telemetry and hardwareMap objects

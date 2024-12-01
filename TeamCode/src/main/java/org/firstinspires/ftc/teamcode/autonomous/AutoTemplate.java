@@ -1,14 +1,9 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.Command;
-import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.RobotCore;
-import org.firstinspires.ftc.teamcode.RobotMap;
-import org.firstinspires.ftc.teamcode.chassis.Chassis;
+import org.firstinspires.ftc.teamcode.Hydra;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.RobotStatus;
 import org.firstinspires.ftc.teamcode.util.commands.Commands;
@@ -16,7 +11,7 @@ import org.firstinspires.ftc.teamcode.util.commands.Commands;
 import static org.firstinspires.ftc.teamcode.RobotStatus.Alliance.*;
 
 public abstract class AutoTemplate extends LinearOpMode {
-    protected RobotCore robot;
+    protected final Hydra robot = Hydra.getInstance();
 
     boolean lastUp;
     boolean lastDown;
@@ -27,12 +22,8 @@ public abstract class AutoTemplate extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         // Init hardware
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         telemetry.addData("Status", "Initializing hardware");
         telemetry.update();
-
-        RobotMap.getInstance().init(hardwareMap);
-        RobotStatus.resetValues();
 
         // Configure auto variables
         while (opModeInInit() && !gamepad1.options) {
@@ -44,24 +35,17 @@ public abstract class AutoTemplate extends LinearOpMode {
         RobotStatus.robotPose = getStartingPose();
         sleep(100);
         buildPaths();
-        robot = new RobotCore(
-                RobotCore.OpModeType.AUTO,
-                telemetry,
-                gamepad1,
-                gamepad2
-        );
+        robot.autonomousInit(telemetry, hardwareMap);
 
         // Schedule auto
         telemetry.addData("Status", "Scheduling commands");
         telemetry.update();
-        if (RobotStatus.alliance != NONE) robot.schedule(
-                Commands.waitMillis(RobotStatus.delayMs)
-                .andThen(makeAutoSequence())
-                .andThen(Commands.runOnce(Chassis.getInstance()::breakFollowing))
-        );
-
-        // Move init servos
-        initSequence();
+        if (RobotStatus.alliance != NONE) {
+            Commands.waitUntil(RobotStatus::isEnabled)
+                    .andThen(Commands.waitMillis(RobotStatus.delayMs))
+                    .andThen(makeAutoSequence())
+                    .schedule();
+        }
 
         while (opModeInInit()) {
             telemetry.addData("Status", "Initialized, Ready to start");
@@ -81,9 +65,6 @@ public abstract class AutoTemplate extends LinearOpMode {
         while (opModeIsActive() && !isStopRequested()) {
             robot.run();
         }
-
-        CommandScheduler.getInstance().cancelAll();
-        CommandScheduler.getInstance().reset();
     }
 
     public void config() {
@@ -126,8 +107,6 @@ public abstract class AutoTemplate extends LinearOpMode {
     }
 
     protected abstract Pose getStartingPose();
-
-    protected abstract void initSequence();
 
     protected abstract void buildPaths();
 

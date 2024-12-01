@@ -11,8 +11,8 @@ import org.firstinspires.ftc.teamcode.RobotStatus;
 
 @TeleOp(name = "Teleop", group = "AAA")
 public class TeleOpMode extends OpMode {
-    Hydra hydra = Hydra.getInstance();
-    boolean lastSquare = false;
+    private final Hydra hydra = Hydra.getInstance();
+    private boolean lastSquare = false;
 
     @Override
     public void init() {
