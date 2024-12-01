@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.opmodes.autos;
 
-import static org.firstinspires.ftc.teamcode.autonomous.AutoConstants.ParkingLocation.OBSERVATION_ZONE;
-
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.Command;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -86,13 +84,8 @@ public class NewAuto_Left_3_1 extends AutoTemplate {
         scoreThreePath = new Path(new BezierLine(new Point(collectThreePose), new Point(scoreThreePose)));
         scoreThreePath.setLinearHeadingInterpolation(collectThreePose.getHeading(), scoreThreePose.getHeading());
 
-        if (RobotGlobal.parkingLocation == OBSERVATION_ZONE) {
-            parkPath = new Path(new BezierCurve(new Point(scoreThreePose), new Point(AutoConstants.OBVZONE_PARKING_POSE)));
-            parkPath.setLinearHeadingInterpolation(scoreThreePose.getHeading(), AutoConstants.OBVZONE_PARKING_POSE.getHeading());
-        } else {
-            parkPath = new Path(new BezierCurve(new Point(scoreThreePose), new Point(60, 122, Point.CARTESIAN), new Point(AutoConstants.ASCENT_PARKING_POSE)));
-            parkPath.setLinearHeadingInterpolation(scoreThreePose.getHeading(), AutoConstants.ASCENT_PARKING_POSE.getHeading());
-        }
+        parkPath = new Path(new BezierCurve(new Point(scoreThreePose), new Point(60, 122, Point.CARTESIAN), new Point(AutoConstants.ASCENT_PARKING_POSE)));
+        parkPath.setLinearHeadingInterpolation(scoreThreePose.getHeading(), AutoConstants.ASCENT_PARKING_POSE.getHeading());
     }
 
     @Override

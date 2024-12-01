@@ -90,8 +90,8 @@ public class Arm extends SubsystemBase {
     }
 
     public void resetSlideEncoder() {
-        rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     public void resetPivotEncoder() {

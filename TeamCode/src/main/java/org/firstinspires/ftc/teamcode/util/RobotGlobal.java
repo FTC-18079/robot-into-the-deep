@@ -12,7 +12,6 @@ public class RobotGlobal {
     public static Alliance alliance = Alliance.NONE;
     public static boolean liveView = false;
     public static Pose robotPose = new Pose();
-    public static AutoConstants.ParkingLocation parkingLocation = AutoConstants.ParkingLocation.ASCENT_ZONE;
 
     public static void setRobotPose(Pose pose) {
         robotPose = pose;
@@ -23,6 +22,5 @@ public class RobotGlobal {
         alliance = Alliance.NONE;
         liveView = false;
         robotPose = new Pose();
-        parkingLocation = AutoConstants.ParkingLocation.ASCENT_ZONE;
     }
 }
