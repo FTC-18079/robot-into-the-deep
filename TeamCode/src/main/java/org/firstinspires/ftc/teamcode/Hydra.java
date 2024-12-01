@@ -56,7 +56,7 @@ public class Hydra extends Robot {
     private Hydra() {
         reset();
         robotInit();
-        Log.i("Hydra", "ROBOT CREATED SUCCESSFULLY");
+        Log.i("Hydra", "============ROBOT CREATED SUCCESSFULLY============");
     }
 
     // INITIALIZE
@@ -67,15 +67,16 @@ public class Hydra extends Robot {
         CommandScheduler.getInstance().reset();
         CommandScheduler.getInstance().cancelAll();
         CommandScheduler.getInstance().clearButtons();
+        Log.i("Hydra", "============COMMAND SCHEDULER CLEARED============");
     }
 
-    public void registerSubsystems() {
+    private void registerSubsystems() {
         for (SubsystemIF s : subsystems) {
             register(s);
         }
     }
 
-    public void robotInit() {
+    private void robotInit() {
         subsystems.clear();
         subsystems.add(Chassis.getInstance().initialize());
         subsystems.add(Arm.getInstance().initialize());
@@ -96,6 +97,7 @@ public class Hydra extends Robot {
 
         // Run autonomous init
         subsystems.forEach(SubsystemIF::onAutonomousInit);
+        Log.i("Hydra", "============INITIALIZED AUTONOMOUS============");
     }
 
     public void teleopInit(Telemetry telemetry, HardwareMap hardwareMap, Gamepad drive, Gamepad manip) {
@@ -188,11 +190,13 @@ public class Hydra extends Robot {
                         Commands.waitMillis(200),
                         Commands.runOnce(() -> Claw.getInstance().setState(ClawConstants.REST_STATE))
                 ));
+
+        Log.i("Hydra", "============INITIALIZED TELEOP============");
     }
 
     // GAMEPAD INTERACTION
 
-    public double applyResponseCurve(double value, double power) {
+    private double applyResponseCurve(double value, double power) {
         return value * Math.pow(Math.abs(value), power - 1);
     }
 
@@ -202,7 +206,7 @@ public class Hydra extends Robot {
      * @param gamepads the controllers to rumble
      * @return an empty command
      */
-    public Command rumble(int ms, GamepadEx... gamepads) {
+    private Command rumble(int ms, GamepadEx... gamepads) {
         for(GamepadEx g : gamepads) {
             g.gamepad.rumble(1, 1, ms);
         }
@@ -216,7 +220,7 @@ public class Hydra extends Robot {
      * @param b the green value of the color
      * @return an empty command
      */
-    public Command setGamepadColors(double r, double g, double b) {
+    private Command setGamepadColors(double r, double g, double b) {
         driveController.gamepad.setLedColor(r, g, b, -1);
         manipController.gamepad.setLedColor(r, g, b, -1);
         return Commands.none();
