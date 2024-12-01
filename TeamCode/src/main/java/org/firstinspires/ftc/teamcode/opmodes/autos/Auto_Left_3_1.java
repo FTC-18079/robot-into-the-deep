@@ -38,7 +38,7 @@ import org.firstinspires.ftc.teamcode.vision.LLVision;
 @Config
 @Autonomous(name = "Left Side 3+1", group = "Auto")
 public class Auto_Left_3_1 extends LinearOpMode {
-    private final Hydra hydra = Hydra.getInstance();
+    private final Hydra robot = Hydra.getInstance();
 
     boolean lastUp;
     boolean lastDown;
@@ -90,7 +90,7 @@ public class Auto_Left_3_1 extends LinearOpMode {
         sleep(100);
         RobotStatus.robotPose = startingPose;
         buildPaths();
-        hydra.autonomousInit(telemetry, hardwareMap);
+        robot.autonomousInit(telemetry, hardwareMap);
 
         // Schedule auto
         telemetry.addData("Status", "Scheduling commands");
@@ -121,7 +121,7 @@ public class Auto_Left_3_1 extends LinearOpMode {
 
         // Run robot
         while (opModeIsActive() && !isStopRequested()) {
-            hydra.run();
+            robot.run();
         }
 
         CommandScheduler.getInstance().cancelAll();
