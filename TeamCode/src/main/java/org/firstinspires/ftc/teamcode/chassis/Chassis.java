@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.chassis;
 
-import com.arcrobotics.ftclib.command.SubsystemBase;
-
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Hydra;
 import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
@@ -10,7 +8,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.RobotStatus;
 import org.firstinspires.ftc.teamcode.util.SubsystemIF;
 
-public class Chassis extends SubsystemBase implements SubsystemIF {
+public class Chassis extends SubsystemIF {
     Follower follower;
     Telemetry telemetry;
     boolean isRobotCentric;

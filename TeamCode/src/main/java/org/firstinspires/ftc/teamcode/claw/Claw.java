@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.Hydra;
 import org.firstinspires.ftc.teamcode.RobotMap;
 import org.firstinspires.ftc.teamcode.util.SubsystemIF;
 
-public class Claw extends SubsystemBase implements SubsystemIF {
+public class Claw extends SubsystemIF {
     Telemetry telemetry;
 
     Servo claw;

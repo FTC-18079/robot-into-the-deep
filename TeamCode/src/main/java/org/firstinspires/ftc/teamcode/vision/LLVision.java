@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.vision;
 
-import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
@@ -15,7 +14,7 @@ import org.firstinspires.ftc.teamcode.util.SubsystemIF;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LLVision extends SubsystemBase implements SubsystemIF {
+public class LLVision extends SubsystemIF {
     Limelight3A limelight;
     Telemetry telemetry;
     LLResult result;

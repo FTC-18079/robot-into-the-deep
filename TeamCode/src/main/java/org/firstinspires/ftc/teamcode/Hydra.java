@@ -71,10 +71,13 @@ public class Hydra extends Robot {
 
     public void robotInit() {
         subsystems.clear();
-        subsystems.add(Chassis.getInstance());
-        subsystems.add(Arm.getInstance());
-        subsystems.add(Claw.getInstance());
-        subsystems.add(LLVision.getInstance());
+        subsystems.add(Chassis.getInstance().initialize());
+        subsystems.add(Arm.getInstance().initialize());
+        subsystems.add(Claw.getInstance().initialize());
+        subsystems.add(LLVision.getInstance().initialize());
+        for (SubsystemIF s : subsystems) {
+            register(s);
+        }
     }
 
     public void autonomousInit(Telemetry telemetry, HardwareMap hardwareMap) {
