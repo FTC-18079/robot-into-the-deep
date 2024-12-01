@@ -69,19 +69,24 @@ public class Hydra extends Robot {
         CommandScheduler.getInstance().clearButtons();
     }
 
+    public void registerSubsystems() {
+        for (SubsystemIF s : subsystems) {
+            register(s);
+        }
+    }
+
     public void robotInit() {
         subsystems.clear();
         subsystems.add(Chassis.getInstance().initialize());
         subsystems.add(Arm.getInstance().initialize());
         subsystems.add(Claw.getInstance().initialize());
         subsystems.add(LLVision.getInstance().initialize());
-        for (SubsystemIF s : subsystems) {
-            register(s);
-        }
+        registerSubsystems();
     }
 
     public void autonomousInit(Telemetry telemetry, HardwareMap hardwareMap) {
         reset();
+        registerSubsystems();
         RobotStatus.robotState = RobotStatus.RobotState.AUTONOMOUS_INIT;
 
         // Update telemetry and hardwareMap objects
@@ -94,6 +99,7 @@ public class Hydra extends Robot {
 
     public void teleopInit(Telemetry telemetry, HardwareMap hardwareMap, Gamepad drive, Gamepad manip) {
         reset();
+        registerSubsystems();
         RobotStatus.robotState = RobotStatus.RobotState.TELEOP_INIT;
 
         // Update telemetry and hardwareMap objects
