@@ -1,22 +1,18 @@
 package org.firstinspires.ftc.teamcode.opmodes.autos;
 
 import static org.firstinspires.ftc.teamcode.RobotStatus.Alliance;
+import static org.firstinspires.ftc.teamcode.RobotStatus.Alliance.NONE;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.CommandScheduler;
-import com.arcrobotics.ftclib.command.InstantCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.RobotCore;
-import org.firstinspires.ftc.teamcode.RobotMap;
+import org.firstinspires.ftc.teamcode.Hydra;
 import org.firstinspires.ftc.teamcode.arm.Arm;
 import org.firstinspires.ftc.teamcode.arm.commands.ArmCommands;
 import org.firstinspires.ftc.teamcode.autonomous.AutoConstants;
-import org.firstinspires.ftc.teamcode.chassis.Chassis;
 import org.firstinspires.ftc.teamcode.chassis.commands.FollowPathCommand;
 import org.firstinspires.ftc.teamcode.claw.Claw;
 import org.firstinspires.ftc.teamcode.claw.ClawConstants;
@@ -42,7 +38,7 @@ import org.firstinspires.ftc.teamcode.vision.LLVision;
 @Config
 @Autonomous(name = "Left Side 3+1", group = "Auto")
 public class Auto_Left_3_1 extends LinearOpMode {
-    RobotCore robot;
+    private final Hydra hydra = Hydra.getInstance();
 
     boolean lastUp;
     boolean lastDown;
@@ -83,10 +79,6 @@ public class Auto_Left_3_1 extends LinearOpMode {
         // Init hardware
         telemetry.addData("Status", "Initializing hardware");
         telemetry.update();
-        RobotMap.getInstance().init(hardwareMap);
-        RobotStatus.resetValues();
-
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         // Configure auto variables
         while (opModeInInit() && !gamepad1.options) {
@@ -98,19 +90,17 @@ public class Auto_Left_3_1 extends LinearOpMode {
         sleep(100);
         RobotStatus.robotPose = startingPose;
         buildPaths();
-        robot = new RobotCore(
-                RobotCore.OpModeType.AUTO,
-                telemetry,
-                gamepad1,
-                gamepad2
-        );
+        hydra.autonomousInit(telemetry, hardwareMap);
 
         // Schedule auto
         telemetry.addData("Status", "Scheduling commands");
         telemetry.update();
-        if (RobotStatus.alliance != Alliance.NONE) robot.schedule(
-                autoSequence()
-                .andThen(new InstantCommand(Chassis.getInstance()::breakFollowing)));
+        if (RobotStatus.alliance != NONE) {
+            Commands.waitUntil(RobotStatus::isEnabled)
+                    .andThen(Commands.waitMillis(RobotStatus.delayMs))
+                    .andThen(autoSequence())
+                    .schedule();
+        }
 
         Claw.getInstance().setState(ClawConstants.REST_STATE);
         Claw.getInstance().periodic();
@@ -131,7 +121,7 @@ public class Auto_Left_3_1 extends LinearOpMode {
 
         // Run robot
         while (opModeIsActive() && !isStopRequested()) {
-            robot.run();
+            hydra.run();
         }
 
         CommandScheduler.getInstance().cancelAll();
