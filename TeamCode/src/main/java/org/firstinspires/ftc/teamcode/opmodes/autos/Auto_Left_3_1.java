@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.opmodes.autos;
 
-import static org.firstinspires.ftc.teamcode.autonomous.AutoConstants.ParkingLocation.*;
 import static org.firstinspires.ftc.teamcode.RobotStatus.Alliance;
 
 import com.acmerobotics.dashboard.FtcDashboard;
@@ -121,7 +120,6 @@ public class Auto_Left_3_1 extends LinearOpMode {
             telemetry.addData("Selected auto delay", RobotStatus.delayMs);
             telemetry.addData("Live view on", RobotStatus.liveView);
             telemetry.addData("Selected alliance", RobotStatus.alliance);
-            telemetry.addData("Selected parking spot", RobotStatus.parkingLocation);
             telemetry.update();
 
             // Sleep CPU a little
@@ -163,13 +161,8 @@ public class Auto_Left_3_1 extends LinearOpMode {
         scoreThreePath = new Path(new BezierLine(new Point(collectThreePose), new Point(scoreThreePose)));
         scoreThreePath.setLinearHeadingInterpolation(collectThreePose.getHeading(), scoreThreePose.getHeading());
 
-        if (RobotStatus.parkingLocation == OBSERVATION_ZONE) {
-            parkPath = new Path(new BezierCurve(new Point(scoreThreePose), new Point(AutoConstants.OBVZONE_PARKING_POSE)));
-            parkPath.setLinearHeadingInterpolation(scoreThreePose.getHeading(), AutoConstants.OBVZONE_PARKING_POSE.getHeading());
-        } else {
-            parkPath = new Path(new BezierCurve(new Point(scoreThreePose), new Point(60, 122, Point.CARTESIAN), new Point(AutoConstants.ASCENT_PARKING_POSE)));
-            parkPath.setLinearHeadingInterpolation(scoreThreePose.getHeading(), AutoConstants.ASCENT_PARKING_POSE.getHeading());
-        }
+        parkPath = new Path(new BezierCurve(new Point(scoreThreePose), new Point(60, 122, Point.CARTESIAN), new Point(AutoConstants.ASCENT_PARKING_POSE)));
+        parkPath.setLinearHeadingInterpolation(scoreThreePose.getHeading(), AutoConstants.ASCENT_PARKING_POSE.getHeading());
     }
 
     private Command autoSequence() {
@@ -268,8 +261,6 @@ public class Auto_Left_3_1 extends LinearOpMode {
         }
         // Toggle live view
         if (checkInputs(gamepad1.cross, lastCross)) RobotStatus.liveView = !RobotStatus.liveView;
-        // Toggle parking pose
-        if (checkInputs(gamepad1.circle, lastCircle)) RobotStatus.parkingLocation = RobotStatus.parkingLocation == ASCENT_ZONE ? OBSERVATION_ZONE : ASCENT_ZONE;
 
         // Set old inputs
         lastUp = gamepad1.dpad_up;
@@ -284,7 +275,6 @@ public class Auto_Left_3_1 extends LinearOpMode {
         telemetry.addData("Selected auto delay", RobotStatus.delayMs);
         telemetry.addData("Live view on", RobotStatus.liveView);
         telemetry.addData("Selected alliance", RobotStatus.alliance);
-        telemetry.addData("Selected parking spot", RobotStatus.parkingLocation);
         telemetry.update();
     }
 

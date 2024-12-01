@@ -13,12 +13,10 @@ import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.RobotStatus;
 import org.firstinspires.ftc.teamcode.util.commands.Commands;
 
-import static org.firstinspires.ftc.teamcode.autonomous.AutoConstants.ParkingLocation.*;
 import static org.firstinspires.ftc.teamcode.RobotStatus.Alliance.*;
 
 public abstract class AutoTemplate extends LinearOpMode {
     protected RobotCore robot;
-    protected Pose startingPose;
 
     boolean lastUp;
     boolean lastDown;
@@ -70,7 +68,6 @@ public abstract class AutoTemplate extends LinearOpMode {
             telemetry.addData("Selected auto delay", RobotStatus.delayMs);
             telemetry.addData("Live view on", RobotStatus.liveView);
             telemetry.addData("Selected alliance", RobotStatus.alliance);
-            telemetry.addData("Selected parking spot", RobotStatus.parkingLocation);
             telemetry.update();
 
             // Sleep CPU a little
@@ -107,8 +104,6 @@ public abstract class AutoTemplate extends LinearOpMode {
         }
         // Toggle live view
         if (checkInputs(gamepad1.cross, lastCross)) RobotStatus.liveView = !RobotStatus.liveView;
-        // Toggle parking pose
-        if (checkInputs(gamepad1.circle, lastCircle)) RobotStatus.parkingLocation = RobotStatus.parkingLocation == ASCENT_ZONE ? OBSERVATION_ZONE : ASCENT_ZONE;
 
         // Set old inputs
         lastUp = gamepad1.dpad_up;
@@ -118,12 +113,11 @@ public abstract class AutoTemplate extends LinearOpMode {
         lastCircle = gamepad1.circle;
 
         telemetry.addData("Status", "Configuring Autonomous");
-        telemetry.addData("Controls", "\nDelay: UP & DOWN \nToggle live view: CROSS \nSelect alliance: SQUARE \nParking pose: CIRCLE");
+        telemetry.addData("Controls", "\nDelay: UP & DOWN \nToggle live view: CROSS \nSelect alliance: SQUARE");
         telemetry.addLine();
         telemetry.addData("Selected auto delay", RobotStatus.delayMs);
         telemetry.addData("Live view on", RobotStatus.liveView);
         telemetry.addData("Selected alliance", RobotStatus.alliance);
-        telemetry.addData("Selected parking spot", RobotStatus.parkingLocation);
         telemetry.update();
     }
 
