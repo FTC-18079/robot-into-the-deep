@@ -60,7 +60,7 @@ public class LLVision extends SubsystemIF {
         telemetry = Hydra.getInstance().getTelemetry();
         limelight = RobotMap.getInstance().LIMELIGHT;
         start();
-        setPipeline();
+        setYellow();
     }
 
     // LIMELIGHT MANAGEMENT
