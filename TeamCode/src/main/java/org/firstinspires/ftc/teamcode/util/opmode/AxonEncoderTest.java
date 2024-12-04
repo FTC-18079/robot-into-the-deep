@@ -18,8 +18,6 @@ public class AxonEncoderTest extends OpMode {
     @Override
     public void loop() {
         telemetry.addData("Encoder pos", encoder.getPosition());
-        telemetry.addData("Manufacturer", encoder.getDevice().getManufacturer());
-        telemetry.addData("Connection info", encoder.getDevice().getConnectionInfo());
         telemetry.update();
     }
 }
