@@ -139,7 +139,7 @@ public class ArmCommands {
         BASKET_TO_AUTO_ASCENT = () -> Commands.sequence(
                 Commands.runOnce(() -> claw.get().setState(ClawConstants.REST_STATE)),
                 Commands.parallel(
-                        new MovePivotCommand(() -> ArmConstants.PIVOT_AUTO_ASCENT_POSITION),
+                        new MovePivotCommand(() -> ArmConstants.PIVOT_SCORE_POSITION),
                         new MoveSlideCommand(900)
                 )
         );
