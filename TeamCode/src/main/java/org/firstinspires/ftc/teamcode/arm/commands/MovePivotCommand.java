@@ -32,9 +32,6 @@ public class MovePivotCommand extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        if (targetPos == ArmConstants.PIVOT_REST_POSITION && arm.pivotAtSetPoint()) {
-            arm.resetPivotEncoder();
-        }
-        arm.setPivotPos(arm.getPivotPos());
+        if (timer.milliseconds() > ArmConstants.PIVOT_TIMEOUT && !arm.pivotAtSetPoint()) arm.setPivotPos(arm.getPivotPos());
     }
 }

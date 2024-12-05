@@ -108,7 +108,7 @@ public class Arm extends SubsystemBase {
     }
 
     public boolean slideAtSetPoint() {
-        return Math.abs(slidePid.getPositionError()) < SLIDE_ERROR_TOLERANCE;
+        return Math.abs(getPivotTarget() - getPivotPos()) < SLIDE_ERROR_TOLERANCE;
     }
 
     public boolean pivotAtSetPoint() {
@@ -186,13 +186,10 @@ public class Arm extends SubsystemBase {
         double pivotOutput = pivotPid.calculate(getPivotPos());
         double pivotFeedforward = PIVOT_kF * Math.cos(Math.toRadians(getPivotTarget()));
 
-        if (pivotAtSetPoint() && getPivotTarget() == PIVOT_REST_POSITION) {
-            pivotOutput = 0.0;
-        }
-
         if (!slideZeroing) rightSlide.setPower(slideOutput + slideFeedforward);
         if (!slideZeroing) leftSlide.setPower(slideOutput + slideFeedforward);
 
-        if (!pivotZeroing) pivot.setPower(pivotOutput + pivotFeedforward);
+        if (pivotAtSetPoint() && getPivotTarget() == PIVOT_REST_POSITION) pivot.setPower(0);
+        else pivot.setPower(pivotOutput + pivotFeedforward);
     }
 }

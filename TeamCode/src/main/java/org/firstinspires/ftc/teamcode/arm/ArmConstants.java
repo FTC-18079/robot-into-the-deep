@@ -51,6 +51,6 @@ public class ArmConstants {
     public static double PIVOT_TIMEOUT = 1500;
 
     // Positions
-    public static double PIVOT_REST_POSITION = 0.0;
-    public static double PIVOT_SCORE_POSITION = 95.0;
+    public static double PIVOT_REST_POSITION = 88.0;
+    public static double PIVOT_SCORE_POSITION = 227.0;
 }
