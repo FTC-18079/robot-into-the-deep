@@ -5,13 +5,11 @@ import static org.firstinspires.ftc.teamcode.arm.ArmConstants.*;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotCore;
 import org.firstinspires.ftc.teamcode.RobotMap;
-import org.firstinspires.ftc.teamcode.util.hardware.SuccessCRServo;
 import org.firstinspires.ftc.teamcode.util.hardware.SuccessMotor;
 import org.firstinspires.ftc.teamcode.vision.LLVision;
 
@@ -21,9 +19,7 @@ public class Arm extends SubsystemBase {
 
     SuccessMotor rightSlide;
     SuccessMotor leftSlide;
-    DcMotorEx pivotEncoder;
-    SuccessCRServo rightPivot;
-    SuccessCRServo leftPivot;
+    Pivot pivot;
 
     PIDController slidePid;
     PIDController pivotPid;
@@ -53,10 +49,7 @@ public class Arm extends SubsystemBase {
         rightSlide = new SuccessMotor(RobotMap.getInstance().RIGHT_SLIDE);
         leftSlide = new SuccessMotor(RobotMap.getInstance().LEFT_SLIDE);
 
-        pivotEncoder = RobotMap.getInstance().MOTOR_BR;
-
-        rightPivot = new SuccessCRServo(RobotMap.getInstance().RIGHT_PIVOT);
-        leftPivot = new SuccessCRServo(RobotMap.getInstance().LEFT_PIVOT);
+        pivot = new Pivot();
 
         slidePid = new PIDController(SLIDE_kP, SLIDE_kI, SLIDE_kD);
         pivotPid = new PIDController(PIVOT_kP, PIVOT_kI, PIVOT_kD);
@@ -82,9 +75,6 @@ public class Arm extends SubsystemBase {
         rightSlide.setDirection(DcMotorSimple.Direction.FORWARD);
         leftSlide.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        rightPivot.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftPivot.setDirection(DcMotorSimple.Direction.FORWARD);
-
         rightSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
@@ -94,9 +84,9 @@ public class Arm extends SubsystemBase {
         leftSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
+    // TODO: either remove or figure out how to make offsets work
     public void resetPivotEncoder() {
-        pivotEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        pivotEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
     }
 
     // GETTERS
@@ -106,7 +96,7 @@ public class Arm extends SubsystemBase {
     }
 
     public double getPivotPos() {
-        return -pivotEncoder.getCurrentPosition();
+        return pivot.getPosition();
     }
 
     public double getSlideTarget() {
@@ -136,8 +126,7 @@ public class Arm extends SubsystemBase {
     // SETTERS
 
     public void setPivotPower(double power) {
-        rightPivot.setPower(power);
-        leftPivot.setPower(power);
+        pivot.setPower(power);
     }
 
     public void setSlidePower(double power) {
@@ -204,7 +193,6 @@ public class Arm extends SubsystemBase {
         if (!slideZeroing) rightSlide.setPower(slideOutput + slideFeedforward);
         if (!slideZeroing) leftSlide.setPower(slideOutput + slideFeedforward);
 
-        if (!pivotZeroing) rightPivot.setPower(pivotOutput + pivotFeedforward);
-        if (!pivotZeroing) leftPivot.setPower(pivotOutput + pivotFeedforward);
+        if (!pivotZeroing) pivot.setPower(pivotOutput + pivotFeedforward);
     }
 }

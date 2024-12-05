@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -32,8 +33,11 @@ public class RobotMap {
     public DcMotorEx RIGHT_SLIDE;
 
     // Pivot
-    public CRServo LEFT_PIVOT;
-    public CRServo RIGHT_PIVOT;
+    public CRServo PIVOT_FL;
+    public CRServo PIVOT_FR;
+    public CRServo PIVOT_BL;
+    public CRServo PIVOT_BR;
+    public AnalogInput PIVOT_ENCODER;
 
     // Claw
     public Servo CLAW;
@@ -66,8 +70,11 @@ public class RobotMap {
         LEFT_SLIDE = hardwareMap.get(DcMotorEx.class, "leftSlide");
         RIGHT_SLIDE = hardwareMap.get(DcMotorEx.class, "rightSlide");
 
-        RIGHT_PIVOT = hardwareMap.get(CRServo.class, "rightPivot");
-        LEFT_PIVOT = hardwareMap.get(CRServo.class, "leftPivot");
+        PIVOT_FR = hardwareMap.get(CRServo.class, "pivotFR");
+        PIVOT_FL = hardwareMap.get(CRServo.class, "pivotFL");
+        PIVOT_BL = hardwareMap.get(CRServo.class, "pivotBL");
+        PIVOT_BR = hardwareMap.get(CRServo.class, "pivotBR");
+        PIVOT_ENCODER = hardwareMap.get(AnalogInput.class, "pivotEncoder");
 
         CLAW = hardwareMap.get(Servo.class, "claw");
         WRIST = hardwareMap.get(Servo.class, "wrist");
