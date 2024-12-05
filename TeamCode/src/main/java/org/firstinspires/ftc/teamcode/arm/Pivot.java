@@ -1,9 +1,9 @@
 package org.firstinspires.ftc.teamcode.arm;
 
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.RobotMap;
-import org.firstinspires.ftc.teamcode.util.hardware.AxonEncoder;
 import org.firstinspires.ftc.teamcode.util.hardware.SuccessCRServo;
 
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ public class Pivot {
     private final SuccessCRServo fl;
     private final SuccessCRServo bl;
     private final SuccessCRServo br;
-    private final AxonEncoder encoder;
+    private final AnalogInput encoder;
 
     private final List<SuccessCRServo> servos = new ArrayList<>();
 
@@ -23,7 +23,7 @@ public class Pivot {
         fl = new SuccessCRServo(RobotMap.getInstance().PIVOT_FL);
         bl = new SuccessCRServo(RobotMap.getInstance().PIVOT_BL);
         br = new SuccessCRServo(RobotMap.getInstance().PIVOT_BR);
-        encoder = new AxonEncoder(RobotMap.getInstance().PIVOT_ENCODER);
+        encoder = RobotMap.getInstance().PIVOT_ENCODER;
 
         fr.setDirection(DcMotorSimple.Direction.FORWARD);
         fl.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -43,7 +43,7 @@ public class Pivot {
     }
 
     public double getPosition() {
-        return encoder.getPosition();
+        return encoder.getVoltage() / 3.3 * 360.0;
     }
 
     public double getPower() {

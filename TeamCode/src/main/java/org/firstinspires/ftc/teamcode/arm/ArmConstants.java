@@ -40,9 +40,9 @@ public class ArmConstants {
      */
 
     // PID
-    public static double PIVOT_kP = 0.003;
+    public static double PIVOT_kP = 0.001;
     public static double PIVOT_kI = 0.0;
-    public static double PIVOT_kD = 0.00008;
+    public static double PIVOT_kD = 0.00005;
     public static double PIVOT_kF = 0.0;
 
     // Constants
