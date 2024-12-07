@@ -15,7 +15,6 @@ import org.firstinspires.ftc.teamcode.arm.Arm;
 import org.firstinspires.ftc.teamcode.arm.ArmConstants;
 import org.firstinspires.ftc.teamcode.arm.commands.ArmCommands;
 import org.firstinspires.ftc.teamcode.arm.commands.MovePivotCommand;
-import org.firstinspires.ftc.teamcode.arm.commands.MoveSlideCommand;
 import org.firstinspires.ftc.teamcode.chassis.Chassis;
 import org.firstinspires.ftc.teamcode.chassis.commands.TeleOpDriveCommand;
 import org.firstinspires.ftc.teamcode.claw.Claw;
@@ -144,12 +143,11 @@ public class RobotCore extends Robot {
                 .whenPressed(chassis::toggleRobotCentric);
 
 
+
         driveController.getGamepadButton(GamepadKeys.Button.DPAD_UP)
-                .whenPressed(new MoveSlideCommand(ArmConstants.SLIDE_SAMPLE_COLLECT_POSITION));
+                .whenPressed(new MovePivotCommand(() -> ArmConstants.PIVOT_SCORE_POSITION));
         driveController.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
-                .whenPressed(new MoveSlideCommand(ArmConstants.SLIDE_REST_POSITION));
-        driveController.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
-                .whenPressed(new MoveSlideCommand(ArmConstants.SLIDE_SPECIMEN_COLLECT_POSITION));
+                .whenPressed(new MovePivotCommand(() -> ArmConstants.PIVOT_REST_POSITION));
 
 
 

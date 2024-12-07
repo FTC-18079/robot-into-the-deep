@@ -54,6 +54,9 @@ public class Arm extends SubsystemBase {
         slidePid = new PIDController(SLIDE_kP, SLIDE_kI, SLIDE_kD);
         pivotPid = new PIDController(PIVOT_kP, PIVOT_kI, PIVOT_kD);
         alignmentPid = new PIDController(ALIGN_kP, ALIGN_kI, ALIGN_kD);
+
+        slidePid.setSetPoint(getSlidePos());
+        pivotPid.setSetPoint(getPivotPos());
         alignmentPid.setSetPoint(0.0);
 
         resetSlideEncoder();
@@ -184,7 +187,7 @@ public class Arm extends SubsystemBase {
         if (state == ArmState.STOW) slideFeedforward = 0;
 
         double pivotOutput = pivotPid.calculate(getPivotPos());
-        double pivotFeedforward = PIVOT_kF * Math.cos(Math.toRadians(getPivotTarget()));
+        double pivotFeedforward = PIVOT_kF * Math.cos(Math.toRadians(getPivotTarget() - PIVOT_REST_POSITION));
 
         if (!slideZeroing) rightSlide.setPower(slideOutput + slideFeedforward);
         if (!slideZeroing) leftSlide.setPower(slideOutput + slideFeedforward);

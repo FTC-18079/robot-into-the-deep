@@ -61,18 +61,14 @@ public class ArmCommands {
                 Commands.runOnce(() -> arm.get().setSlidePos(ArmConstants.SLIDE_REST_POSITION)),
                 Commands.waitUntil(() -> arm.get().getSlidePos() < ArmConstants.SLIDE_CHAMBER_POSITION),
                 Commands.runOnce(() -> claw.get().setState(ClawConstants.REST_STATE)),
-                Commands.parallel(
-                        new MoveSlideCommand(ArmConstants.SLIDE_REST_POSITION),
-                        new MovePivotCommand(() -> ArmConstants.PIVOT_REST_POSITION)
-                )
+                new MoveSlideCommand(ArmConstants.SLIDE_REST_POSITION),
+                new MovePivotCommand(() -> ArmConstants.PIVOT_REST_POSITION)
         );
         CHAMBER_TO_STOW = () -> Commands.sequence(
                 Commands.runOnce(() -> arm.get().setState(Arm.ArmState.STOW)),
                 Commands.runOnce(() -> claw.get().setState(ClawConstants.REST_STATE)),
-                Commands.parallel(
-                        new MoveSlideCommand(ArmConstants.SLIDE_REST_POSITION),
-                        new MovePivotCommand(() -> ArmConstants.PIVOT_REST_POSITION)
-                )
+                new MoveSlideCommand(ArmConstants.SLIDE_REST_POSITION),
+                new MovePivotCommand(() -> ArmConstants.PIVOT_REST_POSITION)
         );
         SAMPLE_COLLECT_TO_STOW = () -> Commands.sequence(
                 Commands.runOnce(() -> arm.get().setState(Arm.ArmState.STOW)),
@@ -138,10 +134,8 @@ public class ArmCommands {
 
         BASKET_TO_AUTO_ASCENT = () -> Commands.sequence(
                 Commands.runOnce(() -> claw.get().setState(ClawConstants.REST_STATE)),
-                Commands.parallel(
-                        new MovePivotCommand(() -> ArmConstants.PIVOT_SCORE_POSITION),
-                        new MoveSlideCommand(900)
-                )
+                new MovePivotCommand(() -> ArmConstants.PIVOT_SCORE_POSITION),
+                new MoveSlideCommand(900)
         );
 
         GRAB = () -> Commands.sequence(

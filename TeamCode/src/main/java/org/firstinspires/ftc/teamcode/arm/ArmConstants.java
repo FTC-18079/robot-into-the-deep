@@ -33,24 +33,24 @@ public class ArmConstants {
     public static double SLIDE_SAMPLE_COLLECT_POSITION = 1150.0;
     public static double SLIDE_SPECIMEN_COLLECT_POSITION = 350;
     public static double SLIDE_CHAMBER_POSITION = SLIDE_REST_POSITION;
-    public static double SLIDE_BASKET_POSITION = 1500.0;
+    public static double SLIDE_BASKET_POSITION = 1300.0;
 
     /**
      * PIVOT
      */
 
     // PID
-    public static double PIVOT_kP = 0.001;
+    public static double PIVOT_kP = 0.006;
     public static double PIVOT_kI = 0.0;
-    public static double PIVOT_kD = 0.00005;
-    public static double PIVOT_kF = 0.0;
+    public static double PIVOT_kD = 0.0001;
+    public static double PIVOT_kF = 0.05;
 
     // Constants
-    public static double PIVOT_ERROR_TOLERANCE = 5.0;
+    public static double PIVOT_ERROR_TOLERANCE = 2.0;
     public static double PIVOT_GEAR_RATIO = 40.0 / 26.0;
-    public static double PIVOT_TIMEOUT = 1500;
+    public static double PIVOT_TIMEOUT = 2000;
 
     // Positions
-    public static double PIVOT_REST_POSITION = 87.0;
-    public static double PIVOT_SCORE_POSITION = 231.0;
+    public static double PIVOT_REST_POSITION = 85.0;
+    public static double PIVOT_SCORE_POSITION = 230.0;
 }
