@@ -13,7 +13,7 @@ public class ArmConstants {
     public static double MAX_ACCELERATION = MAX_VELOCITY * 4.0;
 
     // PID
-    public static double SLIDE_kP = 0.025;
+    public static double SLIDE_kP = 0.015;
     public static double SLIDE_kI = 0.0;
     public static double SLIDE_kD = 0.00025;
     public static double SLIDE_kF = 0.15;
@@ -51,6 +51,6 @@ public class ArmConstants {
     public static double PIVOT_TIMEOUT = 1500;
 
     // Positions
-    public static double PIVOT_REST_POSITION = 88.0;
-    public static double PIVOT_SCORE_POSITION = 227.0;
+    public static double PIVOT_REST_POSITION = 87.0;
+    public static double PIVOT_SCORE_POSITION = 231.0;
 }

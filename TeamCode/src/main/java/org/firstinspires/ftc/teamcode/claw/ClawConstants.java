@@ -8,7 +8,7 @@ public class ClawConstants {
     public static long COLLECT_DELAY = 30;
     public static long GRAB_DELAY = 400;
 
-    public static ClawState REST_STATE = new ClawState(1.0, 1.0, 0.95, 0.1);
+    public static ClawState REST_STATE = new ClawState(1.0, 1.0, 0.95, 0.0);
 
     // SAMPLE POSITIONS
     public static double SAMPLE_COLLECT_JOINT_ONE_POS = 0.2;

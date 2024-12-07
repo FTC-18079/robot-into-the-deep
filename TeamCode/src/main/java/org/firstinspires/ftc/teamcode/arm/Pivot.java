@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.arm;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
@@ -9,6 +10,7 @@ import org.firstinspires.ftc.teamcode.util.hardware.SuccessCRServo;
 import java.util.ArrayList;
 import java.util.List;
 
+@Disabled
 public class Pivot {
     private final SuccessCRServo fr;
     private final SuccessCRServo fl;

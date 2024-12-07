@@ -2,12 +2,15 @@ package org.firstinspires.ftc.teamcode.util.opmode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.RobotMap;
 import org.firstinspires.ftc.teamcode.arm.Pivot;
 
+@Disabled
 @TeleOp
 public class PivotTest extends OpMode {
     private Pivot pivot;
@@ -21,6 +24,9 @@ public class PivotTest extends OpMode {
 
     @Override
     public void loop() {
+        for (LynxModule m : RobotMap.getInstance().getLynxModules()) {
+            m.clearBulkCache();
+        }
         pivot.setPower(-gamepad1.left_stick_y);
         telemetry.addData("Joystick", -gamepad1.left_stick_y);
         telemetry.addData("Encoder pos", pivot.getPosition());
