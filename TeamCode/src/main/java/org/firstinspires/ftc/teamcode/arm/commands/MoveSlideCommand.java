@@ -8,15 +8,17 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.arm.Arm;
 import org.firstinspires.ftc.teamcode.arm.ArmConstants;
 
+import java.util.function.DoubleSupplier;
+
 public class MoveSlideCommand extends CommandBase {
     private final Arm arm;
     private final double targetPos;
     private final ElapsedTime timer;
     boolean exceededTime = false;
 
-    public MoveSlideCommand(double targetPos) {
+    public MoveSlideCommand(DoubleSupplier targetPos) {
         this.arm = Arm.getInstance();
-        this.targetPos = targetPos;
+        this.targetPos = targetPos.getAsDouble();
         timer = new ElapsedTime();
         addRequirements(arm);
     }

@@ -55,7 +55,7 @@ public class Arm extends SubsystemBase {
         pivotPid = new PIDController(PIVOT_kP, PIVOT_kI, PIVOT_kD);
         alignmentPid = new PIDController(ALIGN_kP, ALIGN_kI, ALIGN_kD);
 
-        slidePid.setSetPoint(getSlidePos());
+        slidePid.setSetPoint(0.0);
         pivotPid.setSetPoint(getPivotPos());
         alignmentPid.setSetPoint(0.0);
 
@@ -111,7 +111,7 @@ public class Arm extends SubsystemBase {
     }
 
     public boolean slideAtSetPoint() {
-        return Math.abs(getPivotTarget() - getPivotPos()) < SLIDE_ERROR_TOLERANCE;
+        return Math.abs(getSlidePos() - getSlideTarget()) < SLIDE_ERROR_TOLERANCE;
     }
 
     public boolean pivotAtSetPoint() {
