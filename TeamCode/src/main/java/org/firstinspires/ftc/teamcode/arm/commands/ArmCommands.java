@@ -58,10 +58,8 @@ public class ArmCommands {
                 Commands.runOnce(() -> arm.get().setState(Arm.ArmState.STOW)),
                 Commands.runOnce(() -> claw.get().setJointOne(0.3)),
                 Commands.waitMillis(100),
-                Commands.runOnce(() -> arm.get().setSlidePos(ArmConstants.SLIDE_REST_POSITION)),
-                Commands.waitUntil(() -> arm.get().getSlidePos() < ArmConstants.SLIDE_CHAMBER_POSITION),
-                Commands.runOnce(() -> claw.get().setState(ClawConstants.REST_STATE)),
                 new MoveSlideCommand(() -> ArmConstants.SLIDE_REST_POSITION),
+                Commands.runOnce(() -> claw.get().setState(ClawConstants.REST_STATE)),
                 new MovePivotCommand(() -> ArmConstants.PIVOT_REST_POSITION)
         );
         CHAMBER_TO_STOW = () -> Commands.sequence(
@@ -158,13 +156,8 @@ public class ArmCommands {
         COLLECT_SAMPLE = () -> Commands.sequence(
                 Commands.runOnce(() -> claw.get().setWrist(limelight.get().getServoPos())),
                 Commands.waitMillis(150),
-                Commands.runOnce(() -> claw.get().setJointTwo(ClawConstants.SAMPLE_COLLECT_JOINT_TWO_POS)),
-                Commands.waitMillis(ClawConstants.JOINT_DELAY),
-                Commands.runOnce(() -> claw.get().setJointOne(ClawConstants.SAMPLE_COLLECT_JOINT_ONE_POS + 0.1)),
-                Commands.waitMillis(125),
-                Commands.runOnce(() ->  claw.get().setJointOne(ClawConstants.SAMPLE_COLLECT_JOINT_ONE_POS)),
-                Commands.waitMillis(100),
-                Commands.waitMillis(ClawConstants.COLLECT_DELAY)
+                Commands.run(() -> claw.get().setJointOne(ClawConstants.SAMPLE_COLLECT_JOINT_ONE_POS)),
+                Commands.runOnce(() -> claw.get().setJointTwo(ClawConstants.SAMPLE_COLLECT_JOINT_TWO_POS))
         );
 
     }
