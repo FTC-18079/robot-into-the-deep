@@ -179,7 +179,7 @@ public class Arm extends SubsystemBase {
         double slideOutput = slidePid.calculate(getSlidePos());
         if (state == ArmState.COLLECTING_SAMPLE) {
             double ty = LLVision.getInstance().getSampleTy();
-            slideOutput = alignmentPid.calculate(ty);
+            slideOutput = -alignmentPid.calculate(ty);
             if (slideOutput > 0 && getSlidePos() >= SLIDE_SAMPLE_COLLECT_POSITION + 50) slideOutput = 0.0;
             if (Math.abs(ty) < ALIGN_ERROR_TOLERANCE) slideOutput = 0.0;
         }
