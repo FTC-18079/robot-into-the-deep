@@ -183,7 +183,7 @@ public class Arm extends SubsystemBase {
             if (slideOutput > 0 && getSlidePos() >= SLIDE_SAMPLE_COLLECT_POSITION + 50) slideOutput = 0.0;
             if (Math.abs(ty) < ALIGN_ERROR_TOLERANCE) slideOutput = 0.0;
         }
-        double slideFeedforward = SLIDE_kF * Math.sin(Math.toRadians(getPivotTarget()));
+        double slideFeedforward = SLIDE_kF * Math.sin(Math.toRadians(getPivotTarget() - PIVOT_REST_POSITION));
         if (state == ArmState.STOW) slideFeedforward = 0;
 
         double pivotOutput = pivotPid.calculate(getPivotPos());
