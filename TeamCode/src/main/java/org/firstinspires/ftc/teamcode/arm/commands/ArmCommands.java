@@ -88,6 +88,7 @@ public class ArmCommands {
                 Commands.runOnce(() -> claw.get().setJointOne(0.55)),
                 Commands.waitMillis(200),
                 new MovePivotCommand(() -> ArmConstants.PIVOT_SCORE_POSITION),
+                Commands.runOnce(() -> claw.get().setWrist(ClawConstants.SAMPLE_SCORING_STATE.wristPos)),
                 new MoveSlideCommand(() -> ArmConstants.SLIDE_BASKET_POSITION),
                 Commands.runOnce(() -> claw.get().setState(ClawConstants.SAMPLE_SCORING_STATE)),
                 Commands.waitMillis(200)
@@ -143,7 +144,7 @@ public class ArmCommands {
 
         RELEASE = () -> Commands.sequence(
                 Commands.runOnce(claw.get()::openClaw),
-                Commands.waitMillis(500)
+                Commands.waitMillis(ClawConstants.GRAB_DELAY)
         );
 
         SCORE_SPECIMEN = () -> Commands.sequence(

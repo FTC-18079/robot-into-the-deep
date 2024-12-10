@@ -26,7 +26,6 @@ public class Arm extends SubsystemBase {
     PIDController alignmentPid;
 
     public boolean slideZeroing = false;
-    public boolean pivotZeroing = false;
 
     public enum ArmState {
         STOW, COLLECTING_SAMPLE, COLLECTING_SPECIMEN, SCORING_SAMPLE, SCORING_SPECIMEN
