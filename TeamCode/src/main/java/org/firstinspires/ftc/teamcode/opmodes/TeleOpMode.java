@@ -45,7 +45,7 @@ public class TeleOpMode extends LinearOpMode {
 
         // LOOP
         while (opModeIsActive()) {
-            hydra.run();
+            hydra.periodic();
         }
 
         // END

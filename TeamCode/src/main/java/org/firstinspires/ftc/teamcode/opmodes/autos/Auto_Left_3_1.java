@@ -121,7 +121,7 @@ public class Auto_Left_3_1 extends LinearOpMode {
 
         // Run robot
         while (opModeIsActive() && !isStopRequested()) {
-            robot.run();
+            robot.periodic();
         }
 
         CommandScheduler.getInstance().cancelAll();

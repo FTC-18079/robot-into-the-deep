@@ -63,7 +63,7 @@ public abstract class AutoTemplate extends LinearOpMode {
 
         // Run robot
         while (opModeIsActive() && !isStopRequested()) {
-            robot.run();
+            robot.periodic();
         }
 
         // End
