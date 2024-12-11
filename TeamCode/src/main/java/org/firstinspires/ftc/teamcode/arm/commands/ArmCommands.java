@@ -156,9 +156,10 @@ public class ArmCommands {
 
         COLLECT_SAMPLE = () -> Commands.sequence(
                 Commands.runOnce(() -> claw.get().setWrist(limelight.get().getServoPos())),
-                Commands.waitMillis(150),
-                Commands.runOnce(() -> claw.get().setJointOne(ClawConstants.SAMPLE_COLLECT_JOINT_ONE_POS)),
+                Commands.waitMillis(175),
                 Commands.runOnce(() -> claw.get().setJointTwo(ClawConstants.SAMPLE_COLLECT_JOINT_TWO_POS)),
+                Commands.waitMillis(200),
+                Commands.runOnce(() -> claw.get().setJointOne(ClawConstants.SAMPLE_COLLECT_JOINT_ONE_POS)),
                 Commands.waitMillis(ClawConstants.GRAB_DELAY)
         );
 
