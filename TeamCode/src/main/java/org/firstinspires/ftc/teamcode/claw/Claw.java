@@ -1,13 +1,13 @@
 package org.firstinspires.ftc.teamcode.claw;
 
+import static org.firstinspires.ftc.teamcode.claw.ClawConstants.*;
+
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotCore;
 import org.firstinspires.ftc.teamcode.RobotMap;
-import org.firstinspires.ftc.teamcode.arm.Arm;
-import org.firstinspires.ftc.teamcode.vision.LLVision;
 
 public class Claw extends SubsystemBase {
     Telemetry telemetry;
@@ -32,10 +32,10 @@ public class Claw extends SubsystemBase {
         jointTwo = RobotMap.getInstance().JOINT_TWO;
 
         telemetry = RobotCore.getTelemetry();
-        state.clawPos = ClawConstants.REST_STATE.clawPos;
-        state.wristPos = ClawConstants.REST_STATE.wristPos;
-        state.jointOnePos = ClawConstants.REST_STATE.jointOnePos;
-        state.jointTwoPos = ClawConstants.REST_STATE.jointTwoPos;
+        state.clawPos = REST_STATE.clawPos;
+        state.wristPos = REST_STATE.wristPos;
+        state.jointOnePos = REST_STATE.jointOnePos;
+        state.jointTwoPos = REST_STATE.jointTwoPos;
         INSTANCE = this;
     }
 
@@ -59,7 +59,7 @@ public class Claw extends SubsystemBase {
     }
 
     public void closeClaw() {
-        state.clawPos = 1;
+        state.clawPos = CLAW_CLOSE_POSITION;
     }
 
     public void setWrist(double pos) {

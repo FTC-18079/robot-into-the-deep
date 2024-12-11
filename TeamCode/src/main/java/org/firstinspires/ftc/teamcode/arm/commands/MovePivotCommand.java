@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.arm.commands;
 
+import android.util.Log;
+
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -12,11 +14,13 @@ public class MovePivotCommand extends CommandBase {
     private final Arm arm;
     private final double targetPos;
     private final ElapsedTime timer;
+    boolean exceededTime = false;
 
     public MovePivotCommand(DoubleSupplier targetPos) {
         this.arm = Arm.getInstance();
         this.targetPos = targetPos.getAsDouble();
         timer = new ElapsedTime();
+        addRequirements(arm);
     }
 
     @Override
@@ -26,15 +30,24 @@ public class MovePivotCommand extends CommandBase {
     }
 
     @Override
+    public void execute() {
+        exceededTime = timer.milliseconds() > ArmConstants.PIVOT_TIMEOUT;
+    }
+
+    @Override
     public boolean isFinished() {
-        return arm.pivotAtSetPoint() || timer.milliseconds() > ArmConstants.PIVOT_TIMEOUT;
+        return arm.pivotAtSetPoint() || exceededTime;
     }
 
     @Override
     public void end(boolean interrupted) {
-        if (targetPos == ArmConstants.PIVOT_REST_POSITION && arm.pivotAtSetPoint()) {
-            arm.resetPivotEncoder();
+        if (interrupted) {
+            Log.i("MovePivotCommand", "===============COMMAND INTERRUPTED===============");
+        } else if (exceededTime) {
+            arm.setPivotPos(arm.getPivotPos());
+            Log.i("MovePivotCommand", "===============COMMAND TIMED OUT AT " + timer.milliseconds() + " MILLISECONDS===============");
+        } else {
+            Log.i("MovePivotCommand", "===============COMMAND ENDED SAFELY===============");
         }
-        arm.setPivotPos(arm.getPivotPos());
     }
 }

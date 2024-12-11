@@ -5,13 +5,11 @@ import static org.firstinspires.ftc.teamcode.arm.ArmConstants.*;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotCore;
 import org.firstinspires.ftc.teamcode.RobotMap;
-import org.firstinspires.ftc.teamcode.util.hardware.SuccessCRServo;
 import org.firstinspires.ftc.teamcode.util.hardware.SuccessMotor;
 import org.firstinspires.ftc.teamcode.vision.LLVision;
 
@@ -21,16 +19,13 @@ public class Arm extends SubsystemBase {
 
     SuccessMotor rightSlide;
     SuccessMotor leftSlide;
-    DcMotorEx pivotEncoder;
-    SuccessCRServo rightPivot;
-    SuccessCRServo leftPivot;
+    Pivot pivot;
 
     PIDController slidePid;
     PIDController pivotPid;
     PIDController alignmentPid;
 
     public boolean slideZeroing = false;
-    public boolean pivotZeroing = false;
 
     public enum ArmState {
         STOW, COLLECTING_SAMPLE, COLLECTING_SPECIMEN, SCORING_SAMPLE, SCORING_SPECIMEN
@@ -53,14 +48,14 @@ public class Arm extends SubsystemBase {
         rightSlide = new SuccessMotor(RobotMap.getInstance().RIGHT_SLIDE);
         leftSlide = new SuccessMotor(RobotMap.getInstance().LEFT_SLIDE);
 
-        pivotEncoder = RobotMap.getInstance().MOTOR_BR;
-
-        rightPivot = new SuccessCRServo(RobotMap.getInstance().RIGHT_PIVOT);
-        leftPivot = new SuccessCRServo(RobotMap.getInstance().LEFT_PIVOT);
+        pivot = new Pivot();
 
         slidePid = new PIDController(SLIDE_kP, SLIDE_kI, SLIDE_kD);
         pivotPid = new PIDController(PIVOT_kP, PIVOT_kI, PIVOT_kD);
         alignmentPid = new PIDController(ALIGN_kP, ALIGN_kI, ALIGN_kD);
+
+        slidePid.setSetPoint(0.0);
+        pivotPid.setSetPoint(getPivotPos());
         alignmentPid.setSetPoint(0.0);
 
         resetSlideEncoder();
@@ -82,9 +77,6 @@ public class Arm extends SubsystemBase {
         rightSlide.setDirection(DcMotorSimple.Direction.FORWARD);
         leftSlide.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        rightPivot.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftPivot.setDirection(DcMotorSimple.Direction.FORWARD);
-
         rightSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
@@ -94,9 +86,9 @@ public class Arm extends SubsystemBase {
         leftSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
+    // TODO: either remove or figure out how to make offsets work
     public void resetPivotEncoder() {
-        pivotEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        pivotEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
     }
 
     // GETTERS
@@ -106,7 +98,7 @@ public class Arm extends SubsystemBase {
     }
 
     public double getPivotPos() {
-        return -pivotEncoder.getCurrentPosition();
+        return pivot.getPosition();
     }
 
     public double getSlideTarget() {
@@ -118,7 +110,7 @@ public class Arm extends SubsystemBase {
     }
 
     public boolean slideAtSetPoint() {
-        return Math.abs(slidePid.getPositionError()) < SLIDE_ERROR_TOLERANCE;
+        return Math.abs(getSlidePos() - getSlideTarget()) < SLIDE_ERROR_TOLERANCE;
     }
 
     public boolean pivotAtSetPoint() {
@@ -136,8 +128,7 @@ public class Arm extends SubsystemBase {
     // SETTERS
 
     public void setPivotPower(double power) {
-        rightPivot.setPower(power);
-        leftPivot.setPower(power);
+        pivot.setPower(power);
     }
 
     public void setSlidePower(double power) {
@@ -187,24 +178,20 @@ public class Arm extends SubsystemBase {
         double slideOutput = slidePid.calculate(getSlidePos());
         if (state == ArmState.COLLECTING_SAMPLE) {
             double ty = LLVision.getInstance().getSampleTy();
-            slideOutput = alignmentPid.calculate(ty);
+            slideOutput = -alignmentPid.calculate(ty);
             if (slideOutput > 0 && getSlidePos() >= SLIDE_SAMPLE_COLLECT_POSITION + 50) slideOutput = 0.0;
             if (Math.abs(ty) < ALIGN_ERROR_TOLERANCE) slideOutput = 0.0;
         }
-        double slideFeedforward = SLIDE_kF * Math.sin(Math.toRadians(getPivotTarget() / PIVOT_COUNTS_PER_REVOLUTION * 360.0));
+        double slideFeedforward = SLIDE_kF * Math.sin(Math.toRadians(getPivotTarget() - PIVOT_REST_POSITION));
         if (state == ArmState.STOW) slideFeedforward = 0;
 
         double pivotOutput = pivotPid.calculate(getPivotPos());
-        double pivotFeedforward = PIVOT_kF * Math.cos(Math.toRadians(getPivotTarget() / PIVOT_COUNTS_PER_REVOLUTION * 360.0));
-
-        if (pivotAtSetPoint() && getPivotTarget() == PIVOT_REST_POSITION) {
-            pivotOutput = 0.0;
-        }
+        double pivotFeedforward = PIVOT_kF * Math.cos(Math.toRadians(getPivotTarget() - PIVOT_REST_POSITION));
 
         if (!slideZeroing) rightSlide.setPower(slideOutput + slideFeedforward);
         if (!slideZeroing) leftSlide.setPower(slideOutput + slideFeedforward);
 
-        if (!pivotZeroing) rightPivot.setPower(pivotOutput + pivotFeedforward);
-        if (!pivotZeroing) leftPivot.setPower(pivotOutput + pivotFeedforward);
+        if (pivotAtSetPoint() && getPivotTarget() == PIVOT_REST_POSITION) pivot.setPower(0);
+        else pivot.setPower(pivotOutput + pivotFeedforward);
     }
 }
