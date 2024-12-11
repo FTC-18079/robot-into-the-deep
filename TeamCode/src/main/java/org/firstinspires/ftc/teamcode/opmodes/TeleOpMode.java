@@ -47,5 +47,8 @@ public class TeleOpMode extends LinearOpMode {
         while (opModeIsActive()) {
             hydra.run();
         }
+
+        // END
+        RobotStatus.robotState = RobotStatus.RobotState.DISABLED;
     }
 }

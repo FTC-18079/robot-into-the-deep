@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.content.Context;
 import android.util.Log;
 
 import com.acmerobotics.dashboard.FtcDashboard;
@@ -16,7 +15,6 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.ftccommon.external.OnCreate;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.arm.Arm;
 import org.firstinspires.ftc.teamcode.arm.commands.ArmCommands;
@@ -64,7 +62,7 @@ public class Hydra extends Robot {
     // INITIALIZE
 
     // TODO: uncomment this and test if it creates robot on app startup
-//    @OnCreate
+//    @OnCreateEventLoop
 //    public static void onCreate(Context context) { getInstance(); }
 
     @Override
