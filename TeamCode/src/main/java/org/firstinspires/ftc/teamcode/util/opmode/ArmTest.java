@@ -34,9 +34,9 @@ public class ArmTest extends OpMode {
             hub.clearBulkCache();
         }
         telemetry.addData("Encoder Pos", arm.getPivotPos());
-        telemetry.addData("Encoder angle", arm.getPivotPos() / PIVOT_COUNTS_PER_REVOLUTION * 360.0);
+        telemetry.addData("Encoder angle", arm.getPivotPos());
         telemetry.addData("Target pos", arm.getPivotTarget());
-        telemetry.addData("Target angle", arm.getPivotTarget() / PIVOT_COUNTS_PER_REVOLUTION * 360.0);
+        telemetry.addData("Target angle", arm.getPivotTarget());
         telemetry.update();
     }
 
