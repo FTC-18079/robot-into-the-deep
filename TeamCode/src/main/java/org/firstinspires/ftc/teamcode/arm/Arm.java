@@ -63,12 +63,20 @@ public class Arm extends SubsystemIF {
         configureHardware();
         resetSlideEncoder();
         resetPivotEncoder();
+
+        pivotPid.setSetPoint(getPivotPos());
+        slidePid.setSetPoint(getSlidePos());
     }
 
     @Override
     public void onTeleopInit() {
         telemetry = Hydra.getInstance().getTelemetry();
         configureHardware();
+
+
+        pivotPid.setSetPoint(getPivotPos());
+        slidePid.setSetPoint(getSlidePos());
+
         Commands.sequence(
                 //wait until enabled, then zero
         ).schedule();
