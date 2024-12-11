@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.claw;
 
-import com.arcrobotics.ftclib.command.SubsystemBase;
+import static org.firstinspires.ftc.teamcode.claw.ClawConstants.*;
+
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -73,11 +74,11 @@ public class Claw extends SubsystemIF {
     }
 
     public void openClaw() {
-        state.clawPos = 0;
+        state.clawPos = CLAW_OPEN_POSITION;
     }
 
     public void closeClaw() {
-        state.clawPos = 1;
+        state.clawPos = CLAW_CLOSE_POSITION;
     }
 
     public void setWrist(double pos) {

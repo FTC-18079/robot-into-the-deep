@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.RobotMap;
 import org.firstinspires.ftc.teamcode.claw.Claw;
 import org.firstinspires.ftc.teamcode.claw.ClawState;
 
-@Disabled
+//@Disabled
 @Config
 @TeleOp
 public class ClawTest extends OpMode {
