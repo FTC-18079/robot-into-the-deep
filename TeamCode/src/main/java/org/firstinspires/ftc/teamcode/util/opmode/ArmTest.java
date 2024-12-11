@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.util.opmode;
 
-import static org.firstinspires.ftc.teamcode.arm.ArmConstants.*;
-
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
