@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.localization.Localizer;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.MathFunctions;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Vector;
-import org.firstinspires.ftc.teamcode.util.RobotGlobal;
+import org.firstinspires.ftc.teamcode.RobotStatus;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
@@ -56,7 +56,7 @@ public class AprilTagLocalizer extends Localizer {
                 .setCamera(RobotMap.getInstance().APRILTAG_CAMERA)
                 .setCameraResolution(new Size(640, 480))
                 .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
-                .enableLiveView(RobotGlobal.liveView)
+                .enableLiveView(RobotStatus.liveView)
                 .build();
 
         cameraOffset = new Pose(8.0315, 5.3871); // TODO: update

@@ -22,7 +22,7 @@ public class ArmTest extends OpMode {
     @Override
     public void init() {
         RobotMap.getInstance().init(hardwareMap);
-        arm = new Arm();
+        arm = Arm.getInstance();
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
     }
 

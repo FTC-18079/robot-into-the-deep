@@ -1,31 +1,43 @@
 package org.firstinspires.ftc.teamcode.chassis;
 
-import com.arcrobotics.ftclib.command.SubsystemBase;
-
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.RobotCore;
+import org.firstinspires.ftc.teamcode.Hydra;
 import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
-import org.firstinspires.ftc.teamcode.util.RobotGlobal;
+import org.firstinspires.ftc.teamcode.RobotStatus;
+import org.firstinspires.ftc.teamcode.util.SubsystemIF;
 
-public class Chassis extends SubsystemBase {
+public class Chassis extends SubsystemIF {
     Follower follower;
     Telemetry telemetry;
     boolean isRobotCentric;
     double m = 1.0;
 
-    private static Chassis INSTANCE = null;
+    private static final Chassis INSTANCE = new Chassis();
 
     public static Chassis getInstance() {
         return INSTANCE;
     }
 
-    public Chassis() {
+    private Chassis() {
         isRobotCentric = false;
+    }
+
+    // INITIALIZE
+
+    @Override
+    public void onAutonomousInit() {
+        telemetry = Hydra.getInstance().getTelemetry();
         follower = new Follower(new Pose());
-        this.telemetry = RobotCore.getTelemetry();
-        INSTANCE = this;
+    }
+
+    @Override
+    public void onTeleopInit() {
+        telemetry = Hydra.getInstance().getTelemetry();
+        follower = new Follower(new Pose());
+        follower.startTeleopDrive();
+        setMaxPower(1.0);
     }
 
     public void setMaxPower(double power) {
@@ -69,10 +81,6 @@ public class Chassis extends SubsystemBase {
         follower.setPose(new Pose(oldPose.getX(), oldPose.getY()));
     }
 
-    public void startTeleopDrive() {
-        follower.startTeleopDrive();
-    }
-
     public void enableSlowMode() {
         m = 0.30;
     }
@@ -84,7 +92,7 @@ public class Chassis extends SubsystemBase {
     @Override
     public void periodic() {
         follower.update();
-        RobotGlobal.robotPose = follower.getPose();
+        RobotStatus.robotPose = follower.getPose();
 
         telemetry.addLine();
         telemetry.addData("Robot Centric", isRobotCentric);

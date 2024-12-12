@@ -1,22 +1,17 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.Command;
-import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.RobotCore;
-import org.firstinspires.ftc.teamcode.RobotMap;
-import org.firstinspires.ftc.teamcode.chassis.Chassis;
+import org.firstinspires.ftc.teamcode.Hydra;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
-import org.firstinspires.ftc.teamcode.util.RobotGlobal;
+import org.firstinspires.ftc.teamcode.RobotStatus;
 import org.firstinspires.ftc.teamcode.util.commands.Commands;
 
-import static org.firstinspires.ftc.teamcode.util.RobotGlobal.Alliance.*;
+import static org.firstinspires.ftc.teamcode.RobotStatus.Alliance.*;
 
 public abstract class AutoTemplate extends LinearOpMode {
-    protected RobotCore robot;
+    protected final Hydra robot = Hydra.getInstance();
 
     boolean lastUp;
     boolean lastDown;
@@ -27,12 +22,8 @@ public abstract class AutoTemplate extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         // Init hardware
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         telemetry.addData("Status", "Initializing hardware");
         telemetry.update();
-
-        RobotMap.getInstance().init(hardwareMap);
-        RobotGlobal.resetValues();
 
         // Configure auto variables
         while (opModeInInit() && !gamepad1.options) {
@@ -41,33 +32,26 @@ public abstract class AutoTemplate extends LinearOpMode {
         sleep(500);
 
         // Create robot
-        RobotGlobal.robotPose = getStartingPose();
+        RobotStatus.robotPose = getStartingPose();
         sleep(100);
         buildPaths();
-        robot = new RobotCore(
-                RobotCore.OpModeType.AUTO,
-                telemetry,
-                gamepad1,
-                gamepad2
-        );
+        robot.autonomousInit(telemetry, hardwareMap);
 
         // Schedule auto
         telemetry.addData("Status", "Scheduling commands");
         telemetry.update();
-        if (RobotGlobal.alliance != NONE) robot.schedule(
-                Commands.waitMillis(RobotGlobal.delayMs)
-                .andThen(makeAutoSequence())
-                .andThen(Commands.runOnce(Chassis.getInstance()::breakFollowing))
-        );
-
-        // Move init servos
-        initSequence();
+        if (RobotStatus.alliance != NONE) {
+            Commands.waitUntil(RobotStatus::isEnabled)
+                    .andThen(Commands.waitMillis(RobotStatus.delayMs))
+                    .andThen(makeAutoSequence())
+                    .schedule();
+        }
 
         while (opModeInInit()) {
             telemetry.addData("Status", "Initialized, Ready to start");
-            telemetry.addData("Selected auto delay", RobotGlobal.delayMs);
-            telemetry.addData("Live view on", RobotGlobal.liveView);
-            telemetry.addData("Selected alliance", RobotGlobal.alliance);
+            telemetry.addData("Selected auto delay", RobotStatus.delayMs);
+            telemetry.addData("Live view on", RobotStatus.liveView);
+            telemetry.addData("Selected alliance", RobotStatus.alliance);
             telemetry.update();
 
             // Sleep CPU a little
@@ -75,35 +59,35 @@ public abstract class AutoTemplate extends LinearOpMode {
         }
 
         // Don't run anything without an alliance
-        if (RobotGlobal.alliance == NONE) RobotGlobal.alliance = RobotGlobal.Alliance.BLUE;
+        if (RobotStatus.alliance == NONE) RobotStatus.alliance = RobotStatus.Alliance.BLUE;
 
         // Run robot
         while (opModeIsActive() && !isStopRequested()) {
-            robot.run();
+            robot.periodic();
         }
 
-        CommandScheduler.getInstance().cancelAll();
-        CommandScheduler.getInstance().reset();
+        // End
+        RobotStatus.robotState = RobotStatus.RobotState.DISABLED;
     }
 
     public void config() {
         // Add or remove delay
-        if (checkInputs(gamepad1.dpad_up, lastUp)) RobotGlobal.delayMs += 100;
-        if (checkInputs(gamepad1.dpad_down, lastDown) && RobotGlobal.delayMs > 0) RobotGlobal.delayMs -= 100;
+        if (checkInputs(gamepad1.dpad_up, lastUp)) RobotStatus.delayMs += 100;
+        if (checkInputs(gamepad1.dpad_down, lastDown) && RobotStatus.delayMs > 0) RobotStatus.delayMs -= 100;
         // Select alliance
         if (checkInputs(gamepad1.square, lastSquare)) {
-            switch(RobotGlobal.alliance) {
+            switch(RobotStatus.alliance) {
                 case NONE:
                 case RED:
-                    RobotGlobal.alliance = BLUE;
+                    RobotStatus.alliance = BLUE;
                     break;
                 case BLUE:
-                    RobotGlobal.alliance = RED;
+                    RobotStatus.alliance = RED;
                     break;
             }
         }
         // Toggle live view
-        if (checkInputs(gamepad1.cross, lastCross)) RobotGlobal.liveView = !RobotGlobal.liveView;
+        if (checkInputs(gamepad1.cross, lastCross)) RobotStatus.liveView = !RobotStatus.liveView;
 
         // Set old inputs
         lastUp = gamepad1.dpad_up;
@@ -115,9 +99,9 @@ public abstract class AutoTemplate extends LinearOpMode {
         telemetry.addData("Status", "Configuring Autonomous");
         telemetry.addData("Controls", "\nDelay: UP & DOWN \nToggle live view: CROSS \nSelect alliance: SQUARE");
         telemetry.addLine();
-        telemetry.addData("Selected auto delay", RobotGlobal.delayMs);
-        telemetry.addData("Live view on", RobotGlobal.liveView);
-        telemetry.addData("Selected alliance", RobotGlobal.alliance);
+        telemetry.addData("Selected auto delay", RobotStatus.delayMs);
+        telemetry.addData("Live view on", RobotStatus.liveView);
+        telemetry.addData("Selected alliance", RobotStatus.alliance);
         telemetry.update();
     }
 
@@ -126,8 +110,6 @@ public abstract class AutoTemplate extends LinearOpMode {
     }
 
     protected abstract Pose getStartingPose();
-
-    protected abstract void initSequence();
 
     protected abstract void buildPaths();
 

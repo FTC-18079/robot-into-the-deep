@@ -6,8 +6,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.autonomous.AutoTemplate;
 import org.firstinspires.ftc.teamcode.chassis.commands.FollowPathCommand;
-import org.firstinspires.ftc.teamcode.claw.Claw;
-import org.firstinspires.ftc.teamcode.claw.ClawConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierCurve;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierLine;
@@ -22,7 +20,7 @@ import static org.firstinspires.ftc.teamcode.autonomous.AutoConstants.*;
  * <p>
  * Scores high chamber, then pushes three samples into observation zones and starts cycling specimens
  * <p>
- * Must park in observation zone
+ * Parks in observation zone
  */
 
 @Config
@@ -66,12 +64,6 @@ public class Auto_Right_0_4 extends AutoTemplate {
     @Override
     protected Pose getStartingPose() {
         return startingPose;
-    }
-
-    @Override
-    protected void initSequence() {
-        Claw.getInstance().setState(ClawConstants.REST_STATE);
-        Claw.getInstance().periodic();
     }
 
     @Override
