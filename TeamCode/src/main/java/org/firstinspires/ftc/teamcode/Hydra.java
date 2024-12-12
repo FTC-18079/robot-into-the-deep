@@ -192,11 +192,10 @@ public class Hydra extends Robot {
         // Release sample
         manipController.getGamepadButton(GamepadKeys.Button.X)
                 .whenPressed(Commands.sequence(
-                        Commands.runOnce(() -> Claw.getInstance().setState(ClawConstants.SPECIMEN_COLLECT_STATE)),
-                        Commands.runOnce(Claw.getInstance()::closeClaw),
-                        Commands.waitMillis(400),
+                        Commands.runOnce(() -> Claw.getInstance().setJointOne(ClawConstants.JOINT_ONE_EJECT_POSITION)),
+                        Commands.waitMillis(300),
                         Commands.runOnce(Claw.getInstance()::openClaw),
-                        Commands.waitMillis(200),
+                        Commands.waitMillis(ClawConstants.GRAB_DELAY),
                         Commands.runOnce(() -> Claw.getInstance().setState(ClawConstants.REST_STATE))
                 ));
 

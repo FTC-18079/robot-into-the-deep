@@ -10,6 +10,8 @@ public class ClawConstants {
     public static double CLAW_CLOSE_POSITION = 0.1;
     public static double CLAW_OPEN_POSITION = 0.5;
 
+    public static double JOINT_ONE_EJECT_POSITION = 0.5;
+
     public static ClawState REST_STATE = new ClawState(CLAW_CLOSE_POSITION, 1.0, 0.95, 0.8);
 
     // SAMPLE POSITIONS
