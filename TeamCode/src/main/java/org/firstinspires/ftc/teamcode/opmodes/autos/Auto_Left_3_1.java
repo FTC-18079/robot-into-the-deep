@@ -1,22 +1,18 @@
 package org.firstinspires.ftc.teamcode.opmodes.autos;
 
-import static org.firstinspires.ftc.teamcode.util.RobotGlobal.Alliance;
+import static org.firstinspires.ftc.teamcode.RobotStatus.Alliance;
+import static org.firstinspires.ftc.teamcode.RobotStatus.Alliance.NONE;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.CommandScheduler;
-import com.arcrobotics.ftclib.command.InstantCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.RobotCore;
-import org.firstinspires.ftc.teamcode.RobotMap;
+import org.firstinspires.ftc.teamcode.Hydra;
 import org.firstinspires.ftc.teamcode.arm.Arm;
 import org.firstinspires.ftc.teamcode.arm.commands.ArmCommands;
 import org.firstinspires.ftc.teamcode.autonomous.AutoConstants;
-import org.firstinspires.ftc.teamcode.chassis.Chassis;
 import org.firstinspires.ftc.teamcode.chassis.commands.FollowPathCommand;
 import org.firstinspires.ftc.teamcode.claw.Claw;
 import org.firstinspires.ftc.teamcode.claw.ClawConstants;
@@ -25,7 +21,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierCurve;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierLine;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
-import org.firstinspires.ftc.teamcode.util.RobotGlobal;
+import org.firstinspires.ftc.teamcode.RobotStatus;
 import org.firstinspires.ftc.teamcode.util.commands.Commands;
 import org.firstinspires.ftc.teamcode.vision.LLVision;
 
@@ -42,7 +38,7 @@ import org.firstinspires.ftc.teamcode.vision.LLVision;
 @Config
 @Autonomous(name = "Left Side 3+1", group = "Auto")
 public class Auto_Left_3_1 extends LinearOpMode {
-    RobotCore robot;
+    private final Hydra robot = Hydra.getInstance();
 
     boolean lastUp;
     boolean lastDown;
@@ -83,10 +79,6 @@ public class Auto_Left_3_1 extends LinearOpMode {
         // Init hardware
         telemetry.addData("Status", "Initializing hardware");
         telemetry.update();
-        RobotMap.getInstance().init(hardwareMap);
-        RobotGlobal.resetValues();
-
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         // Configure auto variables
         while (opModeInInit() && !gamepad1.options) {
@@ -96,30 +88,28 @@ public class Auto_Left_3_1 extends LinearOpMode {
 
         // Create robot
         sleep(100);
-        RobotGlobal.robotPose = startingPose;
+        RobotStatus.robotPose = startingPose;
         buildPaths();
-        robot = new RobotCore(
-                RobotCore.OpModeType.AUTO,
-                telemetry,
-                gamepad1,
-                gamepad2
-        );
+        robot.autonomousInit(telemetry, hardwareMap);
 
         // Schedule auto
         telemetry.addData("Status", "Scheduling commands");
         telemetry.update();
-        if (RobotGlobal.alliance != Alliance.NONE) robot.schedule(
-                autoSequence()
-                .andThen(new InstantCommand(Chassis.getInstance()::breakFollowing)));
+        if (RobotStatus.alliance != NONE) {
+            Commands.waitUntil(RobotStatus::isEnabled)
+                    .andThen(Commands.waitMillis(RobotStatus.delayMs))
+                    .andThen(autoSequence())
+                    .schedule();
+        }
 
         Claw.getInstance().setState(ClawConstants.REST_STATE);
         Claw.getInstance().periodic();
 
         while (opModeInInit()) {
             telemetry.addData("Status", "Initialized, Ready to start");
-            telemetry.addData("Selected auto delay", RobotGlobal.delayMs);
-            telemetry.addData("Live view on", RobotGlobal.liveView);
-            telemetry.addData("Selected alliance", RobotGlobal.alliance);
+            telemetry.addData("Selected auto delay", RobotStatus.delayMs);
+            telemetry.addData("Live view on", RobotStatus.liveView);
+            telemetry.addData("Selected alliance", RobotStatus.alliance);
             telemetry.update();
 
             // Sleep CPU a little
@@ -127,11 +117,11 @@ public class Auto_Left_3_1 extends LinearOpMode {
         }
 
         // Set a default alliance
-        if (RobotGlobal.alliance == Alliance.NONE) RobotGlobal.alliance = Alliance.BLUE;
+        if (RobotStatus.alliance == Alliance.NONE) RobotStatus.alliance = Alliance.BLUE;
 
         // Run robot
         while (opModeIsActive() && !isStopRequested()) {
-            robot.run();
+            robot.periodic();
         }
 
         CommandScheduler.getInstance().cancelAll();
@@ -169,7 +159,7 @@ public class Auto_Left_3_1 extends LinearOpMode {
         return Commands.sequence(
                 Commands.runOnce(() -> Arm.getInstance().setScoreType(Arm.ScoreType.SPECIMEN)),
                 Commands.runOnce(LLVision.getInstance()::setYellow),
-                Commands.waitMillis(RobotGlobal.delayMs),
+                Commands.waitMillis(RobotStatus.delayMs),
                 // Drive up to chamber and score
                 Commands.parallel(
                         Commands.waitMillis(preloadPathDelay).andThen(new FollowPathCommand(scorePreloadPath, preloadMaxSpeed)),
@@ -245,22 +235,22 @@ public class Auto_Left_3_1 extends LinearOpMode {
 
     private void config() {
         // Add or remove delay
-        if (checkInputs(gamepad1.dpad_up, lastUp)) RobotGlobal.delayMs += 100;
-        if (checkInputs(gamepad1.dpad_down, lastDown) && RobotGlobal.delayMs > 0) RobotGlobal.delayMs -= 100;
+        if (checkInputs(gamepad1.dpad_up, lastUp)) RobotStatus.delayMs += 100;
+        if (checkInputs(gamepad1.dpad_down, lastDown) && RobotStatus.delayMs > 0) RobotStatus.delayMs -= 100;
         // Select alliance
         if (checkInputs(gamepad1.square, lastSquare)) {
-            switch(RobotGlobal.alliance) {
+            switch(RobotStatus.alliance) {
                 case NONE:
                 case RED:
-                    RobotGlobal.alliance = Alliance.BLUE;
+                    RobotStatus.alliance = Alliance.BLUE;
                     break;
                 case BLUE:
-                    RobotGlobal.alliance = Alliance.RED;
+                    RobotStatus.alliance = Alliance.RED;
                     break;
             }
         }
         // Toggle live view
-        if (checkInputs(gamepad1.cross, lastCross)) RobotGlobal.liveView = !RobotGlobal.liveView;
+        if (checkInputs(gamepad1.cross, lastCross)) RobotStatus.liveView = !RobotStatus.liveView;
 
         // Set old inputs
         lastUp = gamepad1.dpad_up;
@@ -272,9 +262,9 @@ public class Auto_Left_3_1 extends LinearOpMode {
         telemetry.addData("Status", "Configuring Autonomous");
         telemetry.addData("Controls", "\nDelay: UP & DOWN \nToggle live view: CROSS \nSelect alliance: SQUARE \nParking pose: CIRCLE");
         telemetry.addLine();
-        telemetry.addData("Selected auto delay", RobotGlobal.delayMs);
-        telemetry.addData("Live view on", RobotGlobal.liveView);
-        telemetry.addData("Selected alliance", RobotGlobal.alliance);
+        telemetry.addData("Selected auto delay", RobotStatus.delayMs);
+        telemetry.addData("Live view on", RobotStatus.liveView);
+        telemetry.addData("Selected alliance", RobotStatus.alliance);
         telemetry.update();
     }
 

@@ -1,20 +1,20 @@
 package org.firstinspires.ftc.teamcode.vision;
 
-import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.RobotCore;
+import org.firstinspires.ftc.teamcode.Hydra;
 import org.firstinspires.ftc.teamcode.RobotMap;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.MathFunctions;
+import org.firstinspires.ftc.teamcode.util.SubsystemIF;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class LLVision extends SubsystemBase {
+public class LLVision extends SubsystemIF {
     Limelight3A limelight;
     Telemetry telemetry;
     LLResult result;
@@ -23,7 +23,7 @@ public class LLVision extends SubsystemBase {
     SampleColor targetColor;
     double clawOverride = -1;
 
-    private static LLVision INSTANCE = null;
+    private static final LLVision INSTANCE = new LLVision();
 
     public static LLVision getInstance() {
         return INSTANCE;
@@ -41,14 +41,26 @@ public class LLVision extends SubsystemBase {
         }
     }
 
-    public LLVision() {
-        limelight = RobotMap.getInstance().LIMELIGHT;
-        telemetry = RobotCore.getTelemetry();
-
+    private LLVision() {
         targetColor = SampleColor.YELLOW;
-        setPipeline();
+    }
+
+    // INITIALIZE
+
+    @Override
+    public void onAutonomousInit() {
+        telemetry = Hydra.getInstance().getTelemetry();
+        limelight = RobotMap.getInstance().LIMELIGHT;
         start();
-        INSTANCE = this;
+        setPipeline();
+    }
+
+    @Override
+    public void onTeleopInit() {
+        telemetry = Hydra.getInstance().getTelemetry();
+        limelight = RobotMap.getInstance().LIMELIGHT;
+        start();
+        setYellow();
     }
 
     // LIMELIGHT MANAGEMENT
@@ -63,7 +75,6 @@ public class LLVision extends SubsystemBase {
 
     /**
      * Switches the limelight's pipeline
-     *
      */
     private void setPipeline() {
         limelight.pipelineSwitch(targetColor.index);

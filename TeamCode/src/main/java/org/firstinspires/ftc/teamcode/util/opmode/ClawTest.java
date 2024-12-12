@@ -25,7 +25,7 @@ public class ClawTest extends OpMode {
     @Override
     public void init() {
         RobotMap.getInstance().init(hardwareMap);
-        claw = new Claw();
+        claw = Claw.getInstance();
         state = new ClawState();
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
     }

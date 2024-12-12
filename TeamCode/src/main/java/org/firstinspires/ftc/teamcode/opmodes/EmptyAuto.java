@@ -4,13 +4,13 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
-import org.firstinspires.ftc.teamcode.util.RobotGlobal;
+import org.firstinspires.ftc.teamcode.RobotStatus;
 
 @Autonomous(name = "Empty Autonomous", group = "Bad Autos")
 public class EmptyAuto extends OpMode {
     @Override
     public void init() {
-        RobotGlobal.robotPose = new Pose(0, 0, 0);
+        RobotStatus.robotPose = new Pose(0, 0, 0);
     }
 
     @Override
