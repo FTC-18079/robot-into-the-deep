@@ -11,7 +11,6 @@ import org.firstinspires.ftc.teamcode.util.ATLivestream;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
-import org.firstinspires.ftc.vision.apriltag.AprilTagLibrary;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import static org.firstinspires.ftc.teamcode.vision.VisionConstants.arducam_fx;
