@@ -81,6 +81,8 @@ public class Chassis extends SubsystemIF {
         m = 1.0;
     }
 
+    // PATHING
+
     public void followPath(Path path) {
         follower.followPath(path);
     }
