@@ -64,20 +64,8 @@ public class Chassis extends SubsystemIF {
         follower.setPose(pose);
     }
 
-    public void setDrivePowers(double fwd, double str, double rot) {
+    public void setDriveVectors(double fwd, double str, double rot) {
         follower.setTeleOpMovementVectors(fwd * m, str * m, rot * m, isRobotCentric);
-    }
-
-    public void followPath(Path path) {
-        follower.followPath(path);
-    }
-
-    public void breakFollowing() {
-        follower.breakFollowing();
-    }
-
-    public void toggleRobotCentric() {
-        isRobotCentric = !isRobotCentric;
     }
 
     public void resetHeading() {
@@ -91,6 +79,18 @@ public class Chassis extends SubsystemIF {
 
     public void disableSlowMode() {
         m = 1.0;
+    }
+
+    public void followPath(Path path) {
+        follower.followPath(path);
+    }
+
+    public void breakFollowing() {
+        follower.breakFollowing();
+    }
+
+    public void toggleRobotCentric() {
+        isRobotCentric = !isRobotCentric;
     }
 
     // PERIODIC
