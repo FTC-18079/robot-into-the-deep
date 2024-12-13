@@ -40,6 +40,22 @@ public class Chassis extends SubsystemIF {
         setMaxPower(1.0);
     }
 
+    // GETTERS
+
+    public Pose getPoseEstimate() {
+        return follower.getPose();
+    }
+
+    public boolean isBusy() {
+        return follower.isBusy();
+    }
+
+    public boolean isRobotCentric() {
+        return isRobotCentric;
+    }
+
+    // SETTERS
+
     public void setMaxPower(double power) {
         follower.setMaxPower(power);
     }
@@ -52,24 +68,12 @@ public class Chassis extends SubsystemIF {
         follower.setTeleOpMovementVectors(fwd * m, str * m, rot * m, isRobotCentric);
     }
 
-    public Pose getPoseEstimate() {
-        return follower.getPose();
-    }
-
     public void followPath(Path path) {
         follower.followPath(path);
     }
 
     public void breakFollowing() {
         follower.breakFollowing();
-    }
-
-    public boolean isBusy() {
-        return follower.isBusy();
-    }
-
-    public boolean isRobotCentric() {
-        return isRobotCentric;
     }
 
     public void toggleRobotCentric() {
@@ -88,6 +92,8 @@ public class Chassis extends SubsystemIF {
     public void disableSlowMode() {
         m = 1.0;
     }
+
+    // PERIODIC
 
     @Override
     public void periodic() {
