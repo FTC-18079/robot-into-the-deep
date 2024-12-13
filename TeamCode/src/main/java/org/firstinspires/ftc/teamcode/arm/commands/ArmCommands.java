@@ -109,6 +109,7 @@ public class ArmCommands {
         );
 
         BASKET_TO_CHAMBER = () -> Commands.sequence(
+                Commands.runOnce(() -> claw.get().setState(ClawConstants.SPECIMEN_SCORING_STATE)),
                 Commands.runOnce(() -> arm.get().setState(Arm.ArmState.SCORING_SPECIMEN)),
                 new MoveSlideCommand(() -> ArmConstants.SLIDE_CHAMBER_POSITION)
         );
@@ -148,10 +149,10 @@ public class ArmCommands {
         );
 
         SCORE_SPECIMEN = () -> Commands.sequence(
-                Commands.runOnce(() -> claw.get().setState(ClawConstants.SPECIMEN_SCORE_STATE)),
-                Commands.waitMillis(400),
+                new MoveSlideCommand(() -> ArmConstants.SLIDE_CHAMBER_POSITION - ArmConstants.SLIDE_CHAMBER_SCORE_OFFSET),
+                Commands.waitMillis(50),
                 Commands.runOnce(claw.get()::openClaw),
-                Commands.waitMillis(100)
+                Commands.waitMillis(ClawConstants.GRAB_DELAY)
         );
 
         COLLECT_SAMPLE = () -> Commands.sequence(
