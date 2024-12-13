@@ -50,6 +50,6 @@ public class SlideZeroCommand extends CommandBase {
     }
 
     private boolean hasStopped() {
-        return timer.milliseconds() > 20 && Math.abs(arm.getSlideVelocity()) < ArmConstants.ZEROING_VELOCITY_ERROR;
+        return timer.milliseconds() > 40 && Math.abs(arm.getSlideVelocity()) < ArmConstants.ZEROING_VELOCITY_ERROR;
     }
 }
