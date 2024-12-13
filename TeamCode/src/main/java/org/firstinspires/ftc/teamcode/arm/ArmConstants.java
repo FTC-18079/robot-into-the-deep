@@ -8,10 +8,6 @@ public class ArmConstants {
      * SLIDES
      */
 
-    // Motion profile constraints
-    public static double MAX_VELOCITY = 182.0;
-    public static double MAX_ACCELERATION = MAX_VELOCITY * 4.0;
-
     // PID
     public static double SLIDE_kP = 0.025;
     public static double SLIDE_kI = 0.0;
@@ -27,6 +23,8 @@ public class ArmConstants {
     public static double SLIDE_ERROR_TOLERANCE = 15.0;
     public static double ALIGN_ERROR_TOLERANCE = 2;
     public static double SLIDE_TIMEOUT = 1400;
+    public static double ZEROING_TIMEOUT = 2000;
+    public static double ZEROING_VELOCITY_ERROR = 5;
 
     // Positions
     public static double SLIDE_REST_POSITION = 5.0;
