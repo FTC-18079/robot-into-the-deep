@@ -40,28 +40,10 @@ public class Chassis extends SubsystemIF {
         setMaxPower(1.0);
     }
 
-    public void setMaxPower(double power) {
-        follower.setMaxPower(power);
-    }
-
-    public void setPosition(Pose pose) {
-        follower.setPose(pose);
-    }
-
-    public void setDrivePowers(double fwd, double str, double rot) {
-        follower.setTeleOpMovementVectors(fwd * m, str * m, rot * m, isRobotCentric);
-    }
+    // GETTERS
 
     public Pose getPoseEstimate() {
         return follower.getPose();
-    }
-
-    public void followPath(Path path) {
-        follower.followPath(path);
-    }
-
-    public void breakFollowing() {
-        follower.breakFollowing();
     }
 
     public boolean isBusy() {
@@ -72,8 +54,18 @@ public class Chassis extends SubsystemIF {
         return isRobotCentric;
     }
 
-    public void toggleRobotCentric() {
-        isRobotCentric = !isRobotCentric;
+    // SETTERS
+
+    public void setMaxPower(double power) {
+        follower.setMaxPower(power);
+    }
+
+    public void setPosition(Pose pose) {
+        follower.setPose(pose);
+    }
+
+    public void setDriveVectors(double fwd, double str, double rot) {
+        follower.setTeleOpMovementVectors(fwd * m, str * m, rot * m, isRobotCentric);
     }
 
     public void resetHeading() {
@@ -88,6 +80,22 @@ public class Chassis extends SubsystemIF {
     public void disableSlowMode() {
         m = 1.0;
     }
+
+    // PATHING
+
+    public void followPath(Path path) {
+        follower.followPath(path);
+    }
+
+    public void breakFollowing() {
+        follower.breakFollowing();
+    }
+
+    public void toggleRobotCentric() {
+        isRobotCentric = !isRobotCentric;
+    }
+
+    // PERIODIC
 
     @Override
     public void periodic() {
