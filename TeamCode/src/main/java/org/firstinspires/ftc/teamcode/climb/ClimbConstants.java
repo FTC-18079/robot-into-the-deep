@@ -15,4 +15,6 @@ public class ClimbConstants {
     public static double CLIMB_ERROR_TOLERANCE = 0.0;
 
     // POSITIONS
+
+    public static double CLIMB_LATCH_POSITION = 0.0;
 }
