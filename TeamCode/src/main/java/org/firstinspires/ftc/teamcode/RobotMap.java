@@ -45,6 +45,9 @@ public class RobotMap {
     public Servo JOINT_ONE;
     public Servo JOINT_TWO;
 
+    // Climb
+    public DcMotorEx CLIMB_MOTOR;
+
     private static RobotMap instance = null;
 
     // Returns an instance of this
@@ -80,6 +83,8 @@ public class RobotMap {
         WRIST = hardwareMap.get(Servo.class, "wrist");
         JOINT_ONE = hardwareMap.get(Servo.class, "jointOne");
         JOINT_TWO = hardwareMap.get(Servo.class, "jointTwo");
+
+        CLIMB_MOTOR = hardwareMap.get(DcMotorEx.class, "climb");
 
         for (LynxModule hub : getLynxModules()) {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
