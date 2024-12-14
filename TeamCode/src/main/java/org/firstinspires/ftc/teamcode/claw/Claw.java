@@ -7,7 +7,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Hydra;
 import org.firstinspires.ftc.teamcode.RobotMap;
+import org.firstinspires.ftc.teamcode.RobotStatus;
 import org.firstinspires.ftc.teamcode.util.SubsystemIF;
+import org.firstinspires.ftc.teamcode.util.commands.Commands;
 
 public class Claw extends SubsystemIF {
     Telemetry telemetry;
@@ -26,10 +28,10 @@ public class Claw extends SubsystemIF {
     }
 
     private Claw() {
-        state.clawPos = ClawConstants.REST_STATE.clawPos;
-        state.wristPos = ClawConstants.REST_STATE.wristPos;
-        state.jointOnePos = ClawConstants.REST_STATE.jointOnePos;
-        state.jointTwoPos = ClawConstants.REST_STATE.jointTwoPos;
+        state.clawPos = REST_STATE.clawPos;
+        state.wristPos = REST_STATE.wristPos;
+        state.jointOnePos = REST_STATE.jointOnePos;
+        state.jointTwoPos = REST_STATE.jointTwoPos;
     }
 
     // INIT
@@ -38,15 +40,18 @@ public class Claw extends SubsystemIF {
     public void onAutonomousInit() {
         telemetry = Hydra.getInstance().getTelemetry();
         configureHardware();
-        setState(ClawConstants.REST_STATE);
+        setState(INIT_STATE);
         periodic();
+        Commands.waitUntil(RobotStatus::isEnabled)
+                .andThen(Commands.runOnce(() -> setState(REST_STATE)))
+                .schedule();
     }
 
     @Override
     public void onTeleopInit() {
         telemetry = Hydra.getInstance().getTelemetry();
         configureHardware();
-        setState(ClawConstants.REST_STATE);
+        setState(REST_STATE);
     }
 
     // HARDWARE SETUP
