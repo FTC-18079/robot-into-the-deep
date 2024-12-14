@@ -151,7 +151,7 @@ public class ArmCommands {
         SCORE_SPECIMEN = () -> Commands.sequence(
                 Commands.runOnce(() -> claw.get().setState(ClawConstants.SPECIMEN_SCORE_STATE)),
                 new MoveSlideCommand(() -> ArmConstants.SLIDE_CHAMBER_POSITION - ArmConstants.SLIDE_CHAMBER_SCORE_OFFSET),
-                Commands.waitMillis(300),
+                Commands.waitMillis(200),
                 Commands.runOnce(claw.get()::openClaw),
                 Commands.waitMillis(ClawConstants.GRAB_DELAY)
         );
