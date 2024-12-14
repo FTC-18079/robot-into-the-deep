@@ -62,7 +62,6 @@ public class Arm extends SubsystemIF {
         telemetry = Hydra.getInstance().getTelemetry();
         configureHardware();
         resetSlideEncoder();
-        resetPivotEncoder();
 
         pivotPid.setSetPoint(getPivotPos());
         slidePid.setSetPoint(getSlidePos());
