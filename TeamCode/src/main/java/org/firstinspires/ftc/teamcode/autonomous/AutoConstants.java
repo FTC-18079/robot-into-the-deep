@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.RobotStatus;
 @Config
 public class AutoConstants {
     // Scoring poses
-    public static double CHAMBER_X_POSITION = 30.5;
+    public static double CHAMBER_X_POSITION = 24;
     public static double CHAMBER_RIGHT_Y_POSITION = 66;
 
     public static final Pose BASKET_SCORE_POSE = new Pose(14, 124, Math.toRadians(315));
