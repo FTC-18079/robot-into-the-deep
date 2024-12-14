@@ -18,13 +18,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.arm.Arm;
 import org.firstinspires.ftc.teamcode.arm.commands.ArmCommands;
-import org.firstinspires.ftc.teamcode.arm.commands.SlideZeroCommand;
 import org.firstinspires.ftc.teamcode.chassis.Chassis;
 import org.firstinspires.ftc.teamcode.chassis.commands.TeleOpDriveCommand;
 import org.firstinspires.ftc.teamcode.claw.Claw;
 import org.firstinspires.ftc.teamcode.claw.ClawConstants;
 import org.firstinspires.ftc.teamcode.climb.Climb;
-import org.firstinspires.ftc.teamcode.climb.commands.ClimbSequenceCommand;
+import org.firstinspires.ftc.teamcode.climb.commands.AscentThreeCommand;
+import org.firstinspires.ftc.teamcode.climb.commands.AscentTwoCommand;
 import org.firstinspires.ftc.teamcode.util.SubsystemIF;
 import org.firstinspires.ftc.teamcode.util.commands.Commands;
 import org.firstinspires.ftc.teamcode.vision.LLVision;
@@ -203,16 +203,16 @@ public class Hydra extends Robot {
         new Trigger(() -> manipController.gamepad.touchpad)
                 .whenActive(Commands.either(
                         // Start climb
-                        new ClimbSequenceCommand(),
+                        new AscentTwoCommand(),
                         // Check if climb is ready to finish
                         Commands.none(),
-                        () -> Arm.getInstance().getState() == Arm.ArmState.STOW && RobotStatus.climbState == RobotStatus.ClimbState.DISABLED)
-                );
-        new Trigger(() -> driveController.gamepad.touchpad)
-                .whenActive(Commands.either(
-                        Commands.runOnce(() -> RobotStatus.setClimbState(RobotStatus.ClimbState.READY)),
+                        () -> Arm.getInstance().getState() == Arm.ArmState.STOW && RobotStatus.climbState == RobotStatus.ClimbState.DISABLED
+                ));
+        manipController.getGamepadButton(GamepadKeys.Button.START)
+                .whenPressed(Commands.either(
+                        new AscentThreeCommand(),
                         Commands.none(),
-                        () -> RobotStatus.climbState == RobotStatus.ClimbState.ENGAGED
+                        () -> RobotStatus.climbState == RobotStatus.ClimbState.CLIMBED
                 ));
 
         Log.i("Hydra", "============INITIALIZED TELEOP============");

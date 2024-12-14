@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.climb.ClimbConstants;
 import org.firstinspires.ftc.teamcode.util.commands.Commands;
 
 @Config
-public class ClimbSequenceCommand extends SequentialCommandGroup {
+public class AscentTwoCommand extends SequentialCommandGroup {
     private final Climb climb = Climb.getInstance();
     private final Arm arm = Arm.getInstance();
     private final ElapsedTime timer = new ElapsedTime();
@@ -24,7 +24,7 @@ public class ClimbSequenceCommand extends SequentialCommandGroup {
     public static double CLIMB_PULL_OUT_AMOUNT = 600;
     public static double SLIDE_PULL_OUT_POWER = 0.2;
 
-    public ClimbSequenceCommand() {
+    public AscentTwoCommand() {
         addCommands(
                 Commands.runOnce(() -> RobotStatus.setClimbState(RobotStatus.ClimbState.STARTED)),
                 Commands.log("ClimbSequenceCommand","===============LATCHING==============="),
