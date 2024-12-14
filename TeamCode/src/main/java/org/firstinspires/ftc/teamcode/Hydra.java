@@ -18,6 +18,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.arm.Arm;
 import org.firstinspires.ftc.teamcode.arm.commands.ArmCommands;
+import org.firstinspires.ftc.teamcode.arm.commands.SlideZeroCommand;
 import org.firstinspires.ftc.teamcode.chassis.Chassis;
 import org.firstinspires.ftc.teamcode.chassis.commands.TeleOpDriveCommand;
 import org.firstinspires.ftc.teamcode.claw.Claw;
@@ -171,9 +172,6 @@ public class Hydra extends Robot {
                 .whenPressed(() -> LLVision.getInstance().setClawOverride(0.43));
         manipController.getGamepadButton(GamepadKeys.Button.BACK)
                 .whenPressed(LLVision.getInstance()::disableClawOverride);
-
-        // Zeroing
-        // TODO: add if needed
 
         // Toggle target color
         manipController.getGamepadButton(GamepadKeys.Button.B)
