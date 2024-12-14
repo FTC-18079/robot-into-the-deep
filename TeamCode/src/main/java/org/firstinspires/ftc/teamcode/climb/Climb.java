@@ -78,6 +78,14 @@ public class Climb extends SubsystemIF {
 
     // SETTERS
 
+    public void setFloat() {
+        climbMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
+
+    public void setBrake() {
+        climbMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
     public void setPower(double power) {
         climbMotor.setPower(power);
     }
