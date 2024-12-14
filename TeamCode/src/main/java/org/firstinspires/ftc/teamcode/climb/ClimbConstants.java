@@ -22,5 +22,5 @@ public class ClimbConstants {
     public static double CLIMB_IN_POSITION = -950;
 
     public static double RIGHT_HOOK_ENGAGE_POSITION = 0.5;
-    public static double LEFT_HOOK_ENGAGE_POSITION = 0.5;
+    public static double LEFT_HOOK_ENGAGE_POSITION = 1.0;
 }

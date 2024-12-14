@@ -79,8 +79,7 @@ public class AscentTwoCommand extends SequentialCommandGroup {
                 Commands.runOnce(() -> climb.setPower(1.0)),
                 Commands.waitUntil(() -> climb.getClimbPos() >= ClimbConstants.CLIMB_IN_POSITION),
                 Commands.runOnce(() -> climb.setPower(0)),
-                Commands.run(() -> RobotStatus.setClimbState(RobotStatus.ClimbState.CLIMBED)),
-                Commands.runOnce(climb::engageHooks)
+                Commands.run(() -> RobotStatus.setClimbState(RobotStatus.ClimbState.CLIMBED))
         );
         addRequirements(climb);
     }
