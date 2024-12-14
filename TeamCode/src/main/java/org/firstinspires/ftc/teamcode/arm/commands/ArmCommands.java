@@ -186,7 +186,7 @@ public class ArmCommands {
                 default:
                     return Commands.none();
             }
-        });
+        }).andThen(new SlideZeroCommand());
 
         TO_BASKET = Commands.deferredProxy(() -> {
             if (arm.get().getScoreType() == Arm.ScoreType.SPECIMEN) return Commands.none();

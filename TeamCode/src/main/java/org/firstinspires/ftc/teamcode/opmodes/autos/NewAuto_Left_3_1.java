@@ -92,7 +92,7 @@ public class NewAuto_Left_3_1 extends AutoTemplate {
                 Commands.runOnce(LLVision.getInstance()::setYellow),
                 // Drive up to chamber and score
                 Commands.parallel(
-                        Commands.waitMillis(preloadPathDelay).andThen(new FollowPathCommand(scorePreloadPath, preloadMaxSpeed)),
+                        new FollowPathCommand(scorePreloadPath, preloadMaxSpeed),
                         Commands.defer(ArmCommands.STOW_TO_CHAMBER, Arm.getInstance())
                 ),
                 Commands.defer(ArmCommands.SCORE_SPECIMEN, Arm.getInstance()),
