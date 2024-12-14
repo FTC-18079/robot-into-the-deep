@@ -33,7 +33,7 @@ public class ClimbSequenceCommand extends SequentialCommandGroup {
                 Commands.runOnce(timer::reset),
                 Commands.race(
                         Commands.waitUntil(() -> climb.getClimbPos() >= ClimbConstants.CLIMB_LATCH_POSITION + 300),
-                        Commands.waitUntil(() -> timer.milliseconds() > 500)
+                        Commands.waitUntil(() -> timer.milliseconds() > 1000)
                 ),
                 Commands.runOnce(() -> climb.setPower(0)),
                 Commands.runOnce(climb::setFloat),
@@ -52,7 +52,7 @@ public class ClimbSequenceCommand extends SequentialCommandGroup {
                 new MoveSlideCommand(() -> ArmConstants.SLIDE_CLIMB_POSITION),
                 Commands.runOnce(() -> RobotStatus.setClimbState(RobotStatus.ClimbState.ENGAGED)),
                 // Confirm climb
-                Commands.waitMillis(5000),
+                Commands.waitMillis(2000),
 //                Commands.waitUntil(RobotStatus::isClimbReady),
 //                Commands.run(() -> RobotStatus.setClimbState(RobotStatus.ClimbState.CLIMBING)),
                 // Release slides
