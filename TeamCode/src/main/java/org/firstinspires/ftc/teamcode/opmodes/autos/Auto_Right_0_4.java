@@ -4,6 +4,9 @@ import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.Command;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.teamcode.RobotStatus;
+import org.firstinspires.ftc.teamcode.arm.Arm;
+import org.firstinspires.ftc.teamcode.arm.commands.ArmCommands;
 import org.firstinspires.ftc.teamcode.autonomous.AutoTemplate;
 import org.firstinspires.ftc.teamcode.chassis.commands.FollowPathCommand;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
@@ -12,6 +15,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierLine;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.util.commands.Commands;
+import org.firstinspires.ftc.teamcode.vision.LLVision;
 
 import static org.firstinspires.ftc.teamcode.autonomous.AutoConstants.*;
 
@@ -118,8 +122,19 @@ public class Auto_Right_0_4 extends AutoTemplate {
     @Override
     protected Command makeAutoSequence() {
         return Commands.sequence(
+                Commands.runOnce(() -> Arm.getInstance().setScoreType(Arm.ScoreType.SPECIMEN)),
+                Commands.runOnce(() -> LLVision.getInstance().setRed()),
+                Commands.waitMillis(RobotStatus.delayMs),
+
+                Commands.parallel(
+                        Commands.waitMillis(preloadPathDelay).andThen(new FollowPathCommand(scorePreloadPath, preloadMaxSpeed)),
+                        Commands.defer(ArmCommands.STOW_TO_CHAMBER, Arm.getInstance())
+                ),
+                Commands.defer(ArmCommands.SCORE_SPECIMEN, Arm.getInstance()),
+                Commands.parallel(
+
+                ),
                 // Drive up to high chamber and score
-                new FollowPathCommand(scorePreloadPath, preloadMaxSpeed),
                 new FollowPathCommand(behindOnePath),
                 new FollowPathCommand(pushOnePath),
                 new FollowPathCommand(behindTwoPath),
