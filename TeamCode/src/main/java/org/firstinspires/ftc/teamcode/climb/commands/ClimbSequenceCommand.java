@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.climb.commands;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -8,14 +9,20 @@ import org.firstinspires.ftc.teamcode.arm.Arm;
 import org.firstinspires.ftc.teamcode.arm.ArmConstants;
 import org.firstinspires.ftc.teamcode.arm.commands.MovePivotCommand;
 import org.firstinspires.ftc.teamcode.arm.commands.MoveSlideCommand;
+import org.firstinspires.ftc.teamcode.claw.Claw;
+import org.firstinspires.ftc.teamcode.claw.ClawConstants;
 import org.firstinspires.ftc.teamcode.climb.Climb;
 import org.firstinspires.ftc.teamcode.climb.ClimbConstants;
 import org.firstinspires.ftc.teamcode.util.commands.Commands;
 
+@Config
 public class ClimbSequenceCommand extends SequentialCommandGroup {
     private final Climb climb = Climb.getInstance();
     private final Arm arm = Arm.getInstance();
     private final ElapsedTime timer = new ElapsedTime();
+
+    public static double CLIMB_PULL_OUT_AMOUNT = 600;
+    public static double SLIDE_PULL_OUT_POWER = 0.2;
 
     public ClimbSequenceCommand() {
         addCommands(
@@ -31,11 +38,16 @@ public class ClimbSequenceCommand extends SequentialCommandGroup {
                 // Make slides pull the climb out
                 Commands.runOnce(() -> climb.setPower(0.5)),
                 Commands.runOnce(timer::reset),
+                Commands.runOnce(() -> arm.slideZeroing = true),
+                Commands.runOnce(() -> arm.setSlidePower(SLIDE_PULL_OUT_POWER)),
                 Commands.race(
-                        Commands.waitUntil(() -> climb.getClimbPos() >= ClimbConstants.CLIMB_LATCH_POSITION + 300),
+                        Commands.waitUntil(() -> climb.getClimbPos() >= ClimbConstants.CLIMB_LATCH_POSITION + CLIMB_PULL_OUT_AMOUNT),
                         Commands.waitUntil(() -> timer.milliseconds() > 1000)
                 ),
                 Commands.runOnce(() -> climb.setPower(0)),
+                Commands.runOnce(() -> arm.setSlidePower(0)),
+                Commands.runOnce(() -> arm.setSlidePos(arm.getSlidePos())),
+                Commands.runOnce(() -> arm.slideZeroing = false),
                 Commands.runOnce(climb::setFloat),
                 new MoveSlideCommand(() -> ArmConstants.SLIDE_PULL_CLIMB_POSITION),
                 Commands.runOnce(climb::setBrake),
@@ -50,6 +62,7 @@ public class ClimbSequenceCommand extends SequentialCommandGroup {
                 new MoveSlideCommand(() -> ArmConstants.SLIDE_ENGAGE_POSITION),
                 new MovePivotCommand(() -> ArmConstants.PIVOT_SCORE_POSITION),
                 new MoveSlideCommand(() -> ArmConstants.SLIDE_CLIMB_POSITION),
+                Commands.runOnce(() -> Claw.getInstance().setState(ClawConstants.SAMPLE_COLLECTING_STATE)),
                 Commands.runOnce(() -> RobotStatus.setClimbState(RobotStatus.ClimbState.ENGAGED)),
                 // Confirm climb
                 Commands.waitMillis(2000),
