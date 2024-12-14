@@ -9,6 +9,7 @@ public class ClimbConstants {
     public static double kP = 1.0;
     public static double kI = 0.0;
     public static double kD = 0.0;
+    public static double kF = 0.2;
 
     // Constants
 
@@ -16,11 +17,14 @@ public class ClimbConstants {
 
     // POSITIONS
 
-    public static double CLIMB_LATCH_POSITION = -635.0;
-    public static double CLIMB_UNSPOOLED_POSITION = -9100.0;
+    public static double CLIMB_LATCH_POSITION = 700.0;
+    public static double CLIMB_UNSPOOLED_POSITION = -5950;
     public static double CLIMB_PIVOT_POSITION = 800.0;
-    public static double CLIMB_IN_POSITION = -950;
+    public static double CLIMB_IN_POSITION = 1300;
 
-    public static double RIGHT_HOOK_ENGAGE_POSITION = 0.5;
+    public static double RIGHT_HOOK_READY_POSITION = 0.6;
+    public static double LEFT_HOOK_READY_POSITION = 0.4;
+
+    public static double RIGHT_HOOK_ENGAGE_POSITION = 0.0;
     public static double LEFT_HOOK_ENGAGE_POSITION = 1.0;
 }

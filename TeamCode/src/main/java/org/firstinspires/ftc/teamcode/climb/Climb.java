@@ -97,6 +97,21 @@ public class Climb extends SubsystemIF {
         leftHook.setPosition(LEFT_HOOK_ENGAGE_POSITION);
     }
 
+    public void readyHooks() {
+        rightHook.setPosition(RIGHT_HOOK_READY_POSITION);
+        leftHook.setPosition(LEFT_HOOK_READY_POSITION);
+    }
+
+    public void servoDisable() {
+        rightHook.getController().pwmDisable();
+        leftHook.getController().pwmDisable();
+    }
+
+    public void servoEnable() {
+        rightHook.getController().pwmEnable();
+        leftHook.getController().pwmEnable();
+    }
+
     public void setPower(double power) {
         climbMotor.setPower(power);
     }

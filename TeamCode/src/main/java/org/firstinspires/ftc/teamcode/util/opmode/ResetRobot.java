@@ -7,12 +7,13 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 
 import org.firstinspires.ftc.teamcode.RobotMap;
+import org.firstinspires.ftc.teamcode.RobotStatus;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@TeleOp(name = "Encoder Reset", group = "Util")
-public class ResetEncoders extends OpMode {
+@TeleOp(name = "Robot Reset", group = "Util")
+public class ResetRobot extends OpMode {
     List<DcMotorEx> motors = new ArrayList<>();
 
     @Override
@@ -23,6 +24,7 @@ public class ResetEncoders extends OpMode {
                 motors.add((DcMotorEx) h);
             }
         }
+        telemetry.addData("Robot Reset", "Press START to reset robot variables and encoders");
     }
 
     @Override
@@ -30,6 +32,7 @@ public class ResetEncoders extends OpMode {
         for (DcMotorEx m : motors) {
             m.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
+        RobotStatus.resetValues();
     }
 
     @Override

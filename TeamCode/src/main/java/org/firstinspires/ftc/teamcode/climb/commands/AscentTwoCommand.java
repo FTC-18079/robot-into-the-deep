@@ -22,15 +22,16 @@ public class AscentTwoCommand extends SequentialCommandGroup {
     private final ElapsedTime timer = new ElapsedTime();
 
     public static double CLIMB_PULL_OUT_AMOUNT = 600;
-    public static double SLIDE_PULL_OUT_POWER = 0.2;
+    public static double SLIDE_PULL_OUT_POWER = 0.25;
 
     public AscentTwoCommand() {
         addCommands(
                 Commands.runOnce(() -> RobotStatus.setClimbState(RobotStatus.ClimbState.STARTED)),
                 Commands.log("ClimbSequenceCommand","===============LATCHING==============="),
+                Commands.runOnce(climb::readyHooks),
                 // Latch climb onto slides
-                Commands.runOnce(() -> climb.setPower(-0.5)),
-                Commands.waitUntil(() -> climb.getClimbPos() <= ClimbConstants.CLIMB_LATCH_POSITION),
+                Commands.runOnce(() -> climb.setPower(0.5)),
+                Commands.waitUntil(() -> climb.getClimbPos() >= ClimbConstants.CLIMB_LATCH_POSITION),
                 Commands.runOnce(() -> climb.setPower(0.0)),
                 new MoveSlideCommand(() -> ArmConstants.SLIDE_LATCH_POSITION),
                 Commands.waitMillis(500),
@@ -78,7 +79,12 @@ public class AscentTwoCommand extends SequentialCommandGroup {
                 Commands.log("ClimbSequenceCommand","===============CLIMBING==============="),
                 Commands.runOnce(() -> climb.setPower(1.0)),
                 Commands.waitUntil(() -> climb.getClimbPos() >= ClimbConstants.CLIMB_IN_POSITION),
+                new MovePivotCommand(() -> ArmConstants.PIVOT_CLIMBED_POSITION),
+                Commands.runOnce(() -> climb.setPower(ClimbConstants.kF)),
+                Commands.runOnce(climb::engageHooks),
+                Commands.waitMillis(1000),
                 Commands.runOnce(() -> climb.setPower(0)),
+                Commands.runOnce(climb::servoDisable),
                 Commands.run(() -> RobotStatus.setClimbState(RobotStatus.ClimbState.CLIMBED))
         );
         addRequirements(climb);
