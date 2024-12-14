@@ -6,16 +6,19 @@ import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 // TODO: change drive motors back to photon motors
 public class RobotMap {
     private HardwareMap hMap;
+    private final List<HardwareDevice> devices = new ArrayList<>();
 
     // Sensors
     public SparkFunOTOS OTOS;
@@ -59,6 +62,8 @@ public class RobotMap {
     }
 
     public void init(final HardwareMap hardwareMap) {
+        devices.clear();
+
         this.hMap = hardwareMap;
 
         OTOS = hardwareMap.get(SparkFunOTOS.class, "otos");
@@ -89,6 +94,33 @@ public class RobotMap {
         for (LynxModule hub : getLynxModules()) {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
         }
+
+        addDevices();
+    }
+
+    private void addDevices() {
+        devices.add(getInstance().OTOS);
+        devices.add(getInstance().LIMELIGHT);
+        devices.add(getInstance().MOTOR_FL);
+        devices.add(getInstance().MOTOR_FR);
+        devices.add(getInstance().MOTOR_BL);
+        devices.add(getInstance().MOTOR_BR);
+        devices.add(getInstance().LEFT_SLIDE);
+        devices.add(getInstance().RIGHT_SLIDE);
+        devices.add(getInstance().PIVOT_FR);
+        devices.add(getInstance().PIVOT_FL);
+        devices.add(getInstance().PIVOT_BL);
+        devices.add(getInstance().PIVOT_BR);
+        devices.add(getInstance().PIVOT_ENCODER);
+        devices.add(getInstance().CLAW);
+        devices.add(getInstance().WRIST);
+        devices.add(getInstance().JOINT_ONE);
+        devices.add(getInstance().JOINT_TWO);
+        devices.add(getInstance().CLIMB_MOTOR);
+    }
+
+    public List<HardwareDevice> getDevices() {
+        return devices;
     }
 
     // Get hubs
