@@ -62,7 +62,6 @@ public class Arm extends SubsystemIF {
         telemetry = Hydra.getInstance().getTelemetry();
         configureHardware();
         resetSlideEncoder();
-        resetPivotEncoder();
 
         pivotPid.setSetPoint(getPivotPos());
         slidePid.setSetPoint(getSlidePos());
@@ -136,6 +135,10 @@ public class Arm extends SubsystemIF {
         return Math.abs(getPivotPos() - getPivotTarget()) < PIVOT_ERROR_TOLERANCE;
     }
 
+    public double getSlideVelocity() {
+        return leftSlide.getVelocity();
+    }
+
     public ArmState getState() {
         return state;
     }
@@ -207,8 +210,7 @@ public class Arm extends SubsystemIF {
         double pivotOutput = pivotPid.calculate(getPivotPos());
         double pivotFeedforward = PIVOT_kF * Math.cos(Math.toRadians(getPivotTarget() - PIVOT_REST_POSITION));
 
-        if (!slideZeroing) rightSlide.setPower(slideOutput + slideFeedforward);
-        if (!slideZeroing) leftSlide.setPower(slideOutput + slideFeedforward);
+        if (!slideZeroing) setSlidePower(slideOutput + slideFeedforward);
 
         if (pivotAtSetPoint() && getPivotTarget() == PIVOT_REST_POSITION) pivot.setPower(0);
         else pivot.setPower(pivotOutput + pivotFeedforward);

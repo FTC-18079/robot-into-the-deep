@@ -8,10 +8,6 @@ public class ArmConstants {
      * SLIDES
      */
 
-    // Motion profile constraints
-    public static double MAX_VELOCITY = 182.0;
-    public static double MAX_ACCELERATION = MAX_VELOCITY * 4.0;
-
     // PID
     public static double SLIDE_kP = 0.025;
     public static double SLIDE_kI = 0.0;
@@ -21,18 +17,21 @@ public class ArmConstants {
     // Alignment PID
     public static double ALIGN_kP = 0.025;
     public static double ALIGN_kI = 0.0;
-    public static double ALIGN_kD = 0.0;
+    public static double ALIGN_kD = 0.0002;
 
     // Constants
     public static double SLIDE_ERROR_TOLERANCE = 15.0;
     public static double ALIGN_ERROR_TOLERANCE = 2;
     public static double SLIDE_TIMEOUT = 1400;
+    public static double ZEROING_TIMEOUT = 2000;
+    public static double ZEROING_VELOCITY_ERROR = 5;
 
     // Positions
     public static double SLIDE_REST_POSITION = 5.0;
     public static double SLIDE_SAMPLE_COLLECT_POSITION = 1150.0;
     public static double SLIDE_SPECIMEN_COLLECT_POSITION = 350;
-    public static double SLIDE_CHAMBER_POSITION = SLIDE_REST_POSITION;
+    public static double SLIDE_CHAMBER_POSITION = 425;
+    public static double SLIDE_CHAMBER_SCORE_OFFSET = 350;
     public static double SLIDE_BASKET_POSITION = 1300.0;
 
     /**
