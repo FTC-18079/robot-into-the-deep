@@ -69,6 +69,9 @@ public class ClimbSequenceCommand extends SequentialCommandGroup {
 //                Commands.waitUntil(RobotStatus::isClimbReady),
 //                Commands.run(() -> RobotStatus.setClimbState(RobotStatus.ClimbState.CLIMBING)),
                 // Release slides
+                new MoveSlideCommand(() -> ArmConstants.SLIDE_CLIMB_POSITION - 100),
+                Commands.waitMillis(100),
+                Commands.runOnce(() -> arm.setSlidePower(0)),
                 Commands.runOnce(arm::floatNeutralMode),
                 Commands.runOnce(() -> arm.slideZeroing = true),
                 // Climb

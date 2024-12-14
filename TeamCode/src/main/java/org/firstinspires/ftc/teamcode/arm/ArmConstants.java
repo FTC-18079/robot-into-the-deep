@@ -57,6 +57,6 @@ public class ArmConstants {
 
     // Positions
     public static final double PIVOT_REST_TO_SCORE_OFFSET = 150.0;
-    public static double PIVOT_REST_POSITION = 18.0;
-    public static double PIVOT_SCORE_POSITION = 168.0;
+    public static double PIVOT_REST_POSITION = 90.0;
+    public static double PIVOT_SCORE_POSITION = PIVOT_REST_POSITION + PIVOT_REST_TO_SCORE_OFFSET;
 }
