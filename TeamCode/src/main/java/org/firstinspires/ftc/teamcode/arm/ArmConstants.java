@@ -35,6 +35,7 @@ public class ArmConstants {
     public static double SLIDE_CHAMBER_POSITION = SLIDE_REST_POSITION;
     public static double SLIDE_BASKET_POSITION = 1300.0;
     public static double SLIDE_CLIMB_POSITION = 1300.0;
+    public static double SLIDE_LATCH_POSITION = 1300.0;
 
     /**
      * PIVOT

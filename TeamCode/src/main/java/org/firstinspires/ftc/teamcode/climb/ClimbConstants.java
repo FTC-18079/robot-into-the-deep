@@ -17,4 +17,5 @@ public class ClimbConstants {
     // POSITIONS
 
     public static double CLIMB_LATCH_POSITION = 0.0;
+    public static double CLIMB_UNSPOOLED_POSITION = 0.0;
 }
