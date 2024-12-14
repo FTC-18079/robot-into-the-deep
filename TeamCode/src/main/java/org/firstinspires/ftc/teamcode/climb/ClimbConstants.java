@@ -20,4 +20,7 @@ public class ClimbConstants {
     public static double CLIMB_UNSPOOLED_POSITION = -9100.0;
     public static double CLIMB_PIVOT_POSITION = 800.0;
     public static double CLIMB_IN_POSITION = -950;
+
+    public static double RIGHT_HOOK_ENGAGE_POSITION = 0.5;
+    public static double LEFT_HOOK_ENGAGE_POSITION = 0.5;
 }

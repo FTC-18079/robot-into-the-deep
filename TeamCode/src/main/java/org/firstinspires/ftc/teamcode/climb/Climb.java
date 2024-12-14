@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.teamcode.climb.ClimbConstants.*;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Hydra;
@@ -17,6 +18,8 @@ public class Climb extends SubsystemIF {
     Telemetry telemetry;
 
     SuccessMotor climbMotor;
+    Servo rightHook;
+    Servo leftHook;
 
     PIDController climbPid;
 
@@ -52,6 +55,8 @@ public class Climb extends SubsystemIF {
 
     public void configureHardware() {
         climbMotor = new SuccessMotor(RobotMap.getInstance().CLIMB_MOTOR);
+        rightHook = RobotMap.getInstance().RIGHT_HOOK;
+        leftHook = RobotMap.getInstance().LEFT_HOOK;
 
         climbMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         climbMotor.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -85,6 +90,11 @@ public class Climb extends SubsystemIF {
 
     public void setBrake() {
         climbMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
+    public void engageHooks() {
+        rightHook.setPosition(RIGHT_HOOK_ENGAGE_POSITION);
+        leftHook.setPosition(LEFT_HOOK_ENGAGE_POSITION);
     }
 
     public void setPower(double power) {

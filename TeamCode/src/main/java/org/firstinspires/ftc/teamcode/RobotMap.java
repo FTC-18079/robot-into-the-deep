@@ -50,6 +50,8 @@ public class RobotMap {
 
     // Climb
     public DcMotorEx CLIMB_MOTOR;
+    public Servo RIGHT_HOOK;
+    public Servo LEFT_HOOK;
 
     private static RobotMap instance = null;
 
@@ -90,6 +92,8 @@ public class RobotMap {
         JOINT_TWO = hardwareMap.get(Servo.class, "jointTwo");
 
         CLIMB_MOTOR = hardwareMap.get(DcMotorEx.class, "climb");
+        RIGHT_HOOK = hardwareMap.get(Servo.class, "rightHook");
+        LEFT_HOOK = hardwareMap.get(Servo.class, "leftHook");
 
         for (LynxModule hub : getLynxModules()) {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
@@ -117,6 +121,8 @@ public class RobotMap {
         devices.add(getInstance().JOINT_ONE);
         devices.add(getInstance().JOINT_TWO);
         devices.add(getInstance().CLIMB_MOTOR);
+        devices.add(getInstance().RIGHT_HOOK);
+        devices.add(getInstance().LEFT_HOOK);
     }
 
     public List<HardwareDevice> getDevices() {
