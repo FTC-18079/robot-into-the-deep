@@ -16,6 +16,8 @@ public class ClimbConstants {
 
     // POSITIONS
 
-    public static double CLIMB_LATCH_POSITION = 0.0;
-    public static double CLIMB_UNSPOOLED_POSITION = 0.0;
+    public static double CLIMB_LATCH_POSITION = -635.0;
+    public static double CLIMB_UNSPOOLED_POSITION = -5700.0;
+    public static double CLIMB_PIVOT_POSITION = 800.0;
+    public static double CLIMB_IN_POSITION = -2000;
 }

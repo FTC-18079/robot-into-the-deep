@@ -17,17 +17,34 @@ public class ClimbSequenceCommand extends SequentialCommandGroup {
 
     public ClimbSequenceCommand() {
         addCommands(
-                Commands.parallel(
-                        Commands.runOnce(() -> climb.setPower(0.25)),
-                        new MoveSlideCommand(() -> ArmConstants.SLIDE_LATCH_POSITION)
-                ),
-                Commands.waitUntil(() -> climb.getClimbPos() >= ClimbConstants.CLIMB_LATCH_POSITION),
-                Commands.runOnce(() -> climb.setPower(1.0)),
-                Commands.waitMillis(100),
+                // Latch climb onto slides
+                Commands.runOnce(() -> climb.setPower(-0.5)),
+                Commands.waitUntil(() -> climb.getClimbPos() <= ClimbConstants.CLIMB_LATCH_POSITION),
+                Commands.runOnce(() -> climb.setPower(0.0)),
+                new MoveSlideCommand(() -> ArmConstants.SLIDE_LATCH_POSITION),
+                Commands.waitMillis(500),
+                // Make slides pull the climb out
+                Commands.runOnce(() -> climb.setPower(0.5)),
+                Commands.waitUntil(() -> climb.getClimbPos() >= ClimbConstants.CLIMB_LATCH_POSITION + 100),
+                Commands.runOnce(() -> climb.setPower(0)),
+                new MoveSlideCommand(() -> ArmConstants.SLIDE_PULL_CLIMB_POSITION),
+                Commands.waitMillis(500),
+                // Unspool
+                Commands.runOnce(() -> climb.setPower(-1.0)),
+                Commands.waitUntil(() -> climb.getClimbPos() <= ClimbConstants.CLIMB_UNSPOOLED_POSITION),
+                Commands.runOnce(() -> climb.setPower(0)),
+                // Bring arm to engage
+                new MoveSlideCommand(() -> ArmConstants.SLIDE_ENGAGE_POSITION),
                 new MovePivotCommand(() -> ArmConstants.PIVOT_SCORE_POSITION),
                 new MoveSlideCommand(() -> ArmConstants.SLIDE_CLIMB_POSITION),
-                Commands.waitUntil(() -> climb.getClimbPos() >= ClimbConstants.CLIMB_UNSPOOLED_POSITION)
-                        .andThen(Commands.waitMillis(100).andThen(Commands.runOnce(() -> climb.setPower(-1.0))))
+                // Confirm climb
+                Commands.waitMillis(5000),
+                // Release slides
+                Commands.runOnce(arm::floatNeutralMode),
+                Commands.runOnce(() -> arm.slideZeroing = true),
+                // Climb
+                Commands.runOnce(() -> climb.setPower(1.0)),
+                Commands.waitUntil(() -> climb.getClimbPos() >= ClimbConstants.CLIMB_IN_POSITION)
         );
         addRequirements(climb);
     }

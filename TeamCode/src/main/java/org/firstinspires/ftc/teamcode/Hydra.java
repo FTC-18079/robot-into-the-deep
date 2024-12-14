@@ -23,6 +23,8 @@ import org.firstinspires.ftc.teamcode.chassis.Chassis;
 import org.firstinspires.ftc.teamcode.chassis.commands.TeleOpDriveCommand;
 import org.firstinspires.ftc.teamcode.claw.Claw;
 import org.firstinspires.ftc.teamcode.claw.ClawConstants;
+import org.firstinspires.ftc.teamcode.climb.Climb;
+import org.firstinspires.ftc.teamcode.climb.commands.ClimbSequenceCommand;
 import org.firstinspires.ftc.teamcode.util.SubsystemIF;
 import org.firstinspires.ftc.teamcode.util.commands.Commands;
 import org.firstinspires.ftc.teamcode.vision.LLVision;
@@ -90,6 +92,7 @@ public class Hydra extends Robot {
         subsystems.add(Arm.getInstance().initialize());
         subsystems.add(Claw.getInstance().initialize());
         subsystems.add(LLVision.getInstance().initialize());
+        subsystems.add(Climb.getInstance().initialize());
         registerSubsystems();
     }
 
@@ -195,6 +198,14 @@ public class Hydra extends Robot {
                         Commands.waitMillis(ClawConstants.GRAB_DELAY),
                         Commands.runOnce(() -> Claw.getInstance().setState(ClawConstants.REST_STATE))
                 ));
+
+        // Climb
+        new Trigger(() -> manipController.gamepad.touchpad)
+                .whenActive(Commands.either(
+                        new ClimbSequenceCommand(),
+                        Commands.none(),
+                        () -> Arm.getInstance().getState() == Arm.ArmState.STOW
+        ));
 
         Log.i("Hydra", "============INITIALIZED TELEOP============");
     }
