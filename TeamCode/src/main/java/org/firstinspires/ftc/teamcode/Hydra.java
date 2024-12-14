@@ -202,10 +202,18 @@ public class Hydra extends Robot {
         // Climb
         new Trigger(() -> manipController.gamepad.touchpad)
                 .whenActive(Commands.either(
+                        // Start climb
                         new ClimbSequenceCommand(),
+                        // Check if climb is ready to finish
                         Commands.none(),
-                        () -> Arm.getInstance().getState() == Arm.ArmState.STOW
-        ));
+                        () -> Arm.getInstance().getState() == Arm.ArmState.STOW && RobotStatus.climbState == RobotStatus.ClimbState.DISABLED)
+                );
+        new Trigger(() -> driveController.gamepad.touchpad)
+                .whenActive(Commands.either(
+                        Commands.runOnce(() -> RobotStatus.setClimbState(RobotStatus.ClimbState.READY)),
+                        Commands.none(),
+                        () -> RobotStatus.climbState == RobotStatus.ClimbState.ENGAGED
+                ));
 
         Log.i("Hydra", "============INITIALIZED TELEOP============");
     }

@@ -1,10 +1,9 @@
 package org.firstinspires.ftc.teamcode.climb.commands;
 
-import android.util.Log;
-
-import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.RobotStatus;
 import org.firstinspires.ftc.teamcode.arm.Arm;
 import org.firstinspires.ftc.teamcode.arm.ArmConstants;
 import org.firstinspires.ftc.teamcode.arm.commands.MovePivotCommand;
@@ -16,9 +15,11 @@ import org.firstinspires.ftc.teamcode.util.commands.Commands;
 public class ClimbSequenceCommand extends SequentialCommandGroup {
     private final Climb climb = Climb.getInstance();
     private final Arm arm = Arm.getInstance();
+    private final ElapsedTime timer = new ElapsedTime();
 
     public ClimbSequenceCommand() {
         addCommands(
+                Commands.runOnce(() -> RobotStatus.setClimbState(RobotStatus.ClimbState.STARTED)),
                 Commands.log("ClimbSequenceCommand","===============LATCHING==============="),
                 // Latch climb onto slides
                 Commands.runOnce(() -> climb.setPower(-0.5)),
@@ -29,7 +30,11 @@ public class ClimbSequenceCommand extends SequentialCommandGroup {
                 Commands.log("ClimbSequenceCommand","===============PULLING OUT==============="),
                 // Make slides pull the climb out
                 Commands.runOnce(() -> climb.setPower(0.5)),
-                Commands.waitUntil(() -> climb.getClimbPos() >= ClimbConstants.CLIMB_LATCH_POSITION + 200),
+                Commands.runOnce(timer::reset),
+                Commands.race(
+                        Commands.waitUntil(() -> climb.getClimbPos() >= ClimbConstants.CLIMB_LATCH_POSITION + 300),
+                        Commands.waitUntil(() -> timer.milliseconds() > 500)
+                ),
                 Commands.runOnce(() -> climb.setPower(0)),
                 Commands.runOnce(climb::setFloat),
                 new MoveSlideCommand(() -> ArmConstants.SLIDE_PULL_CLIMB_POSITION),
@@ -45,8 +50,11 @@ public class ClimbSequenceCommand extends SequentialCommandGroup {
                 new MoveSlideCommand(() -> ArmConstants.SLIDE_ENGAGE_POSITION),
                 new MovePivotCommand(() -> ArmConstants.PIVOT_SCORE_POSITION),
                 new MoveSlideCommand(() -> ArmConstants.SLIDE_CLIMB_POSITION),
+                Commands.runOnce(() -> RobotStatus.setClimbState(RobotStatus.ClimbState.ENGAGED)),
                 // Confirm climb
                 Commands.waitMillis(5000),
+//                Commands.waitUntil(RobotStatus::isClimbReady),
+//                Commands.run(() -> RobotStatus.setClimbState(RobotStatus.ClimbState.CLIMBING)),
                 // Release slides
                 Commands.runOnce(arm::floatNeutralMode),
                 Commands.runOnce(() -> arm.slideZeroing = true),
@@ -54,7 +62,8 @@ public class ClimbSequenceCommand extends SequentialCommandGroup {
                 Commands.log("ClimbSequenceCommand","===============CLIMBING==============="),
                 Commands.runOnce(() -> climb.setPower(1.0)),
                 Commands.waitUntil(() -> climb.getClimbPos() >= ClimbConstants.CLIMB_IN_POSITION),
-                Commands.runOnce(() -> climb.setPower(0))
+                Commands.runOnce(() -> climb.setPower(0)),
+                Commands.run(() -> RobotStatus.setClimbState(RobotStatus.ClimbState.CLIMBED))
         );
         addRequirements(climb);
     }

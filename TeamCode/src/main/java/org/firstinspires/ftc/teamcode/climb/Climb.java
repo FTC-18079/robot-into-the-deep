@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Hydra;
 import org.firstinspires.ftc.teamcode.RobotMap;
+import org.firstinspires.ftc.teamcode.RobotStatus;
 import org.firstinspires.ftc.teamcode.util.SubsystemIF;
 import org.firstinspires.ftc.teamcode.util.hardware.SuccessMotor;
 
@@ -100,5 +101,6 @@ public class Climb extends SubsystemIF {
     public void periodic() {
         telemetry.addLine();
         telemetry.addData("Climb Position", getClimbPos());
+        telemetry.addData("Climb State", RobotStatus.climbState);
     }
 }
