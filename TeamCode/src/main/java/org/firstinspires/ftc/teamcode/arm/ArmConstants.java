@@ -31,7 +31,7 @@ public class ArmConstants {
     public static double SLIDE_SAMPLE_COLLECT_POSITION = 1150.0;
     public static double SLIDE_SPECIMEN_COLLECT_POSITION = 350;
     public static double SLIDE_CHAMBER_POSITION = 425;
-    public static double SLIDE_CHAMBER_SCORE_OFFSET = 300;
+    public static double SLIDE_CHAMBER_SCORE_OFFSET = 325;
     public static double SLIDE_BASKET_POSITION = 1300.0;
 
     /**

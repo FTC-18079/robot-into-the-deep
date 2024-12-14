@@ -173,11 +173,6 @@ public class Hydra extends Robot {
         manipController.getGamepadButton(GamepadKeys.Button.BACK)
                 .whenPressed(LLVision.getInstance()::disableClawOverride);
 
-        // Zeroing
-        // TODO: add if needed
-        driveController.getGamepadButton(GamepadKeys.Button.A)
-                .whenPressed(new SlideZeroCommand());
-
         // Toggle target color
         manipController.getGamepadButton(GamepadKeys.Button.B)
                 .whenPressed(rumble(300, manipController))
