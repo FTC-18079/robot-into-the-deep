@@ -21,7 +21,7 @@ public class ArmConstants {
     // Alignment PID
     public static double ALIGN_kP = 0.025;
     public static double ALIGN_kI = 0.0;
-    public static double ALIGN_kD = 0.0;
+    public static double ALIGN_kD = 0.0002;
 
     // Constants
     public static double SLIDE_ERROR_TOLERANCE = 15.0;
@@ -32,7 +32,8 @@ public class ArmConstants {
     public static double SLIDE_REST_POSITION = 5.0;
     public static double SLIDE_SAMPLE_COLLECT_POSITION = 1150.0;
     public static double SLIDE_SPECIMEN_COLLECT_POSITION = 350;
-    public static double SLIDE_CHAMBER_POSITION = SLIDE_REST_POSITION;
+    public static double SLIDE_CHAMBER_POSITION = 425;
+    public static double SLIDE_CHAMBER_SCORE_OFFSET = 300;
     public static double SLIDE_BASKET_POSITION = 1300.0;
 
     /**

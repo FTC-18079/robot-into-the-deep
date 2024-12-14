@@ -21,9 +21,7 @@ public abstract class AutoTemplate extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        // Init hardware
-        telemetry.addData("Status", "Initializing hardware");
-        telemetry.update();
+        RobotStatus.resetValues();
 
         // Configure auto variables
         while (opModeInInit() && !gamepad1.options) {
@@ -40,12 +38,11 @@ public abstract class AutoTemplate extends LinearOpMode {
         // Schedule auto
         telemetry.addData("Status", "Scheduling commands");
         telemetry.update();
-        if (RobotStatus.alliance != NONE) {
-            Commands.waitUntil(RobotStatus::isEnabled)
-                    .andThen(Commands.waitMillis(RobotStatus.delayMs))
-                    .andThen(makeAutoSequence())
-                    .schedule();
-        }
+        if (RobotStatus.alliance == NONE) RobotStatus.alliance = RED;
+        Commands.waitUntil(RobotStatus::isEnabled)
+                .andThen(Commands.waitMillis(RobotStatus.delayMs))
+                .andThen(makeAutoSequence())
+                .schedule();
 
         while (opModeInInit()) {
             telemetry.addData("Status", "Initialized, Ready to start");
