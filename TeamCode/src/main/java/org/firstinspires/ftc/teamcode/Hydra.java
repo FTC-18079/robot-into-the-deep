@@ -140,7 +140,7 @@ public class Hydra extends Robot {
 
         // Reset chassis heading
         driveController.getGamepadButton(GamepadKeys.Button.Y)
-                .whenPressed(rumble(300, driveController))
+                .whenPressed(Commands.runOnce(() -> rumble(300, driveController)))
                 .whenPressed(Chassis.getInstance()::resetHeading);
 
         // Toggle field centric
@@ -158,14 +158,19 @@ public class Hydra extends Robot {
 
         // Arm action
         new Trigger(() -> manipController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > TRIGGER_DEADZONE)
-                .whenActive(ArmCommands.ARM_ACTION);
+                .whenActive(ArmCommands.ARM_ACTION)
+                .whenInactive(Commands.either(
+                        Commands.defer(ArmCommands.BASKET_TO_STOW),
+                        Commands.none(),
+                        () -> Arm.getInstance().getState() == Arm.ArmState.SCORING_SAMPLE
+                ));
 
         // Switch game pieces
         manipController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
-                .whenPressed(rumble(300, manipController))
+                .whenPressed(Commands.runOnce(() -> rumble(300, manipController)))
                 .whenPressed(() -> Arm.getInstance().setScoreType(Arm.ScoreType.SAMPLE));
         manipController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                .whenPressed(rumble(300, manipController))
+                .whenPressed(Commands.runOnce(() -> rumble(300, manipController)))
                 .whenPressed(() -> Arm.getInstance().setScoreType(Arm.ScoreType.SPECIMEN));
 
         // Claw overrides
@@ -178,14 +183,14 @@ public class Hydra extends Robot {
 
         // Toggle target color
         manipController.getGamepadButton(GamepadKeys.Button.B)
-                .whenPressed(rumble(300, manipController))
+                .whenPressed(Commands.runOnce(() -> rumble(300, manipController)))
                 .whenPressed(Commands.either(
                         Commands.either(
-                                Commands.runOnce(LLVision.getInstance()::setBlue).andThen(setGamepadColors(0, 0, 1)),
-                                Commands.runOnce(LLVision.getInstance()::setRed).andThen(setGamepadColors(1, 0, 0)),
+                                Commands.runOnce(LLVision.getInstance()::setBlue).andThen(Commands.runOnce(() -> setGamepadColors(0, 0, 1))),
+                                Commands.runOnce(LLVision.getInstance()::setRed).andThen(Commands.runOnce(() -> setGamepadColors(1, 0, 0))),
                                 () -> RobotStatus.alliance == RobotStatus.Alliance.BLUE
                         ),
-                        Commands.runOnce(LLVision.getInstance()::setYellow).andThen(setGamepadColors(1, 1, 0)),
+                        Commands.runOnce(LLVision.getInstance()::setYellow).andThen(Commands.runOnce(() -> setGamepadColors(1, 1, 0))),
                         () -> LLVision.getInstance().getTargetColor() == LLVision.SampleColor.YELLOW
                 ));
 
@@ -228,13 +233,11 @@ public class Hydra extends Robot {
      * Rumbles controllers for a duration
      * @param ms how many milliseconds to rumble for
      * @param gamepads the controllers to rumble
-     * @return an empty command
      */
-    private Command rumble(int ms, GamepadEx... gamepads) {
+    private void rumble(int ms, GamepadEx... gamepads) {
         for(GamepadEx g : gamepads) {
             g.gamepad.rumble(1, 1, ms);
         }
-        return Commands.none();
     }
 
     /**
@@ -242,12 +245,10 @@ public class Hydra extends Robot {
      * @param r the red value of the color
      * @param g the blue value of the color
      * @param b the green value of the color
-     * @return an empty command
      */
-    private Command setGamepadColors(double r, double g, double b) {
+    private void setGamepadColors(double r, double g, double b) {
         driveController.gamepad.setLedColor(r, g, b, -1);
         manipController.gamepad.setLedColor(r, g, b, -1);
-        return Commands.none();
     }
 
     // GETTERS

@@ -237,8 +237,8 @@ public class ArmCommands {
                     );
                 case SCORING_SAMPLE:
                     return Commands.sequence(
-                            Commands.defer(RELEASE, claw.get()),
-                            Commands.defer(BASKET_TO_STOW, arm.get())
+                            Commands.defer(RELEASE, claw.get())
+//                            Commands.defer(BASKET_TO_STOW, arm.get())
                     );
                 case SCORING_SPECIMEN:
                     return Commands.sequence(
