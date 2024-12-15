@@ -4,6 +4,7 @@ import com.arcrobotics.ftclib.command.Command;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Hydra;
+import org.firstinspires.ftc.teamcode.chassis.Chassis;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.RobotStatus;
 import org.firstinspires.ftc.teamcode.util.commands.Commands;
@@ -22,6 +23,7 @@ public abstract class AutoTemplate extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         RobotStatus.resetValues();
+        robot.autonomousInit(telemetry, hardwareMap);
 
         // Configure auto variables
         while (opModeInInit() && !gamepad1.options) {
@@ -29,11 +31,12 @@ public abstract class AutoTemplate extends LinearOpMode {
         }
         sleep(500);
 
-        // Create robot
+        // Setup poses and paths
         RobotStatus.robotPose = getStartingPose();
         sleep(100);
         buildPaths();
-        robot.autonomousInit(telemetry, hardwareMap);
+
+        Chassis.getInstance().setPosition(getStartingPose());
 
         // Schedule auto
         telemetry.addData("Status", "Scheduling commands");
@@ -56,7 +59,7 @@ public abstract class AutoTemplate extends LinearOpMode {
         }
 
         // Don't run anything without an alliance
-        if (RobotStatus.alliance == NONE) RobotStatus.alliance = RobotStatus.Alliance.BLUE;
+        if (RobotStatus.alliance == NONE) RobotStatus.alliance = RobotStatus.Alliance.RED;
 
         // Run robot
         while (opModeIsActive() && !isStopRequested()) {
