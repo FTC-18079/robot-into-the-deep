@@ -59,7 +59,7 @@ public class Auto_Left_4_0 extends AutoTemplate {
     @Override
     public void buildPaths() {
         scorePreloadPath = new Path(new BezierLine(new Point(startingPose), new Point(scorePreloadPose)));
-        scorePreloadPath.setConstantHeadingInterpolation(startingPose.getHeading());
+        scorePreloadPath.setLinearHeadingInterpolation(startingPose.getHeading(), scorePreloadPose.getHeading());
         scorePreloadPath.setPathEndTimeoutConstraint(800);
 
         collectOnePath = new Path(new BezierLine(new Point(scorePreloadPose), new Point(collectOnePose)));
@@ -168,6 +168,7 @@ public class Auto_Left_4_0 extends AutoTemplate {
                         new FollowPathCommand(parkPath)
                 ),
                 // Touch bar
+                Commands.runOnce(() -> Claw.getInstance().setState(ClawConstants.SAMPLE_SCORING_STATE)),
                 new MovePivotCommand(() -> ArmConstants.PIVOT_SCORE_POSITION)
         );
     }

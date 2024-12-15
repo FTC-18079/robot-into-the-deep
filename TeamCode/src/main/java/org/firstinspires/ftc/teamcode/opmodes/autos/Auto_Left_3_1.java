@@ -170,6 +170,7 @@ public class Auto_Left_3_1 extends AutoTemplate {
                         new FollowPathCommand(parkPath)
                 ),
                 // Touch bar
+                Commands.runOnce(() -> Claw.getInstance().setState(ClawConstants.SAMPLE_SCORING_STATE)),
                 new MovePivotCommand(() -> ArmConstants.PIVOT_SCORE_POSITION)
         );
     }
