@@ -9,11 +9,11 @@ import org.firstinspires.ftc.teamcode.RobotStatus;
 @Config
 public class AutoConstants {
     // Scoring poses
-    public static double CHAMBER_X_POSITION = 30;
+    public static double CHAMBER_X_POSITION = 32;
     public static double CHAMBER_RIGHT_Y_POSITION = 66;
 
-    public static final Pose BASKET_SCORE_POSE = new Pose(14, 124, Math.toRadians(315));
-    public static final Pose CHAMBER_LEFT_SCORE_POSE = new Pose(CHAMBER_X_POSITION, 82, Math.toRadians(180));
+    public static final Pose BASKET_SCORE_POSE = new Pose(15, 125, Math.toRadians(315));
+    public static final Pose CHAMBER_LEFT_SCORE_POSE = new Pose(CHAMBER_X_POSITION, 80, Math.toRadians(180));
     public static final Pose CHAMBER_RIGHT_SCORE_POSE = new Pose(CHAMBER_X_POSITION, CHAMBER_RIGHT_Y_POSITION, Math.toRadians(180));
 
     // Parking poses
