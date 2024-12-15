@@ -104,6 +104,11 @@ public class Arm extends SubsystemIF {
         leftSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
+    public void floatNeutralMode() {
+        rightSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        leftSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+    }
+
     // TODO: either remove or figure out how to make offsets work
     public void resetPivotEncoder() {
 

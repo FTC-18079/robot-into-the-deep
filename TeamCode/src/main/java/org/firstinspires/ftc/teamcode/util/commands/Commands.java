@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.util.commands;
 
+import android.util.Log;
+
 import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.FunctionalCommand;
@@ -43,6 +45,10 @@ public class Commands {
     public static Command runEnd(Runnable run, Runnable end, Subsystem... requirements) {
 //        requireNonNullParam(end, "end", "Command.runEnd");
         return new FunctionalCommand(() -> {}, run, interrupted -> end.run(), () -> false, requirements);
+    }
+
+    public static Command log(String tag, String msg) {
+        return Commands.runOnce(() -> Log.i(tag, msg));
     }
 
     public static Command print(String message) {
