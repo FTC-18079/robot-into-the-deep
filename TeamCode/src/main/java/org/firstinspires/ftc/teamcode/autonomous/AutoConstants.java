@@ -9,15 +9,15 @@ import org.firstinspires.ftc.teamcode.RobotStatus;
 @Config
 public class AutoConstants {
     // Scoring poses
-    public static double CHAMBER_X_POSITION = 30.5;
-    public static double CHAMBER_RIGHT_Y_POSITION = 66;
+    public static double CHAMBER_X_POSITION = 31.25;
+    public static double CHAMBER_RIGHT_Y_POSITION = 72;
 
     public static final Pose BASKET_SCORE_POSE = new Pose(14, 124, Math.toRadians(315));
     public static final Pose CHAMBER_LEFT_SCORE_POSE = new Pose(CHAMBER_X_POSITION, 82, Math.toRadians(180));
     public static final Pose CHAMBER_RIGHT_SCORE_POSE = new Pose(CHAMBER_X_POSITION, CHAMBER_RIGHT_Y_POSITION, Math.toRadians(180));
 
     // Parking poses
-    public static final Pose OBVZONE_PARKING_POSE = new Pose(14, 38, Math.toRadians(0));
+    public static final Pose OBVZONE_PARKING_POSE = new Pose(14, 10, Math.toRadians(0));
     public static final Pose ASCENT_PARKING_POSE = new Pose(60, 98, Math.toRadians(0));
 
     // Alliance alliance poses
@@ -31,7 +31,7 @@ public class AutoConstants {
     public static final Pose RIGHT_NEUTRAL_SAMPLE = new Pose(46, 121.25);
 
     // Specimen collect poses
-    public static double WALL_COLLECT_X_POSITION = 20;
+    public static double WALL_COLLECT_X_POSITION = 20.5;
     public static double WALL_COLLECT_Y_POSITION = 35;
 
     public static Pose checkAlliance(Pose pose) {
