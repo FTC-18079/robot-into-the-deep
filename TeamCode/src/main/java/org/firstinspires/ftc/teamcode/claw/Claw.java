@@ -40,7 +40,11 @@ public class Claw extends SubsystemIF {
     public void onAutonomousInit() {
         telemetry = Hydra.getInstance().getTelemetry();
         configureHardware();
-        claw.setPosition(CLAW_CLOSE_POSITION);
+        setState(INIT_STATE);
+        periodic();
+        Commands.waitUntil(RobotStatus::isEnabled)
+                .andThen(Commands.runOnce(() -> setState(REST_STATE)))
+                .schedule();
     }
 
     @Override
