@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Hydra;
 import org.firstinspires.ftc.teamcode.RobotMap;
+import org.firstinspires.ftc.teamcode.RobotStatus;
+import org.firstinspires.ftc.teamcode.arm.commands.MoveSlideCommand;
 import org.firstinspires.ftc.teamcode.util.SubsystemIF;
 import org.firstinspires.ftc.teamcode.util.commands.Commands;
 import org.firstinspires.ftc.teamcode.util.hardware.SuccessMotor;
@@ -77,6 +79,9 @@ public class Arm extends SubsystemIF {
         slidePid.setSetPoint(getSlidePos());
 
         Commands.sequence(
+                Commands.waitUntil(RobotStatus::isEnabled),
+                new MoveSlideCommand(() -> SLIDE_CHAMBER_POSITION),
+                Commands.runOnce(() -> setState(ArmState.SCORING_SAMPLE))
                 //wait until enabled, then zero
         ).schedule();
     }
