@@ -78,12 +78,14 @@ public class ArmCommands {
                 Commands.waitMillis(175),
                 new MoveSlideCommand(() -> ArmConstants.SLIDE_REST_POSITION),
                 Commands.runOnce(() -> claw.get().setState(ClawConstants.REST_STATE)),
-                Commands.waitMillis(150)
+                Commands.waitMillis(150),
+                new SlideZeroCommand()
         );
         SPECIMEN_COLLECT_TO_STOW = () -> Commands.sequence(
                 Commands.runOnce(() -> arm.get().setState(Arm.ArmState.STOW)),
                 Commands.runOnce(() -> claw.get().setState(ClawConstants.REST_STATE)),
-                new MoveSlideCommand(() -> ArmConstants.SLIDE_REST_POSITION)
+                new MoveSlideCommand(() -> ArmConstants.SLIDE_REST_POSITION),
+                new SlideZeroCommand()
         );
 
         STOW_TO_BASKET = () -> Commands.sequence(
@@ -249,8 +251,8 @@ public class ArmCommands {
                     );
                 case SCORING_SAMPLE:
                     return Commands.sequence(
-                            Commands.defer(RELEASE, claw.get()),
-                            Commands.defer(BASKET_TO_STOW, arm.get())
+                            Commands.defer(RELEASE, claw.get())
+//                            Commands.defer(BASKET_TO_STOW, arm.get())
                     );
                 case SCORING_SPECIMEN:
                     return Commands.sequence(
