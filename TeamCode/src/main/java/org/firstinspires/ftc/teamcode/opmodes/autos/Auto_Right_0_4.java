@@ -60,6 +60,7 @@ public class Auto_Right_0_4 extends AutoTemplate {
     private Path collectThreePath;
     private Path scoreThreePath;
     private Path parkingPath;
+    private Path collectOnePath;
 
     // Constants
     public static double preloadMaxSpeed = 0.65; // Speed reduction on the preload path
@@ -99,6 +100,9 @@ public class Auto_Right_0_4 extends AutoTemplate {
         pushThreePath = new Path(new BezierLine(new Point(behindThreePose), new Point(pushThreePose)));
         pushThreePath.setConstantHeadingInterpolation(pushThreePose.getHeading());
 
+        collectOnePath = new Path(new BezierLine(new Point(pushThreePose), new Point(collectTwoPose)));
+        collectOnePath.setConstantHeadingInterpolation(collectTwoPose.getHeading());
+
         scoreOnePath = new Path(new BezierLine(new Point(pushThreePose), new Point(scoreOnePose)));
         scoreOnePath.setConstantHeadingInterpolation(scoreOnePose.getHeading());
 
@@ -132,21 +136,60 @@ public class Auto_Right_0_4 extends AutoTemplate {
                 ),
                 Commands.defer(ArmCommands.SCORE_SPECIMEN, Arm.getInstance()),
                 Commands.parallel(
-
+                        new FollowPathCommand(behindOnePath),
+                        Commands.defer(ArmCommands.CHAMBER_TO_STOW, Arm.getInstance())
                 ),
-                // Drive up to high chamber and score
-                new FollowPathCommand(behindOnePath),
+
                 new FollowPathCommand(pushOnePath),
                 new FollowPathCommand(behindTwoPath),
                 new FollowPathCommand(pushTwoPath),
                 new FollowPathCommand(behindThreePath),
                 new FollowPathCommand(pushThreePath),
-                new FollowPathCommand(scoreOnePath),
-                new FollowPathCommand(collectTwoPath),
-                new FollowPathCommand(scoreTwoPath),
-                new FollowPathCommand(collectThreePath),
-                new FollowPathCommand(scoreThreePath),
-                new FollowPathCommand(parkingPath)
+                new FollowPathCommand(collectOnePath),
+
+                Commands.defer(ArmCommands.STOW_TO_SPECIMEN_COLLECT, Arm.getInstance()),
+
+                Commands.waitMillis(500),
+                Commands.defer(ArmCommands.GRAB, Arm.getInstance()),
+
+                Commands.parallel(
+                        Commands.defer(ArmCommands.SPECIMEN_COLLECT_TO_CHAMBER, Arm.getInstance()),
+                        new FollowPathCommand(scoreOnePath)
+                ),
+                Commands.defer(ArmCommands.SCORE_SPECIMEN, Arm.getInstance()),
+
+                Commands.parallel(
+                        new FollowPathCommand(collectTwoPath),
+                        Commands.defer(ArmCommands.CHAMBER_TO_SPECIMEN_COLLECT, Arm.getInstance())
+                ),
+                Commands.waitMillis(500),
+                Commands.defer(ArmCommands.GRAB, Arm.getInstance()),
+
+                Commands.parallel(
+                        Commands.defer(ArmCommands.SPECIMEN_COLLECT_TO_CHAMBER, Arm.getInstance()),
+                        new FollowPathCommand(scoreTwoPath)
+                ),
+                Commands.defer(ArmCommands.SCORE_SPECIMEN, Arm.getInstance()),
+
+                Commands.parallel(
+                        new FollowPathCommand(collectThreePath),
+                        Commands.defer(ArmCommands.CHAMBER_TO_SPECIMEN_COLLECT, Arm.getInstance())
+                ),
+                Commands.waitMillis(500),
+                Commands.defer(ArmCommands.GRAB, Arm.getInstance()),
+
+                Commands.parallel(
+                        Commands.defer(ArmCommands.SPECIMEN_COLLECT_TO_CHAMBER, Arm.getInstance()),
+                        new FollowPathCommand(scoreThreePath)
+                ),
+                Commands.defer(ArmCommands.SCORE_SPECIMEN, Arm.getInstance()),
+
+                Commands.parallel(
+                        new FollowPathCommand(parkingPath),
+                        Commands.defer(ArmCommands.CHAMBER_TO_STOW, Arm.getInstance())
+                )
+
+
         );
     }
 }
