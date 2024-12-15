@@ -88,7 +88,7 @@ public class AscentTwoCommand extends SequentialCommandGroup {
                 Commands.waitMillis(1000),
                 Commands.runOnce(() -> climb.setPower(0)),
                 Commands.runOnce(climb::servoDisable),
-                Commands.run(() -> RobotStatus.setClimbState(RobotStatus.ClimbState.CLIMBED))
+                Commands.runOnce(() -> RobotStatus.setClimbState(RobotStatus.ClimbState.CLIMBED))
         );
         addRequirements(climb);
     }

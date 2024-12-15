@@ -1,18 +1,16 @@
 package org.firstinspires.ftc.teamcode.opmodes.autos;
 
-import static org.firstinspires.ftc.teamcode.RobotStatus.Alliance;
-import static org.firstinspires.ftc.teamcode.RobotStatus.Alliance.NONE;
-
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.Command;
-import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.Hydra;
 import org.firstinspires.ftc.teamcode.arm.Arm;
+import org.firstinspires.ftc.teamcode.arm.ArmConstants;
 import org.firstinspires.ftc.teamcode.arm.commands.ArmCommands;
+import org.firstinspires.ftc.teamcode.arm.commands.MovePivotCommand;
+import org.firstinspires.ftc.teamcode.arm.commands.MoveSlideCommand;
 import org.firstinspires.ftc.teamcode.autonomous.AutoConstants;
+import org.firstinspires.ftc.teamcode.autonomous.AutoTemplate;
 import org.firstinspires.ftc.teamcode.chassis.commands.FollowPathCommand;
 import org.firstinspires.ftc.teamcode.claw.Claw;
 import org.firstinspires.ftc.teamcode.claw.ClawConstants;
@@ -21,39 +19,29 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierCurve;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierLine;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
-import org.firstinspires.ftc.teamcode.RobotStatus;
 import org.firstinspires.ftc.teamcode.util.commands.Commands;
 import org.firstinspires.ftc.teamcode.vision.LLVision;
+import org.firstinspires.ftc.teamcode.vision.VisionConstants;
 
 /**
  * Starts facing wall on tile X with edge on the center line
  * <p>
  * Scores high chamber, then collects and scores 3 neutral samples on high basket
  * <p>
- * Can park wherever
+ * Parks in ascent zone
  */
 
-// TODO: re-enable photon once it's fixed
-//@Photon
 @Config
 @Autonomous(name = "Left Side 3+1", group = "Auto")
-public class Auto_Left_3_1 extends LinearOpMode {
-    private final Hydra robot = Hydra.getInstance();
-
-    boolean lastUp;
-    boolean lastDown;
-    boolean lastSquare;
-    boolean lastCross;
-    boolean lastCircle;
-
+public class Auto_Left_3_1 extends AutoTemplate {
     // Poses
     private final Pose startingPose = new Pose(8, 80, Math.toRadians(180));
     private final Pose scorePreloadPose = AutoConstants.CHAMBER_LEFT_SCORE_POSE;
-    private final Pose collectOnePose = new Pose(24, 105, Math.toRadians(35));
+    private final Pose collectOnePose = new Pose(20.5, 118.25, Math.toRadians(0));
     private final Pose scoreOnePose = AutoConstants.BASKET_SCORE_POSE;
-    private final Pose collectTwoPose = new Pose(18, 127.5, Math.toRadians(0));
+    private final Pose collectTwoPose = new Pose(20.5, 128.25, Math.toRadians(0));
     private final Pose scoreTwoPose = AutoConstants.BASKET_SCORE_POSE;
-    private final Pose collectThreePose = new Pose(19, 126.5, Math.toRadians(26));
+    private final Pose collectThreePose = new Pose(21.5, 126, Math.toRadians(27));
     private final Pose scoreThreePose = AutoConstants.BASKET_SCORE_POSE;
 
     // Paths
@@ -67,106 +55,54 @@ public class Auto_Left_3_1 extends LinearOpMode {
     private Path parkPath;
 
     // Constants
-    public static double preloadMaxSpeed = 0.65; // Speed reduction on the preload path
-    public static long preloadPathDelay = 1000; // Delay to allow for pivot to move before following first path
-    public static long collectDelay = 50; // Delay in ms between extending and grabbing to allow for vision to align
-    public static double collectOneAlignment = 0.7; // Claw alignment for sample collection
-    public static double collectTwoAlignment = 1.0;
-    public static double collectThreeAlignment = 0.7;
+    public static double preloadMaxSpeed = 0.4; // Speed reduction on the preload path
+    public static long collectDelay = 125; // Delay in ms between extending and grabbing to allow for vision to align
 
     @Override
-    public void runOpMode() {
-        // Init hardware
-        telemetry.addData("Status", "Initializing hardware");
-        telemetry.update();
-
-        // Configure auto variables
-        while (opModeInInit() && !gamepad1.options) {
-            config();
-        }
-        sleep(500);
-
-        // Create robot
-        sleep(100);
-        RobotStatus.robotPose = startingPose;
-        buildPaths();
-        robot.autonomousInit(telemetry, hardwareMap);
-
-        // Schedule auto
-        telemetry.addData("Status", "Scheduling commands");
-        telemetry.update();
-        if (RobotStatus.alliance != NONE) {
-            Commands.waitUntil(RobotStatus::isEnabled)
-                    .andThen(Commands.waitMillis(RobotStatus.delayMs))
-                    .andThen(autoSequence())
-                    .schedule();
-        }
-
-        Claw.getInstance().setState(ClawConstants.REST_STATE);
-        Claw.getInstance().periodic();
-
-        while (opModeInInit()) {
-            telemetry.addData("Status", "Initialized, Ready to start");
-            telemetry.addData("Selected auto delay", RobotStatus.delayMs);
-            telemetry.addData("Live view on", RobotStatus.liveView);
-            telemetry.addData("Selected alliance", RobotStatus.alliance);
-            telemetry.update();
-
-            // Sleep CPU a little
-            sleep(50);
-        }
-
-        // Set a default alliance
-        if (RobotStatus.alliance == Alliance.NONE) RobotStatus.alliance = Alliance.BLUE;
-
-        // Run robot
-        while (opModeIsActive() && !isStopRequested()) {
-            robot.periodic();
-        }
-
-        CommandScheduler.getInstance().cancelAll();
-        CommandScheduler.getInstance().reset();
-    }
-
-    private void buildPaths() {
+    public void buildPaths() {
         scorePreloadPath = new Path(new BezierLine(new Point(startingPose), new Point(scorePreloadPose)));
         scorePreloadPath.setConstantHeadingInterpolation(startingPose.getHeading());
-        scorePreloadPath.setPathEndTimeoutConstraint(600);
+        scorePreloadPath.setPathEndTimeoutConstraint(800);
 
         collectOnePath = new Path(new BezierLine(new Point(scorePreloadPose), new Point(collectOnePose)));
         collectOnePath.setLinearHeadingInterpolation(scorePreloadPose.getHeading(), collectOnePose.getHeading());
 
         scoreOnePath = new Path(new BezierLine(new Point(collectOnePose), new Point(scoreOnePose)));
         scoreOnePath.setLinearHeadingInterpolation(collectOnePose.getHeading(), scoreOnePose.getHeading());
+        scoreOnePath.setPathEndTimeoutConstraint(800);
 
         collectTwoPath = new Path(new BezierLine(new Point(scoreOnePose), new Point(collectTwoPose)));
         collectTwoPath.setLinearHeadingInterpolation(scoreOnePose.getHeading(), collectTwoPose.getHeading());
 
         scoreTwoPath = new Path(new BezierLine(new Point(collectTwoPose), new Point(scoreTwoPose)));
         scoreTwoPath.setLinearHeadingInterpolation(collectTwoPose.getHeading(), scoreTwoPose.getHeading());
+        scoreTwoPath.setPathEndTimeoutConstraint(800);
 
         collectThreePath = new Path(new BezierLine(new Point(scoreTwoPose), new Point(collectThreePose)));
         collectThreePath.setLinearHeadingInterpolation(scoreTwoPose.getHeading(), collectThreePose.getHeading());
 
         scoreThreePath = new Path(new BezierLine(new Point(collectThreePose), new Point(scoreThreePose)));
         scoreThreePath.setLinearHeadingInterpolation(collectThreePose.getHeading(), scoreThreePose.getHeading());
+        scoreThreePath.setPathEndTimeoutConstraint(800);
 
         parkPath = new Path(new BezierCurve(new Point(scoreThreePose), new Point(60, 122, Point.CARTESIAN), new Point(AutoConstants.ASCENT_PARKING_POSE)));
         parkPath.setLinearHeadingInterpolation(scoreThreePose.getHeading(), AutoConstants.ASCENT_PARKING_POSE.getHeading());
+        parkPath.setPathEndTimeoutConstraint(0);
     }
 
-    private Command autoSequence() {
+    @Override
+    protected Command makeAutoSequence() {
         return Commands.sequence(
                 Commands.runOnce(() -> Arm.getInstance().setScoreType(Arm.ScoreType.SPECIMEN)),
                 Commands.runOnce(LLVision.getInstance()::setYellow),
-                Commands.waitMillis(RobotStatus.delayMs),
                 // Drive up to chamber and score
+                Commands.runOnce(() -> Claw.getInstance().setState(ClawConstants.REST_STATE)),
                 Commands.parallel(
-                        Commands.waitMillis(preloadPathDelay).andThen(new FollowPathCommand(scorePreloadPath, preloadMaxSpeed)),
+                        new FollowPathCommand(scorePreloadPath, preloadMaxSpeed),
                         Commands.defer(ArmCommands.STOW_TO_CHAMBER, Arm.getInstance())
                 ),
                 Commands.defer(ArmCommands.SCORE_SPECIMEN, Arm.getInstance()),
-                // Drive to first sample and extend collector
+                // Drive to first sample and line up slides
                 Commands.parallel(
                         new FollowPathCommand(collectOnePath),
                         Commands.defer(ArmCommands.CHAMBER_TO_STOW, Arm.getInstance())
@@ -175,7 +111,7 @@ public class Auto_Left_3_1 extends LinearOpMode {
                 Commands.defer(ArmCommands.STOW_TO_SAMPLE_COLLECT, Arm.getInstance()),
                 Commands.waitMillis(collectDelay),
                 // Collect sample
-                Commands.runOnce(() -> LLVision.getInstance().setClawOverride(collectOneAlignment)),
+                Commands.runOnce(() -> LLVision.getInstance().setClawOverride(1)),
                 Commands.defer(ArmCommands.COLLECT_SAMPLE, Claw.getInstance()),
                 Commands.defer(ArmCommands.GRAB, Claw.getInstance()),
                 Commands.defer(ArmCommands.SAMPLE_COLLECT_TO_STOW, Arm.getInstance()),
@@ -184,91 +120,62 @@ public class Auto_Left_3_1 extends LinearOpMode {
                         Commands.defer(ArmCommands.STOW_TO_BASKET),
                         new FollowPathCommand(scoreOnePath)
                 ),
+                Commands.waitMillis(150),
                 Commands.defer(ArmCommands.RELEASE, Claw.getInstance()),
-                // Retract and go to collect second
+                // Retract and go to collect
                 Commands.parallel(
-                        Commands.defer(ArmCommands.BASKET_TO_STOW, Arm.getInstance()),
+                        Commands.waitMillis(100).andThen(Commands.defer(ArmCommands.BASKET_TO_STOW, Arm.getInstance())),
                         new FollowPathCommand(collectTwoPath)
                 ),
-                // Collect second sample
-                Commands.runOnce(() -> LLVision.getInstance().setClawOverride(collectTwoAlignment)),
                 Commands.defer(ArmCommands.STOW_TO_SAMPLE_COLLECT, Arm.getInstance()),
+                // Collect second sample
+                Commands.runOnce(() -> LLVision.getInstance().setClawOverride(1)),
                 Commands.waitMillis(collectDelay),
                 Commands.defer(ArmCommands.COLLECT_SAMPLE, Claw.getInstance()),
                 Commands.defer(ArmCommands.GRAB, Claw.getInstance()),
                 Commands.defer(ArmCommands.SAMPLE_COLLECT_TO_STOW, Arm.getInstance()),
-                // Score second sample
+                // Go up to basket and score
                 Commands.parallel(
                         Commands.defer(ArmCommands.STOW_TO_BASKET, Arm.getInstance()),
                         new FollowPathCommand(scoreTwoPath)
                 ),
+                Commands.waitMillis(150),
                 Commands.defer(ArmCommands.RELEASE, Claw.getInstance()),
-                // Drive to final sample
+                // Retract and drive to final sample
                 Commands.parallel(
-                        Commands.defer(ArmCommands.BASKET_TO_STOW, Arm.getInstance()),
+                        Commands.waitMillis(100).andThen(Commands.defer(ArmCommands.BASKET_TO_STOW, Arm.getInstance())),
                         new FollowPathCommand(collectThreePath)
                 ),
                 Commands.defer(ArmCommands.STOW_TO_SAMPLE_COLLECT, Arm.getInstance()),
+                // Collect third
+                Commands.runOnce(() -> LLVision.getInstance().setClawOverride(0.4)),
                 Commands.waitMillis(collectDelay),
-                // Collect third sample
-                Commands.runOnce(() -> LLVision.getInstance().setClawOverride(collectThreeAlignment)),
                 Commands.defer(ArmCommands.COLLECT_SAMPLE, Claw.getInstance()),
-                Commands.defer(ArmCommands.GRAB, Arm.getInstance()),
+                Commands.defer(ArmCommands.GRAB, Claw.getInstance()),
                 Commands.defer(ArmCommands.SAMPLE_COLLECT_TO_STOW, Arm.getInstance()),
-                // Score third sample
+                // Basket and score,
+                Commands.runOnce(LLVision.getInstance()::disableClawOverride),
                 Commands.parallel(
                         Commands.defer(ArmCommands.STOW_TO_BASKET, Arm.getInstance()),
                         new FollowPathCommand(scoreThreePath)
                 ),
+                Commands.waitMillis(150),
                 Commands.defer(ArmCommands.RELEASE, Claw.getInstance()),
-                Commands.runOnce(LLVision.getInstance()::disableClawOverride),
-                // Stow arm and go to park
+                // Retract and park
                 Commands.parallel(
                         Commands.sequence(
-                                Commands.waitMillis(500),
+                                Commands.waitMillis(200),
                                 Commands.defer(ArmCommands.BASKET_TO_STOW, Arm.getInstance())
                         ),
                         new FollowPathCommand(parkPath)
-                )
+                ),
+                // Touch bar
+                new MovePivotCommand(() -> ArmConstants.PIVOT_SCORE_POSITION)
         );
     }
 
-    private void config() {
-        // Add or remove delay
-        if (checkInputs(gamepad1.dpad_up, lastUp)) RobotStatus.delayMs += 100;
-        if (checkInputs(gamepad1.dpad_down, lastDown) && RobotStatus.delayMs > 0) RobotStatus.delayMs -= 100;
-        // Select alliance
-        if (checkInputs(gamepad1.square, lastSquare)) {
-            switch(RobotStatus.alliance) {
-                case NONE:
-                case RED:
-                    RobotStatus.alliance = Alliance.BLUE;
-                    break;
-                case BLUE:
-                    RobotStatus.alliance = Alliance.RED;
-                    break;
-            }
-        }
-        // Toggle live view
-        if (checkInputs(gamepad1.cross, lastCross)) RobotStatus.liveView = !RobotStatus.liveView;
-
-        // Set old inputs
-        lastUp = gamepad1.dpad_up;
-        lastDown = gamepad1.dpad_down;
-        lastSquare = gamepad1.square;
-        lastCross = gamepad1.cross;
-        lastCircle = gamepad1.circle;
-
-        telemetry.addData("Status", "Configuring Autonomous");
-        telemetry.addData("Controls", "\nDelay: UP & DOWN \nToggle live view: CROSS \nSelect alliance: SQUARE \nParking pose: CIRCLE");
-        telemetry.addLine();
-        telemetry.addData("Selected auto delay", RobotStatus.delayMs);
-        telemetry.addData("Live view on", RobotStatus.liveView);
-        telemetry.addData("Selected alliance", RobotStatus.alliance);
-        telemetry.update();
-    }
-
-    private boolean checkInputs(boolean current, boolean last) {
-        return (last != current) && current;
+    @Override
+    protected Pose getStartingPose() {
+        return startingPose;
     }
 }
