@@ -50,7 +50,7 @@ public class NewAuto_Left_3_1 extends AutoTemplate {
     private Path parkPath;
 
     // Constants
-    public static double preloadMaxSpeed = 0.35; // Speed reduction on the preload path
+    public static double preloadMaxSpeed = 0.65; // Speed reduction on the preload path
     public static long preloadPathDelay = 1000; // Delay to allow for pivot to move before following first path
     public static long collectDelay = 50; // Delay in ms between extending and grabbing to allow for vision to align
     public static double collectOneAlignment = 0.7; // Claw alignment for sample collection
