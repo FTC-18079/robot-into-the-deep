@@ -33,7 +33,7 @@ public class Commands {
         return new InstantCommand(action, requirements);
     }
 
-    public static Command run(Runnable action, Subsystem... requirements) {
+    private static Command run(Runnable action, Subsystem... requirements) {
         return new RunCommand(action, requirements);
     }
 

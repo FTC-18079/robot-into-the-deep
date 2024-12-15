@@ -31,7 +31,7 @@ public abstract class AutoTemplate extends LinearOpMode {
         }
         sleep(500);
 
-        // Create robot
+        // Setup poses and paths
         RobotStatus.robotPose = getStartingPose();
         sleep(100);
         buildPaths();

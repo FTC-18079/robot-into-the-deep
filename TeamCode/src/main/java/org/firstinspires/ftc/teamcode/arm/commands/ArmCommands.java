@@ -90,7 +90,7 @@ public class ArmCommands {
 
         STOW_TO_BASKET = () -> Commands.sequence(
                 Commands.runOnce(() -> arm.get().setState(Arm.ArmState.SCORING_SAMPLE)),
-                Commands.runOnce(() -> claw.get().setJointOne(0.55)),
+                Commands.runOnce(() -> claw.get().setJointOne(0.3)),
                 Commands.waitMillis(200),
                 new MovePivotCommand(() -> ArmConstants.PIVOT_SCORE_POSITION),
                 Commands.runOnce(() -> claw.get().setWrist(ClawConstants.SAMPLE_SCORING_STATE.wristPos)),
