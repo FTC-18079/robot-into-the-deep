@@ -116,7 +116,8 @@ public class Arm extends SubsystemIF {
 
     // TODO: either remove or figure out how to make offsets work
     public void resetPivotEncoder() {
-
+        PIVOT_REST_POSITION = getPivotPos();
+        PIVOT_SCORE_POSITION = getPivotPos() + PIVOT_REST_TO_SCORE_OFFSET;
     }
 
     // GETTERS

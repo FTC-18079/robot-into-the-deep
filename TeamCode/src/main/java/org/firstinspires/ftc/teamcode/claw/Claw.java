@@ -41,12 +41,13 @@ public class Claw extends SubsystemIF {
         telemetry = Hydra.getInstance().getTelemetry();
         configureHardware();
         claw.setPosition(CLAW_CLOSE_POSITION);
+        jointTwo.setPosition(0.6);
 
-        Commands.sequence(
-                Commands.waitUntil(RobotStatus::isEnabled),
-                Commands.runOnce(() -> jointTwo.getController().pwmEnable()),
-                Commands.runOnce(() -> jointTwo.setPosition(1))
-        ).schedule();
+//        Commands.sequence(
+//                Commands.waitUntil(RobotStatus::isEnabled),
+//                Commands.runOnce(() -> jointTwo.getController().pwmEnable()),
+//                Commands.runOnce(() -> jointTwo.setPosition(1))
+//        ).schedule();
     }
 
     @Override
