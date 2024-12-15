@@ -5,7 +5,10 @@ import com.arcrobotics.ftclib.command.Command;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.arm.Arm;
+import org.firstinspires.ftc.teamcode.arm.ArmConstants;
 import org.firstinspires.ftc.teamcode.arm.commands.ArmCommands;
+import org.firstinspires.ftc.teamcode.arm.commands.MovePivotCommand;
+import org.firstinspires.ftc.teamcode.arm.commands.MoveSlideCommand;
 import org.firstinspires.ftc.teamcode.autonomous.AutoConstants;
 import org.firstinspires.ftc.teamcode.autonomous.AutoTemplate;
 import org.firstinspires.ftc.teamcode.chassis.commands.FollowPathCommand;
@@ -18,6 +21,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.util.commands.Commands;
 import org.firstinspires.ftc.teamcode.vision.LLVision;
+import org.firstinspires.ftc.teamcode.vision.VisionConstants;
 
 /**
  * Starts facing wall on tile X with edge on the center line
@@ -33,9 +37,9 @@ public class Auto_Left_3_1 extends AutoTemplate {
     // Poses
     private final Pose startingPose = new Pose(8, 80, Math.toRadians(180));
     private final Pose scorePreloadPose = AutoConstants.CHAMBER_LEFT_SCORE_POSE;
-    private final Pose collectOnePose = new Pose(20.5, 118, Math.toRadians(0));
+    private final Pose collectOnePose = new Pose(20.5, 118.25, Math.toRadians(0));
     private final Pose scoreOnePose = AutoConstants.BASKET_SCORE_POSE;
-    private final Pose collectTwoPose = new Pose(20.5, 128, Math.toRadians(0));
+    private final Pose collectTwoPose = new Pose(20.5, 128.25, Math.toRadians(0));
     private final Pose scoreTwoPose = AutoConstants.BASKET_SCORE_POSE;
     private final Pose collectThreePose = new Pose(21.5, 126, Math.toRadians(27));
     private final Pose scoreThreePose = AutoConstants.BASKET_SCORE_POSE;
@@ -144,7 +148,7 @@ public class Auto_Left_3_1 extends AutoTemplate {
                 ),
                 Commands.defer(ArmCommands.STOW_TO_SAMPLE_COLLECT, Arm.getInstance()),
                 // Collect third
-                Commands.run(() -> LLVision.getInstance().setClawOverride(0.63)),
+                Commands.runOnce(() -> LLVision.getInstance().setClawOverride(0.4)),
                 Commands.waitMillis(collectDelay),
                 Commands.defer(ArmCommands.COLLECT_SAMPLE, Claw.getInstance()),
                 Commands.defer(ArmCommands.GRAB, Claw.getInstance()),
@@ -164,7 +168,9 @@ public class Auto_Left_3_1 extends AutoTemplate {
                                 Commands.defer(ArmCommands.BASKET_TO_STOW, Arm.getInstance())
                         ),
                         new FollowPathCommand(parkPath)
-                )
+                ),
+                // Touch bar
+                new MovePivotCommand(() -> ArmConstants.PIVOT_SCORE_POSITION)
         );
     }
 
