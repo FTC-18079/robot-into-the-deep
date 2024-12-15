@@ -22,7 +22,8 @@ public class AscentTwoCommand extends SequentialCommandGroup {
     private final ElapsedTime timer = new ElapsedTime();
 
     public static double CLIMB_PULL_OUT_AMOUNT = 600;
-    public static double SLIDE_PULL_OUT_POWER = 0.25;
+    public static double SLIDE_PULL_OUT_POWER = 0.3;
+    public static double SLIDE_DOWN_POS = 375;
 
     public AscentTwoCommand() {
         addCommands(
@@ -33,8 +34,10 @@ public class AscentTwoCommand extends SequentialCommandGroup {
                 Commands.runOnce(() -> climb.setPower(0.5)),
                 Commands.waitUntil(() -> climb.getClimbPos() >= ClimbConstants.CLIMB_LATCH_POSITION),
                 Commands.runOnce(() -> climb.setPower(0.0)),
-                new MoveSlideCommand(() -> ArmConstants.SLIDE_LATCH_POSITION),
-                Commands.waitMillis(500),
+                Commands.sequence(
+                        new MoveSlideCommand(() -> ArmConstants.SLIDE_LATCH_POSITION),
+                        Commands.waitMillis(500)
+                ),
                 Commands.log("ClimbSequenceCommand","===============PULLING OUT==============="),
                 // Make slides pull the climb out
                 Commands.runOnce(() -> climb.setPower(0.5)),
@@ -70,7 +73,7 @@ public class AscentTwoCommand extends SequentialCommandGroup {
 //                Commands.waitUntil(RobotStatus::isClimbReady),
 //                Commands.run(() -> RobotStatus.setClimbState(RobotStatus.ClimbState.CLIMBING)),
                 // Release slides
-                new MoveSlideCommand(() -> ArmConstants.SLIDE_CLIMB_POSITION - 100),
+                new MoveSlideCommand(() -> SLIDE_DOWN_POS),
                 Commands.waitMillis(100),
                 Commands.runOnce(() -> arm.setSlidePower(0)),
                 Commands.runOnce(arm::floatNeutralMode),

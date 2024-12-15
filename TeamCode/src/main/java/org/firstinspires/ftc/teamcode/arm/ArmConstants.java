@@ -35,8 +35,8 @@ public class ArmConstants {
     public static double SLIDE_BASKET_POSITION = 1300.0;
 
     // Climb
-    public static double SLIDE_CLIMB_POSITION = 500;
-    public static double SLIDE_LATCH_POSITION = 200.0;
+    public static double SLIDE_CLIMB_POSITION = 550;
+    public static double SLIDE_LATCH_POSITION = 220.0;
     public static double SLIDE_PULL_CLIMB_POSITION = 430.0;
     public static double SLIDE_ENGAGE_POSITION = 235.0;
 
@@ -56,7 +56,7 @@ public class ArmConstants {
     public static double PIVOT_TIMEOUT = 1500;
 
     // Positions
-    public static double PIVOT_REST_POSITION = 146;
+    public static double PIVOT_REST_POSITION = 174;
     public static final double PIVOT_REST_TO_SCORE_OFFSET = 150.0;
     public static double PIVOT_SCORE_POSITION = PIVOT_REST_POSITION + PIVOT_REST_TO_SCORE_OFFSET;
     public static double PIVOT_CLIMBED_POSITION = PIVOT_SCORE_POSITION - 30;
