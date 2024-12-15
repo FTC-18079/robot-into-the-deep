@@ -36,7 +36,6 @@ public class ArmCommands {
 
     // TO SPECIMEN COLLECT
     public static final Supplier<Command> STOW_TO_SPECIMEN_COLLECT;
-    public static final Supplier<Command> CHAMBER_TO_SPECIMEN_COLLECT;
 
     // ACTIONS
     public static final Supplier<Command> GRAB;
@@ -49,8 +48,6 @@ public class ArmCommands {
     public static Command TO_CHAMBER;
     public static Command TO_COLLECT;
     public static Command ARM_ACTION;
-
-
 
     static {
         Supplier<Arm> arm = Arm::getInstance;
@@ -113,7 +110,6 @@ public class ArmCommands {
                 new MoveSlideCommand(() -> ArmConstants.SLIDE_CHAMBER_POSITION)
         );
 
-
         BASKET_TO_CHAMBER = () -> Commands.sequence(
                 Commands.runOnce(() -> claw.get().setState(ClawConstants.SPECIMEN_SCORING_STATE)),
                 Commands.runOnce(() -> arm.get().setState(Arm.ArmState.SCORING_SPECIMEN)),
@@ -130,14 +126,6 @@ public class ArmCommands {
                 Commands.runOnce(() -> claw.get().setState(ClawConstants.SPECIMEN_COLLECT_STATE)),
                 new MoveSlideCommand(() -> ArmConstants.SLIDE_SPECIMEN_COLLECT_POSITION),
                 Commands.runOnce(() -> arm.get().setState(Arm.ArmState.COLLECTING_SPECIMEN))
-        );
-
-        CHAMBER_TO_SPECIMEN_COLLECT = () -> Commands.sequence(
-                new MoveSlideCommand(() -> ArmConstants.SLIDE_REST_POSITION),
-                new MovePivotCommand(() -> ArmConstants.PIVOT_REST_POSITION),
-                Commands.runOnce(() -> claw.get().setState(ClawConstants.SPECIMEN_COLLECT_STATE)),
-                Commands.runOnce(() -> arm.get().setState(Arm.ArmState.COLLECTING_SPECIMEN)),
-                new MoveSlideCommand(() -> ArmConstants.SLIDE_SPECIMEN_COLLECT_POSITION)
         );
 
         STOW_TO_CHAMBER = () -> Commands.sequence(
