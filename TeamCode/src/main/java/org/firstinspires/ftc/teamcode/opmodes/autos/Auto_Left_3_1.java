@@ -33,11 +33,11 @@ public class Auto_Left_3_1 extends AutoTemplate {
     // Poses
     private final Pose startingPose = new Pose(8, 80, Math.toRadians(180));
     private final Pose scorePreloadPose = AutoConstants.CHAMBER_LEFT_SCORE_POSE;
-    private final Pose collectOnePose = new Pose(18.5, 117.5, Math.toRadians(0));
+    private final Pose collectOnePose = new Pose(20.5, 118, Math.toRadians(0));
     private final Pose scoreOnePose = AutoConstants.BASKET_SCORE_POSE;
-    private final Pose collectTwoPose = new Pose(18.5, 127.5, Math.toRadians(0));
+    private final Pose collectTwoPose = new Pose(20.5, 128, Math.toRadians(0));
     private final Pose scoreTwoPose = AutoConstants.BASKET_SCORE_POSE;
-    private final Pose collectThreePose = new Pose(21, 125, Math.toRadians(27));
+    private final Pose collectThreePose = new Pose(21.5, 126, Math.toRadians(27));
     private final Pose scoreThreePose = AutoConstants.BASKET_SCORE_POSE;
 
     // Paths
@@ -52,7 +52,7 @@ public class Auto_Left_3_1 extends AutoTemplate {
 
     // Constants
     public static double preloadMaxSpeed = 0.4; // Speed reduction on the preload path
-    public static long collectDelay = 150; // Delay in ms between extending and grabbing to allow for vision to align
+    public static long collectDelay = 125; // Delay in ms between extending and grabbing to allow for vision to align
 
     @Override
     public void buildPaths() {
@@ -100,7 +100,7 @@ public class Auto_Left_3_1 extends AutoTemplate {
                 Commands.defer(ArmCommands.SCORE_SPECIMEN, Arm.getInstance()),
                 // Drive to first sample and line up slides
                 Commands.parallel(
-                        new FollowPathCommand(collectOnePath, 0.9),
+                        new FollowPathCommand(collectOnePath),
                         Commands.defer(ArmCommands.CHAMBER_TO_STOW, Arm.getInstance())
                 ),
                 Commands.runOnce(() -> Arm.getInstance().setScoreType(Arm.ScoreType.SAMPLE)),
@@ -121,7 +121,7 @@ public class Auto_Left_3_1 extends AutoTemplate {
                 // Retract and go to collect
                 Commands.parallel(
                         Commands.waitMillis(100).andThen(Commands.defer(ArmCommands.BASKET_TO_STOW, Arm.getInstance())),
-                        new FollowPathCommand(collectTwoPath, 0.9)
+                        new FollowPathCommand(collectTwoPath)
                 ),
                 Commands.defer(ArmCommands.STOW_TO_SAMPLE_COLLECT, Arm.getInstance()),
                 // Collect second sample
@@ -140,7 +140,7 @@ public class Auto_Left_3_1 extends AutoTemplate {
                 // Retract and drive to final sample
                 Commands.parallel(
                         Commands.waitMillis(100).andThen(Commands.defer(ArmCommands.BASKET_TO_STOW, Arm.getInstance())),
-                        new FollowPathCommand(collectThreePath, 0.9)
+                        new FollowPathCommand(collectThreePath)
                 ),
                 Commands.defer(ArmCommands.STOW_TO_SAMPLE_COLLECT, Arm.getInstance()),
                 // Collect third
@@ -149,24 +149,22 @@ public class Auto_Left_3_1 extends AutoTemplate {
                 Commands.defer(ArmCommands.COLLECT_SAMPLE, Claw.getInstance()),
                 Commands.defer(ArmCommands.GRAB, Claw.getInstance()),
                 Commands.defer(ArmCommands.SAMPLE_COLLECT_TO_STOW, Arm.getInstance()),
-                Commands.none()
-//                // Score third sample
-//                Commands.parallel(
-//                        Commands.defer(ArmCommands.STOW_TO_BASKET, Arm.getInstance()),
-//                        new FollowPathCommand(scoreThreePath)
-//                ),
-//                Commands.waitMillis(150),
-//                Commands.defer(ArmCommands.RELEASE, Claw.getInstance()),
-//                Commands.runOnce(LLVision.getInstance()::disableClawOverride),
-//                // Stow arm and go to park
-//                Commands.parallel(
-//                        Commands.sequence(
-//                                Commands.waitMillis(200),
-//                                Commands.defer(ArmCommands.BASKET_TO_STOW, Arm.getInstance()),
-//                                new MovePivotCommand(ArmConstants.PIVOT_SCORE_POSITION))
-//                        ),
-//                        new FollowPathCommand(parkPath)
-//                )
+                // Basket and score,
+                Commands.runOnce(LLVision.getInstance()::disableClawOverride),
+                Commands.parallel(
+                        Commands.defer(ArmCommands.STOW_TO_BASKET, Arm.getInstance()),
+                        new FollowPathCommand(scoreThreePath)
+                ),
+                Commands.waitMillis(150),
+                Commands.defer(ArmCommands.RELEASE, Claw.getInstance()),
+                // Retract and park
+                Commands.parallel(
+                        Commands.sequence(
+                                Commands.waitMillis(200),
+                                Commands.defer(ArmCommands.BASKET_TO_STOW, Arm.getInstance())
+                        ),
+                        new FollowPathCommand(parkPath)
+                )
         );
     }
 
