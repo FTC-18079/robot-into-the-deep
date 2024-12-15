@@ -69,7 +69,7 @@ public class OTOSLocalizer extends Localizer {
 
         otos.setOffset(new SparkFunOTOS.Pose2D(1.34350393701,0.0,0.0));
 
-        otos.setLinearScalar(1.0247);
+        otos.setLinearScalar(1.162);
         otos.setAngularScalar(0.9788);
 
         otos.calibrateImu();
