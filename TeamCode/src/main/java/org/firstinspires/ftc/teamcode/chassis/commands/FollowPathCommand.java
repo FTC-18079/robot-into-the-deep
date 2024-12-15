@@ -5,6 +5,7 @@ import com.arcrobotics.ftclib.command.CommandBase;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Hydra;
 import org.firstinspires.ftc.teamcode.chassis.Chassis;
+import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
 
 public class FollowPathCommand extends CommandBase {
@@ -34,8 +35,10 @@ public class FollowPathCommand extends CommandBase {
 
     @Override
     public void execute() {
+        Pose pose = chassis.getPoseEstimate();
         telemetry.addLine();
         telemetry.addData("Path Running", chassis.isBusy());
+        telemetry.addData("Pose", pose.getX() + ", " + pose.getY() + ", " + pose.getHeading());
     }
 
     @Override
