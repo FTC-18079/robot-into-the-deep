@@ -35,9 +35,9 @@ public class Auto_Left_4_0 extends AutoTemplate {
     // Poses
     private final Pose startingPose = new Pose(8, 104, Math.toRadians(180));
     private final Pose scorePreloadPose = AutoConstants.BASKET_SCORE_POSE;
-    private final Pose collectOnePose = new Pose(17.5, 116, Math.toRadians(0));
+    private final Pose collectOnePose = new Pose(17.5, 118, Math.toRadians(0));
     private final Pose scoreOnePose = AutoConstants.BASKET_SCORE_POSE;
-    private final Pose collectTwoPose = new Pose(17, 125, Math.toRadians(0));
+    private final Pose collectTwoPose = new Pose(17, 126, Math.toRadians(0));
     private final Pose scoreTwoPose = AutoConstants.BASKET_SCORE_POSE;
     private final Pose collectThreePose = new Pose(20, 125, Math.toRadians(27));
     private final Pose scoreThreePose = AutoConstants.BASKET_SCORE_POSE;
@@ -99,7 +99,7 @@ public class Auto_Left_4_0 extends AutoTemplate {
                         new FollowPathCommand(scorePreloadPath, preloadMaxSpeed),
                         Commands.waitMillis(200).andThen(Commands.runOnce(() -> Claw.getInstance().setJointOne(0.3))),
                         Commands.waitMillis(100).andThen(Commands.runOnce(() -> Claw.getInstance().setState(ClawConstants.REST_STATE))),
-                        Commands.defer(ArmCommands.STOW_TO_BASKET, Arm.getInstance())
+                        Commands.defer(ArmCommands.STOW_TO_BASKET)
                 ),
                 Commands.waitMillis(150),
                 Commands.defer(ArmCommands.RELEASE, Claw.getInstance()),
