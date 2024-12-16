@@ -112,6 +112,9 @@ public class Hydra extends Robot {
         // Update telemetry and hardwareMap objects
         this.telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         RobotMap.getInstance().init(hardwareMap);
+        for (LynxModule hub : RobotMap.getInstance().getLynxModules()) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+        }
 
         // Run autonomous init
         subsystems.forEach(SubsystemIF::onAutonomousInit);
@@ -127,6 +130,9 @@ public class Hydra extends Robot {
         // Update telemetry and hardwareMap objects
         this.telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         RobotMap.getInstance().init(hardwareMap);
+        for (LynxModule hub : RobotMap.getInstance().getLynxModules()) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+        }
 
         // Update gamepad objects
         driveController = new GamepadEx(drive);

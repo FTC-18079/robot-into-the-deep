@@ -95,10 +95,6 @@ public class RobotMap {
         RIGHT_HOOK = hardwareMap.get(Servo.class, "rightHook");
         LEFT_HOOK = hardwareMap.get(Servo.class, "leftHook");
 
-        for (LynxModule hub : getLynxModules()) {
-            hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
-        }
-
         addDevices();
     }
 
