@@ -37,7 +37,7 @@ import java.util.List;
  * It functions as a singleton, so all references to it come from getInstance()
  */
 public class Hydra extends Robot {
-    private Telemetry telemetry;
+    private Telemetry telemetry = FtcDashboard.getInstance().getTelemetry();
 
     private final List<SubsystemIF> subsystems = new ArrayList<>();
 
@@ -94,6 +94,13 @@ public class Hydra extends Robot {
         subsystems.add(LLVision.getInstance().initialize());
         subsystems.add(Climb.getInstance().initialize());
         registerSubsystems();
+    }
+
+    // Runs the process of disabling the robot
+    public void disabledInit() {
+        RobotStatus.robotState = RobotStatus.RobotState.DISABLED;
+        telemetry = FtcDashboard.getInstance().getTelemetry();
+        Log.i("Hydra", "===============ROBOT DISABLED===============");
     }
 
     // Runs autonomous initialization sequence
