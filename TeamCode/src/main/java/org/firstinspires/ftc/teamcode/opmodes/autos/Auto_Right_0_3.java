@@ -80,7 +80,7 @@ public class Auto_Right_0_3 extends AutoTemplate {
         scorePreloadPath.setConstantHeadingInterpolation(scorePreloadPose.getHeading());
         scorePreloadPath.setPathEndTimeoutConstraint(1000);
 
-        behindOnePath = new Path(new BezierCurve(new Point(scorePreloadPose), new Point(27, 16, Point.CARTESIAN), new Point(64, 44, Point.CARTESIAN), new Point(behindOnePose)));
+        behindOnePath = new Path(new BezierCurve(new Point(scorePreloadPose), new Point(27, 13, Point.CARTESIAN), new Point(64, 44, Point.CARTESIAN), new Point(behindOnePose)));
         behindOnePath.setConstantHeadingInterpolation(scorePreloadPose.getHeading());
         behindOnePath.setPathEndTimeoutConstraint(0);
 
