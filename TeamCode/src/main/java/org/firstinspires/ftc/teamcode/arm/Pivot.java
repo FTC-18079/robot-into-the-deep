@@ -24,7 +24,7 @@ public class Pivot {
         fl = new SuccessCRServo(RobotMap.getInstance().PIVOT_FL);
         bl = new SuccessCRServo(RobotMap.getInstance().PIVOT_BL);
         br = new SuccessCRServo(RobotMap.getInstance().PIVOT_BR);
-        encoder = new AxonEncoder(RobotMap.getInstance().PIVOT_ENCODER, true);
+        encoder = new AxonEncoder(RobotMap.getInstance().PIVOT_ENCODER);
 
         fr.setDirection(DcMotorSimple.Direction.FORWARD);
         fl.setDirection(DcMotorSimple.Direction.REVERSE);

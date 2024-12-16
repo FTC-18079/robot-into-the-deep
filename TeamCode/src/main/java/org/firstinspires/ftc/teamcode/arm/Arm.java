@@ -28,6 +28,8 @@ public class Arm extends SubsystemIF {
     PIDController pivotPid;
     PIDController alignmentPid;
 
+    private double lastPivotPos;
+
     public boolean slideZeroing = false;
 
     public enum ArmState {
@@ -65,8 +67,10 @@ public class Arm extends SubsystemIF {
         configureHardware();
         resetSlideEncoder();
 
-        pivotPid.setSetPoint(getPivotPos());
+        pivotPid.setSetPoint(pivot.getPosition());
         slidePid.setSetPoint(getSlidePos());
+
+        lastPivotPos = pivot.getPosition();
     }
 
     @Override
@@ -74,8 +78,7 @@ public class Arm extends SubsystemIF {
         telemetry = Hydra.getInstance().getTelemetry();
         configureHardware();
 
-
-        pivotPid.setSetPoint(getPivotPos());
+        pivotPid.setSetPoint(pivot.getPosition());
         slidePid.setSetPoint(getSlidePos());
 
         Commands.sequence(
@@ -84,6 +87,8 @@ public class Arm extends SubsystemIF {
                 Commands.runOnce(() -> setState(ArmState.SCORING_SAMPLE))
                 //wait until enabled, then zero
         ).schedule();
+
+        lastPivotPos = pivot.getPosition();
     }
 
     // MOTOR SETUP
@@ -114,7 +119,6 @@ public class Arm extends SubsystemIF {
         leftSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
     }
 
-    // TODO: either remove or figure out how to make offsets work
     public void resetPivotEncoder() {
         PIVOT_REST_POSITION = getPivotPos();
         PIVOT_SCORE_POSITION = getPivotPos() + PIVOT_REST_TO_SCORE_OFFSET;
@@ -126,8 +130,16 @@ public class Arm extends SubsystemIF {
         return leftSlide.getCurrentPosition();
     }
 
+    // Note: THIS ONLY WORKS ASSUMING THE ENCODER NEVER TURNS >180 COUNTS IN ANY SINGLE LOOP
     public double getPivotPos() {
-        return pivot.getPosition();
+        double position = pivot.getPosition();
+        double diff = position - lastPivotPos;
+
+        double absoluteAngle = (360 + diff) % 360;
+        double num = lastPivotPos + ((absoluteAngle > 180) ? absoluteAngle - 360 : absoluteAngle);
+
+        lastPivotPos = num;
+        return num;
     }
 
     public double getSlideTarget() {

@@ -4,18 +4,9 @@ import com.qualcomm.robotcore.hardware.AnalogInput;
 
 public class AxonEncoder {
     private final AnalogInput encoder;
-    private final boolean continuous;
-    private double lastPosition;
 
     public AxonEncoder(AnalogInput encoder) {
-        this(encoder, false);
-    }
-
-    public AxonEncoder(AnalogInput encoder, boolean continuous) {
         this.encoder = encoder;
-        this.continuous = continuous;
-
-        lastPosition = getPosition();
         encoder.resetDeviceConfigurationForOpMode();
     }
 
