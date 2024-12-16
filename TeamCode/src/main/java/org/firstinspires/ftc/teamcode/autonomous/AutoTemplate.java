@@ -67,7 +67,7 @@ public abstract class AutoTemplate extends LinearOpMode {
         }
 
         // End
-        RobotStatus.robotState = RobotStatus.RobotState.DISABLED;
+        robot.disabledInit();
     }
 
     public void config() {
