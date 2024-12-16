@@ -51,6 +51,10 @@ public class Commands {
         return Commands.runOnce(() -> Log.i(tag, msg));
     }
 
+    public static Command log(Class clazz, String msg) {
+        return log(clazz.getName(), msg);
+    }
+
     public static Command print(String message) {
         return new PrintCommand(message);
     }
