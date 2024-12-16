@@ -37,11 +37,11 @@ public class Auto_Left_3_1 extends AutoTemplate {
     // Poses
     private final Pose startingPose = new Pose(8, 80, Math.toRadians(180));
     private final Pose scorePreloadPose = AutoConstants.CHAMBER_LEFT_SCORE_POSE;
-    private final Pose collectOnePose = new Pose(20.5, 118.25, Math.toRadians(0));
+    private final Pose collectOnePose = new Pose(17.5, 117.25, Math.toRadians(0));
     private final Pose scoreOnePose = AutoConstants.BASKET_SCORE_POSE;
-    private final Pose collectTwoPose = new Pose(20.5, 128.25, Math.toRadians(0));
+    private final Pose collectTwoPose = new Pose(17, 126, Math.toRadians(0));
     private final Pose scoreTwoPose = AutoConstants.BASKET_SCORE_POSE;
-    private final Pose collectThreePose = new Pose(21.5, 126, Math.toRadians(27));
+    private final Pose collectThreePose = new Pose(20, 125, Math.toRadians(27));
     private final Pose scoreThreePose = AutoConstants.BASKET_SCORE_POSE;
 
     // Paths
@@ -170,6 +170,7 @@ public class Auto_Left_3_1 extends AutoTemplate {
                         new FollowPathCommand(parkPath)
                 ),
                 // Touch bar
+                Commands.runOnce(() -> Claw.getInstance().setState(ClawConstants.SAMPLE_SCORING_STATE)),
                 new MovePivotCommand(() -> ArmConstants.PIVOT_SCORE_POSITION)
         );
     }
