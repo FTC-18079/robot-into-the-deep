@@ -54,7 +54,7 @@ public class LimelightLocalizer extends Localizer {
         if (result != null && result.isValid() && result.getPipelineIndex() == 4) {
             Pose3D llPose = result.getBotpose_MT2();
             // Check that we accept the limelight pose
-            if (llPose != null && isPoseValid()) {
+            if (llPose != null && isPoseValid(llPose)) {
                 // Add pose to the starting position and return that
                 Pose pose = MathFunctions.addPoses(startPose, new Pose(llPose.getPosition().x, llPose.getPosition().y, llPose.getOrientation().getYaw(AngleUnit.RADIANS)));
                 secondaryLocalizer.setPose(pose);
@@ -68,10 +68,26 @@ public class LimelightLocalizer extends Localizer {
         return secondaryLocalizer.getPose();
     }
 
-    // TODO: add a way of determining if our pose is actually valid or not
-    public boolean isPoseValid() {
+    public boolean isPoseValid(Pose3D pose) {
         // Don't accept pose if it's from >100 ms ago
-        if (result.getStaleness() > 100) return false;
+        if (result.getStaleness() > 100) {
+            Log.i("LimelightLocalizer", "===============Stale tag! Reverting to secondary localizer.===============");
+            return false;
+        }
+        // Don't accept pose if heading is cooked
+        if (secondaryLocalizer.getVelocityVector().getMagnitude() != 0 && secondaryLocalizer.getPose().getHeading() == 0 && previousHeading == 0) {
+            Log.i("LimelightLocalizer", "===============No heading difference. Reverting to secondary localizer.===============");
+            return false;
+        }
+        // Don't accept pose if it's outside the field
+        if (pose.getPosition().x > 144 || pose.getPosition().y > 144 || pose.getPosition().x < 0 || pose.getPosition().y < 0) {
+            Log.i("LimelightLocalizer", "===============Out of field. Reverting to secondary localizer.===============");
+            return false;
+        }
+        // Don't accept pose if no heading is present
+        if (pose.getOrientation().getYaw() == 0 && pose.getOrientation().getPitch() == 0 && pose.getOrientation().getRoll() == 0) {
+            Log.i("LimelightLocalizer", "===============No heading found. Reverting to secondary localizer.===============");
+        }
         return true;
     }
 
