@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.pedroPathing.localization.localizers;
 
+import android.util.Log;
+
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 
@@ -48,12 +50,19 @@ public class LimelightLocalizer extends Localizer {
     // TODO: kalman filter? some way of fusing readings instead of just accepting it? black magic?
     @Override
     public Pose getPose() {
-        if (result != null && result.isValid()) {
+        // Check if result actually exists
+        if (result != null && result.isValid() && result.getPipelineIndex() == 4) {
             Pose3D llPose = result.getBotpose_MT2();
+            // Check that we accept the limelight pose
             if (llPose != null && isPoseValid()) {
+                // Add pose to the starting position and return that
                 Pose pose = MathFunctions.addPoses(startPose, new Pose(llPose.getPosition().x, llPose.getPosition().y, llPose.getOrientation().getYaw(AngleUnit.RADIANS)));
                 secondaryLocalizer.setPose(pose);
                 return pose;
+            } else {
+                // Take a snapshot of bad poses for debugging
+                Log.i("LimelightLocalizer", "===============Error: Bad pose found! Saving snapshot.===============");
+                limelight.captureSnapshot("bad_localizer_pose");
             }
         }
         return secondaryLocalizer.getPose();
@@ -61,6 +70,8 @@ public class LimelightLocalizer extends Localizer {
 
     // TODO: add a way of determining if our pose is actually valid or not
     public boolean isPoseValid() {
+        // Don't accept pose if it's from >100 ms ago
+        if (result.getStaleness() > 100) return false;
         return true;
     }
 
