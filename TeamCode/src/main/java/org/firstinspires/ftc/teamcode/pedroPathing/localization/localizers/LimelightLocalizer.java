@@ -34,6 +34,7 @@ public class LimelightLocalizer extends Localizer {
 
         limelight = RobotMap.getInstance().LIMELIGHT;
         limelight.pipelineSwitch(4);
+        limelight.setPollRateHz(125);
         limelight.start();
 
         setStartPose(startPose);
