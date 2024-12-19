@@ -28,9 +28,6 @@ public class ArmTest extends OpMode {
 
     @Override
     public void init_loop() {
-        for (LynxModule hub : RobotMap.getInstance().getLynxModules()) {
-            hub.clearBulkCache();
-        }
         telemetry.addData("Encoder Pos", arm.getPivotPos());
         telemetry.addData("Encoder angle", arm.getPivotPos());
         telemetry.addData("Target pos", arm.getPivotTarget());
@@ -40,10 +37,6 @@ public class ArmTest extends OpMode {
 
     @Override
     public void loop() {
-        for (LynxModule hub : RobotMap.getInstance().getLynxModules()) {
-            hub.clearBulkCache();
-        }
-
         if (gamepad1.a) {
             arm.updatePid();
         }

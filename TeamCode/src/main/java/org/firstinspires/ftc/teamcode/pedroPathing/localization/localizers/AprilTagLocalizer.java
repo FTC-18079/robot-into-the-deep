@@ -163,4 +163,9 @@ public class AprilTagLocalizer extends Localizer {
     public double getTurningMultiplier() {
         return secondaryLocalizer.getTurningMultiplier();
     }
+
+    @Override
+    public void resetIMU() throws InterruptedException {
+        secondaryLocalizer.resetIMU();
+    }
 }

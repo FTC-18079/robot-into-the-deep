@@ -29,13 +29,15 @@ public class Chassis extends SubsystemIF {
     @Override
     public void onAutonomousInit() {
         telemetry = Hydra.getInstance().getTelemetry();
-        follower = new Follower(RobotStatus.robotPose);
+        follower = new Follower();
+        follower.setPose(RobotStatus.robotPose);
     }
 
     @Override
     public void onTeleopInit() {
         telemetry = Hydra.getInstance().getTelemetry();
-        follower = new Follower(RobotStatus.robotPose);
+        follower = new Follower();
+        follower.setPose(RobotStatus.robotPose);
         follower.startTeleopDrive();
         setMaxPower(1.0);
     }
@@ -102,7 +104,6 @@ public class Chassis extends SubsystemIF {
         follower.update();
         RobotStatus.robotPose = follower.getPose();
 
-        telemetry.addLine();
         telemetry.addData("Robot Centric", isRobotCentric);
         telemetry.addData("Path exists", follower.getCurrentPath() != null);
     }
