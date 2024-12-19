@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.pedroPathing.localization.tuning;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
@@ -25,7 +26,6 @@ import org.firstinspires.ftc.teamcode.pedroPathing.util.Drawing;
  * @author Anyi Lin - 10158 Scott's Bots
  * @version 1.0, 5/6/2024
  */
-//@Photon
 @Config
 @Autonomous(name = "Lateral Localizer Tuner", group = "Pedro Autonomous Pathing Tuning")
 public class LateralTuner extends OpMode {
@@ -34,7 +34,7 @@ public class LateralTuner extends OpMode {
 
     private Telemetry telemetryA;
 
-    public static double DISTANCE = 30;
+    public static double DISTANCE = 48;
 
     /**
      * This initializes the PoseUpdater as well as the FTC Dashboard telemetry.

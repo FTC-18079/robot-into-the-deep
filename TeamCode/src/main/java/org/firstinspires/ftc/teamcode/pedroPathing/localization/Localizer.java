@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.pedroPathing.localization;
 
+import com.qualcomm.robotcore.hardware.IMU;
+
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Vector;
 
 /**
@@ -86,4 +88,18 @@ public abstract class Localizer {
      * @return returns the turning ticks to radians multiplier
      */
     public abstract double getTurningMultiplier();
+
+    /**
+     * This resets the IMU of the localizer, if applicable.
+     */
+    public abstract void resetIMU() throws InterruptedException;
+
+    /**
+     * This is overridden to return the IMU, if there is one.
+     *
+     * @return returns the IMU if it exists
+     */
+    public IMU getIMU() {
+        return null;
+    }
 }
