@@ -510,22 +510,7 @@ public class Follower {
 
             calculateAveragedVelocityAndAcceleration();
 
-            // TODO: figure out which drive calculation function to use, pedro's or standard
             drivePowers = driveVectorScaler.getDrivePowers(getCentripetalForceCorrection(), teleopHeadingVector, teleopDriveVector, poseUpdater.getPose().getHeading());
-
-            // Don't wanna use pedro's driving as it can get silly
-//            double[] wheelPowers = new double[4];
-//            double fwd = teleopDriveVector.getXComponent();
-//            double lat = teleopDriveVector.getYComponent();
-//            double rot = teleopDriveValues[2];
-//
-//            double denominator = Math.max(Math.abs(fwd) + Math.abs(lat) + Math.abs(rot), 1);
-//            wheelPowers[0] = (fwd + lat + rot) / denominator;
-//            wheelPowers[1] = (fwd - lat + rot) / denominator;
-//            wheelPowers[2] = (fwd - lat - rot) / denominator;
-//            wheelPowers[3] = (fwd + lat - rot) / denominator;
-//
-//            drivePowers = wheelPowers;
 
             for (int i = 0; i < motors.size(); i++) {
                 motors.get(i).setPower(drivePowers[i]);
