@@ -201,7 +201,6 @@ public class Arm extends SubsystemIF {
         // temp
         updatePid();
 
-        telemetry.addLine();
         telemetry.addData("Arm State", state);
         telemetry.addData("Scoring Piece", scoreType);
         telemetry.addData("Pivot target", getPivotTarget());

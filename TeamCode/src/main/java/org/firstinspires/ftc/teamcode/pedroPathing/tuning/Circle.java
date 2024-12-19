@@ -25,6 +25,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
  * @author Harrison Womack - 10158 Scott's Bots
  * @version 1.0, 3/12/2024
  */
+//@Photon
 @Config
 @Autonomous (name = "Circle", group = "Pedro Autonomous Pathing Tuning")
 public class Circle extends OpMode {
@@ -43,7 +44,7 @@ public class Circle extends OpMode {
     @Override
     public void init() {
         RobotMap.getInstance().init(hardwareMap);
-        follower = new Follower();
+        follower = new Follower(new Pose());
 
         circle = follower.pathBuilder()
                 .addPath(new BezierCurve(new Point(0,0, Point.CARTESIAN), new Point(RADIUS,0, Point.CARTESIAN), new Point(RADIUS, RADIUS, Point.CARTESIAN)))

@@ -24,6 +24,9 @@ public class PivotTest extends OpMode {
 
     @Override
     public void loop() {
+        for (LynxModule m : RobotMap.getInstance().getLynxModules()) {
+            m.clearBulkCache();
+        }
         pivot.setPower(-gamepad1.left_stick_y);
         telemetry.addData("Joystick", -gamepad1.left_stick_y);
         telemetry.addData("Encoder pos", pivot.getPosition());

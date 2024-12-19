@@ -27,6 +27,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
  * @author Harrison Womack - 10158 Scott's Bots
  * @version 1.0, 3/13/2024
  */
+//@Photon
 @Config
 @Autonomous (name = "Curved Back And Forth", group = "Pedro Autonomous Pathing Tuning")
 public class CurvedBackAndForth extends OpMode {
@@ -48,7 +49,7 @@ public class CurvedBackAndForth extends OpMode {
     @Override
     public void init() {
         RobotMap.getInstance().init(hardwareMap);
-        follower = new Follower();
+        follower = new Follower(new Pose());
 
         forwards = new Path(new BezierCurve(new Point(0,0, Point.CARTESIAN), new Point(Math.abs(DISTANCE),0, Point.CARTESIAN), new Point(Math.abs(DISTANCE),DISTANCE, Point.CARTESIAN)));
         backwards = new Path(new BezierCurve(new Point(Math.abs(DISTANCE),DISTANCE, Point.CARTESIAN), new Point(Math.abs(DISTANCE),0, Point.CARTESIAN), new Point(0,0, Point.CARTESIAN)));

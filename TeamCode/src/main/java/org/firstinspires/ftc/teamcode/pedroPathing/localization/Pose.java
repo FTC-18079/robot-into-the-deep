@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.pedroPathing.localization;
 
-import androidx.annotation.NonNull;
-
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.MathFunctions;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Vector;
 
@@ -209,11 +207,5 @@ public class Pose {
      */
     public Pose copy() {
         return new Pose(getX(), getY(), getHeading());
-    }
-
-    @NonNull
-    @Override
-    public String toString() {
-        return "(" + getX() + ", " + getY() + ", " + Math.toDegrees(getHeading()) + ")";
     }
 }

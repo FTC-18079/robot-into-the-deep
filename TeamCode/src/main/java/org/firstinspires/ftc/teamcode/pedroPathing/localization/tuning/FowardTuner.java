@@ -28,7 +28,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.util.Drawing;
 //@Photon
 @Config
 @Autonomous(name = "Forward Localizer Tuner", group = "Pedro Autonomous Pathing Tuning")
-public class ForwardTuner extends OpMode {
+public class FowardTuner extends OpMode {
     private PoseUpdater poseUpdater;
     private DashboardPoseTracker dashboardPoseTracker;
 
