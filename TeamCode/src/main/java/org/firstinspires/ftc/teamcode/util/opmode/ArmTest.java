@@ -11,9 +11,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.RobotMap;
 import org.firstinspires.ftc.teamcode.arm.Arm;
 
-@Disabled
 @Config
-@TeleOp
+@TeleOp(name = "Arm Test", group = "Tests")
 public class ArmTest extends OpMode {
     Arm arm;
     public static double pivotTarget = 0;
@@ -23,6 +22,7 @@ public class ArmTest extends OpMode {
     public void init() {
         RobotMap.getInstance().init(hardwareMap);
         arm = Arm.getInstance();
+        arm.onTeleopInit();
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
     }
 
@@ -41,12 +41,10 @@ public class ArmTest extends OpMode {
             arm.updatePid();
         }
 
-        arm.periodic();
-        arm.setPivotPos(pivotTarget);
-        arm.setSlidePos(slideTarget);
+        arm.setPivotPower(-gamepad1.left_stick_y);
 
-        telemetry.addData("Encoder Pos", arm.getSlidePos());
-        telemetry.addData("Target pos", arm.getSlideTarget());
+        telemetry.addData("Slide Pos", arm.getSlidePos());
+        telemetry.addData("Pivot Pos", arm.getPivotPos());
         telemetry.update();
     }
 }
