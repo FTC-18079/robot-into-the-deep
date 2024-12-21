@@ -25,13 +25,18 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.ArrayList;
 
+/**
+ *
+ */
 public class AprilTagLocalizer extends Localizer {
     private Pose startPose;
+    private Pose tagPose;
     private double previousHeading;
     private double totalHeading;
     private long tagDetectTime;
-    private AprilTagProcessor aprilTag;
-    private VisionPortal visionPortal;
+
+    private final AprilTagProcessor aprilTag;
+    private final VisionPortal visionPortal;
 
     private final boolean xAxisInverted = false; // TODO: Change if needed
     private final boolean yAxisInverted = false; // TODO: Change if needed
@@ -68,21 +73,24 @@ public class AprilTagLocalizer extends Localizer {
 
     @Override
     public Pose getPose() {
-        Pose pose = getVectorBasedOnTags();
-
-        if (pose != null) {
-            double x = pose.getX();
-            double y = pose.getY();
+        if (tagPose != null && isPoseValid(tagPose)) {
+            double x = tagPose.getX();
+            double y = tagPose.getY();
 
             if (xAxisInverted) x *= -1;
             if (yAxisInverted) y *= -1;
 
-            secondaryLocalizer.setPose(new Pose(x, y));
+            Pose newPose = MathFunctions.addPoses(startPose, new Pose(x, y, secondaryLocalizer.getPose().getHeading()));
+            secondaryLocalizer.setPose(newPose);
 
-            return MathFunctions.addPoses(startPose, new Pose(x, y, secondaryLocalizer.getTotalHeading()));
+            return newPose;
         } else {
             return secondaryLocalizer.getPose();
         }
+    }
+
+    private boolean isPoseValid(Pose pose) {
+        return true;
     }
 
     public Pose getVectorBasedOnTags() {
@@ -124,7 +132,7 @@ public class AprilTagLocalizer extends Localizer {
 
     @Override
     public Vector getVelocityVector() {
-        return getVelocity().getVector();
+        return secondaryLocalizer.getVelocityVector();
     }
 
     @Override
@@ -132,16 +140,16 @@ public class AprilTagLocalizer extends Localizer {
         startPose = pose;
     }
 
-    // TODO: implement this
     @Override
     public void setPose(Pose pose) {
-
+        secondaryLocalizer.setPose(pose);
     }
 
     @Override
     public void update() {
         secondaryLocalizer.update();
         totalHeading = secondaryLocalizer.getTotalHeading();
+        tagPose = getVectorBasedOnTags();
     }
 
     @Override
