@@ -11,9 +11,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.RobotMap;
 import org.firstinspires.ftc.teamcode.arm.Arm;
 
-@Disabled
 @Config
-@TeleOp
+@TeleOp(name = "Arm Test", group = "Tests")
 public class ArmTest extends OpMode {
     Arm arm;
     public static double pivotTarget = 0;
@@ -23,14 +22,12 @@ public class ArmTest extends OpMode {
     public void init() {
         RobotMap.getInstance().init(hardwareMap);
         arm = Arm.getInstance();
+        arm.onTeleopInit();
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
     }
 
     @Override
     public void init_loop() {
-        for (LynxModule hub : RobotMap.getInstance().getLynxModules()) {
-            hub.clearBulkCache();
-        }
         telemetry.addData("Encoder Pos", arm.getPivotPos());
         telemetry.addData("Encoder angle", arm.getPivotPos());
         telemetry.addData("Target pos", arm.getPivotTarget());
@@ -40,20 +37,14 @@ public class ArmTest extends OpMode {
 
     @Override
     public void loop() {
-        for (LynxModule hub : RobotMap.getInstance().getLynxModules()) {
-            hub.clearBulkCache();
-        }
-
         if (gamepad1.a) {
             arm.updatePid();
         }
 
-        arm.periodic();
-        arm.setPivotPos(pivotTarget);
-        arm.setSlidePos(slideTarget);
+        arm.setPivotPower(-gamepad1.left_stick_y);
 
-        telemetry.addData("Encoder Pos", arm.getSlidePos());
-        telemetry.addData("Target pos", arm.getSlideTarget());
+        telemetry.addData("Slide Pos", arm.getSlidePos());
+        telemetry.addData("Pivot Pos", arm.getPivotPos());
         telemetry.update();
     }
 }

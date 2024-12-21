@@ -11,9 +11,8 @@ import org.firstinspires.ftc.teamcode.RobotMap;
 import org.firstinspires.ftc.teamcode.claw.Claw;
 import org.firstinspires.ftc.teamcode.claw.ClawState;
 
-//@Disabled
 @Config
-@TeleOp
+@TeleOp(name = "Claw Test", group = "Test")
 public class ClawTest extends OpMode {
     Claw claw;
     ClawState state;
@@ -33,20 +32,12 @@ public class ClawTest extends OpMode {
 
     @Override
     public void init_loop() {
-        for (LynxModule hub : RobotMap.getInstance().getLynxModules()) {
-            hub.clearBulkCache();
-        }
-
         telemetry.addData("Claw State:", claw.getState());
         telemetry.update();
     }
 
     @Override
     public void loop() {
-        for (LynxModule hub : RobotMap.getInstance().getLynxModules()) {
-            hub.clearBulkCache();
-        }
-
         state.clawPos = clawTarget;
         state.wristPos = wristTarget;
         state.jointOnePos = jointOneTarget;

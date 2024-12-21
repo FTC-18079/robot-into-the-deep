@@ -172,7 +172,8 @@ public class LimelightLocalizer extends Localizer {
         return secondaryLocalizer.getTurningMultiplier();
     }
 
-    public void resetImu() {
-
+    @Override
+    public void resetIMU() throws InterruptedException {
+        secondaryLocalizer.resetIMU();
     }
 }

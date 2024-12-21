@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.pedroPathing.tuning.FollowerConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,10 +73,10 @@ public class RobotMap {
         APRILTAG_CAMERA = hardwareMap.get(WebcamName.class, "arducam");
         LIMELIGHT = hardwareMap.get(Limelight3A.class, "limelight");
 
-        MOTOR_FL = hardwareMap.get(DcMotorEx.class, "leftFront");
-        MOTOR_FR = hardwareMap.get(DcMotorEx.class, "rightFront");
-        MOTOR_BL = hardwareMap.get(DcMotorEx.class, "leftBack");
-        MOTOR_BR = hardwareMap.get(DcMotorEx.class, "rightBack");
+        MOTOR_FL = hardwareMap.get(DcMotorEx.class, FollowerConstants.leftFrontMotorName);
+        MOTOR_FR = hardwareMap.get(DcMotorEx.class, FollowerConstants.rightFrontMotorName);
+        MOTOR_BL = hardwareMap.get(DcMotorEx.class, FollowerConstants.leftRearMotorName);
+        MOTOR_BR = hardwareMap.get(DcMotorEx.class, FollowerConstants.rightRearMotorName);
 
         LEFT_SLIDE = hardwareMap.get(DcMotorEx.class, "leftSlide");
         RIGHT_SLIDE = hardwareMap.get(DcMotorEx.class, "rightSlide");
@@ -94,10 +95,6 @@ public class RobotMap {
         CLIMB_MOTOR = hardwareMap.get(DcMotorEx.class, "climb");
         RIGHT_HOOK = hardwareMap.get(Servo.class, "rightHook");
         LEFT_HOOK = hardwareMap.get(Servo.class, "leftHook");
-
-        for (LynxModule hub : getLynxModules()) {
-            hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
-        }
 
         addDevices();
     }

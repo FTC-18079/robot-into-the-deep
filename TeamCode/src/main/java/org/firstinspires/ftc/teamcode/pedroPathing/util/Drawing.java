@@ -20,6 +20,8 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Vector;
  * @version 1.0, 4/22/2024
  */
 public class Drawing {
+    public static final double ROBOT_RADIUS = 9;
+
     private static TelemetryPacket packet;
     private static final Canvas CUSTOM_FIELD = new Canvas();
 
@@ -33,6 +35,7 @@ public class Drawing {
     /**
      * This draws everything that will be used in the Follower's telemetryDebug() method. This takes
      * a Follower as an input, so an instance of the DashbaordDrawingHandler class is not needed.
+     *
      * @param follower
      */
     public static void drawDebug(Follower follower) {
@@ -48,6 +51,7 @@ public class Drawing {
                     follower.getPose().getHeading()
                 ),
                 "#4CAF50");
+
         sendPacket();
     }
 
@@ -130,12 +134,10 @@ public class Drawing {
      * @param t the Point to draw at
      */
     public static void drawRobotOnCanvas(Canvas c, Point t) {
-        final double ROBOT_RADIUS = 9;
-
         c.setStrokeWidth(1);
         c.strokeCircle(t.getX(), t.getY(), ROBOT_RADIUS);
 
-        Vector halfv = new Vector(0.5*ROBOT_RADIUS, t.getTheta());
+        Vector halfv = new Vector(0.5 * ROBOT_RADIUS, t.getTheta());
         Vector p1 = MathFunctions.addVectors(halfv, new Vector(t.getR(), t.getTheta()));
         Vector p2 = MathFunctions.addVectors(p1, halfv);
         c.strokeLine(p1.getXComponent(), p1.getYComponent(), p2.getXComponent(), p2.getYComponent());
@@ -149,8 +151,6 @@ public class Drawing {
      * @param t the Pose to draw at
      */
     public static void drawRobotOnCanvas(Canvas c, Pose t) {
-        final double ROBOT_RADIUS = 9;
-
         c.strokeCircle(t.getX(), t.getY(), ROBOT_RADIUS);
         Vector v = t.getHeadingVector();
         v.setMagnitude(v.getMagnitude() * ROBOT_RADIUS);

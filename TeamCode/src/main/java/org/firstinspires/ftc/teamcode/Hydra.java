@@ -112,6 +112,9 @@ public class Hydra extends Robot {
         // Update telemetry and hardwareMap objects
         this.telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         RobotMap.getInstance().init(hardwareMap);
+        for (LynxModule hub : RobotMap.getInstance().getLynxModules()) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+        }
 
         // Run autonomous init
         subsystems.forEach(SubsystemIF::onAutonomousInit);
@@ -127,6 +130,9 @@ public class Hydra extends Robot {
         // Update telemetry and hardwareMap objects
         this.telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         RobotMap.getInstance().init(hardwareMap);
+        for (LynxModule hub : RobotMap.getInstance().getLynxModules()) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+        }
 
         // Update gamepad objects
         driveController = new GamepadEx(drive);
@@ -138,8 +144,8 @@ public class Hydra extends Robot {
         // Chassis driving
         Chassis.getInstance().setDefaultCommand(new TeleOpDriveCommand(
                 () -> applyResponseCurve(driveController.getLeftY(), DRIVE_SENSITIVITY),
-                () -> applyResponseCurve(driveController.getLeftX(), DRIVE_SENSITIVITY),
-                () -> applyResponseCurve(driveController.getRightX(), ROTATIONAL_SENSITIVITY)
+                () -> -applyResponseCurve(driveController.getLeftX(), DRIVE_SENSITIVITY),
+                () -> -applyResponseCurve(driveController.getRightX(), ROTATIONAL_SENSITIVITY)
         ));
         new Trigger(() -> driveController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > TRIGGER_DEADZONE)
                 .whenActive(Chassis.getInstance()::enableSlowMode)
