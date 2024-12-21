@@ -78,12 +78,12 @@ public class Arm extends SubsystemIF {
         pivotPid.setSetPoint(getPivotPos());
         slidePid.setSetPoint(getSlidePos());
 
-        Commands.sequence(
-                Commands.waitUntil(RobotStatus::isEnabled),
-                new MoveSlideCommand(() -> SLIDE_CHAMBER_POSITION),
-                Commands.runOnce(() -> setState(ArmState.SCORING_SAMPLE))
-                //wait until enabled, then zero
-        ).schedule();
+//        Commands.sequence(
+//                Commands.waitUntil(RobotStatus::isEnabled),
+//                new MoveSlideCommand(() -> SLIDE_CHAMBER_POSITION),
+//                Commands.runOnce(() -> setState(ArmState.SCORING_SAMPLE))
+//                //wait until enabled, then zero
+//        ).schedule();
     }
 
     // MOTOR SETUP

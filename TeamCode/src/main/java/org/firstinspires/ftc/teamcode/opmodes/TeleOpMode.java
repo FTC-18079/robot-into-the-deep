@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.RobotStatus;
 public class TeleOpMode extends LinearOpMode {
     private final Hydra hydra = Hydra.getInstance();
     private boolean lastSquare = false;
+    private boolean lastCross = false;
 
     @Override
     public void runOpMode() {
@@ -32,9 +33,17 @@ public class TeleOpMode extends LinearOpMode {
                         break;
                 }
             }
+
+            // Toggle live view
+            if (gamepad1.cross != lastCross && gamepad1.cross) {
+                RobotStatus.liveView = !RobotStatus.liveView;
+            }
+
+            lastCross = gamepad1.cross;
             lastSquare = gamepad1.square;
 
             telemetry.addData("Alliance", RobotStatus.alliance);
+            telemetry.addData("LiveView", RobotStatus.liveView);
             telemetry.addData("Status", RobotStatus.robotState);
             telemetry.update();
         }

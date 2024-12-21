@@ -21,6 +21,14 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Vector;
  */
 public class Drawing {
     private static TelemetryPacket packet;
+    private static final Canvas CUSTOM_FIELD = new Canvas();
+
+    static {
+        CUSTOM_FIELD.setAlpha(0.4);
+        CUSTOM_FIELD.drawImage("images/field-2024-juice-dark.png", 0, 0, 144, 144);
+        CUSTOM_FIELD.setAlpha(1.0);
+        CUSTOM_FIELD.drawGrid(0, 0, 144, 144, 7, 7);
+    }
 
     /**
      * This draws everything that will be used in the Follower's telemetryDebug() method. This takes
@@ -34,7 +42,12 @@ public class Drawing {
             drawRobot(new Pose(closestPoint.getX(), closestPoint.getY(), follower.getCurrentPath().getHeadingGoal(follower.getCurrentPath().getClosestPointTValue())), "#3F51B5");
         }
         drawPoseHistory(follower.getDashboardPoseTracker(), "#4CAF50");
-        drawRobot(follower.getPose(), "#4CAF50");
+        drawRobot(new Pose(
+                follower.getPose().getX() - 72,
+                follower.getPose().getY() + 72,
+                    follower.getPose().getHeading()
+                ),
+                "#4CAF50");
         sendPacket();
     }
 
@@ -46,8 +59,9 @@ public class Drawing {
      * @param color the color to draw the robot with
      */
     public static void drawRobot(Pose pose, String color) {
-        if (packet == null) packet = new TelemetryPacket();
+        if (packet == null) packet = new TelemetryPacket(false);
 
+        packet.field().getOperations().addAll(CUSTOM_FIELD.getOperations());
         packet.fieldOverlay().setStroke(color);
         Drawing.drawRobotOnCanvas(packet.fieldOverlay(), pose.copy());
     }
@@ -60,8 +74,9 @@ public class Drawing {
      * @param color the color to draw the Path with
      */
     public static void drawPath(Path path, String color) {
-        if (packet == null) packet = new TelemetryPacket();
+        if (packet == null) packet = new TelemetryPacket(false);
 
+        packet.field().getOperations().addAll(CUSTOM_FIELD.getOperations());
         packet.fieldOverlay().setStroke(color);
         Drawing.drawPath(packet.fieldOverlay(), path.getDashboardDrawingPoints());
     }
@@ -87,8 +102,9 @@ public class Drawing {
      * @param color the color to draw the pose history with
      */
     public static void drawPoseHistory(DashboardPoseTracker poseTracker, String color) {
-        if (packet == null) packet = new TelemetryPacket();
+        if (packet == null) packet = new TelemetryPacket(false);
 
+        packet.field().getOperations().addAll(CUSTOM_FIELD.getOperations());
         packet.fieldOverlay().setStroke(color);
         packet.fieldOverlay().strokePolyline(poseTracker.getXPositionsArray(), poseTracker.getYPositionsArray());
     }

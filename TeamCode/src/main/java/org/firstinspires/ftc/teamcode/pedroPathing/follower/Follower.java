@@ -25,6 +25,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotMap;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.PoseUpdater;
+import org.firstinspires.ftc.teamcode.pedroPathing.localization.localizers.AprilTagLocalizer;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.localizers.OTOSLocalizer;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierPoint;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.MathFunctions;
@@ -152,7 +153,7 @@ public class Follower {
      */
     public void initialize(Pose initialPose) {
         driveVectorScaler = new DriveVectorScaler(FollowerConstants.frontLeftVector);
-        poseUpdater = new PoseUpdater(new OTOSLocalizer(initialPose));
+        poseUpdater = new PoseUpdater(new AprilTagLocalizer(initialPose));
         setStartingPose(initialPose);
 
         leftFront = new SuccessMotor(RobotMap.getInstance().MOTOR_FL);
