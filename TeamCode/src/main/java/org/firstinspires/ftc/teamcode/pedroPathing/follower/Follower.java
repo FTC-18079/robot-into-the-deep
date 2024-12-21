@@ -30,6 +30,7 @@ import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigu
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotMap;
+import org.firstinspires.ftc.teamcode.pedroPathing.localization.Localizer;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.PoseUpdater;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.localizers.AprilTagLocalizer;
@@ -148,7 +149,11 @@ public class Follower {
      * This creates a new Follower.
      */
     public Follower() {
-        initialize();
+        this(new AprilTagLocalizer());
+    }
+
+    public Follower(Localizer localizer) {
+        initialize(localizer);
     }
 
     /**
@@ -157,9 +162,9 @@ public class Follower {
      * initialized and their behavior is set, and the variables involved in approximating first and
      * second derivatives for teleop are set.
      */
-    public void initialize() {
+    public void initialize(Localizer localizer) {
         driveVectorScaler = new DriveVectorScaler(FollowerConstants.frontLeftVector);
-        poseUpdater = new PoseUpdater(new AprilTagLocalizer());
+        poseUpdater = new PoseUpdater(localizer);
 
         leftFront = new SuccessMotor(RobotMap.getInstance().MOTOR_FL);
         leftRear = new SuccessMotor(RobotMap.getInstance().MOTOR_BL);

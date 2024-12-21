@@ -4,7 +4,6 @@ import android.util.Log;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.Robot;
 import com.arcrobotics.ftclib.command.button.Trigger;
@@ -23,11 +22,11 @@ import org.firstinspires.ftc.teamcode.chassis.commands.TeleOpDriveCommand;
 import org.firstinspires.ftc.teamcode.claw.Claw;
 import org.firstinspires.ftc.teamcode.claw.ClawConstants;
 import org.firstinspires.ftc.teamcode.climb.Climb;
-import org.firstinspires.ftc.teamcode.climb.commands.AscentThreeCommand;
 import org.firstinspires.ftc.teamcode.climb.commands.AscentTwoCommand;
 import org.firstinspires.ftc.teamcode.util.SubsystemIF;
 import org.firstinspires.ftc.teamcode.util.commands.Commands;
 import org.firstinspires.ftc.teamcode.vision.LLVision;
+import org.firstinspires.ftc.teamcode.vision.ATVision;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,6 +92,7 @@ public class Hydra extends Robot {
         subsystems.add(Claw.getInstance().initialize());
         subsystems.add(LLVision.getInstance().initialize());
         subsystems.add(Climb.getInstance().initialize());
+        subsystems.add(ATVision.getInstance().initialize());
         registerSubsystems();
     }
 

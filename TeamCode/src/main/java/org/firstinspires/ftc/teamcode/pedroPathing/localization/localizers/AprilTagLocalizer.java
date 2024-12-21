@@ -1,38 +1,27 @@
 package org.firstinspires.ftc.teamcode.pedroPathing.localization.localizers;
 
-import static org.firstinspires.ftc.teamcode.vision.VisionConstants.*;
-
 import android.util.Log;
-import android.util.Size;
 
 import com.arcrobotics.ftclib.geometry.Vector2d;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.RobotMap;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Localizer;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.MathFunctions;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Vector;
-import org.firstinspires.ftc.teamcode.RobotStatus;
-import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.teamcode.vision.ATVision;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
-import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.ArrayList;
 
-/**
- *
- */
 public class AprilTagLocalizer extends Localizer {
+    private final ATVision atVision = ATVision.getInstance();
+
     private Pose startPose;
     private Pose tagPose;
     private double previousHeading;
     private double totalHeading;
     private long tagDetectTime;
 
-    private final AprilTagProcessor aprilTag;
-    private final VisionPortal visionPortal;
     private final Localizer secondaryLocalizer;
 
     public AprilTagLocalizer() {
@@ -41,24 +30,6 @@ public class AprilTagLocalizer extends Localizer {
 
     public AprilTagLocalizer(Pose startPose) {
         secondaryLocalizer = new OTOSLocalizer();
-
-        aprilTag = new AprilTagProcessor.Builder()
-                .setLensIntrinsics(arducam_fx, arducam_fy, arducam_cx, arducam_cy)
-                .setDrawAxes(true)
-                .setCameraPose(CAMERA_POSE, CAMERA_ROTATION)
-                .setOutputUnits(DistanceUnit.INCH, AngleUnit.RADIANS)
-                .build();
-        aprilTag.setDecimation(3);
-
-        visionPortal = new VisionPortal.Builder()
-                .setCamera(RobotMap.getInstance().APRILTAG_CAMERA)
-                .setCameraResolution(new Size(640, 480))
-                .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
-                .enableLiveView(RobotStatus.liveView)
-                .setAutoStopLiveView(true)
-                .addProcessor(aprilTag)
-                .build();
-
         setStartPose(startPose);
         totalHeading = 0;
         previousHeading = startPose.getHeading();
@@ -139,7 +110,7 @@ public class AprilTagLocalizer extends Localizer {
         secondaryLocalizer.update();
         totalHeading = secondaryLocalizer.getTotalHeading();
 
-        tagPose = getPoseBasedOnTags(aprilTag.getDetections());
+        tagPose = getPoseBasedOnTags(atVision.getDetections());
     }
 
     @Override

@@ -1,118 +1,99 @@
 package org.firstinspires.ftc.teamcode.vision;
 
-import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.Quaternion;
-import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import org.firstinspires.ftc.teamcode.Hydra;
 import org.firstinspires.ftc.teamcode.RobotMap;
-import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
+import org.firstinspires.ftc.teamcode.RobotStatus;
 import org.firstinspires.ftc.teamcode.util.ATLivestream;
+import org.firstinspires.ftc.teamcode.util.SubsystemIF;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
-import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
-import static org.firstinspires.ftc.teamcode.vision.VisionConstants.arducam_fx;
-import static org.firstinspires.ftc.teamcode.vision.VisionConstants.arducam_fy;
-import static org.firstinspires.ftc.teamcode.vision.VisionConstants.arducam_cx;
-import static org.firstinspires.ftc.teamcode.vision.VisionConstants.arducam_cy;
-import static org.firstinspires.ftc.teamcode.vision.VisionConstants.CAMERA_POSE;
+import static org.firstinspires.ftc.teamcode.vision.VisionConstants.*;
 
-import android.util.Size;
+import java.util.ArrayList;
 
-import java.util.List;
+public class ATVision extends SubsystemIF {
+    private Telemetry telemetry;
+    private AprilTagProcessor aprilTag;
+    private VisionPortal visionPortal;
 
-public class ATVision {
-    private AprilTagProcessor processor;
-    private VisionPortal portal;
-    public AprilTagDetection lastDetection;
+    private static final ATVision INSTANCE = new ATVision();
 
-    public final ATLivestream livestream = new ATLivestream();
+    public static ATVision getInstance() {
+        return INSTANCE;
+    }
 
-    public ATVision(boolean liveView) {
-        // Create AT Processor
-        processor = new AprilTagProcessor.Builder()
+    // INITIALIZE
+
+    @Override
+    public void onAutonomousInit() {
+        telemetry = Hydra.getInstance().getTelemetry();
+
+        makeProcessor();
+        makePortal();
+    }
+
+    @Override
+    public void onTeleopInit() {
+        telemetry = Hydra.getInstance().getTelemetry();
+
+        makeProcessor();
+        makePortal();
+    }
+
+    @Override
+    public void onDisabledInit() {
+        closePortal();
+    }
+
+    private void makeProcessor() {
+        aprilTag = new AprilTagProcessor.Builder()
                 .setLensIntrinsics(arducam_fx, arducam_fy, arducam_cx, arducam_cy)
                 .setDrawAxes(true)
-                .setDrawTagOutline(true)
-                .setDrawTagID(true)
-                .setDrawCubeProjection(true)
+                .setCameraPose(CAMERA_POSE, CAMERA_ROTATION)
                 .setOutputUnits(DistanceUnit.INCH, AngleUnit.RADIANS)
-                .setCameraPose(CAMERA_POSE, new YawPitchRollAngles(AngleUnit.RADIANS, 0, 0, 0, 0))
                 .build();
+        aprilTag.setDecimation(3);
+    }
 
-        // Create Vision Portal
-        portal = new VisionPortal.Builder()
+    private void makePortal() {
+        VisionPortal.Builder portalBuilder = new VisionPortal.Builder()
                 .setCamera(RobotMap.getInstance().APRILTAG_CAMERA)
-                .setCameraResolution(new Size(640, 480))
+                .setCameraResolution(CAMERA_RESOLUTION)
                 .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
-                .addProcessor(processor)
-                .addProcessor(livestream)
-                .enableLiveView(liveView)
-                .build();
-    }
+                .enableLiveView(RobotStatus.liveView)
+                .setAutoStopLiveView(true)
+                .addProcessor(aprilTag);
 
-    public VisionPortal.CameraState getCameraState() {
-        return portal.getCameraState();
-    }
-
-    public float getFPS() {
-        return portal.getFps();
-    }
-
-    public List<AprilTagDetection> getDetections() {
-        return processor.getDetections();
-    }
-
-    public Pose getVectorFromTags(double botHeading) {
-        List<AprilTagDetection> currentDetections = getDetections();
-        int realDetections = 0;
-        Pose averagePose = new Pose();
-        if (currentDetections.isEmpty()) return null;
-        Pose robotPos;
-
-        // Loop through detection list and calculate robot pose from each tag
-        for (AprilTagDetection detection : currentDetections) {
-            if (detection.metadata != null) {
-                robotPos = calculateRobotPose(detection, botHeading);
-
-                // we're going to get the average here by adding them all up and dividingA the number of detections
-                // we do this because the backdrop has 3 tags, so we get 3 positions
-                // hopefully by averaging them we can get a more accurate position
-                lastDetection = detection;
-                averagePose.add(robotPos);
-                realDetections++;
-            }
+        if (RobotStatus.liveView) {
+            portalBuilder.enableLiveView(true);
+            portalBuilder.addProcessor(new ATLivestream());
         }
 
-        averagePose.scalarDivide(realDetections);
-        return averagePose;
+        visionPortal = portalBuilder.build();
     }
 
-    public Pose toPose(VectorF vectorF) {
-        return new Pose(vectorF.get(0), vectorF.get(1));
+    // GETTERS
+
+    public ArrayList<AprilTagDetection> getDetections() {
+        return aprilTag.getDetections();
     }
 
-    public double quaternionToHeading(Quaternion q) {
-        return Math.atan2(2.0 * (q.z * q.w + q.x * q.y) , - 1.0 + 2.0 * (q.w * q.w + q.x * q.x)) - Math.toRadians(270);
+    // SETTERS
+
+    public void stopStreaming() {
+        visionPortal.stopStreaming();
     }
 
-    public Pose calculateRobotPose(AprilTagDetection detection, double botHeading) {
-        // Calculate robot coordinates
-        double x = detection.ftcPose.x;
-        double y = detection.ftcPose.y;
-        botHeading = -botHeading;
+    public void resumeStreaming() {
+        visionPortal.resumeStreaming();
+    }
 
-        // Rotate coordinates to be field-centric
-        double x2 = x * Math.cos(botHeading) + y * Math.sin(botHeading);
-        double y2 = x * -Math.sin(botHeading) + y * Math.cos(botHeading);
-
-        // Get tag pose from tag library
-        VectorF tagPose = AprilTagGameDatabase.getIntoTheDeepTagLibrary().lookupTag(detection.id).fieldPosition;
-        Pose newTagPose = toPose(tagPose);
-        newTagPose.add(new Pose(72, 72)); // Convert to pedro coordinates
-
-        return new Pose(newTagPose.getX() + x2, newTagPose.getY() + y2);
+    public void closePortal() {
+        visionPortal.close();
     }
 }
