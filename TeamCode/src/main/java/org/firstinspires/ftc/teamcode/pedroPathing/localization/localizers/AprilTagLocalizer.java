@@ -45,7 +45,7 @@ public class AprilTagLocalizer extends Localizer {
         aprilTag = new AprilTagProcessor.Builder()
                 .setLensIntrinsics(arducam_fx, arducam_fy, arducam_cx, arducam_cy)
                 .setDrawAxes(true)
-                .setCameraPose(cameraPose, cameraRotation)
+                .setCameraPose(CAMERA_POSE, CAMERA_ROTATION)
                 .setOutputUnits(DistanceUnit.INCH, AngleUnit.RADIANS)
                 .build();
         aprilTag.setDecimation(3);

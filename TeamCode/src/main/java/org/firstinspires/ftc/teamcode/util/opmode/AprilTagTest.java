@@ -4,7 +4,6 @@ import static org.firstinspires.ftc.teamcode.vision.VisionConstants.arducam_fx;
 import static org.firstinspires.ftc.teamcode.vision.VisionConstants.arducam_fy;
 import static org.firstinspires.ftc.teamcode.vision.VisionConstants.arducam_cx;
 import static org.firstinspires.ftc.teamcode.vision.VisionConstants.arducam_cy;
-import static org.firstinspires.ftc.teamcode.vision.VisionConstants.cameraPose;
 
 import android.util.Size;
 

@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.vision;
 
+import android.util.Size;
+
 import com.acmerobotics.dashboard.config.Config;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -10,8 +12,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 @Config
 public class VisionConstants {
     // AprilTag camera position as +x = right, +y = forward, +z = upward
-    public static final Position cameraPose = new Position(DistanceUnit.INCH, 0, -8.0315 ,3.625, 0);
-    public static final YawPitchRollAngles cameraRotation = new YawPitchRollAngles(AngleUnit.DEGREES, 180, -90, 0, 0);
+    public static final Position CAMERA_POSE = new Position(DistanceUnit.INCH, 0, -8.0315 ,3.625, 0);
+    public static final YawPitchRollAngles CAMERA_ROTATION = new YawPitchRollAngles(AngleUnit.DEGREES, 180, -90, 0, 0);
+
+    // Camera resolution
+    public static final Size CAMERA_RESOLUTION = new Size(640, 480);
 
     // Arducam lens intrinsics
     public static final double arducam_fx = 549.535;

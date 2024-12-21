@@ -17,7 +17,7 @@ import static org.firstinspires.ftc.teamcode.vision.VisionConstants.arducam_fx;
 import static org.firstinspires.ftc.teamcode.vision.VisionConstants.arducam_fy;
 import static org.firstinspires.ftc.teamcode.vision.VisionConstants.arducam_cx;
 import static org.firstinspires.ftc.teamcode.vision.VisionConstants.arducam_cy;
-import static org.firstinspires.ftc.teamcode.vision.VisionConstants.cameraPose;
+import static org.firstinspires.ftc.teamcode.vision.VisionConstants.CAMERA_POSE;
 
 import android.util.Size;
 
@@ -39,7 +39,7 @@ public class ATVision {
                 .setDrawTagID(true)
                 .setDrawCubeProjection(true)
                 .setOutputUnits(DistanceUnit.INCH, AngleUnit.RADIANS)
-                .setCameraPose(cameraPose, new YawPitchRollAngles(AngleUnit.RADIANS, 0, 0, 0, 0))
+                .setCameraPose(CAMERA_POSE, new YawPitchRollAngles(AngleUnit.RADIANS, 0, 0, 0, 0))
                 .build();
 
         // Create Vision Portal

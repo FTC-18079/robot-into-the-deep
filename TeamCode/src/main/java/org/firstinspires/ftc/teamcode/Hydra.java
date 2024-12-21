@@ -100,6 +100,7 @@ public class Hydra extends Robot {
     public void disabledInit() {
         RobotStatus.robotState = RobotStatus.RobotState.DISABLED;
         telemetry = FtcDashboard.getInstance().getTelemetry();
+        subsystems.forEach(SubsystemIF::onDisabledInit);
         Log.i("Hydra", "===============ROBOT DISABLED===============");
     }
 
