@@ -1,16 +1,12 @@
 package org.firstinspires.ftc.teamcode.pedroPathing.localization.localizers;
 
-import static org.firstinspires.ftc.teamcode.vision.VisionConstants.arducam_cx;
-import static org.firstinspires.ftc.teamcode.vision.VisionConstants.arducam_cy;
-import static org.firstinspires.ftc.teamcode.vision.VisionConstants.arducam_fx;
-import static org.firstinspires.ftc.teamcode.vision.VisionConstants.arducam_fy;
+import static org.firstinspires.ftc.teamcode.vision.VisionConstants.*;
 
 import android.util.Log;
 import android.util.Size;
 
 import com.arcrobotics.ftclib.geometry.Vector2d;
 
-import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.RobotMap;
@@ -21,7 +17,6 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Vector;
 import org.firstinspires.ftc.teamcode.RobotStatus;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
-import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.ArrayList;
@@ -38,10 +33,6 @@ public class AprilTagLocalizer extends Localizer {
 
     private final AprilTagProcessor aprilTag;
     private final VisionPortal visionPortal;
-
-    private final boolean xAxisInverted = false; // TODO: Change if needed
-    private final boolean yAxisInverted = false; // TODO: Change if needed
-    private final Pose cameraOffset;
     private final Localizer secondaryLocalizer;
 
     public AprilTagLocalizer() {
@@ -53,19 +44,20 @@ public class AprilTagLocalizer extends Localizer {
 
         aprilTag = new AprilTagProcessor.Builder()
                 .setLensIntrinsics(arducam_fx, arducam_fy, arducam_cx, arducam_cy)
-                .setDrawCubeProjection(true)
+                .setDrawAxes(true)
+                .setCameraPose(cameraPose, cameraRotation)
                 .setOutputUnits(DistanceUnit.INCH, AngleUnit.RADIANS)
                 .build();
+        aprilTag.setDecimation(3);
 
         visionPortal = new VisionPortal.Builder()
                 .setCamera(RobotMap.getInstance().APRILTAG_CAMERA)
-                .addProcessor(aprilTag)
                 .setCameraResolution(new Size(640, 480))
                 .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
                 .enableLiveView(RobotStatus.liveView)
+                .setAutoStopLiveView(true)
+                .addProcessor(aprilTag)
                 .build();
-
-        cameraOffset = new Pose(-8.0315, 0);
 
         setStartPose(startPose);
         totalHeading = 0;
@@ -77,9 +69,6 @@ public class AprilTagLocalizer extends Localizer {
         if (tagPose != null) {
             double x = tagPose.getX();
             double y = tagPose.getY();
-
-            if (xAxisInverted) x *= -1;
-            if (yAxisInverted) y *= -1;
 
             Pose newPose = MathFunctions.addPoses(startPose, new Pose(x, y, secondaryLocalizer.getPose().getHeading()));
             secondaryLocalizer.setPose(newPose);
@@ -104,15 +93,14 @@ public class AprilTagLocalizer extends Localizer {
         return true;
     }
 
-    public Pose getVectorBasedOnTags() {
-        ArrayList<AprilTagDetection> detections = aprilTag.getDetections();
+    private Pose getPoseBasedOnTags(ArrayList<AprilTagDetection> detections) {
         if (detections.isEmpty()) {
             return null;
         } else {
             tagDetectTime = detections.get(0).frameAcquisitionNanoTime;
 
             Vector2d posVector2d = detections.stream()
-                    .map(detection -> getFCPosition(detection, secondaryLocalizer.getPose().getHeading(), cameraOffset))
+                    .map(detection -> getBotVector(detection))
                     .reduce(new Vector2d(), Vector2d::plus)
                     .div(detections.size());
 
@@ -120,22 +108,8 @@ public class AprilTagLocalizer extends Localizer {
         }
     }
 
-    public Vector2d getFCPosition(AprilTagDetection detection, double botHeading, Pose cameraOffset) {
-        double botX = detection.ftcPose.x;
-        double botY = detection.ftcPose.y;
-
-//        double x = detection.ftcPose.x - cameraOffset.getX();
-//        double y = detection.ftcPose.y - cameraOffset.getY();
-//
-//        botHeading = -botHeading;
-//
-//        double x2 = x * Math.cos(botHeading) + y * Math.sin(botHeading);
-//        double y2 = x * -Math.sin(botHeading) + y * Math.cos(botHeading);
-//
-//        VectorF tagPose = AprilTagGameDatabase.getIntoTheDeepTagLibrary().lookupTag(detection.id).fieldPosition;
-//
-//        return new Vector2d(tagPose.get(0) - y2 + 72, tagPose.get(1) + x2 + 72);
-        return new Vector2d(botX, botY);
+    private Vector2d getBotVector(AprilTagDetection detection) {
+        return new Vector2d(-detection.robotPose.getPosition().y + 72, detection.robotPose.getPosition().x + 72);
     }
 
     // Pedro stuff from here on out
@@ -164,7 +138,8 @@ public class AprilTagLocalizer extends Localizer {
     public void update() {
         secondaryLocalizer.update();
         totalHeading = secondaryLocalizer.getTotalHeading();
-        tagPose = getVectorBasedOnTags();
+
+        tagPose = getPoseBasedOnTags(aprilTag.getDetections());
     }
 
     @Override

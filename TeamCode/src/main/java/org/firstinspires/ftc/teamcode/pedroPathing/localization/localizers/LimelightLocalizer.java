@@ -76,10 +76,10 @@ public class LimelightLocalizer extends Localizer {
             return false;
         }
         // Don't accept pose if heading is cooked
-        if (secondaryLocalizer.getVelocityVector().getMagnitude() != 0 && secondaryLocalizer.getPose().getHeading() == 0 && previousHeading == 0) {
-            Log.i("LimelightLocalizer", "===============No heading difference. Reverting to secondary localizer.===============");
-            return false;
-        }
+//        if (secondaryLocalizer.getVelocityVector().getMagnitude() != 0 && secondaryLocalizer.getPose().getHeading() == 0 && previousHeading == 0) {
+//            Log.i("LimelightLocalizer", "===============No heading difference. Reverting to secondary localizer.===============");
+//            return false;
+//        }
         // Don't accept pose if it's outside the field
         if (pose.getPosition().x > 144 || pose.getPosition().y > 144 || pose.getPosition().x < 0 || pose.getPosition().y < 0) {
             Log.i("LimelightLocalizer", "===============Out of field. Reverting to secondary localizer.===============");
