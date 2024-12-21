@@ -48,18 +48,18 @@ public class AprilTagLocalizer extends Localizer {
         aprilTag = new AprilTagProcessor.Builder()
                 .setLensIntrinsics(arducam_fx, arducam_fy, arducam_cx, arducam_cy)
                 .setDrawCubeProjection(true)
-                .setOutputUnits(DistanceUnit.INCH, AngleUnit.DEGREES)
+                .setOutputUnits(DistanceUnit.INCH, AngleUnit.RADIANS)
                 .build();
 
         visionPortal = new VisionPortal.Builder()
-                .addProcessor(aprilTag)
                 .setCamera(RobotMap.getInstance().APRILTAG_CAMERA)
+                .addProcessor(aprilTag)
                 .setCameraResolution(new Size(640, 480))
                 .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
                 .enableLiveView(RobotStatus.liveView)
                 .build();
 
-        cameraOffset = new Pose(8.0315, 5.3871); // TODO: update
+        cameraOffset = new Pose(-8.0315, 0);
 
         setStartPose(startPose);
         totalHeading = 0;

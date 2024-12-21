@@ -69,7 +69,7 @@ public class RobotMap {
         this.hMap = hardwareMap;
 
         OTOS = hardwareMap.get(SparkFunOTOS.class, "otos");
-//        APRILTAG_CAMERA = hardwareMap.get(WebcamName.class, "arducam");
+        APRILTAG_CAMERA = hardwareMap.get(WebcamName.class, "arducam");
         LIMELIGHT = hardwareMap.get(Limelight3A.class, "limelight");
 
         MOTOR_FL = hardwareMap.get(DcMotorEx.class, "leftFront");
@@ -104,6 +104,7 @@ public class RobotMap {
 
     private void addDevices() {
         devices.add(getInstance().OTOS);
+        devices.add(getInstance().APRILTAG_CAMERA);
         devices.add(getInstance().LIMELIGHT);
         devices.add(getInstance().MOTOR_FL);
         devices.add(getInstance().MOTOR_FR);
