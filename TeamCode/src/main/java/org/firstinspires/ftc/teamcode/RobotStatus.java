@@ -19,7 +19,7 @@ public class RobotStatus {
     public static Alliance alliance = Alliance.NONE;
     public static RobotState robotState = RobotState.DISABLED;
     public static boolean liveView = false;
-    public static Pose robotPose = new Pose();
+    public static Pose robotPose = new Pose(8, 8, 0);
     public static ClimbState climbState = ClimbState.DISABLED;
 
     public static void resetValues() {

@@ -110,6 +110,10 @@ public class Chassis extends SubsystemIF {
         telemetry.addLine();
         telemetry.addData("Robot Centric", isRobotCentric);
         telemetry.addData("Path exists", follower.getCurrentPath() != null);
+        telemetry.addData("x", follower.getPose().getX());
+        telemetry.addData("y", follower.getPose().getY());
+        telemetry.addData("heading", follower.getPose().getHeading());
+        telemetry.addData("total heading", follower.getTotalHeading());
     }
 
 }

@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.pedroPathing.localization.localizers.AprilTagLocalizer;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.localizers.OTOSLocalizer;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.MathFunctions;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Vector;
@@ -57,7 +58,7 @@ public class PoseUpdater {
      * Creates a new PoseUpdater from a HardwareMap.
      */
     public PoseUpdater() {
-        this(new OTOSLocalizer());
+        this(new AprilTagLocalizer());
     }
 
     /**

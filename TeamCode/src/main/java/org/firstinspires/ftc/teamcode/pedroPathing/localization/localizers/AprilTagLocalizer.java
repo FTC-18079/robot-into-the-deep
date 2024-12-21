@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.teamcode.vision.VisionConstants.arducam_cy;
 import static org.firstinspires.ftc.teamcode.vision.VisionConstants.arducam_fx;
 import static org.firstinspires.ftc.teamcode.vision.VisionConstants.arducam_fy;
 
+import android.util.Log;
 import android.util.Size;
 
 import com.arcrobotics.ftclib.geometry.Vector2d;
@@ -73,7 +74,7 @@ public class AprilTagLocalizer extends Localizer {
 
     @Override
     public Pose getPose() {
-        if (tagPose != null && isPoseValid(tagPose)) {
+        if (tagPose != null) {
             double x = tagPose.getX();
             double y = tagPose.getY();
 
@@ -90,6 +91,16 @@ public class AprilTagLocalizer extends Localizer {
     }
 
     private boolean isPoseValid(Pose pose) {
+        // Don't accept if it's too stale
+        if ((double) tagDetectTime > 100) {
+            Log.i("AprilTagLocalizer", "===============Stale tag! (" + tagDetectTime + "ms) Reverting to secondary localizer.===============");
+            return false;
+        }
+        // Don't accept tag if pose is out of field
+        if (pose.getX() > 144 || pose.getY() > 144 || pose.getX() < 0 || pose.getY() < 0) {
+            Log.i("AprilTagLocalizer", "===============Out of field! (" + pose.getX() + ", " + pose.getY() + ") Reverting to secondary localizer.===============");
+            return false;
+        }
         return true;
     }
 
@@ -110,17 +121,21 @@ public class AprilTagLocalizer extends Localizer {
     }
 
     public Vector2d getFCPosition(AprilTagDetection detection, double botHeading, Pose cameraOffset) {
-        double x = detection.ftcPose.x - cameraOffset.getX();
-        double y = detection.ftcPose.y - cameraOffset.getY();
+        double botX = detection.ftcPose.x;
+        double botY = detection.ftcPose.y;
 
-        botHeading = -botHeading;
-
-        double x2 = x * Math.cos(botHeading) + y * Math.sin(botHeading);
-        double y2 = x * -Math.sin(botHeading) + y * Math.cos(botHeading);
-
-        VectorF tagPose = AprilTagGameDatabase.getIntoTheDeepTagLibrary().lookupTag(detection.id).fieldPosition;
-
-        return new Vector2d(tagPose.get(0) + y2 + 72, tagPose.get(1) + x2 + 72);
+//        double x = detection.ftcPose.x - cameraOffset.getX();
+//        double y = detection.ftcPose.y - cameraOffset.getY();
+//
+//        botHeading = -botHeading;
+//
+//        double x2 = x * Math.cos(botHeading) + y * Math.sin(botHeading);
+//        double y2 = x * -Math.sin(botHeading) + y * Math.cos(botHeading);
+//
+//        VectorF tagPose = AprilTagGameDatabase.getIntoTheDeepTagLibrary().lookupTag(detection.id).fieldPosition;
+//
+//        return new Vector2d(tagPose.get(0) - y2 + 72, tagPose.get(1) + x2 + 72);
+        return new Vector2d(botX, botY);
     }
 
     // Pedro stuff from here on out

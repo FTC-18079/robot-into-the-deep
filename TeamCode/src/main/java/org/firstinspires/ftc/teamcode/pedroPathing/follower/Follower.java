@@ -159,7 +159,6 @@ public class Follower {
      */
     public void initialize() {
         driveVectorScaler = new DriveVectorScaler(FollowerConstants.frontLeftVector);
-        poseUpdater = new PoseUpdater();
         poseUpdater = new PoseUpdater(new AprilTagLocalizer());
 
         leftFront = new SuccessMotor(RobotMap.getInstance().MOTOR_FL);

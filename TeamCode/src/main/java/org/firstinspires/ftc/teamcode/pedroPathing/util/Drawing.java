@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Vector;
  * @version 1.0, 4/22/2024
  */
 public class Drawing {
-    public static final double ROBOT_RADIUS = 9;
+    public static final double ROBOT_RADIUS = 8;
 
     private static TelemetryPacket packet;
     private static final Canvas CUSTOM_FIELD = new Canvas();
@@ -47,7 +47,7 @@ public class Drawing {
         drawPoseHistory(follower.getDashboardPoseTracker(), "#4CAF50");
         drawRobot(new Pose(
                 follower.getPose().getX() - 72,
-                follower.getPose().getY() + 72,
+                follower.getPose().getY() - 72,
                     follower.getPose().getHeading()
                 ),
                 "#4CAF50");
