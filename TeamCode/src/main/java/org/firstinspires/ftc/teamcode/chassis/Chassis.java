@@ -4,6 +4,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Hydra;
 import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
+import org.firstinspires.ftc.teamcode.pedroPathing.localization.localizers.AprilTagLocalizer;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.RobotStatus;
 import org.firstinspires.ftc.teamcode.pedroPathing.util.Drawing;
@@ -37,7 +38,7 @@ public class Chassis extends SubsystemIF {
     @Override
     public void onTeleopInit() {
         telemetry = Hydra.getInstance().getTelemetry();
-        follower = new Follower();
+        follower = new Follower(new AprilTagLocalizer());
         follower.setPose(RobotStatus.robotPose);
         follower.startTeleopDrive();
         setMaxPower(1.0);

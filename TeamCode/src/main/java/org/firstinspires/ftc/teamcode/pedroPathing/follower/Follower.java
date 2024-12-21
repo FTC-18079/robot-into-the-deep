@@ -149,7 +149,7 @@ public class Follower {
      * This creates a new Follower.
      */
     public Follower() {
-        this(new AprilTagLocalizer());
+        this(new OTOSLocalizer());
     }
 
     public Follower(Localizer localizer) {

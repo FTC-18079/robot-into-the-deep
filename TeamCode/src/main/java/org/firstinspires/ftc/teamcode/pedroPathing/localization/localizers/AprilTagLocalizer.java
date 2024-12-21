@@ -3,7 +3,9 @@ package org.firstinspires.ftc.teamcode.pedroPathing.localization.localizers;
 import android.util.Log;
 
 import com.arcrobotics.ftclib.geometry.Vector2d;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.RobotStatus;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Localizer;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.MathFunctions;
@@ -13,16 +15,19 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 import java.util.ArrayList;
 
+import static org.firstinspires.ftc.teamcode.vision.VisionConstants.*;
+
 public class AprilTagLocalizer extends Localizer {
     private final ATVision atVision = ATVision.getInstance();
 
     private Pose startPose;
     private Pose tagPose;
-    private double previousHeading;
     private double totalHeading;
     private long tagDetectTime;
 
     private final Localizer secondaryLocalizer;
+
+    private final ElapsedTime timer = new ElapsedTime();
 
     public AprilTagLocalizer() {
         this(new Pose());
@@ -32,12 +37,11 @@ public class AprilTagLocalizer extends Localizer {
         secondaryLocalizer = new OTOSLocalizer();
         setStartPose(startPose);
         totalHeading = 0;
-        previousHeading = startPose.getHeading();
     }
 
     @Override
     public Pose getPose() {
-        if (tagPose != null) {
+        if (tagPose != null && RobotStatus.visionEnabled && isPoseValid(tagPose)) {
             double x = tagPose.getX();
             double y = tagPose.getY();
 
@@ -51,11 +55,6 @@ public class AprilTagLocalizer extends Localizer {
     }
 
     private boolean isPoseValid(Pose pose) {
-        // Don't accept if it's too stale
-        if ((double) tagDetectTime > 100) {
-            Log.i("AprilTagLocalizer", "===============Stale tag! (" + tagDetectTime + "ms) Reverting to secondary localizer.===============");
-            return false;
-        }
         // Don't accept tag if pose is out of field
         if (pose.getX() > 144 || pose.getY() > 144 || pose.getX() < 0 || pose.getY() < 0) {
             Log.i("AprilTagLocalizer", "===============Out of field! (" + pose.getX() + ", " + pose.getY() + ") Reverting to secondary localizer.===============");
@@ -65,6 +64,24 @@ public class AprilTagLocalizer extends Localizer {
     }
 
     private Pose getPoseBasedOnTags(ArrayList<AprilTagDetection> detections) {
+        if (detections.isEmpty()) return null;
+
+        // Clean up bad detections
+        for (int i = detections.size() - 1; i >= 0; i--) {
+            AprilTagDetection detection = detections.get(i);
+
+            // Remove if null
+            if (detection == null) {
+                detections.remove(i);
+            // Remove if robot is floating
+            } else if (detection.ftcPose.z > CAMERA_POSE.z + 1) {
+                detections.remove(i);
+            // Remove if too far
+            } else if (detection.ftcPose.range > MAXIMUM_APRILTAG_RANGE) {
+                detections.remove(i);
+            }
+        }
+
         if (detections.isEmpty()) {
             return null;
         } else {
@@ -110,7 +127,13 @@ public class AprilTagLocalizer extends Localizer {
         secondaryLocalizer.update();
         totalHeading = secondaryLocalizer.getTotalHeading();
 
-        tagPose = getPoseBasedOnTags(atVision.getDetections());
+        // Don't get tags every loop to reduce processing times
+        if (timer.milliseconds() > APRILTAG_REFRESH_RATE) {
+            tagPose = getPoseBasedOnTags(atVision.getDetections());
+            timer.reset();
+        } else {
+            tagPose = null;
+        }
     }
 
     @Override

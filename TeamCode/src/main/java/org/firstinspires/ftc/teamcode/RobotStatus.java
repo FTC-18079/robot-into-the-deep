@@ -21,6 +21,7 @@ public class RobotStatus {
     public static boolean liveView = false;
     public static Pose robotPose = new Pose(8, 8, 0);
     public static ClimbState climbState = ClimbState.DISABLED;
+    public static boolean visionEnabled = true;
 
     public static void resetValues() {
         delayMs = 0;
@@ -29,6 +30,7 @@ public class RobotStatus {
         liveView = false;
         robotPose = new Pose();
         climbState = ClimbState.DISABLED;
+        visionEnabled = true;
     }
 
     public static void setClimbState(ClimbState state) {
