@@ -33,6 +33,7 @@ public class ArmCommands {
     // TO SAMPLE COLLECT
     public static final Supplier<Command> STOW_TO_SAMPLE_COLLECT;
     public static final Supplier<Command> COLLECT_SAMPLE;
+    public static final Supplier<Command> MISSED_SEQUENCE;
 
     // TO SPECIMEN COLLECT
     public static final Supplier<Command> STOW_TO_SPECIMEN_COLLECT;
@@ -49,8 +50,6 @@ public class ArmCommands {
     public static Command TO_CHAMBER;
     public static Command TO_COLLECT;
     public static Command ARM_ACTION;
-
-
 
     static {
         Supplier<Arm> arm = Arm::getInstance;
@@ -181,11 +180,18 @@ public class ArmCommands {
                 Commands.waitMillis(ClawConstants.GRAB_DELAY)
         );
 
+        MISSED_SEQUENCE = () -> Commands.sequence(
+                Commands.runOnce(() -> claw.get().setState(ClawConstants.SAMPLE_COLLECTING_STATE), claw.get()),
+                Commands.waitMillis(175),
+                Commands.runOnce(() -> arm.get().setState(Arm.ArmState.COLLECTING_SAMPLE), arm.get())
+        );
+
     }
 
     static {
         Supplier<Arm> arm = Arm::getInstance;
         Supplier<Claw> claw = Claw::getInstance;
+        Supplier<LLVision> llVision = LLVision::getInstance;
 
         TO_STOW = Commands.deferredProxy(() -> {
             switch (arm.get().getState()) {
@@ -241,8 +247,16 @@ public class ArmCommands {
                 case COLLECTING_SAMPLE:
                     return Commands.sequence(
                             Commands.defer(COLLECT_SAMPLE, claw.get()),
+                            Commands.runOnce(llVision.get()::setOrange),
                             Commands.defer(GRAB, claw.get()),
-                            Commands.defer(SAMPLE_COLLECT_TO_STOW, arm.get())
+                            Commands.either(
+                                    // If claw is in sight (missed collection)
+                                    Commands.defer(MISSED_SEQUENCE, claw.get()),
+                                    // If claw is out of sight (collected)
+                                    Commands.defer(SAMPLE_COLLECT_TO_STOW, arm.get()),
+                                    // Condition
+                                    llVision.get()::clawInView
+                            )
                     );
                 case COLLECTING_SPECIMEN:
                     return Commands.sequence(

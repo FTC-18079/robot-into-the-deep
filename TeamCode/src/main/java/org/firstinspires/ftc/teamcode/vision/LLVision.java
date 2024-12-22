@@ -95,6 +95,10 @@ public class LLVision extends SubsystemIF {
         setPipeline();
     }
 
+    public void setOrange() {
+        limelight.pipelineSwitch(3);
+    }
+
     /**
      * Updates limelight detection results
      */
@@ -116,6 +120,14 @@ public class LLVision extends SubsystemIF {
     }
 
     // GETTERS
+
+    public boolean clawInView() {
+        if (result.getPipelineIndex() != 3 || colorResults.isEmpty()) {
+            return false;
+        }
+        setPipeline();
+        return true;
+    }
 
     /**
      * Gets the angle of the sample in degrees
