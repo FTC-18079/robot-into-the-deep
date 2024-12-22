@@ -233,7 +233,8 @@ public class Arm extends SubsystemIF {
         double pivotOutput = pivotPid.calculate(getPivotPos());
         double pivotFeedforward = PIVOT_kF * Math.cos(Math.toRadians(getPivotTarget() - PIVOT_REST_POSITION));
 
-        if (!slideZeroing) setSlidePower(slideOutput + slideFeedforward);
+        if (slideAtSetPoint() && getSlideTarget() == SLIDE_REST_POSITION && !slideZeroing) setSlidePower(0);
+        else if (!slideZeroing) setSlidePower(slideOutput + slideFeedforward);
 
         if (pivotAtSetPoint() && getPivotTarget() == PIVOT_REST_POSITION) pivot.setPower(0);
         else pivot.setPower(pivotOutput + pivotFeedforward);

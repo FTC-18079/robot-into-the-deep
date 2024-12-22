@@ -57,7 +57,7 @@ public class ATVision extends SubsystemIF {
                 .setCameraPose(CAMERA_POSE, CAMERA_ROTATION)
                 .setOutputUnits(DistanceUnit.INCH, AngleUnit.RADIANS)
                 .build();
-        aprilTag.setDecimation(3);
+        aprilTag.setDecimation(DECIMATION);
     }
 
     private void makePortal() {

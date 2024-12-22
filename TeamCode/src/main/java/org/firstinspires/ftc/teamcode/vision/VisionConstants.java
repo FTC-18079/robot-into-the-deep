@@ -21,8 +21,9 @@ public class VisionConstants {
     public static final double arducam_cx = 310.076;
     public static final double arducam_cy = 251.101;
 
+    public static float DECIMATION = 2;
     public static double MAXIMUM_APRILTAG_RANGE = 48.0;
-    public static double APRILTAG_REFRESH_RATE = 20.0;
+    public static double APRILTAG_REFRESH_RATE = 30.0;
 
     // Claw angles
     public static double[][] CLAW_ANGLES = {
