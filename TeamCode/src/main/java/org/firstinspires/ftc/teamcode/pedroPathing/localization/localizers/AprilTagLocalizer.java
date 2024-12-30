@@ -71,10 +71,10 @@ public class AprilTagLocalizer extends Localizer {
             AprilTagDetection detection = detections.get(i);
 
             // Remove if null
-            if (detection == null) {
+            if (detection == null || detection.ftcPose == null) {
                 detections.remove(i);
             // Remove if robot is floating
-            } else if (detection.ftcPose == null || detection.ftcPose.z > CAMERA_POSE.z + 1) {
+            } else if (detection.ftcPose.z > CAMERA_POSE.z + 1) {
                 detections.remove(i);
             // Remove if too far
             } else if (detection.ftcPose.range > MAXIMUM_APRILTAG_RANGE) {
