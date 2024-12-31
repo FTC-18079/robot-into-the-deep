@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.vision;
 
+import android.util.Log;
+
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
@@ -76,7 +78,7 @@ public class LLVision extends SubsystemIF {
     /**
      * Switches the limelight's pipeline
      */
-    private void setPipeline() {
+    public void setPipeline() {
         limelight.pipelineSwitch(targetColor.index);
     }
 

@@ -249,6 +249,7 @@ public class ArmCommands {
                             Commands.defer(COLLECT_SAMPLE, claw.get()),
                             Commands.runOnce(llVision.get()::setOrange),
                             Commands.defer(GRAB, claw.get()),
+                            Commands.waitMillis(100),
                             Commands.either(
                                     // If claw is in sight (missed collection)
                                     Commands.defer(MISSED_SEQUENCE, claw.get()),
@@ -256,7 +257,8 @@ public class ArmCommands {
                                     Commands.defer(SAMPLE_COLLECT_TO_STOW, arm.get()),
                                     // Condition
                                     llVision.get()::clawInView
-                            )
+                            ),
+                            Commands.runOnce(llVision.get()::setPipeline)
                     );
                 case COLLECTING_SPECIMEN:
                     return Commands.sequence(
