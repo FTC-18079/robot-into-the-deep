@@ -17,7 +17,7 @@ public class ClawConstants {
 
     // SAMPLE POSITIONS
     public static double SAMPLE_COLLECT_JOINT_ONE_POS = 0.2;
-    public static double SAMPLE_COLLECT_JOINT_TWO_POS = 0.8;
+    public static double SAMPLE_COLLECT_JOINT_TWO_POS = 0.7;
 
     public static ClawState SAMPLE_COLLECTING_STATE = new ClawState(CLAW_OPEN_POSITION, 1.0, 0.65, 0.0);
     public static ClawState SAMPLE_SCORING_STATE = new ClawState(CLAW_CLOSE_POSITION, 0, 0.55, 0.82);
