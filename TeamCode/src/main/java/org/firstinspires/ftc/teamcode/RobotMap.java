@@ -16,7 +16,6 @@ import org.firstinspires.ftc.teamcode.pedroPathing.tuning.FollowerConstants;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: change drive motors back to photon motors
 public class RobotMap {
     private HardwareMap hMap;
     private final List<HardwareDevice> devices = new ArrayList<>();
