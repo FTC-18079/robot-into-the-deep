@@ -4,7 +4,6 @@ import android.util.Log;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.Robot;
 import com.arcrobotics.ftclib.command.button.Trigger;
@@ -23,7 +22,6 @@ import org.firstinspires.ftc.teamcode.chassis.commands.TeleOpDriveCommand;
 import org.firstinspires.ftc.teamcode.claw.Claw;
 import org.firstinspires.ftc.teamcode.claw.ClawConstants;
 import org.firstinspires.ftc.teamcode.climb.Climb;
-import org.firstinspires.ftc.teamcode.climb.commands.AscentThreeCommand;
 import org.firstinspires.ftc.teamcode.climb.commands.AscentTwoCommand;
 import org.firstinspires.ftc.teamcode.util.SubsystemIF;
 import org.firstinspires.ftc.teamcode.util.commands.Commands;
@@ -158,7 +156,7 @@ public class Hydra extends Robot {
 
         // Toggle field centric
         driveController.getGamepadButton(GamepadKeys.Button.B)
-                .whenPressed(Chassis.getInstance()::toggleRobotCentric);
+                .whenPressed(Chassis.getInstance()::toggleFieldCentric);
 
         // Arm to scoring position
         manipController.getGamepadButton(GamepadKeys.Button.DPAD_UP)

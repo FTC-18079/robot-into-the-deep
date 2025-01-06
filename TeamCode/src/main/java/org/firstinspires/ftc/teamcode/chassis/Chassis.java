@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.util.SubsystemIF;
 public class Chassis extends SubsystemIF {
     Follower follower;
     Telemetry telemetry;
-    boolean isRobotCentric;
+    boolean isFieldCentric;
     double m = 1.0;
 
     private static final Chassis INSTANCE = new Chassis();
@@ -21,7 +21,7 @@ public class Chassis extends SubsystemIF {
     }
 
     private Chassis() {
-        isRobotCentric = false;
+        isFieldCentric = true;
     }
 
     // INITIALIZE
@@ -52,8 +52,8 @@ public class Chassis extends SubsystemIF {
         return follower.isBusy();
     }
 
-    public boolean isRobotCentric() {
-        return isRobotCentric;
+    public boolean isFieldCentric() {
+        return isFieldCentric;
     }
 
     // SETTERS
@@ -67,7 +67,7 @@ public class Chassis extends SubsystemIF {
     }
 
     public void setDriveVectors(double fwd, double str, double rot) {
-        follower.setTeleOpMovementVectors(fwd * m, str * m, rot * m, isRobotCentric);
+        follower.setTeleOpMovementVectors(fwd * m, str * m, rot * m, isFieldCentric);
     }
 
     public void resetHeading() {
@@ -93,8 +93,8 @@ public class Chassis extends SubsystemIF {
         follower.breakFollowing();
     }
 
-    public void toggleRobotCentric() {
-        isRobotCentric = !isRobotCentric;
+    public void toggleFieldCentric() {
+        isFieldCentric = !isFieldCentric;
     }
 
     // PERIODIC
@@ -104,7 +104,7 @@ public class Chassis extends SubsystemIF {
         follower.update();
         RobotStatus.robotPose = follower.getPose();
 
-        telemetry.addData("Robot Centric", isRobotCentric);
+        telemetry.addData("Field Centric", isFieldCentric);
         telemetry.addData("Path exists", follower.getCurrentPath() != null);
     }
 
