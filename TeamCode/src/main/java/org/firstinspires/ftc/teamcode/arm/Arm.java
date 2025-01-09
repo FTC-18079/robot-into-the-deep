@@ -210,9 +210,6 @@ public class Arm extends SubsystemIF {
 
     @Override
     public void periodic() {
-        // temp
-        updatePid();
-
         telemetry.addLine();
         telemetry.addData("Arm State", state);
         telemetry.addData("Scoring Piece", scoreType);
