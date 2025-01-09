@@ -50,10 +50,10 @@ public class ArmConstants {
     public static double PIVOT_kP = 0.0085;
     public static double PIVOT_kI = 0.0;
     public static double PIVOT_kD = 0.000045;
-    public static double PIVOT_kF = 0.05;
+    public static double PIVOT_kF = 0.0;
 
     // Constants
-    public static double PIVOT_ERROR_TOLERANCE = 8.0;
+    public static double PIVOT_ERROR_TOLERANCE = 5.0;
     public static double PIVOT_GEAR_RATIO = 40.0 / 26.0;
     public static double PIVOT_TIMEOUT = 1500;
 
