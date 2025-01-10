@@ -53,7 +53,7 @@ public class Arm extends SubsystemIF {
         slidePid = new PIDController(SLIDE_kP, SLIDE_kI, SLIDE_kD);
         pivotPid = new PIDController(PIVOT_kP, PIVOT_kI, PIVOT_kD);
         alignmentPid = new PIDController(ALIGN_kP, ALIGN_kI, ALIGN_kD);
-        alignmentPid.setSetPoint(0.0);
+        alignmentPid.setSetPoint(ALIGN_tY);
 
         state = ArmState.STOW;
         scoreType = ScoreType.SAMPLE;
