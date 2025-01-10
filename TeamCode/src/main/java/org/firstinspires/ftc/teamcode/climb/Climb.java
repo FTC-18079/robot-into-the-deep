@@ -18,8 +18,6 @@ public class Climb extends SubsystemIF {
     Telemetry telemetry;
 
     SuccessMotor climbMotor;
-    Servo rightHook;
-    Servo leftHook;
 
     PIDController climbPid;
 
@@ -55,8 +53,6 @@ public class Climb extends SubsystemIF {
 
     public void configureHardware() {
         climbMotor = new SuccessMotor(RobotMap.getInstance().CLIMB_MOTOR);
-        rightHook = RobotMap.getInstance().RIGHT_HOOK;
-        leftHook = RobotMap.getInstance().LEFT_HOOK;
 
         climbMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         climbMotor.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -90,26 +86,6 @@ public class Climb extends SubsystemIF {
 
     public void setBrake() {
         climbMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-    }
-
-    public void engageHooks() {
-        rightHook.setPosition(RIGHT_HOOK_ENGAGE_POSITION);
-        leftHook.setPosition(LEFT_HOOK_ENGAGE_POSITION);
-    }
-
-    public void readyHooks() {
-        rightHook.setPosition(RIGHT_HOOK_READY_POSITION);
-        leftHook.setPosition(LEFT_HOOK_READY_POSITION);
-    }
-
-    public void servoDisable() {
-        rightHook.getController().pwmDisable();
-        leftHook.getController().pwmDisable();
-    }
-
-    public void servoEnable() {
-        rightHook.getController().pwmEnable();
-        leftHook.getController().pwmEnable();
     }
 
     public void setPower(double power) {
