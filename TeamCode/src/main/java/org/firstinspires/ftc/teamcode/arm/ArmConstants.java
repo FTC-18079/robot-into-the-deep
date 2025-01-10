@@ -16,10 +16,10 @@ public class ArmConstants {
     public static double SLIDE_kF = 0.15;
 
     // Alignment PID
-    public static double ALIGN_kP = 0.02;
+    public static double ALIGN_kP = 0.04;
     public static double ALIGN_kI = 0.0;
     public static double ALIGN_kD = 0.0;
-//    public static double ALIGN_kD = 0.0002;
+    public static double ALIGN_tY = -2.0;
 
     // Constants
     public static double SLIDE_ERROR_TOLERANCE = 15.0;
@@ -58,7 +58,7 @@ public class ArmConstants {
     public static double PIVOT_TIMEOUT = 1500;
 
     // Positions
-    public static double PIVOT_REST_POSITION = 136;
+    public static double PIVOT_REST_POSITION = 94;
     public static final double PIVOT_REST_TO_SCORE_OFFSET = 150.0;
     public static double PIVOT_SCORE_POSITION = PIVOT_REST_POSITION + PIVOT_REST_TO_SCORE_OFFSET;
     public static double PIVOT_CLIMBED_POSITION = PIVOT_SCORE_POSITION - 30;
