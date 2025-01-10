@@ -29,7 +29,6 @@ public class AscentTwoCommand extends SequentialCommandGroup {
         addCommands(
                 Commands.runOnce(() -> RobotStatus.setClimbState(RobotStatus.ClimbState.STARTED)),
                 Commands.log("ClimbSequenceCommand","===============LATCHING==============="),
-                Commands.runOnce(climb::readyHooks),
                 // Latch climb onto slides
                 Commands.runOnce(() -> climb.setPower(0.5)),
                 Commands.waitUntil(() -> climb.getClimbPos() >= ClimbConstants.CLIMB_LATCH_POSITION),
@@ -84,10 +83,8 @@ public class AscentTwoCommand extends SequentialCommandGroup {
                 Commands.waitUntil(() -> climb.getClimbPos() >= ClimbConstants.CLIMB_IN_POSITION),
                 new MovePivotCommand(() -> ArmConstants.PIVOT_CLIMBED_POSITION),
                 Commands.runOnce(() -> climb.setPower(ClimbConstants.kF)),
-                Commands.runOnce(climb::engageHooks),
                 Commands.waitMillis(1000),
                 Commands.runOnce(() -> climb.setPower(0)),
-                Commands.runOnce(climb::servoDisable),
                 Commands.runOnce(() -> RobotStatus.setClimbState(RobotStatus.ClimbState.CLIMBED))
         );
         addRequirements(climb);
