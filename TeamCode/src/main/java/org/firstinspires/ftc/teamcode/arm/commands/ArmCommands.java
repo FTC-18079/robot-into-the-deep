@@ -89,7 +89,7 @@ public class ArmCommands {
 
         STOW_TO_BASKET = () -> Commands.sequence(
                 Commands.runOnce(() -> arm.get().setState(Arm.ArmState.SCORING_SAMPLE)),
-                Commands.runOnce(() -> claw.get().setJointOne(0.3)),
+                Commands.runOnce(() -> claw.get().setJointOne(0.6)),
                 Commands.waitMillis(200),
                 new MovePivotCommand(() -> ArmConstants.PIVOT_SCORE_POSITION),
                 Commands.runOnce(() -> claw.get().setWrist(ClawConstants.SAMPLE_SCORING_STATE.wristPos)),
@@ -103,7 +103,7 @@ public class ArmCommands {
         );
 
         SPECIMEN_COLLECT_TO_CHAMBER = () -> Commands.sequence(
-                Commands.runOnce(() -> claw.get().setJointOne(0.5)),
+                Commands.runOnce(() -> claw.get().setJointOne(0.65)),
                 Commands.waitMillis(100),
                 Commands.runOnce(() -> arm.get().setState(Arm.ArmState.SCORING_SPECIMEN)),
                 new MoveSlideCommand(() -> ArmConstants.SLIDE_REST_POSITION),
@@ -174,9 +174,9 @@ public class ArmCommands {
                 Commands.runOnce(() -> arm.get().setState(Arm.ArmState.STOW)),
                 Commands.runOnce(() -> claw.get().setWrist(limelight.get().getServoPos())),
                 Commands.waitMillis(175),
-                Commands.runOnce(() -> claw.get().setJointTwo(ClawConstants.SAMPLE_COLLECT_JOINT_TWO_POS)),
-                Commands.waitMillis(ClawConstants.PIVOT_DELAY),
                 Commands.runOnce(() -> claw.get().setJointOne(ClawConstants.SAMPLE_COLLECT_JOINT_ONE_POS)),
+                Commands.waitMillis(ClawConstants.PIVOT_DELAY),
+                Commands.runOnce(() -> claw.get().setJointTwo(ClawConstants.SAMPLE_COLLECT_JOINT_TWO_POS)),
                 Commands.waitMillis(ClawConstants.GRAB_DELAY)
         );
 
