@@ -29,7 +29,7 @@ public class ArmConstants {
     public static double ZEROING_VELOCITY_ERROR = 5;
 
     // Positions
-    public static double SLIDE_REST_POSITION = 5.0;
+    public static double SLIDE_REST_POSITION = 8.0;
     public static double SLIDE_SAMPLE_COLLECT_POSITION = 1150.0;
     public static double SLIDE_SPECIMEN_COLLECT_POSITION = 350;
     public static double SLIDE_CHAMBER_POSITION = 430;
@@ -58,7 +58,7 @@ public class ArmConstants {
     public static double PIVOT_TIMEOUT = 1500;
 
     // Positions
-    public static double PIVOT_REST_POSITION = 190;
+    public static double PIVOT_REST_POSITION = 136;
     public static final double PIVOT_REST_TO_SCORE_OFFSET = 150.0;
     public static double PIVOT_SCORE_POSITION = PIVOT_REST_POSITION + PIVOT_REST_TO_SCORE_OFFSET;
     public static double PIVOT_CLIMBED_POSITION = PIVOT_SCORE_POSITION - 30;
