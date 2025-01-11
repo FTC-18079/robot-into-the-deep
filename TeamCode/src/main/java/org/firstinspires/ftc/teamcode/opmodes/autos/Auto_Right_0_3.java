@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.arm.Arm;
 import org.firstinspires.ftc.teamcode.arm.ArmConstants;
 import org.firstinspires.ftc.teamcode.arm.commands.ArmCommands;
+import org.firstinspires.ftc.teamcode.arm.commands.AutoSpecimenCommand;
 import org.firstinspires.ftc.teamcode.arm.commands.MovePivotCommand;
 import org.firstinspires.ftc.teamcode.arm.commands.MoveSlideCommand;
 import org.firstinspires.ftc.teamcode.autonomous.AutoTemplate;
@@ -70,7 +71,7 @@ public class Auto_Right_0_3 extends AutoTemplate {
 
     // Constants
     public static double preloadMaxSpeed = 0.6; // Speed reduction on the preload path
-    public static long preloadPathDelay = 0; // Delay to allow for pivot to move before following first path
+    public static long preloadPathDelay = 750; // Delay to allow for pivot to move before following first path
 
     @Override
     protected Pose getStartingPose() {
@@ -137,15 +138,24 @@ public class Auto_Right_0_3 extends AutoTemplate {
                 Commands.runOnce(() -> Claw.getInstance().setState(ClawConstants.SPECIMEN_AUTO_SCORING_STATE)),
                 Commands.parallel(
                         Commands.waitMillis(preloadPathDelay).andThen(new FollowPathCommand(scorePreloadPath, preloadMaxSpeed)),
-                        new MovePivotCommand(() -> ArmConstants.PIVOT_SCORE_POSITION)
+                        Commands.defer(ArmCommands.STOW_TO_CHAMBER, Arm.getInstance())
                 ),
-                new MoveSlideCommand(() -> ArmConstants.SLIDE_CHAMBER_POSITION + 320),
-                Commands.defer(ArmCommands.RELEASE, Arm.getInstance()),
+                Commands.defer(ArmCommands.SCORE_SPECIMEN),
                 Commands.parallel(
                         new FollowPathCommand(behindOnePath),
-                        new MoveSlideCommand(() -> ArmConstants.SLIDE_REST_POSITION).andThen(new MovePivotCommand(() -> ArmConstants.PIVOT_REST_POSITION))
+                        Commands.defer(ArmCommands.CHAMBER_TO_STOW)
                 ),
-                Commands.runOnce(() -> Claw.getInstance().setState(ClawConstants.REST_STATE)),
+//                Commands.parallel(
+//                        Commands.waitMillis(preloadPathDelay).andThen(new FollowPathCommand(scorePreloadPath, preloadMaxSpeed)),
+//                        new MovePivotCommand(() -> ArmConstants.PIVOT_SCORE_POSITION)
+//                ),
+//                new MoveSlideCommand(() -> ArmConstants.SLIDE_CHAMBER_POSITION + 320),
+//                Commands.defer(ArmCommands.RELEASE, Arm.getInstance()),
+//                Commands.parallel(
+//                        new FollowPathCommand(behindOnePath),
+//                        new MoveSlideCommand(() -> ArmConstants.SLIDE_REST_POSITION).andThen(new MovePivotCommand(() -> ArmConstants.PIVOT_REST_POSITION))
+//                ),
+//                Commands.runOnce(() -> Claw.getInstance().setState(ClawConstants.REST_STATE)),
                 // Push samples into zone
                 new FollowPathCommand(pushOnePath),
                 new FollowPathCommand(behindTwoPath),
@@ -153,11 +163,9 @@ public class Auto_Right_0_3 extends AutoTemplate {
 //                new FollowPathCommand(behindThreePath),
 //                new FollowPathCommand(pushThreePath),
                 // Collect first
-                Commands.parallel(
-                        new FollowPathCommand(collectOnePath),
-                        Commands.defer(ArmCommands.STOW_TO_SPECIMEN_COLLECT, Arm.getInstance())
-                ),
-                Commands.waitMillis(700),
+                new FollowPathCommand(collectOnePath),
+                Commands.defer(ArmCommands.STOW_TO_SPECIMEN_COLLECT, Arm.getInstance()),
+                new AutoSpecimenCommand(),
                 Commands.defer(ArmCommands.GRAB, Arm.getInstance()),
                 // Score
                 Commands.parallel(
@@ -170,7 +178,7 @@ public class Auto_Right_0_3 extends AutoTemplate {
                         new FollowPathCommand(collectTwoPath),
                         Commands.defer(ArmCommands.CHAMBER_TO_SPECIMEN_COLLECT, Arm.getInstance())
                 ),
-                Commands.waitMillis(700),
+                new AutoSpecimenCommand(),
                 Commands.defer(ArmCommands.GRAB, Arm.getInstance()),
                 // Score
                 Commands.parallel(
