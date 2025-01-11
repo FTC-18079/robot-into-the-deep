@@ -42,9 +42,14 @@ public class ArmTest extends OpMode {
         }
 
         arm.setPivotPower(-gamepad1.left_stick_y);
+        arm.setSlidePower(-gamepad1.right_stick_y);
 
         telemetry.addData("Slide Pos", arm.getSlidePos());
         telemetry.addData("Pivot Pos", arm.getPivotPos());
+        telemetry.addData("Slide velocity", arm.getSlideVelocity());
+        telemetry.addLine();
+        telemetry.addData("Slide power", -gamepad1.right_stick_y);
+        telemetry.addData("Pivot power", -gamepad1.left_stick_y);
         telemetry.update();
     }
 }

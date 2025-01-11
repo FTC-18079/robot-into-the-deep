@@ -4,9 +4,12 @@ import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.Command;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.RobotStatus;
 import org.firstinspires.ftc.teamcode.arm.Arm;
+import org.firstinspires.ftc.teamcode.arm.ArmConstants;
 import org.firstinspires.ftc.teamcode.arm.commands.ArmCommands;
+import org.firstinspires.ftc.teamcode.arm.commands.AutoSpecimenCommand;
+import org.firstinspires.ftc.teamcode.arm.commands.MovePivotCommand;
+import org.firstinspires.ftc.teamcode.arm.commands.MoveSlideCommand;
 import org.firstinspires.ftc.teamcode.autonomous.AutoTemplate;
 import org.firstinspires.ftc.teamcode.chassis.commands.FollowPathCommand;
 import org.firstinspires.ftc.teamcode.claw.Claw;
@@ -34,19 +37,20 @@ import static org.firstinspires.ftc.teamcode.autonomous.AutoConstants.*;
 public class Auto_Right_0_3 extends AutoTemplate {
     // Poses
     private final Pose startingPose = new Pose(8, 64, Math.toRadians(180));
-    private final Pose scorePreloadPose = CHAMBER_RIGHT_SCORE_POSE;
+    private final Pose scorePreloadPose = CHAMBER_RIGHT_SCORE_POSE.copy();
     private final Pose behindOnePose = new Pose(62, 29, Math.toRadians(180));
     private final Pose pushOnePose = new Pose(16, 29, Math.toRadians(180));
     private final Pose behindTwoPose = new Pose(62, 19, Math.toRadians(180));
-    private final Pose pushTwoPose = new Pose(WALL_COLLECT_X_POSITION - 1, 19, Math.toRadians(180));
+    private final Pose pushTwoPose = new Pose(16, 19, Math.toRadians(180));
 //    private final Pose behindThreePose = new Pose(62, 9, Math.toRadians(180));
 //    private final Pose pushThreePose = new Pose(WALL_COLLECT_X_POSITION-1, 9, Math.toRadians(180));
+    private final Pose collectOnePose = new Pose(WALL_COLLECT_X_POSITION, WALL_COLLECT_Y_POSITION, Math.toRadians(180));
     private final Pose scoreOnePose = new Pose(CHAMBER_X_POSITION, CHAMBER_RIGHT_Y_POSITION - 2.5, Math.toRadians(180));
     private final Pose collectTwoPose = new Pose(WALL_COLLECT_X_POSITION, WALL_COLLECT_Y_POSITION, Math.toRadians(180));
     private final Pose scoreTwoPose = new Pose(CHAMBER_X_POSITION, CHAMBER_RIGHT_Y_POSITION - 5, Math.toRadians(180));
 //    private final Pose collectThreePose = collectTwoPose;
 //    private final Pose scoreThreePose = new Pose(CHAMBER_X_POSITION, CHAMBER_RIGHT_Y_POSITION - 6, Math.toRadians(180));
-    private final Pose parkingPose = OBVZONE_PARKING_POSE;
+    private final Pose parkingPose = OBVZONE_PARKING_POSE.copy();
     private final Pose scoreControlPoint = new Pose(5.84415584,59.37662337662338, Math.toRadians(180));
 
     // Paths
@@ -66,8 +70,8 @@ public class Auto_Right_0_3 extends AutoTemplate {
     private Path collectOnePath;
 
     // Constants
-    public static double preloadMaxSpeed = 0.5; // Speed reduction on the preload path
-    public static long preloadPathDelay = 1000; // Delay to allow for pivot to move before following first path
+    public static double preloadMaxSpeed = 0.6; // Speed reduction on the preload path
+    public static long preloadPathDelay = 700; // Delay to allow for pivot to move before following first path
 
     @Override
     protected Pose getStartingPose() {
@@ -76,9 +80,9 @@ public class Auto_Right_0_3 extends AutoTemplate {
 
     @Override
     protected void buildPaths() {
-        scorePreloadPath = new Path(new BezierLine(new Point(startingPose), new Point(scorePreloadPose)));
+        scorePreloadPath = new Path(new BezierCurve(new Point(startingPose), new Point(scorePreloadPose)));
         scorePreloadPath.setConstantHeadingInterpolation(scorePreloadPose.getHeading());
-        scorePreloadPath.setPathEndTimeoutConstraint(1000);
+        scorePreloadPath.setPathEndTimeoutConstraint(800);
 
         behindOnePath = new Path(new BezierCurve(new Point(scorePreloadPose), new Point(27, 13, Point.CARTESIAN), new Point(64, 44, Point.CARTESIAN), new Point(behindOnePose)));
         behindOnePath.setConstantHeadingInterpolation(scorePreloadPose.getHeading());
@@ -103,17 +107,19 @@ public class Auto_Right_0_3 extends AutoTemplate {
 //        pushThreePath = new Path(new BezierLine(new Point(behindThreePose), new Point(pushThreePose)));
 //        pushThreePath.setConstantHeadingInterpolation(pushThreePose.getHeading());
 
-        collectOnePath = new Path(new BezierLine(new Point(pushTwoPose), new Point(collectTwoPose)));
+        collectOnePath = new Path(new BezierLine(new Point(pushTwoPose), new Point(collectOnePose)));
         collectOnePath.setConstantHeadingInterpolation(collectTwoPose.getHeading());
 
         scoreOnePath = new Path(new BezierCurve(new Point(collectTwoPose), new Point(scoreControlPoint), new Point(scoreOnePose)));
         scoreOnePath.setConstantHeadingInterpolation(scoreOnePose.getHeading());
+        scoreOnePath.setPathEndTimeoutConstraint(800);
 
         collectTwoPath = new Path(new BezierLine(new Point(scoreOnePose), new Point(collectTwoPose)));
         collectTwoPath.setConstantHeadingInterpolation(collectTwoPose.getHeading());
 
         scoreTwoPath = new Path(new BezierCurve(new Point(collectTwoPose), new Point(scoreControlPoint) ,new Point(scoreTwoPose)));
         scoreTwoPath.setConstantHeadingInterpolation(scoreTwoPose.getHeading());
+        scoreTwoPath.setPathEndTimeoutConstraint(800);
 
 //        collectThreePath = new Path(new BezierLine(new Point(scoreTwoPose), new Point(collectThreePose)));
 //        collectThreePath.setConstantHeadingInterpolation(collectThreePose.getHeading());
@@ -131,18 +137,15 @@ public class Auto_Right_0_3 extends AutoTemplate {
         return Commands.sequence(
                 Commands.runOnce(() -> Arm.getInstance().setScoreType(Arm.ScoreType.SPECIMEN)),
                 Commands.runOnce(() -> LLVision.getInstance().setRed()),
-                Commands.runOnce(() -> Claw.getInstance().setState(ClawConstants.REST_STATE)),
-                Commands.waitMillis(RobotStatus.delayMs),
-                Commands.runOnce(() -> Claw.getInstance().setState(ClawConstants.REST_STATE)),
-                Commands.waitMillis(20),
+                Commands.runOnce(() -> Claw.getInstance().setState(ClawConstants.SPECIMEN_AUTO_SCORING_STATE)),
                 Commands.parallel(
-                        new FollowPathCommand(scorePreloadPath, preloadMaxSpeed),
+                        Commands.waitMillis(preloadPathDelay).andThen(new FollowPathCommand(scorePreloadPath, preloadMaxSpeed)),
                         Commands.defer(ArmCommands.STOW_TO_CHAMBER, Arm.getInstance())
                 ),
-                Commands.defer(ArmCommands.SCORE_SPECIMEN, Arm.getInstance()),
+                Commands.defer(ArmCommands.SCORE_SPECIMEN),
                 Commands.parallel(
                         new FollowPathCommand(behindOnePath),
-                        Commands.defer(ArmCommands.CHAMBER_TO_STOW, Arm.getInstance())
+                        Commands.defer(ArmCommands.CHAMBER_TO_STOW)
                 ),
                 // Push samples into zone
                 new FollowPathCommand(pushOnePath),
@@ -150,10 +153,11 @@ public class Auto_Right_0_3 extends AutoTemplate {
                 new FollowPathCommand(pushTwoPath),
 //                new FollowPathCommand(behindThreePath),
 //                new FollowPathCommand(pushThreePath),
-                new FollowPathCommand(collectOnePath),
                 // Collect first
+                new FollowPathCommand(collectOnePath),
                 Commands.defer(ArmCommands.STOW_TO_SPECIMEN_COLLECT, Arm.getInstance()),
-                Commands.waitMillis(500),
+                Commands.waitMillis(900),
+                new AutoSpecimenCommand(),
                 Commands.defer(ArmCommands.GRAB, Arm.getInstance()),
                 // Score
                 Commands.parallel(
@@ -166,7 +170,8 @@ public class Auto_Right_0_3 extends AutoTemplate {
                         new FollowPathCommand(collectTwoPath),
                         Commands.defer(ArmCommands.CHAMBER_TO_SPECIMEN_COLLECT, Arm.getInstance())
                 ),
-                Commands.waitMillis(500),
+                Commands.waitMillis(900),
+                new AutoSpecimenCommand(),
                 Commands.defer(ArmCommands.GRAB, Arm.getInstance()),
                 // Score
                 Commands.parallel(
