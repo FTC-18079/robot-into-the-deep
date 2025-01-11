@@ -145,17 +145,6 @@ public class Auto_Right_0_3 extends AutoTemplate {
                         new FollowPathCommand(behindOnePath),
                         Commands.defer(ArmCommands.CHAMBER_TO_STOW)
                 ),
-//                Commands.parallel(
-//                        Commands.waitMillis(preloadPathDelay).andThen(new FollowPathCommand(scorePreloadPath, preloadMaxSpeed)),
-//                        new MovePivotCommand(() -> ArmConstants.PIVOT_SCORE_POSITION)
-//                ),
-//                new MoveSlideCommand(() -> ArmConstants.SLIDE_CHAMBER_POSITION + 320),
-//                Commands.defer(ArmCommands.RELEASE, Arm.getInstance()),
-//                Commands.parallel(
-//                        new FollowPathCommand(behindOnePath),
-//                        new MoveSlideCommand(() -> ArmConstants.SLIDE_REST_POSITION).andThen(new MovePivotCommand(() -> ArmConstants.PIVOT_REST_POSITION))
-//                ),
-//                Commands.runOnce(() -> Claw.getInstance().setState(ClawConstants.REST_STATE)),
                 // Push samples into zone
                 new FollowPathCommand(pushOnePath),
                 new FollowPathCommand(behindTwoPath),
@@ -165,6 +154,7 @@ public class Auto_Right_0_3 extends AutoTemplate {
                 // Collect first
                 new FollowPathCommand(collectOnePath),
                 Commands.defer(ArmCommands.STOW_TO_SPECIMEN_COLLECT, Arm.getInstance()),
+                Commands.waitMillis(100),
                 new AutoSpecimenCommand(),
                 Commands.defer(ArmCommands.GRAB, Arm.getInstance()),
                 // Score
