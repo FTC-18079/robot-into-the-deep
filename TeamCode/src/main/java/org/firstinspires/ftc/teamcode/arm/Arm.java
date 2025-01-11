@@ -66,8 +66,9 @@ public class Arm extends SubsystemIF {
     public void onAutonomousInit() {
         telemetry = Hydra.getInstance().getTelemetry();
         configureHardware();
+
         resetSlideEncoder();
-        offset = pivot.getPosition();
+        resetPivotEncoder();
 
         setPivotPos(pivot.getPosition());
         slidePid.setSetPoint(getSlidePos());
@@ -79,6 +80,10 @@ public class Arm extends SubsystemIF {
     public void onTeleopInit() {
         telemetry = Hydra.getInstance().getTelemetry();
         configureHardware();
+
+        if (offset == 0 || Double.isNaN(offset)) {
+            resetPivotEncoder();
+        }
 
         setPivotPos(pivot.getPosition());
         slidePid.setSetPoint(getSlidePos());
@@ -210,6 +215,8 @@ public class Arm extends SubsystemIF {
 
     @Override
     public void periodic() {
+        updatePid();
+
         telemetry.addLine();
         telemetry.addData("Arm State", state);
         telemetry.addData("Scoring Piece", scoreType);
