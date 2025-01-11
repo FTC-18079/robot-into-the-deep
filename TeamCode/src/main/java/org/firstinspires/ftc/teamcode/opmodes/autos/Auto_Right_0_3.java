@@ -4,9 +4,11 @@ import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.Command;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.RobotStatus;
 import org.firstinspires.ftc.teamcode.arm.Arm;
+import org.firstinspires.ftc.teamcode.arm.ArmConstants;
 import org.firstinspires.ftc.teamcode.arm.commands.ArmCommands;
+import org.firstinspires.ftc.teamcode.arm.commands.MovePivotCommand;
+import org.firstinspires.ftc.teamcode.arm.commands.MoveSlideCommand;
 import org.firstinspires.ftc.teamcode.autonomous.AutoTemplate;
 import org.firstinspires.ftc.teamcode.chassis.commands.FollowPathCommand;
 import org.firstinspires.ftc.teamcode.claw.Claw;
@@ -43,7 +45,7 @@ public class Auto_Right_0_3 extends AutoTemplate {
 //    private final Pose pushThreePose = new Pose(WALL_COLLECT_X_POSITION-1, 9, Math.toRadians(180));
     private final Pose collectOnePose = new Pose(WALL_COLLECT_X_POSITION, WALL_COLLECT_Y_POSITION, Math.toRadians(180));
     private final Pose scoreOnePose = new Pose(CHAMBER_X_POSITION, CHAMBER_RIGHT_Y_POSITION - 2.5, Math.toRadians(180));
-    private final Pose collectTwoPose = new Pose(WALL_COLLECT_X_POSITION_2, WALL_COLLECT_Y_POSITION, Math.toRadians(180));
+    private final Pose collectTwoPose = new Pose(WALL_COLLECT_X_POSITION, WALL_COLLECT_Y_POSITION, Math.toRadians(180));
     private final Pose scoreTwoPose = new Pose(CHAMBER_X_POSITION, CHAMBER_RIGHT_Y_POSITION - 5, Math.toRadians(180));
 //    private final Pose collectThreePose = collectTwoPose;
 //    private final Pose scoreThreePose = new Pose(CHAMBER_X_POSITION, CHAMBER_RIGHT_Y_POSITION - 6, Math.toRadians(180));
@@ -67,8 +69,8 @@ public class Auto_Right_0_3 extends AutoTemplate {
     private Path collectOnePath;
 
     // Constants
-    public static double preloadMaxSpeed = 0.5; // Speed reduction on the preload path
-    public static long preloadPathDelay = 600; // Delay to allow for pivot to move before following first path
+    public static double preloadMaxSpeed = 0.6; // Speed reduction on the preload path
+    public static long preloadPathDelay = 0; // Delay to allow for pivot to move before following first path
 
     @Override
     protected Pose getStartingPose() {
@@ -132,25 +134,30 @@ public class Auto_Right_0_3 extends AutoTemplate {
         return Commands.sequence(
                 Commands.runOnce(() -> Arm.getInstance().setScoreType(Arm.ScoreType.SPECIMEN)),
                 Commands.runOnce(() -> LLVision.getInstance().setRed()),
+                Commands.runOnce(() -> Claw.getInstance().setState(ClawConstants.SPECIMEN_AUTO_SCORING_STATE)),
                 Commands.parallel(
                         Commands.waitMillis(preloadPathDelay).andThen(new FollowPathCommand(scorePreloadPath, preloadMaxSpeed)),
-                        Commands.defer(ArmCommands.STOW_TO_CHAMBER, Arm.getInstance())
+                        new MovePivotCommand(() -> ArmConstants.PIVOT_SCORE_POSITION)
                 ),
-                Commands.defer(ArmCommands.SCORE_SPECIMEN, Arm.getInstance()),
+                new MoveSlideCommand(() -> ArmConstants.SLIDE_CHAMBER_POSITION + 320),
+                Commands.defer(ArmCommands.RELEASE, Arm.getInstance()),
                 Commands.parallel(
                         new FollowPathCommand(behindOnePath),
-                        Commands.defer(ArmCommands.CHAMBER_TO_STOW, Arm.getInstance())
+                        new MoveSlideCommand(() -> ArmConstants.SLIDE_REST_POSITION).andThen(new MovePivotCommand(() -> ArmConstants.PIVOT_REST_POSITION))
                 ),
+                Commands.runOnce(() -> Claw.getInstance().setState(ClawConstants.REST_STATE)),
                 // Push samples into zone
                 new FollowPathCommand(pushOnePath),
                 new FollowPathCommand(behindTwoPath),
                 new FollowPathCommand(pushTwoPath),
 //                new FollowPathCommand(behindThreePath),
 //                new FollowPathCommand(pushThreePath),
-                new FollowPathCommand(collectOnePath),
                 // Collect first
-                Commands.defer(ArmCommands.STOW_TO_SPECIMEN_COLLECT, Arm.getInstance()),
-                Commands.waitMillis(500),
+                Commands.parallel(
+                        new FollowPathCommand(collectOnePath),
+                        Commands.defer(ArmCommands.STOW_TO_SPECIMEN_COLLECT, Arm.getInstance())
+                ),
+                Commands.waitMillis(700),
                 Commands.defer(ArmCommands.GRAB, Arm.getInstance()),
                 // Score
                 Commands.parallel(
@@ -163,12 +170,12 @@ public class Auto_Right_0_3 extends AutoTemplate {
                         new FollowPathCommand(collectTwoPath),
                         Commands.defer(ArmCommands.CHAMBER_TO_SPECIMEN_COLLECT, Arm.getInstance())
                 ),
-                Commands.waitMillis(500),
+                Commands.waitMillis(700),
                 Commands.defer(ArmCommands.GRAB, Arm.getInstance()),
                 // Score
                 Commands.parallel(
                         Commands.defer(ArmCommands.SPECIMEN_COLLECT_TO_CHAMBER, Arm.getInstance()),
-                        new FollowPathCommand(scoreTwoPath, 0.6)
+                        new FollowPathCommand(scoreTwoPath, 0.7)
                 ),
                 Commands.defer(ArmCommands.SCORE_SPECIMEN, Arm.getInstance()),
                 // Park
