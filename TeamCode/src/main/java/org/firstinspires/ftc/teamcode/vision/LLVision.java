@@ -63,6 +63,7 @@ public class LLVision extends SubsystemIF {
         limelight = RobotMap.getInstance().LIMELIGHT;
         start();
         setYellow();
+        disableClawOverride();
     }
 
     // LIMELIGHT MANAGEMENT

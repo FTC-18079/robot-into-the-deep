@@ -20,6 +20,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.util.KalmanFilterParameters;
  * @author Harrison Womack - 10158 Scott's Bots
  * @version 1.0, 3/4/2024
  */
+
 @Config
 public class FollowerConstants {
     // This section is for configuring your motors
@@ -109,7 +110,7 @@ public class FollowerConstants {
     // Decreasing this will cause the deceleration at the end of the Path to be slower, making the
     // robot slower but reducing risk of end-of-path overshoots or localization slippage.
     // This can be set individually for each Path, but this is the default.
-    public static double zeroPowerAccelerationMultiplier = 3.5;
+    public static double zeroPowerAccelerationMultiplier = 3.25;
 
 
     // When the robot is at the end of its current Path or PathChain and the velocity goes below
