@@ -30,7 +30,7 @@ public class Arm extends SubsystemIF {
     PIDController alignmentPid;
 
     private double lastPivotPos;
-
+    private double offset;
     public boolean slideZeroing = false;
 
     public enum ArmState {
@@ -67,8 +67,9 @@ public class Arm extends SubsystemIF {
         telemetry = Hydra.getInstance().getTelemetry();
         configureHardware();
         resetSlideEncoder();
+        offset = pivot.getPosition();
 
-        pivotPid.setSetPoint(pivot.getPosition());
+        setPivotPos(pivot.getPosition());
         slidePid.setSetPoint(getSlidePos());
 
         lastPivotPos = pivot.getPosition();
@@ -79,7 +80,7 @@ public class Arm extends SubsystemIF {
         telemetry = Hydra.getInstance().getTelemetry();
         configureHardware();
 
-        pivotPid.setSetPoint(pivot.getPosition());
+        setPivotPos(pivot.getPosition());
         slidePid.setSetPoint(getSlidePos());
 
         Commands.sequence(
@@ -120,8 +121,7 @@ public class Arm extends SubsystemIF {
     }
 
     public void resetPivotEncoder() {
-        PIVOT_REST_POSITION = getPivotPos();
-        PIVOT_SCORE_POSITION = getPivotPos() + PIVOT_REST_TO_SCORE_OFFSET;
+        offset = pivot.getPosition();
     }
 
     // GETTERS
@@ -186,7 +186,7 @@ public class Arm extends SubsystemIF {
     }
 
     public void setPivotPos(double pos) {
-        pivotPid.setSetPoint(pos);
+        pivotPid.setSetPoint(pos + offset);
     }
 
     public void setState(ArmState state) {
