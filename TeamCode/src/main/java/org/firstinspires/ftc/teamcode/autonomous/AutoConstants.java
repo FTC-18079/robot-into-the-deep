@@ -12,20 +12,20 @@ public class AutoConstants {
     public static double CHAMBER_X_POSITION = 31.25;
     public static double CHAMBER_RIGHT_Y_POSITION = 74;
 
-    public static final Pose BASKET_SCORE_POSE = new Pose(14, 125, Math.toRadians(315));
+    public static final Pose BASKET_SCORE_POSE = new Pose(17, 120, Math.toRadians(315));
     public static final Pose CHAMBER_LEFT_SCORE_POSE = new Pose(CHAMBER_X_POSITION, 80, Math.toRadians(180));
     public static final Pose CHAMBER_RIGHT_SCORE_POSE = new Pose(CHAMBER_X_POSITION, CHAMBER_RIGHT_Y_POSITION, Math.toRadians(180));
 
     // Parking poses
     public static final Pose OBVZONE_PARKING_POSE = new Pose(14, 10, Math.toRadians(0));
-    public static final Pose ASCENT_PARKING_POSE = new Pose(60, 97.5, Math.toRadians(90));
+    public static final Pose ASCENT_PARKING_POSE = new Pose(60, 96.5, Math.toRadians(90));
 
     // Alliance alliance poses
     public static final Pose LEFT_ALLIANCE_SAMPLE = new Pose(46, 22.75);
     public static final Pose MIDDLE_ALLIANCE_SAMPLE = new Pose(46, 12.5);
     public static final Pose RIGHT_ALLIANCE_SAMPLE = new Pose(46, 2.25);
 
-    // Alliance sample poses
+    // Neutral sample poses
     public static final Pose LEFT_NEUTRAL_SAMPLE = new Pose(46, 141.75);
     public static final Pose MIDDLE_NEUTRAL_SAMPLE = new Pose(46, 131.5);
     public static final Pose RIGHT_NEUTRAL_SAMPLE = new Pose(46, 121.25);
