@@ -34,7 +34,7 @@ import static org.firstinspires.ftc.teamcode.autonomous.AutoConstants.*;
 public class Auto_Right_0_3 extends AutoTemplate {
     // Poses
     private final Pose startingPose = new Pose(8, 64, Math.toRadians(180));
-    private final Pose scorePreloadPose = CHAMBER_RIGHT_SCORE_POSE;
+    private final Pose scorePreloadPose = CHAMBER_RIGHT_SCORE_POSE.copy();
     private final Pose behindOnePose = new Pose(62, 29, Math.toRadians(180));
     private final Pose pushOnePose = new Pose(16, 29, Math.toRadians(180));
     private final Pose behindTwoPose = new Pose(62, 19, Math.toRadians(180));
@@ -46,7 +46,7 @@ public class Auto_Right_0_3 extends AutoTemplate {
     private final Pose scoreTwoPose = new Pose(CHAMBER_X_POSITION, CHAMBER_RIGHT_Y_POSITION - 5, Math.toRadians(180));
 //    private final Pose collectThreePose = collectTwoPose;
 //    private final Pose scoreThreePose = new Pose(CHAMBER_X_POSITION, CHAMBER_RIGHT_Y_POSITION - 6, Math.toRadians(180));
-    private final Pose parkingPose = OBVZONE_PARKING_POSE;
+    private final Pose parkingPose = OBVZONE_PARKING_POSE.copy();
     private final Pose scoreControlPoint = new Pose(5.84415584,59.37662337662338, Math.toRadians(180));
 
     // Paths
@@ -66,7 +66,7 @@ public class Auto_Right_0_3 extends AutoTemplate {
     private Path collectOnePath;
 
     // Constants
-    public static double preloadMaxSpeed = 0.5; // Speed reduction on the preload path
+    public static double preloadMaxSpeed = 0.35; // Speed reduction on the preload path
     public static long preloadPathDelay = 1000; // Delay to allow for pivot to move before following first path
 
     @Override
@@ -171,7 +171,7 @@ public class Auto_Right_0_3 extends AutoTemplate {
                 // Score
                 Commands.parallel(
                         Commands.defer(ArmCommands.SPECIMEN_COLLECT_TO_CHAMBER, Arm.getInstance()),
-                        new FollowPathCommand(scoreTwoPath, 0.7)
+                        new FollowPathCommand(scoreTwoPath, 0.6)
                 ),
                 Commands.defer(ArmCommands.SCORE_SPECIMEN, Arm.getInstance()),
                 // Park
