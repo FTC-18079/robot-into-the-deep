@@ -41,7 +41,7 @@ public class Auto_Right_0_3 extends AutoTemplate {
     private final Pose behindOnePose = new Pose(62, 29, Math.toRadians(180));
     private final Pose pushOnePose = new Pose(16, 29, Math.toRadians(180));
     private final Pose behindTwoPose = new Pose(62, 19, Math.toRadians(180));
-    private final Pose pushTwoPose = new Pose(WALL_COLLECT_X_POSITION - 1, 19, Math.toRadians(180));
+    private final Pose pushTwoPose = new Pose(16, 19, Math.toRadians(180));
 //    private final Pose behindThreePose = new Pose(62, 9, Math.toRadians(180));
 //    private final Pose pushThreePose = new Pose(WALL_COLLECT_X_POSITION-1, 9, Math.toRadians(180));
     private final Pose collectOnePose = new Pose(WALL_COLLECT_X_POSITION, WALL_COLLECT_Y_POSITION, Math.toRadians(180));
@@ -71,7 +71,7 @@ public class Auto_Right_0_3 extends AutoTemplate {
 
     // Constants
     public static double preloadMaxSpeed = 0.6; // Speed reduction on the preload path
-    public static long preloadPathDelay = 750; // Delay to allow for pivot to move before following first path
+    public static long preloadPathDelay = 700; // Delay to allow for pivot to move before following first path
 
     @Override
     protected Pose getStartingPose() {
@@ -82,7 +82,7 @@ public class Auto_Right_0_3 extends AutoTemplate {
     protected void buildPaths() {
         scorePreloadPath = new Path(new BezierCurve(new Point(startingPose), new Point(scorePreloadPose)));
         scorePreloadPath.setConstantHeadingInterpolation(scorePreloadPose.getHeading());
-        scorePreloadPath.setPathEndTimeoutConstraint(1000);
+        scorePreloadPath.setPathEndTimeoutConstraint(800);
 
         behindOnePath = new Path(new BezierCurve(new Point(scorePreloadPose), new Point(27, 13, Point.CARTESIAN), new Point(64, 44, Point.CARTESIAN), new Point(behindOnePose)));
         behindOnePath.setConstantHeadingInterpolation(scorePreloadPose.getHeading());
@@ -112,12 +112,14 @@ public class Auto_Right_0_3 extends AutoTemplate {
 
         scoreOnePath = new Path(new BezierCurve(new Point(collectTwoPose), new Point(scoreControlPoint), new Point(scoreOnePose)));
         scoreOnePath.setConstantHeadingInterpolation(scoreOnePose.getHeading());
+        scoreOnePath.setPathEndTimeoutConstraint(800);
 
         collectTwoPath = new Path(new BezierLine(new Point(scoreOnePose), new Point(collectTwoPose)));
         collectTwoPath.setConstantHeadingInterpolation(collectTwoPose.getHeading());
 
         scoreTwoPath = new Path(new BezierCurve(new Point(collectTwoPose), new Point(scoreControlPoint) ,new Point(scoreTwoPose)));
         scoreTwoPath.setConstantHeadingInterpolation(scoreTwoPose.getHeading());
+        scoreTwoPath.setPathEndTimeoutConstraint(800);
 
 //        collectThreePath = new Path(new BezierLine(new Point(scoreTwoPose), new Point(collectThreePose)));
 //        collectThreePath.setConstantHeadingInterpolation(collectThreePose.getHeading());
@@ -154,7 +156,7 @@ public class Auto_Right_0_3 extends AutoTemplate {
                 // Collect first
                 new FollowPathCommand(collectOnePath),
                 Commands.defer(ArmCommands.STOW_TO_SPECIMEN_COLLECT, Arm.getInstance()),
-                Commands.waitMillis(100),
+                Commands.waitMillis(900),
                 new AutoSpecimenCommand(),
                 Commands.defer(ArmCommands.GRAB, Arm.getInstance()),
                 // Score
@@ -168,6 +170,7 @@ public class Auto_Right_0_3 extends AutoTemplate {
                         new FollowPathCommand(collectTwoPath),
                         Commands.defer(ArmCommands.CHAMBER_TO_SPECIMEN_COLLECT, Arm.getInstance())
                 ),
+                Commands.waitMillis(900),
                 new AutoSpecimenCommand(),
                 Commands.defer(ArmCommands.GRAB, Arm.getInstance()),
                 // Score
