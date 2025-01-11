@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes.autos;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.Command;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.arm.Arm;
 import org.firstinspires.ftc.teamcode.arm.ArmConstants;
@@ -31,6 +32,7 @@ import org.firstinspires.ftc.teamcode.vision.VisionConstants;
  * Parks in ascent zone
  */
 
+@Disabled
 @Config
 @Autonomous(name = "Left Side 3+1", group = "Auto")
 public class Auto_Left_3_1 extends AutoTemplate {

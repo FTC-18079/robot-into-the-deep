@@ -41,13 +41,6 @@ public class MovePivotCommand extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        if (interrupted) {
-            Log.i("MovePivotCommand", "===============COMMAND INTERRUPTED===============");
-        } else if (exceededTime) {
-            arm.setPivotPos(arm.getPivotPos());
-            Log.i("MovePivotCommand", "===============COMMAND TIMED OUT AT " + timer.milliseconds() + " MILLISECONDS===============");
-        } else {
-            Log.i("MovePivotCommand", "===============COMMAND ENDED SAFELY===============");
-        }
+        if (exceededTime) arm.setPivotPos(arm.getPivotPos());
     }
 }
