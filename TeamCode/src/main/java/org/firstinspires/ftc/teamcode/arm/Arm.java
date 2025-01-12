@@ -30,7 +30,6 @@ public class Arm extends SubsystemIF {
     PIDController alignmentPid;
 
     private double lastPivotPos;
-    private double offset = 0;
     public boolean slideZeroing = false;
     public boolean pivotZeroing = false;
 
@@ -69,9 +68,8 @@ public class Arm extends SubsystemIF {
         configureHardware();
 
         resetSlideEncoder();
-        resetPivotEncoder();
 
-        pivotPid.setSetPoint(pivot.getPosition());
+        setPivotPos(getPivotPos());
         slidePid.setSetPoint(getSlidePos());
 
         lastPivotPos = pivot.getPosition();
@@ -82,12 +80,12 @@ public class Arm extends SubsystemIF {
         telemetry = Hydra.getInstance().getTelemetry();
         configureHardware();
 
-        pivotPid.setSetPoint(pivot.getPosition());
+        setPivotPos(getPivotPos());
         slidePid.setSetPoint(getSlidePos());
 
         Commands.sequence(
                 Commands.waitUntil(RobotStatus::isEnabled),
-                new MoveSlideCommand(() -> SLIDE_CHAMBER_POSITION)
+                new MoveSlideCommand(() -> SLIDE_CHAMBER_POSITION + 150)
                 //wait until enabled, then zero
         ).schedule();
 
@@ -120,15 +118,6 @@ public class Arm extends SubsystemIF {
     public void floatNeutralMode() {
         rightSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         leftSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-    }
-
-    public void resetPivotEncoder() {
-        if (!Double.isNaN(lastPivotPos) && lastPivotPos != 0) lastPivotPos = lastPivotPos % 360.0;
-        offset = pivot.getPosition();
-    }
-
-    public void resetOffset() {
-        offset = 0.0;
     }
 
     // GETTERS
@@ -193,7 +182,7 @@ public class Arm extends SubsystemIF {
     }
 
     public void setPivotPos(double pos) {
-        pivotPid.setSetPoint(pos + offset);
+        pivotPid.setSetPoint(pos);
     }
 
     public void setState(ArmState state) {
@@ -224,7 +213,6 @@ public class Arm extends SubsystemIF {
         telemetry.addData("Scoring Piece", scoreType);
         telemetry.addData("Pivot target", getPivotTarget());
         telemetry.addData("Pivot pos", getPivotPos());
-        telemetry.addData("Pivot offset", offset);
         telemetry.addData("Slide target", getSlideTarget());
         telemetry.addData("Slide pos", getSlidePos());
 

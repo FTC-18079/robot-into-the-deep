@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.hardware.HardwareDevice;
 
 import org.firstinspires.ftc.teamcode.RobotMap;
 import org.firstinspires.ftc.teamcode.RobotStatus;
-import org.firstinspires.ftc.teamcode.arm.Arm;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +33,6 @@ public class ResetRobot extends OpMode {
             m.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
         RobotStatus.resetValues();
-        Arm.getInstance().resetOffset();
     }
 
     @Override
