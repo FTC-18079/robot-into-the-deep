@@ -82,10 +82,6 @@ public class Arm extends SubsystemIF {
         telemetry = Hydra.getInstance().getTelemetry();
         configureHardware();
 
-        if (offset == 0 || Double.isNaN(offset)) {
-            resetPivotEncoder();
-        }
-
         pivotPid.setSetPoint(pivot.getPosition());
         slidePid.setSetPoint(getSlidePos());
 
