@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.vision;
 
-import android.util.Log;
-
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
@@ -98,7 +96,7 @@ public class LLVision extends SubsystemIF {
         setPipeline();
     }
 
-    public void setOrange() {
+    public void setWhite() {
         limelight.pipelineSwitch(3);
     }
 
@@ -120,6 +118,10 @@ public class LLVision extends SubsystemIF {
 
     public void disableClawOverride() {
         setClawOverride(-1);
+    }
+
+    public void snapShot() {
+        limelight.captureSnapshot("missed orange snapshot");
     }
 
     // GETTERS

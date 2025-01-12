@@ -30,8 +30,9 @@ public class Arm extends SubsystemIF {
     PIDController alignmentPid;
 
     private double lastPivotPos;
-    private double offset;
+    private double offset = 0;
     public boolean slideZeroing = false;
+    public boolean pivotZeroing = false;
 
     public enum ArmState {
         STOW, COLLECTING_SAMPLE, COLLECTING_SPECIMEN, SCORING_SAMPLE, SCORING_SPECIMEN
@@ -70,7 +71,7 @@ public class Arm extends SubsystemIF {
         resetSlideEncoder();
         resetPivotEncoder();
 
-        setPivotPos(pivot.getPosition());
+        pivotPid.setSetPoint(pivot.getPosition());
         slidePid.setSetPoint(getSlidePos());
 
         lastPivotPos = pivot.getPosition();
@@ -85,7 +86,7 @@ public class Arm extends SubsystemIF {
             resetPivotEncoder();
         }
 
-        setPivotPos(pivot.getPosition());
+        pivotPid.setSetPoint(pivot.getPosition());
         slidePid.setSetPoint(getSlidePos());
 
         Commands.sequence(
@@ -127,6 +128,10 @@ public class Arm extends SubsystemIF {
 
     public void resetPivotEncoder() {
         offset = pivot.getPosition();
+    }
+
+    public void resetOffset() {
+        offset = 0.0;
     }
 
     // GETTERS
@@ -222,6 +227,7 @@ public class Arm extends SubsystemIF {
         telemetry.addData("Scoring Piece", scoreType);
         telemetry.addData("Pivot target", getPivotTarget());
         telemetry.addData("Pivot pos", getPivotPos());
+        telemetry.addData("Pivot offset", offset);
         telemetry.addData("Slide target", getSlideTarget());
         telemetry.addData("Slide pos", getSlidePos());
 
@@ -241,6 +247,6 @@ public class Arm extends SubsystemIF {
         if (!slideZeroing) setSlidePower(slideOutput + slideFeedforward);
 
         if (pivotAtSetPoint() && getPivotTarget() == PIVOT_REST_POSITION) pivot.setPower(0);
-        else pivot.setPower(pivotOutput + pivotFeedforward);
+        else if (!pivotZeroing) pivot.setPower(pivotOutput + pivotFeedforward);
     }
 }

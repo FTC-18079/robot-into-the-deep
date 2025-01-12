@@ -7,11 +7,11 @@ import org.firstinspires.ftc.teamcode.arm.Arm;
 import org.firstinspires.ftc.teamcode.arm.ArmConstants;
 import org.firstinspires.ftc.teamcode.util.commands.Commands;
 
-public class SlideZeroCommand extends CommandBase {
+public class PivotZeroCommand extends CommandBase {
     private final Arm arm;
     private final ElapsedTime timer;
 
-    public SlideZeroCommand() {
+    public PivotZeroCommand() {
         arm = Arm.getInstance();
         timer = new ElapsedTime();
         addRequirements(arm);
@@ -20,31 +20,27 @@ public class SlideZeroCommand extends CommandBase {
     @Override
     public void initialize() {
         timer.reset();
-        arm.slideZeroing = true;
+        arm.pivotZeroing = true;
     }
 
     @Override
     public boolean isFinished() {
-        return timer.milliseconds() > ArmConstants.ZEROING_TIMEOUT || hasStopped();
+        return timer.milliseconds() > ArmConstants.ZEROING_TIMEOUT;
     }
 
     @Override
     public void execute() {
-        arm.setSlidePower(-0.5);
+        arm.setPivotPower(-0.35);
     }
 
     @Override
     public void end(boolean interrupted) {
-        arm.setSlidePower(0);
-        arm.resetSlideEncoder();
-        arm.setSlidePos(0);
+        arm.setPivotPower(0);
+        arm.resetPivotEncoder();
+        arm.setPivotPos(0);
 
         Commands.waitMillis(30)
-                .andThen(Commands.runOnce(() -> arm.slideZeroing = false))
+                .andThen(Commands.runOnce(() -> arm.pivotZeroing = false))
                 .schedule();
-    }
-
-    private boolean hasStopped() {
-        return timer.milliseconds() > 40 && Math.abs(arm.getSlideVelocity()) < ArmConstants.ZEROING_VELOCITY_ERROR;
     }
 }

@@ -250,7 +250,7 @@ public class ArmCommands {
                 case COLLECTING_SAMPLE:
                     return Commands.sequence(
                             Commands.defer(COLLECT_SAMPLE, claw.get()),
-                            Commands.runOnce(llVision.get()::setOrange),
+                            Commands.runOnce(llVision.get()::setWhite),
                             Commands.defer(GRAB, claw.get()),
                             Commands.waitMillis(100),
                             Commands.either(
