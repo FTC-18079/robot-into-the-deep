@@ -85,6 +85,7 @@ public class Arm extends SubsystemIF {
 
         Commands.sequence(
                 Commands.waitUntil(RobotStatus::isEnabled),
+                Commands.runOnce(() -> setState(ArmState.SCORING_SAMPLE)),
                 new MoveSlideCommand(() -> SLIDE_CHAMBER_POSITION + 150)
                 //wait until enabled, then zero
         ).schedule();

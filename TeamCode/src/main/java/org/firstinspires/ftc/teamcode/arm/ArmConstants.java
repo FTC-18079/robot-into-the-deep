@@ -29,7 +29,7 @@ public class ArmConstants {
     public static double ZEROING_VELOCITY_ERROR = 5;
 
     // Positions
-    public static double SLIDE_REST_POSITION = 8.0;
+    public static double SLIDE_REST_POSITION = 10.0;
     public static double SLIDE_SAMPLE_COLLECT_POSITION = 1090.0;
     public static double SLIDE_SPECIMEN_COLLECT_POSITION = 350;
     public static double SLIDE_CHAMBER_POSITION = 430;

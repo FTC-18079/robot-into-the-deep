@@ -112,14 +112,14 @@ public class Auto_Right_0_3 extends AutoTemplate {
 
         scoreOnePath = new Path(new BezierCurve(new Point(collectTwoPose), new Point(scoreControlPoint), new Point(scoreOnePose)));
         scoreOnePath.setConstantHeadingInterpolation(scoreOnePose.getHeading());
-        scoreOnePath.setPathEndTimeoutConstraint(800);
+        scoreOnePath.setPathEndTimeoutConstraint(1000);
 
         collectTwoPath = new Path(new BezierLine(new Point(scoreOnePose), new Point(collectTwoPose)));
         collectTwoPath.setConstantHeadingInterpolation(collectTwoPose.getHeading());
 
         scoreTwoPath = new Path(new BezierCurve(new Point(collectTwoPose), new Point(scoreControlPoint) ,new Point(scoreTwoPose)));
         scoreTwoPath.setConstantHeadingInterpolation(scoreTwoPose.getHeading());
-        scoreTwoPath.setPathEndTimeoutConstraint(800);
+        scoreTwoPath.setPathEndTimeoutConstraint(1000);
 
 //        collectThreePath = new Path(new BezierLine(new Point(scoreTwoPose), new Point(collectThreePose)));
 //        collectThreePath.setConstantHeadingInterpolation(collectThreePose.getHeading());
@@ -156,7 +156,7 @@ public class Auto_Right_0_3 extends AutoTemplate {
                 // Collect first
                 new FollowPathCommand(collectOnePath),
                 Commands.defer(ArmCommands.STOW_TO_SPECIMEN_COLLECT, Arm.getInstance()),
-                Commands.waitMillis(900),
+                Commands.waitMillis(1100),
                 new AutoSpecimenCommand(),
                 Commands.defer(ArmCommands.GRAB, Arm.getInstance()),
                 // Score
@@ -170,7 +170,7 @@ public class Auto_Right_0_3 extends AutoTemplate {
                         new FollowPathCommand(collectTwoPath),
                         Commands.defer(ArmCommands.CHAMBER_TO_SPECIMEN_COLLECT, Arm.getInstance())
                 ),
-                Commands.waitMillis(900),
+                Commands.waitMillis(1100),
                 new AutoSpecimenCommand(),
                 Commands.defer(ArmCommands.GRAB, Arm.getInstance()),
                 // Score
