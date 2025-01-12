@@ -72,10 +72,15 @@ public class ArmCommands {
         );
         SAMPLE_COLLECT_TO_STOW = () -> Commands.sequence(
                 Commands.runOnce(() -> arm.get().setState(Arm.ArmState.STOW)),
-                Commands.runOnce(() -> claw.get().setState(ClawConstants.SPECIMEN_COLLECT_STATE)),
-                Commands.runOnce(claw.get()::closeClaw),
-                Commands.waitMillis(175),
-                new MoveSlideCommand(() -> ArmConstants.SLIDE_REST_POSITION),
+//                Commands.runOnce(() -> claw.get().setState(ClawConstants.SPECIMEN_COLLECT_STATE)),
+//                Commands.runOnce(claw.get()::closeClaw),
+//                Commands.waitMillis(175),
+                Commands.parallel(
+                        new MoveSlideCommand(() -> ArmConstants.SLIDE_REST_POSITION),
+                        Commands.waitMillis(75)
+                                .andThen(Commands.runOnce(() -> claw.get().setState(ClawConstants.SPECIMEN_COLLECT_STATE)))
+                                .andThen(Commands.runOnce(claw.get()::closeClaw))
+                ),
                 Commands.runOnce(() -> claw.get().setState(ClawConstants.REST_STATE)),
                 Commands.waitMillis(150),
                 new SlideZeroCommand()
