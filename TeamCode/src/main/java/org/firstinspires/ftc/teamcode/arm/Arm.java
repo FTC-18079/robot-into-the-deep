@@ -91,7 +91,7 @@ public class Arm extends SubsystemIF {
 
         Commands.sequence(
                 Commands.waitUntil(RobotStatus::isEnabled),
-                new SlideZeroCommand()
+                new MoveSlideCommand(() -> SLIDE_CHAMBER_POSITION)
                 //wait until enabled, then zero
         ).schedule();
 
@@ -127,6 +127,7 @@ public class Arm extends SubsystemIF {
     }
 
     public void resetPivotEncoder() {
+        if (!Double.isNaN(lastPivotPos) && lastPivotPos != 0) lastPivotPos = lastPivotPos % 360.0;
         offset = pivot.getPosition();
     }
 

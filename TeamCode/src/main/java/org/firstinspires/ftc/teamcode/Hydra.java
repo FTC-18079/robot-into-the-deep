@@ -178,7 +178,8 @@ public class Hydra extends Robot {
                 ));
 
         manipController.getGamepadButton(GamepadKeys.Button.START)
-                .whenPressed(new PivotZeroCommand());
+                .whenPressed(Arm.getInstance()::resetPivotEncoder);
+//                .whenPressed(new PivotZeroCommand());
 
         // Switch game pieces
         manipController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)

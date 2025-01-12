@@ -14,7 +14,7 @@ public class PivotZeroCommand extends CommandBase {
     private final ElapsedTime timer;
 
     public static double COMMAND_TIMEOUT = 750;
-    public static double PIVOT_POWER = -0.10;
+    public static double PIVOT_POWER = -0.15;
 
     public PivotZeroCommand() {
         arm = Arm.getInstance();

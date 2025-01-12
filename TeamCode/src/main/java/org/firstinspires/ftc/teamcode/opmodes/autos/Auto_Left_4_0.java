@@ -37,7 +37,7 @@ public class Auto_Left_4_0 extends AutoTemplate {
     private final Pose scorePreloadPose = AutoConstants.BASKET_SCORE_POSE.copy();
     private final Pose collectOnePose = new Pose(18, 119.75, Math.toRadians(0));
     private final Pose scoreOnePose = AutoConstants.BASKET_SCORE_POSE.copy();
-    private final Pose collectTwoPose = new Pose(18, 127, Math.toRadians(0));
+    private final Pose collectTwoPose = new Pose(18, 127.5, Math.toRadians(0));
     private final Pose scoreTwoPose = AutoConstants.BASKET_SCORE_POSE;
     private final Pose collectThreePose = new Pose(19, 125.5, Math.toRadians(27));
     private final Pose scoreThreePose = AutoConstants.BASKET_SCORE_POSE.copy();
