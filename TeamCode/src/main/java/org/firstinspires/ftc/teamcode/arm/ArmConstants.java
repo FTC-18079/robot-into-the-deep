@@ -16,21 +16,21 @@ public class ArmConstants {
     public static double SLIDE_kF = 0.15;
 
     // Alignment PID
-    public static double ALIGN_kP = 0.04;
+    public static double ALIGN_kP = 0.03;
     public static double ALIGN_kI = 0.0;
-    public static double ALIGN_kD = 0.0;
+    public static double ALIGN_kD = 0.0001;
     public static double ALIGN_tY = -2.0;
+    public static double ALIGN_ERROR_TOLERANCE = 1;
 
     // Constants
     public static double SLIDE_ERROR_TOLERANCE = 15.0;
-    public static double ALIGN_ERROR_TOLERANCE = 2;
     public static double SLIDE_TIMEOUT = 1400;
     public static double ZEROING_TIMEOUT = 2000;
     public static double ZEROING_VELOCITY_ERROR = 5;
 
     // Positions
-    public static double SLIDE_REST_POSITION = 8.0;
-    public static double SLIDE_SAMPLE_COLLECT_POSITION = 1150.0;
+    public static double SLIDE_REST_POSITION = 10.0;
+    public static double SLIDE_SAMPLE_COLLECT_POSITION = 1090.0;
     public static double SLIDE_SPECIMEN_COLLECT_POSITION = 350;
     public static double SLIDE_CHAMBER_POSITION = 430;
     public static double SLIDE_CHAMBER_SCORE_OFFSET = 350;
@@ -58,7 +58,7 @@ public class ArmConstants {
     public static double PIVOT_TIMEOUT = 1500;
 
     // Positions
-    public static double PIVOT_REST_POSITION = 0;
+    public static double PIVOT_REST_POSITION = 10;
     public static final double PIVOT_REST_TO_SCORE_OFFSET = 150.0;
     public static double PIVOT_SCORE_POSITION = PIVOT_REST_POSITION + PIVOT_REST_TO_SCORE_OFFSET;
     public static double PIVOT_CLIMBED_POSITION = PIVOT_SCORE_POSITION - 30;

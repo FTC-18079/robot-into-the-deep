@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.arm.commands;
 
-import android.util.Log;
-
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -23,7 +21,6 @@ public class SlideZeroCommand extends CommandBase {
     public void initialize() {
         timer.reset();
         arm.slideZeroing = true;
-        Log.i("SlideZeroCommand", "===============ZEROING SLIDES===============");
     }
 
     @Override
@@ -45,8 +42,6 @@ public class SlideZeroCommand extends CommandBase {
         Commands.waitMillis(30)
                 .andThen(Commands.runOnce(() -> arm.slideZeroing = false))
                 .schedule();
-
-        Log.i("SlideZeroCommand", "===============SLIDE ZEROED===============");
     }
 
     private boolean hasStopped() {

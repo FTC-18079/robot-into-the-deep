@@ -30,8 +30,8 @@ public class Arm extends SubsystemIF {
     PIDController alignmentPid;
 
     private double lastPivotPos;
-    private double offset;
     public boolean slideZeroing = false;
+    public boolean pivotZeroing = false;
 
     public enum ArmState {
         STOW, COLLECTING_SAMPLE, COLLECTING_SPECIMEN, SCORING_SAMPLE, SCORING_SPECIMEN
@@ -66,10 +66,10 @@ public class Arm extends SubsystemIF {
     public void onAutonomousInit() {
         telemetry = Hydra.getInstance().getTelemetry();
         configureHardware();
-        resetSlideEncoder();
-        offset = pivot.getPosition();
 
-        setPivotPos(pivot.getPosition());
+        resetSlideEncoder();
+
+        setPivotPos(getPivotPos());
         slidePid.setSetPoint(getSlidePos());
 
         lastPivotPos = pivot.getPosition();
@@ -80,12 +80,13 @@ public class Arm extends SubsystemIF {
         telemetry = Hydra.getInstance().getTelemetry();
         configureHardware();
 
-        setPivotPos(pivot.getPosition());
+        setPivotPos(getPivotPos());
         slidePid.setSetPoint(getSlidePos());
 
         Commands.sequence(
                 Commands.waitUntil(RobotStatus::isEnabled),
-                new SlideZeroCommand()
+                Commands.runOnce(() -> setState(ArmState.SCORING_SAMPLE)),
+                new MoveSlideCommand(() -> SLIDE_CHAMBER_POSITION + 150)
                 //wait until enabled, then zero
         ).schedule();
 
@@ -118,10 +119,6 @@ public class Arm extends SubsystemIF {
     public void floatNeutralMode() {
         rightSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         leftSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-    }
-
-    public void resetPivotEncoder() {
-        offset = pivot.getPosition();
     }
 
     // GETTERS
@@ -186,7 +183,7 @@ public class Arm extends SubsystemIF {
     }
 
     public void setPivotPos(double pos) {
-        pivotPid.setSetPoint(pos + offset);
+        pivotPid.setSetPoint(pos);
     }
 
     public void setState(ArmState state) {
@@ -210,6 +207,8 @@ public class Arm extends SubsystemIF {
 
     @Override
     public void periodic() {
+        updatePid();
+
         telemetry.addLine();
         telemetry.addData("Arm State", state);
         telemetry.addData("Scoring Piece", scoreType);
@@ -234,6 +233,6 @@ public class Arm extends SubsystemIF {
         if (!slideZeroing) setSlidePower(slideOutput + slideFeedforward);
 
         if (pivotAtSetPoint() && getPivotTarget() == PIVOT_REST_POSITION) pivot.setPower(0);
-        else pivot.setPower(pivotOutput + pivotFeedforward);
+        else if (!pivotZeroing) pivot.setPower(pivotOutput + pivotFeedforward);
     }
 }
