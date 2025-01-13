@@ -25,7 +25,7 @@ import org.firstinspires.ftc.teamcode.climb.Climb;
 import org.firstinspires.ftc.teamcode.climb.commands.AscentTwoCommand;
 import org.firstinspires.ftc.teamcode.util.SubsystemIF;
 import org.firstinspires.ftc.teamcode.util.commands.Commands;
-//import org.firstinspires.ftc.teamcode.vision.LLVision;
+import org.firstinspires.ftc.teamcode.vision.LLVision;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,7 +89,7 @@ public class Hydra extends Robot {
         subsystems.add(Chassis.getInstance().initialize());
         subsystems.add(Arm.getInstance().initialize());
         subsystems.add(Claw.getInstance().initialize());
-//        subsystems.add(LLVision.getInstance().initialize());
+        subsystems.add(LLVision.getInstance().initialize());
         subsystems.add(Climb.getInstance().initialize());
         registerSubsystems();
     }
@@ -188,26 +188,26 @@ public class Hydra extends Robot {
                 .whenPressed(Commands.runOnce(() -> rumble(300, manipController)))
                 .whenPressed(() -> Arm.getInstance().setScoreType(Arm.ScoreType.SPECIMEN));
 
-//        // Claw overrides
-//        manipController.getGamepadButton(GamepadKeys.Button.LEFT_STICK_BUTTON)
-//                .whenPressed(() -> LLVision.getInstance().setClawOverride(1.0));
-//        manipController.getGamepadButton(GamepadKeys.Button.RIGHT_STICK_BUTTON)
-//                .whenPressed(() -> LLVision.getInstance().setClawOverride(0.43));
-//        manipController.getGamepadButton(GamepadKeys.Button.BACK)
-//                .whenPressed(LLVision.getInstance()::disableClawOverride);
+        // Claw overrides
+        manipController.getGamepadButton(GamepadKeys.Button.LEFT_STICK_BUTTON)
+                .whenPressed(() -> LLVision.getInstance().setClawOverride(1.0));
+        manipController.getGamepadButton(GamepadKeys.Button.RIGHT_STICK_BUTTON)
+                .whenPressed(() -> LLVision.getInstance().setClawOverride(0.43));
+        manipController.getGamepadButton(GamepadKeys.Button.BACK)
+                .whenPressed(LLVision.getInstance()::disableClawOverride);
 
         // Toggle target color
-//        manipController.getGamepadButton(GamepadKeys.Button.B)
-//                .whenPressed(Commands.runOnce(() -> rumble(300, manipController)))
-//                .whenPressed(Commands.either(
-//                        Commands.either(
-//                                Commands.runOnce(LLVision.getInstance()::setBlue).andThen(Commands.runOnce(() -> setGamepadColors(0, 0, 1))),
-//                                Commands.runOnce(LLVision.getInstance()::setRed).andThen(Commands.runOnce(() -> setGamepadColors(1, 0, 0))),
-//                                () -> RobotStatus.alliance == RobotStatus.Alliance.BLUE
-//                        ),
-//                        Commands.runOnce(LLVision.getInstance()::setYellow).andThen(Commands.runOnce(() -> setGamepadColors(1, 1, 0))),
-//                        () -> LLVision.getInstance().getTargetColor() == LLVision.SampleColor.YELLOW
-//                ));
+        manipController.getGamepadButton(GamepadKeys.Button.B)
+                .whenPressed(Commands.runOnce(() -> rumble(300, manipController)))
+                .whenPressed(Commands.either(
+                        Commands.either(
+                                Commands.runOnce(LLVision.getInstance()::setBlue).andThen(Commands.runOnce(() -> setGamepadColors(0, 0, 1))),
+                                Commands.runOnce(LLVision.getInstance()::setRed).andThen(Commands.runOnce(() -> setGamepadColors(1, 0, 0))),
+                                () -> RobotStatus.alliance == RobotStatus.Alliance.BLUE
+                        ),
+                        Commands.runOnce(LLVision.getInstance()::setYellow).andThen(Commands.runOnce(() -> setGamepadColors(1, 1, 0))),
+                        () -> LLVision.getInstance().getTargetColor() == LLVision.SampleColor.YELLOW
+                ));
 
         // Release sample
         manipController.getGamepadButton(GamepadKeys.Button.X)
@@ -228,12 +228,6 @@ public class Hydra extends Robot {
                         Commands.none(),
                         () -> Arm.getInstance().getState() == Arm.ArmState.STOW && RobotStatus.climbState == RobotStatus.ClimbState.DISABLED
                 ));
-//        manipController.getGamepadButton(GamepadKeys.Button.START)
-//                .whenPressed(Commands.either(
-//                        new AscentThreeCommand(),
-//                        Commands.none(),
-//                        () -> RobotStatus.climbState == RobotStatus.ClimbState.CLIMBED
-//                ));
 
         Log.i("Hydra", "============INITIALIZED TELEOP============");
     }
@@ -293,6 +287,5 @@ public class Hydra extends Robot {
         telemetry.addData("Loop Time", timer.milliseconds());
         telemetry.update();
         timer.reset();
-
     }
 }

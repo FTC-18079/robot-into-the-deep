@@ -50,7 +50,7 @@ public class LLVision extends SubsystemIF {
     @Override
     public void onAutonomousInit() {
         telemetry = Hydra.getInstance().getTelemetry();
-        //limelight = RobotMap.getInstance().LIMELIGHT;
+        limelight = RobotMap.getInstance().LIMELIGHT;
         start();
         setPipeline();
     }
@@ -58,7 +58,7 @@ public class LLVision extends SubsystemIF {
     @Override
     public void onTeleopInit() {
         telemetry = Hydra.getInstance().getTelemetry();
-        //limelight = RobotMap.getInstance().LIMELIGHT;
+        limelight = RobotMap.getInstance().LIMELIGHT;
         start();
         setYellow();
         disableClawOverride();

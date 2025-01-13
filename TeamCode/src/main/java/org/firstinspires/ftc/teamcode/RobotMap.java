@@ -23,7 +23,7 @@ public class RobotMap {
     // Sensors
     public SparkFunOTOS OTOS;
     public WebcamName APRILTAG_CAMERA;
-    //public Limelight3A LIMELIGHT;
+    public Limelight3A LIMELIGHT;
 
     // Drive motors
     public DcMotorEx MOTOR_FL;
@@ -68,7 +68,7 @@ public class RobotMap {
 
         OTOS = hardwareMap.get(SparkFunOTOS.class, "otos");
 //        APRILTAG_CAMERA = hardwareMap.get(WebcamName.class, "arducam");
-        //LIMELIGHT = hardwareMap.get(Limelight3A.class, "limelight");
+        LIMELIGHT = hardwareMap.get(Limelight3A.class, "limelight");
 
         MOTOR_FL = hardwareMap.get(DcMotorEx.class, FollowerConstants.leftFrontMotorName);
         MOTOR_FR = hardwareMap.get(DcMotorEx.class, FollowerConstants.rightFrontMotorName);
@@ -96,7 +96,7 @@ public class RobotMap {
 
     private void addDevices() {
         devices.add(getInstance().OTOS);
-        //devices.add(getInstance().LIMELIGHT);
+        devices.add(getInstance().LIMELIGHT);
         devices.add(getInstance().MOTOR_FL);
         devices.add(getInstance().MOTOR_FR);
         devices.add(getInstance().MOTOR_BL);
