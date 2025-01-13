@@ -176,8 +176,9 @@ public class Hydra extends Robot {
                         () -> Arm.getInstance().getState() == Arm.ArmState.SCORING_SAMPLE
                 ));
 
-        manipController.getGamepadButton(GamepadKeys.Button.START)
-                .whenPressed(Commands.runOnce(Arm.getInstance()::resetPivotEncoder));
+//        manipController.getGamepadButton(GamepadKeys.Button.START)
+//                .whenPressed(Arm.getInstance()::resetPivotEncoder);
+//                .whenPressed(new PivotZeroCommand());
 
         // Switch game pieces
         manipController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
@@ -227,12 +228,6 @@ public class Hydra extends Robot {
                         Commands.none(),
                         () -> Arm.getInstance().getState() == Arm.ArmState.STOW && RobotStatus.climbState == RobotStatus.ClimbState.DISABLED
                 ));
-//        manipController.getGamepadButton(GamepadKeys.Button.START)
-//                .whenPressed(Commands.either(
-//                        new AscentThreeCommand(),
-//                        Commands.none(),
-//                        () -> RobotStatus.climbState == RobotStatus.ClimbState.CLIMBED
-//                ));
 
         Log.i("Hydra", "============INITIALIZED TELEOP============");
     }

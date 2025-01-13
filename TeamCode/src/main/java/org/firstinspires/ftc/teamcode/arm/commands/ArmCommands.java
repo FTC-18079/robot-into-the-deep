@@ -72,10 +72,15 @@ public class ArmCommands {
         );
         SAMPLE_COLLECT_TO_STOW = () -> Commands.sequence(
                 Commands.runOnce(() -> arm.get().setState(Arm.ArmState.STOW)),
-                Commands.runOnce(() -> claw.get().setState(ClawConstants.SPECIMEN_COLLECT_STATE)),
-                Commands.runOnce(claw.get()::closeClaw),
-                Commands.waitMillis(175),
-                new MoveSlideCommand(() -> ArmConstants.SLIDE_REST_POSITION),
+//                Commands.runOnce(() -> claw.get().setState(ClawConstants.SPECIMEN_COLLECT_STATE)),
+//                Commands.runOnce(claw.get()::closeClaw),
+//                Commands.waitMillis(175),
+                Commands.parallel(
+                        new MoveSlideCommand(() -> ArmConstants.SLIDE_REST_POSITION),
+                        Commands.waitMillis(75)
+                                .andThen(Commands.runOnce(() -> claw.get().setState(ClawConstants.SPECIMEN_COLLECT_STATE)))
+                                .andThen(Commands.runOnce(claw.get()::closeClaw))
+                ),
                 Commands.runOnce(() -> claw.get().setState(ClawConstants.REST_STATE)),
                 Commands.waitMillis(150),
                 new SlideZeroCommand()
@@ -140,6 +145,7 @@ public class ArmCommands {
         );
 
         STOW_TO_CHAMBER = () -> Commands.sequence(
+                Commands.runOnce(() -> arm.get().setState(Arm.ArmState.SCORING_SPECIMEN)),
                 Commands.runOnce(() -> claw.get().setState(ClawConstants.SPECIMEN_SCORING_STATE)),
                 new MovePivotCommand(() -> ArmConstants.PIVOT_SCORE_POSITION),
                 new MoveSlideCommand(() -> ArmConstants.SLIDE_CHAMBER_POSITION)
@@ -227,6 +233,8 @@ public class ArmCommands {
                     return Commands.defer(SPECIMEN_COLLECT_TO_CHAMBER, arm.get());
                 case SCORING_SAMPLE:
                     return Commands.defer(BASKET_TO_CHAMBER, arm.get());
+                case STOW:
+                    return Commands.defer(STOW_TO_CHAMBER, arm.get());
                 default:
                     return Commands.none();
             }
@@ -247,7 +255,7 @@ public class ArmCommands {
                 case COLLECTING_SAMPLE:
                     return Commands.sequence(
                             Commands.defer(COLLECT_SAMPLE, claw.get()),
-                            Commands.runOnce(llVision.get()::setOrange),
+                            Commands.runOnce(llVision.get()::setWhite),
                             Commands.defer(GRAB, claw.get()),
                             Commands.waitMillis(100),
                             Commands.either(
