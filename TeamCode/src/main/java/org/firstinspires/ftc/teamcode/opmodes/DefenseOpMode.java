@@ -12,8 +12,7 @@ public class DefenseOpMode extends OpMode {
 
     @Override
     public void init() {
-        RobotMap.getInstance().init(hardwareMap);
-        follower = new Follower();
+        follower = new Follower(hardwareMap);
         follower.startTeleopDrive();
     }
 

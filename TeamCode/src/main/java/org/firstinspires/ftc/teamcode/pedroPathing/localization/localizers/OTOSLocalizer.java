@@ -1,10 +1,10 @@
 package org.firstinspires.ftc.teamcode.pedroPathing.localization.localizers;
 
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.RobotMap;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Localizer;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.MathFunctions;
@@ -38,6 +38,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Vector;
  * @version 1.0, 7/20/2024
  */
 public class OTOSLocalizer extends Localizer {
+    private HardwareMap hardwareMap;
     private Pose startPose;
     private SparkFunOTOS otos;
     private SparkFunOTOS.Pose2D otosPose;
@@ -47,21 +48,25 @@ public class OTOSLocalizer extends Localizer {
     private double totalHeading;
 
     /**
-     * This creates a new OTOSLocalizer with a starting Pose at (0,0)
+     * This creates a new OTOSLocalizer from a HardwareMap, with a starting Pose at (0,0)
      * facing 0 heading.
+     *
+     * @param map the HardwareMap
      */
-    public OTOSLocalizer() {
-        this(new Pose());
+    public OTOSLocalizer(HardwareMap map) {
+        this(map, new Pose());
     }
 
     /**
-     * This creates a new OTOSLocalizer from a a Pose, with the Pose
+     * This creates a new OTOSLocalizer from a HardwareMap and a Pose, with the Pose
      * specifying the starting pose of the localizer.
      *
+     * @param map the HardwareMap
      * @param setStartPose the Pose to start from
      */
-    public OTOSLocalizer(Pose setStartPose) {
-        otos = RobotMap.getInstance().OTOS;
+    public OTOSLocalizer(HardwareMap map, Pose setStartPose) {
+        hardwareMap = map;
+        otos = hardwareMap.get(SparkFunOTOS.class, "otos");
 
         otos.setLinearUnit(DistanceUnit.INCH);
         otos.setAngularUnit(AngleUnit.RADIANS);
