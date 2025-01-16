@@ -142,8 +142,8 @@ public class Hydra extends Robot {
         // Chassis driving
         Chassis.getInstance().setDefaultCommand(new TeleOpDriveCommand(
                 () -> applyResponseCurve(driveController.getLeftY(), DRIVE_SENSITIVITY),
-                () -> applyResponseCurve(driveController.getLeftX(), DRIVE_SENSITIVITY),
-                () -> applyResponseCurve(driveController.getRightX(), ROTATIONAL_SENSITIVITY)
+                () -> -applyResponseCurve(driveController.getLeftX(), DRIVE_SENSITIVITY),
+                () -> -applyResponseCurve(driveController.getRightX(), ROTATIONAL_SENSITIVITY)
         ));
         new Trigger(() -> driveController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > TRIGGER_DEADZONE)
                 .whenActive(Chassis.getInstance()::enableSlowMode)
