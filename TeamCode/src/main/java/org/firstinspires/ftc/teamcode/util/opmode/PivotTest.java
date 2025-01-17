@@ -20,6 +20,10 @@ public class PivotTest extends OpMode {
         telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry(), telemetry);
         RobotMap.getInstance().init(hardwareMap);
         pivot = new Pivot();
+
+        for (LynxModule hub : RobotMap.getInstance().getLynxModules()) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
+        }
     }
 
     @Override
