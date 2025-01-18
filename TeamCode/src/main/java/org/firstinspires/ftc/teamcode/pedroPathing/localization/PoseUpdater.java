@@ -46,18 +46,24 @@ public class PoseUpdater {
     /**
      * Creates a new PoseUpdater from a HardwareMap and a Localizer.
      *
+     * @param hardwareMap the HardwareMap
      * @param localizer the Localizer
      */
-    public PoseUpdater(Localizer localizer) {
+    public PoseUpdater(HardwareMap hardwareMap, Localizer localizer) {
+        this.hardwareMap = hardwareMap;
+
         this.localizer = localizer;
         imu = localizer.getIMU();
     }
 
     /**
      * Creates a new PoseUpdater from a HardwareMap.
+     *
+     * @param hardwareMap the HardwareMap
      */
-    public PoseUpdater() {
-        this(new OTOSLocalizer());
+    public PoseUpdater(HardwareMap hardwareMap) {
+        // TODO: replace the second argument with your preferred localizer
+        this(hardwareMap, new OTOSLocalizer(hardwareMap));
     }
 
     /**
