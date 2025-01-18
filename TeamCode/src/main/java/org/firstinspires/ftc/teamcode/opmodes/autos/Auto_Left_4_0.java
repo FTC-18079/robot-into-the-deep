@@ -2,10 +2,12 @@ package org.firstinspires.ftc.teamcode.opmodes.autos;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.Command;
+import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Pose;
 import com.pedropathing.pathgen.BezierCurve;
 import com.pedropathing.pathgen.BezierLine;
 import com.pedropathing.pathgen.Path;
+import com.pedropathing.pathgen.PathChain;
 import com.pedropathing.pathgen.Point;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
@@ -15,6 +17,7 @@ import org.firstinspires.ftc.teamcode.arm.commands.ArmCommands;
 import org.firstinspires.ftc.teamcode.arm.commands.MovePivotCommand;
 import org.firstinspires.ftc.teamcode.autonomous.AutoConstants;
 import org.firstinspires.ftc.teamcode.autonomous.AutoTemplate;
+import org.firstinspires.ftc.teamcode.chassis.Chassis;
 import org.firstinspires.ftc.teamcode.chassis.commands.FollowPathCommand;
 import org.firstinspires.ftc.teamcode.claw.Claw;
 import org.firstinspires.ftc.teamcode.claw.ClawConstants;
@@ -43,14 +46,7 @@ public class Auto_Left_4_0 extends AutoTemplate {
     private final Pose scoreThreePose = AutoConstants.BASKET_SCORE_POSE.copy();
 
     // Paths
-    private Path scorePreloadPath;
-    private Path collectOnePath;
-    private Path scoreOnePath;
-    private Path collectTwoPath;
-    private Path scoreTwoPath;
-    private Path collectThreePath;
-    private Path scoreThreePath;
-    private Path parkPath;
+    private PathChain scorePreloadPath, collectOnePath, scoreOnePath, collectTwoPath, scoreTwoPath, collectThreePath, scoreThreePath, parkPath;
 
     // Constants
     public static double preloadMaxSpeed = 0.8; // Speed reduction on the preload path
@@ -58,29 +54,47 @@ public class Auto_Left_4_0 extends AutoTemplate {
 
     @Override
     public void buildPaths() {
-        scorePreloadPath = new Path(new BezierLine(new Point(startingPose), new Point(scorePreloadPose)));
-        scorePreloadPath.setLinearHeadingInterpolation(startingPose.getHeading(), scorePreloadPose.getHeading());
+        Follower follower = Chassis.getInstance().getFollower();
 
-        collectOnePath = new Path(new BezierLine(new Point(scorePreloadPose), new Point(collectOnePose)));
-        collectOnePath.setLinearHeadingInterpolation(scorePreloadPose.getHeading(), collectOnePose.getHeading());
+        scorePreloadPath = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(startingPose), new Point(scorePreloadPose)))
+                .setLinearHeadingInterpolation(startingPose.getHeading(), scorePreloadPose.getHeading())
+                .build();
 
-        scoreOnePath = new Path(new BezierLine(new Point(collectOnePose), new Point(scoreOnePose)));
-        scoreOnePath.setLinearHeadingInterpolation(collectOnePose.getHeading(), scoreOnePose.getHeading());
+        collectOnePath = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(scorePreloadPose), new Point(collectOnePose)))
+                .setLinearHeadingInterpolation(scorePreloadPose.getHeading(), collectOnePose.getHeading())
+                .build();
 
-        collectTwoPath = new Path(new BezierLine(new Point(scoreOnePose), new Point(collectTwoPose)));
-        collectTwoPath.setLinearHeadingInterpolation(scoreOnePose.getHeading(), collectTwoPose.getHeading());
+        scoreOnePath = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(collectOnePose), new Point(scoreOnePose)))
+                .setLinearHeadingInterpolation(collectOnePose.getHeading(), scoreOnePose.getHeading())
+                .build();
 
-        scoreTwoPath = new Path(new BezierLine(new Point(collectTwoPose), new Point(scoreTwoPose)));
-        scoreTwoPath.setLinearHeadingInterpolation(collectTwoPose.getHeading(), scoreTwoPose.getHeading());
+        collectTwoPath = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(scoreOnePose), new Point(collectTwoPose)))
+                .setLinearHeadingInterpolation(scoreOnePose.getHeading(), collectTwoPose.getHeading())
+                .build();
 
-        collectThreePath = new Path(new BezierLine(new Point(scoreTwoPose), new Point(collectThreePose)));
-        collectThreePath.setLinearHeadingInterpolation(scoreTwoPose.getHeading(), collectThreePose.getHeading());
+        scoreTwoPath = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(collectTwoPose), new Point(scoreTwoPose)))
+                .setLinearHeadingInterpolation(collectTwoPose.getHeading(), scoreTwoPose.getHeading())
+                .build();
 
-        scoreThreePath = new Path(new BezierLine(new Point(collectThreePose), new Point(scoreThreePose)));
-        scoreThreePath.setLinearHeadingInterpolation(collectThreePose.getHeading(), scoreThreePose.getHeading());
+        collectThreePath = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(scoreTwoPose), new Point(collectThreePose)))
+                .setLinearHeadingInterpolation(scoreTwoPose.getHeading(), collectThreePose.getHeading())
+                .build();
 
-        parkPath = new Path(new BezierCurve(new Point(scoreThreePose), new Point(60, 122, Point.CARTESIAN), new Point(AutoConstants.ASCENT_PARKING_POSE)));
-        parkPath.setLinearHeadingInterpolation(scoreThreePose.getHeading(), AutoConstants.ASCENT_PARKING_POSE.getHeading());
+        scoreThreePath = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(collectThreePose), new Point(scoreThreePose)))
+                .setLinearHeadingInterpolation(collectThreePose.getHeading(), scoreThreePose.getHeading())
+                .build();
+
+        parkPath = follower.pathBuilder()
+                .addPath(new BezierCurve(new Point(scoreThreePose), new Point(60, 122, Point.CARTESIAN), new Point(AutoConstants.ASCENT_PARKING_POSE)))
+                .setLinearHeadingInterpolation(scoreThreePose.getHeading(), AutoConstants.ASCENT_PARKING_POSE.getHeading())
+                .build();
     }
 
     @Override
@@ -91,7 +105,7 @@ public class Auto_Left_4_0 extends AutoTemplate {
                 // Drive up to basket and score
                 Commands.runOnce(() -> Claw.getInstance().setState(ClawConstants.REST_STATE)),
                 Commands.parallel(
-                        new FollowPathCommand(scorePreloadPath, preloadMaxSpeed),
+                        new FollowPathCommand(scorePreloadPath, true, preloadMaxSpeed),
                         Commands.defer(ArmCommands.STOW_TO_BASKET)
                 ),
                 Commands.waitMillis(150),

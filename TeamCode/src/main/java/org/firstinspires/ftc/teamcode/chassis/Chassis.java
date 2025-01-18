@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.chassis;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Pose;
 import com.pedropathing.pathgen.Path;
+import com.pedropathing.pathgen.PathChain;
 import com.pedropathing.util.Constants;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -51,6 +52,10 @@ public class Chassis extends SubsystemIF {
 
     // GETTERS
 
+    public Follower getFollower() {
+        return follower;
+    }
+
     public Pose getPoseEstimate() {
         return follower.getPose();
     }
@@ -94,6 +99,10 @@ public class Chassis extends SubsystemIF {
 
     public void followPath(Path path) {
         follower.followPath(path);
+    }
+
+    public void followPath(PathChain path, boolean holdEnd) {
+        follower.followPath(path, holdEnd);
     }
 
     public void breakFollowing() {
