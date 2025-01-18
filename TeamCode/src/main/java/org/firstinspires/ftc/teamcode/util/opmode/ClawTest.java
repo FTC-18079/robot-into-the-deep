@@ -28,6 +28,10 @@ public class ClawTest extends OpMode {
         claw.onTeleopInit();
         state = new ClawState();
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+
+        for (LynxModule hub : RobotMap.getInstance().getLynxModules()) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
+        }
     }
 
     @Override

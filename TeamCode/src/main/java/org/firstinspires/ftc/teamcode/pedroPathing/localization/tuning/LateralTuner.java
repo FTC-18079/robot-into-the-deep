@@ -41,8 +41,7 @@ public class LateralTuner extends OpMode {
      */
     @Override
     public void init() {
-        RobotMap.getInstance().init(hardwareMap);
-        poseUpdater = new PoseUpdater();
+        poseUpdater = new PoseUpdater(hardwareMap);
 
         dashboardPoseTracker = new DashboardPoseTracker(poseUpdater);
 

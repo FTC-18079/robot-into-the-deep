@@ -51,6 +51,7 @@ public class Hydra extends Robot {
     private static final double DRIVE_SENSITIVITY = 1.1;
     private static final double ROTATIONAL_SENSITIVITY = 2.0;
     private static final double TRIGGER_DEADZONE = 0.1;
+    private static final double ROTATION_DAMPEN = 0.9;
 
     private final ElapsedTime timer = new ElapsedTime();
 
@@ -142,8 +143,8 @@ public class Hydra extends Robot {
         // Chassis driving
         Chassis.getInstance().setDefaultCommand(new TeleOpDriveCommand(
                 () -> applyResponseCurve(driveController.getLeftY(), DRIVE_SENSITIVITY),
-                () -> applyResponseCurve(driveController.getLeftX(), DRIVE_SENSITIVITY),
-                () -> applyResponseCurve(driveController.getRightX(), ROTATIONAL_SENSITIVITY)
+                () -> -applyResponseCurve(driveController.getLeftX(), DRIVE_SENSITIVITY),
+                () -> -applyResponseCurve(driveController.getRightX(), ROTATIONAL_SENSITIVITY) * ROTATION_DAMPEN
         ));
         new Trigger(() -> driveController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > TRIGGER_DEADZONE)
                 .whenActive(Chassis.getInstance()::enableSlowMode)
@@ -156,6 +157,7 @@ public class Hydra extends Robot {
 
         // Toggle field centric
         driveController.getGamepadButton(GamepadKeys.Button.B)
+                .whenPressed(Commands.runOnce(() -> rumble(300, driveController)))
                 .whenPressed(Chassis.getInstance()::toggleFieldCentric);
 
         // Arm to scoring position

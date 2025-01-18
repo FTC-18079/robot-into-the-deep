@@ -6,6 +6,10 @@ import static org.firstinspires.ftc.teamcode.pedroPathing.tuning.FollowerConstan
 import static org.firstinspires.ftc.teamcode.pedroPathing.tuning.FollowerConstants.headingPIDFFeedForward;
 import static org.firstinspires.ftc.teamcode.pedroPathing.tuning.FollowerConstants.headingPIDFSwitch;
 import static org.firstinspires.ftc.teamcode.pedroPathing.tuning.FollowerConstants.lateralZeroPowerAcceleration;
+import static org.firstinspires.ftc.teamcode.pedroPathing.tuning.FollowerConstants.leftFrontMotorName;
+import static org.firstinspires.ftc.teamcode.pedroPathing.tuning.FollowerConstants.leftRearMotorName;
+import static org.firstinspires.ftc.teamcode.pedroPathing.tuning.FollowerConstants.rightFrontMotorName;
+import static org.firstinspires.ftc.teamcode.pedroPathing.tuning.FollowerConstants.rightRearMotorName;
 import static org.firstinspires.ftc.teamcode.pedroPathing.tuning.FollowerConstants.leftFrontMotorDirection;
 import static org.firstinspires.ftc.teamcode.pedroPathing.tuning.FollowerConstants.leftRearMotorDirection;
 import static org.firstinspires.ftc.teamcode.pedroPathing.tuning.FollowerConstants.rightFrontMotorDirection;
@@ -22,10 +26,13 @@ import static org.firstinspires.ftc.teamcode.pedroPathing.tuning.FollowerConstan
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.RobotMap;
+import org.firstinspires.ftc.teamcode.pedroPathing.localization.Localizer;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.PoseUpdater;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierPoint;
@@ -42,7 +49,6 @@ import org.firstinspires.ftc.teamcode.pedroPathing.util.Drawing;
 import org.firstinspires.ftc.teamcode.pedroPathing.util.FilteredPIDFController;
 import org.firstinspires.ftc.teamcode.pedroPathing.util.KalmanFilter;
 import org.firstinspires.ftc.teamcode.pedroPathing.util.PIDFController;
-import org.firstinspires.ftc.teamcode.util.hardware.SuccessMotor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -59,11 +65,13 @@ import java.util.List;
  */
 @Config
 public class Follower {
-    private SuccessMotor leftFront;
-    private SuccessMotor leftRear;
-    private SuccessMotor rightFront;
-    private SuccessMotor rightRear;
-    private List<SuccessMotor> motors;
+    private HardwareMap hardwareMap;
+
+    private DcMotorEx leftFront;
+    private DcMotorEx leftRear;
+    private DcMotorEx rightFront;
+    private DcMotorEx rightRear;
+    private List<DcMotorEx> motors;
 
     private DriveVectorScaler driveVectorScaler;
 
@@ -139,10 +147,23 @@ public class Follower {
     public static boolean useDrive = true;
 
     /**
-     * This creates a new Follower.
+     * This creates a new Follower given a HardwareMap.
+     *
+     * @param hardwareMap HardwareMap required
      */
-    public Follower() {
+    public Follower(HardwareMap hardwareMap) {
+        this.hardwareMap = hardwareMap;
         initialize();
+    }
+
+    /**
+     * This creates a new Follower given a HardwareMap and a localizer.
+     * @param hardwareMap HardwareMap required
+     * @param localizer the localizer you wish to use
+     */
+    public Follower(HardwareMap hardwareMap, Localizer localizer) {
+        this.hardwareMap = hardwareMap;
+        initialize(localizer);
     }
 
     /**
@@ -153,12 +174,12 @@ public class Follower {
      */
     public void initialize() {
         driveVectorScaler = new DriveVectorScaler(FollowerConstants.frontLeftVector);
-        poseUpdater = new PoseUpdater();
+        poseUpdater = new PoseUpdater(hardwareMap);
 
-        leftFront = new SuccessMotor(RobotMap.getInstance().MOTOR_FL);
-        leftRear = new SuccessMotor(RobotMap.getInstance().MOTOR_BL);
-        rightRear = new SuccessMotor(RobotMap.getInstance().MOTOR_BR);
-        rightFront = new SuccessMotor(RobotMap.getInstance().MOTOR_FR);
+        leftFront = hardwareMap.get(DcMotorEx.class, leftFrontMotorName);
+        leftRear = hardwareMap.get(DcMotorEx.class, leftRearMotorName);
+        rightRear = hardwareMap.get(DcMotorEx.class, rightRearMotorName);
+        rightFront = hardwareMap.get(DcMotorEx.class, rightFrontMotorName);
         leftFront.setDirection(leftFrontMotorDirection);
         leftRear.setDirection(leftRearMotorDirection);
         rightFront.setDirection(rightFrontMotorDirection);
@@ -166,13 +187,52 @@ public class Follower {
 
         motors = Arrays.asList(leftFront, leftRear, rightFront, rightRear);
 
-        for (SuccessMotor motor : motors) {
+        for (DcMotorEx motor : motors) {
             MotorConfigurationType motorConfigurationType = motor.getMotorType().clone();
             motorConfigurationType.setAchieveableMaxRPMFraction(1.0);
             motor.setMotorType(motorConfigurationType);
         }
 
-        for (SuccessMotor motor : motors) {
+        for (DcMotorEx motor : motors) {
+            motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        }
+
+        dashboardPoseTracker = new DashboardPoseTracker(poseUpdater);
+
+        breakFollowing();
+    }
+
+    /**
+     * This initializes the follower.
+     * In this, the DriveVectorScaler and PoseUpdater is instantiated, the drive motors are
+     * initialized and their behavior is set, and the variables involved in approximating first and
+     * second derivatives for teleop are set.
+     * @param localizer the localizer you wish to use
+     */
+
+    public void initialize(Localizer localizer) {
+        driveVectorScaler = new DriveVectorScaler(FollowerConstants.frontLeftVector);
+        poseUpdater = new PoseUpdater(hardwareMap, localizer);
+
+        leftFront = hardwareMap.get(DcMotorEx.class, leftFrontMotorName);
+        leftRear = hardwareMap.get(DcMotorEx.class, leftRearMotorName);
+        rightRear = hardwareMap.get(DcMotorEx.class, rightRearMotorName);
+        rightFront = hardwareMap.get(DcMotorEx.class, rightFrontMotorName);
+
+        leftFront.setDirection(leftFrontMotorDirection);
+        leftRear.setDirection(leftRearMotorDirection);
+        rightFront.setDirection(rightFrontMotorDirection);
+        leftFront.setDirection(rightRearMotorDirection);
+
+        motors = Arrays.asList(leftFront, leftRear, rightFront, rightRear);
+
+        for (DcMotorEx motor : motors) {
+            MotorConfigurationType motorConfigurationType = motor.getMotorType().clone();
+            motorConfigurationType.setAchieveableMaxRPMFraction(1.0);
+            motor.setMotorType(motorConfigurationType);
+        }
+
+        for (DcMotorEx motor : motors) {
             motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         }
 
@@ -423,9 +483,6 @@ public class Follower {
      */
     public void startTeleopDrive() {
         breakFollowing();
-        for (SuccessMotor m: motors) {
-            m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        }
         teleopDrive = true;
     }
 
@@ -505,20 +562,7 @@ public class Follower {
 
             calculateAveragedVelocityAndAcceleration();
 
-            // Don't wanna use pedro's driving cuz it's get silly
-            double[] wheelPowers = new double[4];
-            double x = teleopDriveVector.getXComponent();
-            double y = teleopDriveVector.getYComponent() * 1.1;
-            double omega = teleopDriveValues[2];
-
-            double denominator = Math.max(Math.abs(x) + Math.abs(y) + Math.abs(omega), 1);
-            wheelPowers[0] = (x + y + omega) / denominator;
-            wheelPowers[1] = (x - y + omega) / denominator;
-            wheelPowers[2] = (x - y - omega) / denominator;
-            wheelPowers[3] = (x + y - omega) / denominator;
-
-            // drivePowers = driveVectorScaler.getDrivePowers(getCentripetalForceCorrection(), teleopHeadingVector, teleopDriveVector, poseUpdater.getPose().getHeading());
-            drivePowers = wheelPowers;
+            drivePowers = driveVectorScaler.getDrivePowers(getCentripetalForceCorrection(), teleopHeadingVector, teleopDriveVector, poseUpdater.getPose().getHeading());
 
             for (int i = 0; i < motors.size(); i++) {
                 motors.get(i).setPower(drivePowers[i]);
@@ -618,9 +662,6 @@ public class Follower {
      * This resets the PIDFs and stops following the current Path.
      */
     public void breakFollowing() {
-        for (SuccessMotor m : motors) {
-            m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        }
         teleopDrive = false;
         holdingPosition = false;
         isBusy = false;

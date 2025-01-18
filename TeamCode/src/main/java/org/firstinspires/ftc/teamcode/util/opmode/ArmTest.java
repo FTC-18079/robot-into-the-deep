@@ -24,6 +24,10 @@ public class ArmTest extends OpMode {
         arm = Arm.getInstance();
         arm.onTeleopInit();
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+
+        for (LynxModule hub : RobotMap.getInstance().getLynxModules()) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
+        }
     }
 
     @Override
