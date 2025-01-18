@@ -10,10 +10,10 @@ import org.firstinspires.ftc.teamcode.RobotStatus;
 import org.firstinspires.ftc.teamcode.util.SubsystemIF;
 
 public class Chassis extends SubsystemIF {
-    Follower follower;
-    Telemetry telemetry;
-    boolean isFieldCentric;
-    double m = 1.0;
+    private Follower follower;
+    private Telemetry telemetry;
+    private boolean isFieldCentric;
+    private double m = 1.0;
 
     private static final Chassis INSTANCE = new Chassis();
 
@@ -68,7 +68,7 @@ public class Chassis extends SubsystemIF {
     }
 
     public void setDriveVectors(double fwd, double str, double rot) {
-        follower.setTeleOpMovementVectors(fwd * m, str * m, rot * m, isFieldCentric);
+        follower.setTeleOpMovementVectors(fwd * m, str * m, rot * m, !isFieldCentric);
     }
 
     public void resetHeading() {
@@ -77,7 +77,7 @@ public class Chassis extends SubsystemIF {
     }
 
     public void enableSlowMode() {
-        m = 0.30;
+        m = 0.25;
     }
 
     public void disableSlowMode() {

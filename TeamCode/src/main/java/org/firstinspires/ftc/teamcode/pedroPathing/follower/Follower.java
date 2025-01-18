@@ -214,11 +214,6 @@ public class Follower {
         driveVectorScaler = new DriveVectorScaler(FollowerConstants.frontLeftVector);
         poseUpdater = new PoseUpdater(hardwareMap, localizer);
 
-        //        rightFront = hardwareMap.get(DcMotorEx.class, "motor_rf");
-        //        rightRear = hardwareMap.get(DcMotorEx.class, "motor_rb");
-        //        leftFront = hardwareMap.get(DcMotorEx.class, "motor_lf");
-        //        leftRear = hardwareMap.get(DcMotorEx.class, "motor_lb");
-
         leftFront = hardwareMap.get(DcMotorEx.class, leftFrontMotorName);
         leftRear = hardwareMap.get(DcMotorEx.class, leftRearMotorName);
         rightRear = hardwareMap.get(DcMotorEx.class, rightRearMotorName);
