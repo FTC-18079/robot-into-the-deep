@@ -8,6 +8,7 @@ import static org.firstinspires.ftc.teamcode.vision.VisionConstants.arducam_fy;
 import android.util.Size;
 
 import com.arcrobotics.ftclib.geometry.Vector2d;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -38,12 +39,12 @@ public class AprilTagLocalizer extends Localizer {
     private final Pose cameraOffset;
     private final Localizer secondaryLocalizer;
 
-    public AprilTagLocalizer() {
-        this(new Pose());
+    public AprilTagLocalizer(HardwareMap hardwareMap) {
+        this(new Pose(), hardwareMap);
     }
 
-    public AprilTagLocalizer(Pose startPose) {
-        secondaryLocalizer = new OTOSLocalizer();
+    public AprilTagLocalizer(Pose startPose, HardwareMap hardwareMap) {
+        secondaryLocalizer = new OTOSLocalizer(hardwareMap);
 
         aprilTag = new AprilTagProcessor.Builder()
                 .setLensIntrinsics(arducam_fx, arducam_fy, arducam_cx, arducam_cy)

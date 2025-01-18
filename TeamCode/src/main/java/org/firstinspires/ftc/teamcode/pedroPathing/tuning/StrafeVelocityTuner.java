@@ -69,8 +69,7 @@ public class StrafeVelocityTuner extends OpMode {
      */
     @Override
     public void init() {
-        RobotMap.getInstance().init(hardwareMap);
-        poseUpdater = new PoseUpdater();
+        poseUpdater = new PoseUpdater(hardwareMap);
 
         leftFront = RobotMap.getInstance().MOTOR_FL;
         leftRear =  RobotMap.getInstance().MOTOR_BL;
