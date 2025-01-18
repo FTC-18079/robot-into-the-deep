@@ -1,12 +1,12 @@
 package org.firstinspires.ftc.teamcode.chassis.commands;
 
 import com.arcrobotics.ftclib.command.CommandBase;
+import com.pedropathing.localization.Pose;
+import com.pedropathing.pathgen.Path;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Hydra;
 import org.firstinspires.ftc.teamcode.chassis.Chassis;
-import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
-import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
 
 public class FollowPathCommand extends CommandBase {
     private final Telemetry telemetry;

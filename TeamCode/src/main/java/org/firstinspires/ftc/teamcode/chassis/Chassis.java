@@ -1,12 +1,16 @@
 package org.firstinspires.ftc.teamcode.chassis;
 
+import com.pedropathing.follower.Follower;
+import com.pedropathing.localization.Pose;
+import com.pedropathing.pathgen.Path;
+import com.pedropathing.util.Constants;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Hydra;
 import org.firstinspires.ftc.teamcode.RobotMap;
-import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
-import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
-import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.RobotStatus;
+import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
+import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
 import org.firstinspires.ftc.teamcode.util.SubsystemIF;
 
 public class Chassis extends SubsystemIF {
@@ -30,6 +34,7 @@ public class Chassis extends SubsystemIF {
     @Override
     public void onAutonomousInit() {
         telemetry = Hydra.getInstance().getTelemetry();
+        Constants.setConstants(FConstants.class, LConstants.class);
         follower = new Follower(RobotMap.getInstance().getHardwareMap());
         follower.setPose(RobotStatus.robotPose);
     }
@@ -37,6 +42,7 @@ public class Chassis extends SubsystemIF {
     @Override
     public void onTeleopInit() {
         telemetry = Hydra.getInstance().getTelemetry();
+        Constants.setConstants(FConstants.class, LConstants.class);
         follower = new Follower(RobotMap.getInstance().getHardwareMap());
         follower.setPose(RobotStatus.robotPose);
         follower.startTeleopDrive();

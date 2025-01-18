@@ -3,6 +3,7 @@ repositories {
     google() // Needed for androidx
 
     maven { url = 'https://maven.brott.dev/' }
+    maven { url = 'https://maven.pedropathing.com/'}
 }
 
 dependencies {
@@ -17,5 +18,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
 
     implementation 'com.acmerobotics.dashboard:dashboard:0.4.16' // FTC Dashboard
+
+    implementation 'com.pedropathing:pedro:1.0.6' // Pedro Pathing
 }
 
