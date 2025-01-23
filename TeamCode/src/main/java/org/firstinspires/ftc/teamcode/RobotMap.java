@@ -48,9 +48,6 @@ public class RobotMap {
     public Servo JOINT_ONE;
     public Servo JOINT_TWO;
 
-    // Climb
-    public DcMotorEx CLIMB_MOTOR;
-
     private static RobotMap instance = null;
 
     // Returns an instance of this
@@ -89,8 +86,6 @@ public class RobotMap {
         JOINT_ONE = hardwareMap.get(Servo.class, "jointOne");
         JOINT_TWO = hardwareMap.get(Servo.class, "jointTwo");
 
-        CLIMB_MOTOR = hardwareMap.get(DcMotorEx.class, "climb");
-
         addDevices();
     }
 
@@ -112,7 +107,6 @@ public class RobotMap {
         devices.add(getInstance().WRIST);
         devices.add(getInstance().JOINT_ONE);
         devices.add(getInstance().JOINT_TWO);
-        devices.add(getInstance().CLIMB_MOTOR);
     }
 
     public List<HardwareDevice> getDevices() {

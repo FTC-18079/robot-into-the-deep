@@ -9,8 +9,6 @@
 <!--            Motors-->
             <RevRoboticsUltraplanetaryHDHexMotor name="leftSlide" port="0" />
             <RevRoboticsUltraplanetaryHDHexMotor name="rightSlide" port="1" />
-            <RevRoboticsUltraplanetaryHDHexMotor name="climb" port="2" />
-            <RevRoboticsUltraplanetaryHDHexMotor name="tipper" port="3" />
         </LynxModule>
 
 <!--        Control Hub-->
