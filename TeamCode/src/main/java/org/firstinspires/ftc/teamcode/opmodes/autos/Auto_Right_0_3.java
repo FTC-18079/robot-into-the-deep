@@ -55,10 +55,11 @@ public class Auto_Right_0_3 extends AutoTemplate {
 
     // Paths
     private PathChain scorePreloadPath;
-    private PathChain behindOnePath;
-    private PathChain pushOnePath;
-    private PathChain behindTwoPath;
-    private PathChain pushTwoPath;
+    private PathChain pushPath;
+//    private PathChain behindOnePath;
+//    private PathChain pushOnePath;
+//    private PathChain behindTwoPath;
+//    private PathChain pushTwoPath;
 //    private Path behindThreePath;
 //    private Path pushThreePath;
     private PathChain scoreOnePath;
@@ -88,29 +89,44 @@ public class Auto_Right_0_3 extends AutoTemplate {
                 .setPathEndTimeoutConstraint(800)
                 .build();
 
-        behindOnePath = follower.pathBuilder()
+        pushPath = follower.pathBuilder()
                 .addPath(new BezierCurve(new Point(scorePreloadPose), new Point(27, 13, Point.CARTESIAN), new Point(64, 44, Point.CARTESIAN), new Point(behindOnePose)))
                 .setConstantHeadingInterpolation(scorePreloadPose.getHeading())
                 .setPathEndTimeoutConstraint(0)
-                .build();
-
-        pushOnePath = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(behindOnePose), new Point(pushOnePose)))
                 .setConstantHeadingInterpolation(behindOnePose.getHeading())
                 .setPathEndTimeoutConstraint(0)
-                .build();
-
-        behindTwoPath = follower.pathBuilder()
                 .addPath(new BezierCurve(new Point(pushOnePose), new Point(64, 28, Point.CARTESIAN), new Point(behindTwoPose)))
                 .setConstantHeadingInterpolation(behindTwoPose.getHeading())
                 .setPathEndTimeoutConstraint(0)
-                .build();
-
-        pushTwoPath = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(behindTwoPose), new Point(pushTwoPose)))
                 .setConstantHeadingInterpolation(pushTwoPose.getHeading())
                 .setPathEndTimeoutConstraint(0)
                 .build();
+
+//        behindOnePath = follower.pathBuilder()
+//                .addPath(new BezierCurve(new Point(scorePreloadPose), new Point(27, 13, Point.CARTESIAN), new Point(64, 44, Point.CARTESIAN), new Point(behindOnePose)))
+//                .setConstantHeadingInterpolation(scorePreloadPose.getHeading())
+//                .setPathEndTimeoutConstraint(0)
+//                .build();
+//
+//        pushOnePath = follower.pathBuilder()
+//                .addPath(new BezierLine(new Point(behindOnePose), new Point(pushOnePose)))
+//                .setConstantHeadingInterpolation(behindOnePose.getHeading())
+//                .setPathEndTimeoutConstraint(0)
+//                .build();
+//
+//        behindTwoPath = follower.pathBuilder()
+//                .addPath(new BezierCurve(new Point(pushOnePose), new Point(64, 28, Point.CARTESIAN), new Point(behindTwoPose)))
+//                .setConstantHeadingInterpolation(behindTwoPose.getHeading())
+//                .setPathEndTimeoutConstraint(0)
+//                .build();
+//
+//        pushTwoPath = follower.pathBuilder()
+//                .addPath(new BezierLine(new Point(behindTwoPose), new Point(pushTwoPose)))
+//                .setConstantHeadingInterpolation(pushTwoPose.getHeading())
+//                .setPathEndTimeoutConstraint(0)
+//                .build();
 
 //        behindThreePath = new Path(new BezierCurve(new Point(pushTwoPose), new Point(64, 18, Point.CARTESIAN), new Point(behindThreePose)));
 //        behindThreePath.setConstantHeadingInterpolation(behindThreePose.getHeading());
@@ -165,13 +181,13 @@ public class Auto_Right_0_3 extends AutoTemplate {
                 ),
                 Commands.defer(ArmCommands.SCORE_SPECIMEN),
                 Commands.parallel(
-                        new FollowPathCommand(behindOnePath, false),
+                        new FollowPathCommand(pushPath, false, 1),
                         Commands.defer(ArmCommands.CHAMBER_TO_STOW)
                 ),
                 // Push samples into zone
-                new FollowPathCommand(pushOnePath, false),
-                new FollowPathCommand(behindTwoPath, false),
-                new FollowPathCommand(pushTwoPath, false),
+//                new FollowPathCommand(pushOnePath, false),
+//                new FollowPathCommand(behindTwoPath, false),
+//                new FollowPathCommand(pushTwoPath, false),
 //                new FollowPathCommand(behindThreePath),
 //                new FollowPathCommand(pushThreePath),
                 // Collect first
