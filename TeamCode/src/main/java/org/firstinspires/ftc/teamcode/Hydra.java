@@ -21,8 +21,6 @@ import org.firstinspires.ftc.teamcode.chassis.Chassis;
 import org.firstinspires.ftc.teamcode.chassis.commands.TeleOpDriveCommand;
 import org.firstinspires.ftc.teamcode.claw.Claw;
 import org.firstinspires.ftc.teamcode.claw.ClawConstants;
-import org.firstinspires.ftc.teamcode.climb.Climb;
-import org.firstinspires.ftc.teamcode.climb.commands.AscentTwoCommand;
 import org.firstinspires.ftc.teamcode.util.SubsystemIF;
 import org.firstinspires.ftc.teamcode.util.commands.Commands;
 import org.firstinspires.ftc.teamcode.vision.LLVision;
@@ -91,7 +89,6 @@ public class Hydra extends Robot {
         subsystems.add(Arm.getInstance().initialize());
         subsystems.add(Claw.getInstance().initialize());
         subsystems.add(LLVision.getInstance().initialize());
-        subsystems.add(Climb.getInstance().initialize());
         registerSubsystems();
     }
 
@@ -219,16 +216,6 @@ public class Hydra extends Robot {
                         Commands.runOnce(Claw.getInstance()::openClaw),
                         Commands.waitMillis(ClawConstants.GRAB_DELAY),
                         Commands.runOnce(() -> Claw.getInstance().setState(ClawConstants.REST_STATE))
-                ));
-
-        // Climb
-        new Trigger(() -> manipController.gamepad.touchpad)
-                .whenActive(Commands.either(
-                        // Start climb
-                        new AscentTwoCommand(),
-                        // Check if climb is ready to finish
-                        Commands.none(),
-                        () -> Arm.getInstance().getState() == Arm.ArmState.STOW && RobotStatus.climbState == RobotStatus.ClimbState.DISABLED
                 ));
 
         Log.i("Hydra", "============INITIALIZED TELEOP============");
