@@ -9,13 +9,6 @@
 <!--            Motors-->
             <RevRoboticsUltraplanetaryHDHexMotor name="leftSlide" port="0" />
             <RevRoboticsUltraplanetaryHDHexMotor name="rightSlide" port="1" />
-            <RevRoboticsUltraplanetaryHDHexMotor name="climb" port="2" />
-            <RevRoboticsUltraplanetaryHDHexMotor name="tipper" port="3" />
-<!--            Servos-->
-            <ContinuousRotationServo name="pivotFL" port="2" />
-            <ContinuousRotationServo name="pivotBL" port="3" />
-            <Servo name="claw" port="4" />
-            <Servo name="jointOne" port="5" />
         </LynxModule>
 
 <!--        Control Hub-->
@@ -25,15 +18,30 @@
             <RevRoboticsUltraplanetaryHDHexMotor name="leftBack" port="1" />
             <RevRoboticsUltraplanetaryHDHexMotor name="rightFront" port="2" />
             <RevRoboticsUltraplanetaryHDHexMotor name="rightBack" port="3" />
-<!--            Servos-->
-            <ContinuousRotationServo name="pivotFR" port = "0" />
-            <ContinuousRotationServo name="pivotBR" port = "1" />
-            <Servo name="wrist" port="2" />
-            <Servo name="jointTwo" port="3" />
 <!--            Sensors-->
             <AnalogInput name="pivotEncoder" port="2" />
             <SparkFunOTOS name="otos" port="0" bus="3" />
         </LynxModule>
+
+<!--        Servo Hub 3-->
+        <ServoHub name="Servo Hub 3" port="3">
+            <!--            Servos-->
+            <Servo name="wrist" port="0" />
+            <Servo name="jointTwo" port="1" />
+
+            <ContinuousRotationServo name="pivotBR" port = "3" />
+            <ContinuousRotationServo name="pivotFR" port = "4" />
+        </ServoHub>
+
+<!--        Servo Hub 4-->
+        <ServoHub name="Servo Hub 4" port="4">
+<!--            Servos-->
+            <Servo name="claw" port="4" />
+            <Servo name="jointOne" port="5" />
+
+            <ContinuousRotationServo name="pivotBL" port = "0" />
+            <ContinuousRotationServo name="pivotFL" port = "1" />
+        </ServoHub>
 
     </LynxUsbDevice>
 
