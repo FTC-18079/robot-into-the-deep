@@ -33,13 +33,13 @@ public class FConstants {
         FollowerConstants.leftRearMotorDirection = DcMotorSimple.Direction.REVERSE;
         FollowerConstants.rightRearMotorDirection = DcMotorSimple.Direction.REVERSE;
         // Robot mass in kg
-        FollowerConstants.mass = 15.422; // 34 lbs in freedom units
+        FollowerConstants.mass = 14.152; // 31.2 lbs in freedom units
         // Max velocities
-        FollowerConstants.xMovement = 76.205;
-        FollowerConstants.yMovement = 51.4708;
+        FollowerConstants.xMovement = 72.66487662247785;
+        FollowerConstants.yMovement = 51.44735020915355;
         // Robot deceleration
-        FollowerConstants.forwardZeroPowerAcceleration = -47.601;
-        FollowerConstants.lateralZeroPowerAcceleration = -114.94575;
+        FollowerConstants.forwardZeroPowerAcceleration = -57.44193340555747;
+        FollowerConstants.lateralZeroPowerAcceleration = -105.61619139985632;
         // Zero power multiplier
         FollowerConstants.zeroPowerAccelerationMultiplier = 3.25;
         // Whether or not to use dual PID
@@ -47,13 +47,13 @@ public class FConstants {
         FollowerConstants.useSecondaryTranslationalPID = false;
         FollowerConstants.useSecondaryHeadingPID = false;
         // Primary PID coefficients
-        FollowerConstants.drivePIDFCoefficients = new CustomFilteredPIDFCoefficients(0.007, 0, 0.00011, 0.6, 0);
-        FollowerConstants.translationalPIDFCoefficients = new CustomPIDFCoefficients(0.7, 0, 0.06, 0);
-        FollowerConstants.headingPIDFCoefficients = new CustomPIDFCoefficients(3.0, 0, 0.15, 0);
+        FollowerConstants.drivePIDFCoefficients.setCoefficients(0.007, 0, 0.00011, 0.6, 0);
+        FollowerConstants.translationalPIDFCoefficients.setCoefficients(0.7, 0, 0.06, 0);
+        FollowerConstants.headingPIDFCoefficients.setCoefficients(3.0, 0, 0.15, 0);
         // Secondary PID coefficients
-        FollowerConstants.secondaryDrivePIDFCoefficients = new CustomFilteredPIDFCoefficients(0.010, 0, 0.00004, 0.6, 0);
-        FollowerConstants.secondaryTranslationalPIDFCoefficients = new CustomPIDFCoefficients(0.3, 0, 0.01, 0);
-        FollowerConstants.secondaryHeadingPIDFCoefficients = new CustomPIDFCoefficients(3.0, 0, 0.15, 0);
+        FollowerConstants.secondaryDrivePIDFCoefficients.setCoefficients(0.010, 0, 0.00004, 0.6, 0);
+        FollowerConstants.secondaryTranslationalPIDFCoefficients.setCoefficients(0.3, 0, 0.01, 0);
+        FollowerConstants.secondaryHeadingPIDFCoefficients.setCoefficients(3.0, 0, 0.15, 0);
         // Centripetal force correction
         FollowerConstants.centripetalScaling = 0.0007;
     }

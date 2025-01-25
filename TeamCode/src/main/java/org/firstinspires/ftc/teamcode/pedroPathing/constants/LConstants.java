@@ -19,7 +19,7 @@ public class LConstants {
         // OTOS position on the robot
         OTOSConstants.offset = new SparkFunOTOS.Pose2D(1.28100393701, 0, 0);
         // Scalars for the sensor
-        OTOSConstants.linearScalar = 0.975433;
+        OTOSConstants.linearScalar = 1.0955866171846023;
         OTOSConstants.angularScalar = 0.965;
     }
 }

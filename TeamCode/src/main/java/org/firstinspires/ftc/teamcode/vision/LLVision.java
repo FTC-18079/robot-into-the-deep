@@ -127,7 +127,7 @@ public class LLVision extends SubsystemIF {
     // GETTERS
 
     public boolean clawInView() {
-        if (result.getPipelineIndex() != 3 || colorResults.isEmpty()) {
+        if (result == null || result.getPipelineIndex() != 3 || colorResults.isEmpty()) {
             return false;
         }
         setPipeline();
