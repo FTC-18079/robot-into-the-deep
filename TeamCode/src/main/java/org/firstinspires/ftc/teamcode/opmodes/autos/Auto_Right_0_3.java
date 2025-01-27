@@ -71,7 +71,7 @@ public class Auto_Right_0_3 extends AutoTemplate {
     private PathChain collectOnePath;
 
     // Constants
-    public static double preloadMaxSpeed = 0.6; // Speed reduction on the preload path
+    public static double preloadMaxSpeed = 0.7; // Speed reduction on the preload path
     public static long preloadPathDelay = 700; // Delay to allow for pivot to move before following first path
 
     @Override
@@ -199,7 +199,7 @@ public class Auto_Right_0_3 extends AutoTemplate {
                 // Score
                 Commands.parallel(
                         Commands.defer(ArmCommands.SPECIMEN_COLLECT_TO_CHAMBER, Arm.getInstance()),
-                        new FollowPathCommand(scoreOnePath, true, 0.7)
+                        new FollowPathCommand(scoreOnePath, true, 0.8)
                 ),
                 Commands.defer(ArmCommands.SCORE_SPECIMEN, Arm.getInstance()),
                 // Collect second
@@ -213,7 +213,7 @@ public class Auto_Right_0_3 extends AutoTemplate {
                 // Score
                 Commands.parallel(
                         Commands.defer(ArmCommands.SPECIMEN_COLLECT_TO_CHAMBER, Arm.getInstance()),
-                        new FollowPathCommand(scoreTwoPath, true, 0.7)
+                        new FollowPathCommand(scoreTwoPath, true, 0.8)
                 ),
                 Commands.defer(ArmCommands.SCORE_SPECIMEN, Arm.getInstance()),
                 // Park
