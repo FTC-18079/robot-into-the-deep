@@ -35,25 +35,25 @@ public class FConstants {
         // Robot mass in kg
         FollowerConstants.mass = 14.152; // 31.2 lbs in freedom units
         // Max velocities
-        FollowerConstants.xMovement = 72.66487662247785;
-        FollowerConstants.yMovement = 51.44735020915355;
+        FollowerConstants.xMovement = 72.13802788201278;
+        FollowerConstants.yMovement = 52.29679618294783;
         // Robot deceleration
-        FollowerConstants.forwardZeroPowerAcceleration = -57.44193340555747;
-        FollowerConstants.lateralZeroPowerAcceleration = -105.61619139985632;
+        FollowerConstants.forwardZeroPowerAcceleration = -59.57815433783589;
+        FollowerConstants.lateralZeroPowerAcceleration = -114.94083656134548;
         // Zero power multiplier
-        FollowerConstants.zeroPowerAccelerationMultiplier = 3.25;
+        FollowerConstants.zeroPowerAccelerationMultiplier = 4;
         // Whether or not to use dual PID
-        FollowerConstants.useSecondaryDrivePID = false;
+        FollowerConstants.useSecondaryDrivePID = true;
         FollowerConstants.useSecondaryTranslationalPID = false;
         FollowerConstants.useSecondaryHeadingPID = false;
         // Primary PID coefficients
-        FollowerConstants.drivePIDFCoefficients.setCoefficients(0.007, 0, 0.00011, 0.6, 0);
+        FollowerConstants.drivePIDFCoefficients.setCoefficients(0.025, 0, 0.00001, 0.6, 0);
         FollowerConstants.translationalPIDFCoefficients.setCoefficients(0.7, 0, 0.06, 0);
         FollowerConstants.headingPIDFCoefficients.setCoefficients(3.0, 0, 0.15, 0);
         // Secondary PID coefficients
-        FollowerConstants.secondaryDrivePIDFCoefficients.setCoefficients(0.010, 0, 0.00004, 0.6, 0);
+        FollowerConstants.secondaryDrivePIDFCoefficients.setCoefficients(0.015, 0, 0.000005, 0.6, 0);
         FollowerConstants.secondaryTranslationalPIDFCoefficients.setCoefficients(0.3, 0, 0.01, 0);
-        FollowerConstants.secondaryHeadingPIDFCoefficients.setCoefficients(3.0, 0, 0.15, 0);
+        FollowerConstants.secondaryHeadingPIDFCoefficients.setCoefficients(2, 0, 0.08, 0);
         // Centripetal force correction
         FollowerConstants.centripetalScaling = 0.0007;
     }
