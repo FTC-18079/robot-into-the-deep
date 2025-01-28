@@ -37,13 +37,13 @@ import org.firstinspires.ftc.teamcode.vision.LLVision;
 public class Auto_Left_4_0 extends AutoTemplate {
     // Poses
     private final Pose startingPose = new Pose(8, 104, Math.toRadians(0));
-    private final Pose scorePreloadPose = AutoConstants.BASKET_SCORE_POSE.copy();
-    private final Pose collectOnePose = new Pose(18.5, 119.75, Math.toRadians(0));
-    private final Pose scoreOnePose = AutoConstants.BASKET_SCORE_POSE.copy();
-    private final Pose collectTwoPose = new Pose(18.5, 127.5, Math.toRadians(0));
+    private final Pose scorePreloadPose = AutoConstants.BASKET_SCORE_POSE;
+    private final Pose collectOnePose = new Pose(17.5, 117, Math.toRadians(0));
+    private final Pose scoreOnePose = AutoConstants.BASKET_SCORE_POSE;
+    private final Pose collectTwoPose = new Pose(17.5, 125.25, Math.toRadians(0));
     private final Pose scoreTwoPose = AutoConstants.BASKET_SCORE_POSE;
-    private final Pose collectThreePose = new Pose(21.5, 125.5, Math.toRadians(27));
-    private final Pose scoreThreePose = AutoConstants.BASKET_SCORE_POSE.copy();
+    private final Pose collectThreePose = new Pose(21, 125, Math.toRadians(26));
+    private final Pose scoreThreePose = AutoConstants.BASKET_SCORE_POSE;
 
     // Paths
     private PathChain scorePreloadPath, collectOnePath, scoreOnePath, collectTwoPath, scoreTwoPath, collectThreePath, scoreThreePath, parkPath;
