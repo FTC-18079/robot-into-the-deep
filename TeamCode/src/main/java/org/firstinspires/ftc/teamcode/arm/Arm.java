@@ -223,12 +223,12 @@ public class Arm extends SubsystemIF {
             slideOutput = -alignmentPid.calculate(ty);
             if (slideOutput > 0 && getSlidePos() >= SLIDE_SAMPLE_COLLECT_POSITION) slideOutput = 0.0;
             if (Math.abs(ty) < ALIGN_ERROR_TOLERANCE) slideOutput = 0.0;
-        }
-        double slideFeedforward = SLIDE_kF * Math.sin(Math.toRadians(getPivotTarget() - PIVOT_REST_POSITION));
+        } else if (slideAtSetPoint()) slideOutput = 0;
+        double slideFeedforward = SLIDE_kF * Math.sin(Math.toRadians((getPivotTarget() - PIVOT_REST_POSITION) / PIVOT_GEAR_RATIO));
         if (state == ArmState.STOW) slideFeedforward = 0;
 
         double pivotOutput = pivotPid.calculate(getPivotPos());
-        double pivotFeedforward = PIVOT_kF * Math.cos(Math.toRadians(getPivotTarget() - PIVOT_REST_POSITION));
+        double pivotFeedforward = PIVOT_kF * Math.cos(Math.toRadians((getPivotTarget() - PIVOT_REST_POSITION) / PIVOT_GEAR_RATIO));
 
         if (!slideZeroing) setSlidePower(slideOutput + slideFeedforward);
 

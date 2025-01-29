@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.pedroPathing.tuning.FollowerConstants;
+import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,10 +67,10 @@ public class RobotMap {
 //        APRILTAG_CAMERA = hardwareMap.get(WebcamName.class, "arducam");
         LIMELIGHT = hardwareMap.get(Limelight3A.class, "limelight");
 
-        MOTOR_FL = hardwareMap.get(DcMotorEx.class, FollowerConstants.leftFrontMotorName);
-        MOTOR_FR = hardwareMap.get(DcMotorEx.class, FollowerConstants.rightFrontMotorName);
-        MOTOR_BL = hardwareMap.get(DcMotorEx.class, FollowerConstants.leftRearMotorName);
-        MOTOR_BR = hardwareMap.get(DcMotorEx.class, FollowerConstants.rightRearMotorName);
+        MOTOR_FL = hardwareMap.get(DcMotorEx.class, FConstants.MOTOR_FL_NAME);
+        MOTOR_FR = hardwareMap.get(DcMotorEx.class, FConstants.MOTOR_FR_NAME);
+        MOTOR_BL = hardwareMap.get(DcMotorEx.class, FConstants.MOTOR_BL_NAME);
+        MOTOR_BR = hardwareMap.get(DcMotorEx.class, FConstants.MOTOR_BR_NAME);
 
         LEFT_SLIDE = hardwareMap.get(DcMotorEx.class, "leftSlide");
         RIGHT_SLIDE = hardwareMap.get(DcMotorEx.class, "rightSlide");

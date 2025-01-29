@@ -6,7 +6,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Quaternion;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.RobotMap;
-import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.util.ATLivestream;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
@@ -20,6 +19,8 @@ import static org.firstinspires.ftc.teamcode.vision.VisionConstants.arducam_cy;
 import static org.firstinspires.ftc.teamcode.vision.VisionConstants.cameraPose;
 
 import android.util.Size;
+
+import com.pedropathing.localization.Pose;
 
 import java.util.List;
 

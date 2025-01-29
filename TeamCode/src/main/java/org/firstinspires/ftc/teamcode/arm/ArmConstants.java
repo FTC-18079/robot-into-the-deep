@@ -13,7 +13,7 @@ public class ArmConstants {
     public static double SLIDE_kP = 0.025;
     public static double SLIDE_kI = 0.0;
     public static double SLIDE_kD = 0.0003;
-    public static double SLIDE_kF = 0.15;
+    public static double SLIDE_kF = 0.1;
 
     // Alignment PID
     public static double ALIGN_kP = 0.03;

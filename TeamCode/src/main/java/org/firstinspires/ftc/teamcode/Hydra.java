@@ -18,7 +18,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.arm.Arm;
 import org.firstinspires.ftc.teamcode.arm.commands.ArmCommands;
 import org.firstinspires.ftc.teamcode.chassis.Chassis;
-import org.firstinspires.ftc.teamcode.chassis.commands.TeleOpDriveCommand;
+import org.firstinspires.ftc.teamcode.chassis.commands.TeleopDriveCommand;
 import org.firstinspires.ftc.teamcode.claw.Claw;
 import org.firstinspires.ftc.teamcode.claw.ClawConstants;
 import org.firstinspires.ftc.teamcode.util.SubsystemIF;
@@ -138,7 +138,7 @@ public class Hydra extends Robot {
         subsystems.forEach(SubsystemIF::onTeleopInit);
 
         // Chassis driving
-        Chassis.getInstance().setDefaultCommand(new TeleOpDriveCommand(
+        Chassis.getInstance().setDefaultCommand(new TeleopDriveCommand(
                 () -> applyResponseCurve(driveController.getLeftY(), DRIVE_SENSITIVITY),
                 () -> -applyResponseCurve(driveController.getLeftX(), DRIVE_SENSITIVITY),
                 () -> -applyResponseCurve(driveController.getRightX(), ROTATIONAL_SENSITIVITY) * ROTATION_DAMPEN
