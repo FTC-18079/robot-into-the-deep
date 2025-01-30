@@ -39,19 +39,19 @@ public class Auto_Right_0_3 extends AutoTemplate {
     private final Pose startingPose = new Pose(8, 64, Math.toRadians(180));
     private final Pose scorePreloadPose = CHAMBER_RIGHT_SCORE_POSE.copy();
     private final Pose behindOnePose = new Pose(62, 29, Math.toRadians(180));
-    private final Pose pushOnePose = new Pose(16, 29, Math.toRadians(180));
+    private final Pose pushOnePose = new Pose(24, 29, Math.toRadians(180));
     private final Pose behindTwoPose = new Pose(62, 19, Math.toRadians(180));
-    private final Pose pushTwoPose = new Pose(16, 19, Math.toRadians(180));
+    private final Pose pushTwoPose = new Pose(18, 19, Math.toRadians(180));
 //    private final Pose behindThreePose = new Pose(62, 9, Math.toRadians(180));
 //    private final Pose pushThreePose = new Pose(WALL_COLLECT_X_POSITION-1, 9, Math.toRadians(180));
     private final Pose collectOnePose = new Pose(WALL_COLLECT_X_POSITION, WALL_COLLECT_Y_POSITION, Math.toRadians(180));
-    private final Pose scoreOnePose = new Pose(CHAMBER_X_POSITION, CHAMBER_RIGHT_Y_POSITION - 2.5, Math.toRadians(180));
-    private final Pose collectTwoPose = new Pose(WALL_COLLECT_X_POSITION, WALL_COLLECT_Y_POSITION, Math.toRadians(180));
-    private final Pose scoreTwoPose = new Pose(CHAMBER_X_POSITION, CHAMBER_RIGHT_Y_POSITION - 5, Math.toRadians(180));
+    private final Pose scoreOnePose = new Pose(CHAMBER_X_POSITION, CHAMBER_RIGHT_Y_POSITION - 7, Math.toRadians(180));
+    private final Pose collectTwoPose = new Pose(WALL_COLLECT_X_POSITION - 1, WALL_COLLECT_Y_POSITION - 3, Math.toRadians(180));
+    private final Pose scoreTwoPose = new Pose(CHAMBER_X_POSITION, CHAMBER_RIGHT_Y_POSITION - 9, Math.toRadians(180));
 //    private final Pose collectThreePose = collectTwoPose;
 //    private final Pose scoreThreePose = new Pose(CHAMBER_X_POSITION, CHAMBER_RIGHT_Y_POSITION - 6, Math.toRadians(180));
     private final Pose parkingPose = OBVZONE_PARKING_POSE.copy();
-    private final Pose scoreControlPoint = new Pose(5.84415584,59.37662337662338, Math.toRadians(180));
+    private final Pose scoreControlPoint = new Pose(15,59.37662337662338, Math.toRadians(180));
 
     // Paths
     private PathChain scorePreloadPath;
@@ -71,8 +71,10 @@ public class Auto_Right_0_3 extends AutoTemplate {
     private PathChain collectOnePath;
 
     // Constants
-    public static double preloadMaxSpeed = 0.7; // Speed reduction on the preload path
-    public static long preloadPathDelay = 700; // Delay to allow for pivot to move before following first path
+    public static double preloadMaxSpeed = 0.9; // Speed reduction on the preload path
+    public static double scoreSpeed = 0.9;
+    public static long preloadPathDelay = 100; // Delay to allow for pivot to move before following first path
+    public static long collectDelay = 750;
 
     @Override
     protected Pose getStartingPose() {
@@ -86,7 +88,7 @@ public class Auto_Right_0_3 extends AutoTemplate {
         scorePreloadPath = follower.pathBuilder()
                 .addPath(new BezierCurve(new Point(startingPose), new Point(scorePreloadPose)))
                 .setConstantHeadingInterpolation(scorePreloadPose.getHeading())
-                .setPathEndTimeoutConstraint(800)
+                .setPathEndTimeoutConstraint(300)
                 .build();
 
         pushPath = follower.pathBuilder()
@@ -143,7 +145,7 @@ public class Auto_Right_0_3 extends AutoTemplate {
         scoreOnePath = follower.pathBuilder()
                 .addPath(new BezierCurve(new Point(collectOnePose), new Point(scoreControlPoint), new Point(scoreOnePose)))
                 .setConstantHeadingInterpolation(scoreOnePose.getHeading())
-                .setPathEndTimeoutConstraint(1000)
+                .setPathEndTimeoutConstraint(300)
                 .build();
 
         collectTwoPath = follower.pathBuilder()
@@ -154,7 +156,7 @@ public class Auto_Right_0_3 extends AutoTemplate {
         scoreTwoPath = follower.pathBuilder()
                 .addPath(new BezierCurve(new Point(collectTwoPose), new Point(scoreControlPoint) ,new Point(scoreTwoPose)))
                 .setConstantHeadingInterpolation(scoreTwoPose.getHeading())
-                .setPathEndTimeoutConstraint(1000)
+                .setPathEndTimeoutConstraint(300)
                 .build();
 
 //        collectThreePath = new Path(new BezierLine(new Point(scoreTwoPose), new Point(collectThreePose)));
@@ -193,13 +195,13 @@ public class Auto_Right_0_3 extends AutoTemplate {
                 // Collect first
                 new FollowPathCommand(collectOnePath),
                 Commands.defer(ArmCommands.STOW_TO_SPECIMEN_COLLECT, Arm.getInstance()),
-                Commands.waitMillis(1100),
+                Commands.waitMillis(collectDelay),
                 new AutoSpecimenCommand(),
                 Commands.defer(ArmCommands.GRAB, Arm.getInstance()),
                 // Score
                 Commands.parallel(
                         Commands.defer(ArmCommands.SPECIMEN_COLLECT_TO_CHAMBER, Arm.getInstance()),
-                        new FollowPathCommand(scoreOnePath, true, 0.8)
+                        new FollowPathCommand(scoreOnePath, true, scoreSpeed)
                 ),
                 Commands.defer(ArmCommands.SCORE_SPECIMEN, Arm.getInstance()),
                 // Collect second
@@ -207,18 +209,18 @@ public class Auto_Right_0_3 extends AutoTemplate {
                         new FollowPathCommand(collectTwoPath),
                         Commands.defer(ArmCommands.CHAMBER_TO_SPECIMEN_COLLECT, Arm.getInstance())
                 ),
-                Commands.waitMillis(1100),
+                Commands.waitMillis(collectDelay),
                 new AutoSpecimenCommand(),
                 Commands.defer(ArmCommands.GRAB, Arm.getInstance()),
                 // Score
                 Commands.parallel(
                         Commands.defer(ArmCommands.SPECIMEN_COLLECT_TO_CHAMBER, Arm.getInstance()),
-                        new FollowPathCommand(scoreTwoPath, true, 0.8)
+                        new FollowPathCommand(scoreTwoPath, true, scoreSpeed)
                 ),
                 Commands.defer(ArmCommands.SCORE_SPECIMEN, Arm.getInstance()),
                 // Park
                 Commands.parallel(
-                        new FollowPathCommand(parkingPath),
+                        new FollowPathCommand(parkingPath, false),
                         Commands.defer(ArmCommands.CHAMBER_TO_STOW, Arm.getInstance())
                 )
         );
