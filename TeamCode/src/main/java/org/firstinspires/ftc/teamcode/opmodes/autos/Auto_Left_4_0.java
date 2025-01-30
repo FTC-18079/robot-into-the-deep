@@ -6,7 +6,6 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Pose;
 import com.pedropathing.pathgen.BezierCurve;
 import com.pedropathing.pathgen.BezierLine;
-import com.pedropathing.pathgen.Path;
 import com.pedropathing.pathgen.PathChain;
 import com.pedropathing.pathgen.Point;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -38,11 +37,11 @@ public class Auto_Left_4_0 extends AutoTemplate {
     // Poses
     private final Pose startingPose = new Pose(8, 104, Math.toRadians(0));
     private final Pose scorePreloadPose = AutoConstants.BASKET_SCORE_POSE;
-    private final Pose collectOnePose = new Pose(17.5, 117, Math.toRadians(0));
+    private final Pose collectOnePose = new Pose(17.25, 117.25, Math.toRadians(0));
     private final Pose scoreOnePose = AutoConstants.BASKET_SCORE_POSE;
-    private final Pose collectTwoPose = new Pose(17.5, 125.25, Math.toRadians(0));
+    private final Pose collectTwoPose = new Pose(17, 126, Math.toRadians(0));
     private final Pose scoreTwoPose = AutoConstants.BASKET_SCORE_POSE;
-    private final Pose collectThreePose = new Pose(21, 125, Math.toRadians(26));
+    private final Pose collectThreePose = new Pose(18, 125, Math.toRadians(26));
     private final Pose scoreThreePose = AutoConstants.BASKET_SCORE_POSE;
 
     // Paths

@@ -221,6 +221,9 @@ public class ArmCommands {
                     return Commands.defer(STOW_TO_BASKET, arm.get());
                 case SCORING_SPECIMEN:
                     return Commands.defer(CHAMBER_TO_BASKET, arm.get());
+                case SCORING_SAMPLE:
+                    return new MovePivotCommand(() -> ArmConstants.PIVOT_SCORE_POSITION)
+                            .andThen(new MoveSlideCommand(() -> ArmConstants.SLIDE_BASKET_POSITION));
                 default:
                     return Commands.none();
             }
