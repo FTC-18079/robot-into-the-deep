@@ -12,6 +12,7 @@ public class AutoSpecimenCommand extends CommandBase {
     private final ElapsedTime timer;
 
     public static double COMMAND_TIMEOUT = 500;
+    public static double POWER = 0.5;
 
     public AutoSpecimenCommand() {
         arm = Arm.getInstance();
@@ -23,7 +24,7 @@ public class AutoSpecimenCommand extends CommandBase {
     public void initialize() {
         timer.reset();
         arm.slideZeroing = true;
-        arm.setSlidePower(0.3);
+        arm.setSlidePower(POWER);
     }
 
     @Override
