@@ -61,6 +61,9 @@ public abstract class AutoTemplate extends LinearOpMode {
         // Don't run anything without an alliance
         if (RobotStatus.alliance == NONE) RobotStatus.alliance = RobotStatus.Alliance.RED;
 
+        // Set the auto ran
+        setAutoRan();
+
         // Run robot
         while (opModeIsActive() && !isStopRequested()) {
             robot.periodic();
@@ -114,4 +117,6 @@ public abstract class AutoTemplate extends LinearOpMode {
     protected abstract void buildPaths();
 
     protected abstract Command makeAutoSequence();
+
+    protected abstract void setAutoRan();
 }

@@ -10,6 +10,7 @@ import com.pedropathing.pathgen.PathChain;
 import com.pedropathing.pathgen.Point;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.teamcode.RobotStatus;
 import org.firstinspires.ftc.teamcode.arm.Arm;
 import org.firstinspires.ftc.teamcode.arm.commands.ArmCommands;
 import org.firstinspires.ftc.teamcode.arm.commands.AutoSpecimenCommand;
@@ -202,5 +203,10 @@ public class Auto_Right_0_4 extends AutoTemplate {
 //                )
                 Commands.defer(ArmCommands.CHAMBER_TO_STOW, Arm.getInstance())
         );
+    }
+
+    @Override
+    protected void setAutoRan() {
+        RobotStatus.autoRan = RobotStatus.AutoRan.SPECIMEN;
     }
 }
