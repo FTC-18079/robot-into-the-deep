@@ -12,7 +12,7 @@ public class AutoConstants {
     public static double CHAMBER_X_POSITION = 31;
     public static double CHAMBER_RIGHT_Y_POSITION = 74;
 
-    public static final Pose BASKET_SCORE_POSE = new Pose(14.25, 120.5, Math.toRadians(315));
+    public static final Pose BASKET_SCORE_POSE = new Pose(15, 121.25, Math.toRadians(315));
     public static final Pose CHAMBER_LEFT_SCORE_POSE = new Pose(CHAMBER_X_POSITION, 80, Math.toRadians(180));
     public static final Pose CHAMBER_RIGHT_SCORE_POSE = new Pose(CHAMBER_X_POSITION, CHAMBER_RIGHT_Y_POSITION, Math.toRadians(180));
 
