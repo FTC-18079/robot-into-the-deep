@@ -58,7 +58,7 @@ public class ArmConstants {
     public static double PIVOT_TIMEOUT = 1500;
 
     // Positions
-    public static double PIVOT_REST_POSITION = 10;
+    public static double PIVOT_REST_POSITION = 24;
     public static final double PIVOT_REST_TO_SCORE_OFFSET = 150.0;
     public static double PIVOT_SCORE_POSITION = PIVOT_REST_POSITION + PIVOT_REST_TO_SCORE_OFFSET;
     public static double PIVOT_CLIMBED_POSITION = PIVOT_SCORE_POSITION - 30;

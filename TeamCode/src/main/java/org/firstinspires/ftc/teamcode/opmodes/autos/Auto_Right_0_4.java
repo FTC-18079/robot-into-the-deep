@@ -6,7 +6,6 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Pose;
 import com.pedropathing.pathgen.BezierCurve;
 import com.pedropathing.pathgen.BezierLine;
-import com.pedropathing.pathgen.Path;
 import com.pedropathing.pathgen.PathChain;
 import com.pedropathing.pathgen.Point;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -34,7 +33,7 @@ import static org.firstinspires.ftc.teamcode.autonomous.AutoConstants.*;
 
 @Config
 @Autonomous(name = "Right Side 0+4 Spec", group = "Auto")
-public class Auto_Right_0_3 extends AutoTemplate {
+public class Auto_Right_0_4 extends AutoTemplate {
     private Follower follower;
 
     // Poses
@@ -44,11 +43,11 @@ public class Auto_Right_0_3 extends AutoTemplate {
     private final Pose pushOnePose = new Pose(25, 29, Math.toRadians(180));
     private final Pose behindTwoPose = new Pose(62, 19, Math.toRadians(180));
     private final Pose pushTwoPose = new Pose(19, 19, Math.toRadians(180));
-    private final Pose collectOnePose = new Pose(WALL_COLLECT_X_POSITION, WALL_COLLECT_Y_POSITION, Math.toRadians(180));
+    private final Pose collectOnePose = new Pose(WALL_COLLECT_X_POSITION + 0.5, WALL_COLLECT_Y_POSITION, Math.toRadians(180));
     private final Pose scoreOnePose = new Pose(CHAMBER_X_POSITION, CHAMBER_RIGHT_Y_POSITION - 8, Math.toRadians(180));
-    private final Pose collectTwoPose = new Pose(WALL_COLLECT_X_POSITION - 1.5, WALL_COLLECT_Y_POSITION - 3, Math.toRadians(180));
+    private final Pose collectTwoPose = new Pose(WALL_COLLECT_X_POSITION, WALL_COLLECT_Y_POSITION - 3, Math.toRadians(180));
     private final Pose scoreTwoPose = new Pose(CHAMBER_X_POSITION, CHAMBER_RIGHT_Y_POSITION - 7, Math.toRadians(180));
-    private final Pose collectThreePose = new Pose(WALL_COLLECT_X_POSITION - 1.5, WALL_COLLECT_Y_POSITION - 5, Math.toRadians(180));
+    private final Pose collectThreePose = new Pose(WALL_COLLECT_X_POSITION, WALL_COLLECT_Y_POSITION - 5, Math.toRadians(180));
     private final Pose scoreThreePose = new Pose(CHAMBER_X_POSITION - 0.75, CHAMBER_RIGHT_Y_POSITION - 6, Math.toRadians(180));
     private final Pose parkingPose = OBVZONE_PARKING_POSE.copy();
     private final Pose scoreControlPoint = new Pose(15,59.37662337662338, Math.toRadians(180));
