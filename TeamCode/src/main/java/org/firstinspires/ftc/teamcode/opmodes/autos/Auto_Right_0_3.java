@@ -33,7 +33,7 @@ import static org.firstinspires.ftc.teamcode.autonomous.AutoConstants.*;
  */
 
 @Config
-@Autonomous(name = "Right Side 0+3", group = "Auto")
+@Autonomous(name = "Right Side 0+4 Spec", group = "Auto")
 public class Auto_Right_0_3 extends AutoTemplate {
     private Follower follower;
 
@@ -41,15 +41,15 @@ public class Auto_Right_0_3 extends AutoTemplate {
     private final Pose startingPose = new Pose(8, 64, Math.toRadians(180));
     private final Pose scorePreloadPose = CHAMBER_RIGHT_SCORE_POSE.copy();
     private final Pose behindOnePose = new Pose(62, 29, Math.toRadians(180));
-    private final Pose pushOnePose = new Pose(24, 29, Math.toRadians(180));
+    private final Pose pushOnePose = new Pose(25, 29, Math.toRadians(180));
     private final Pose behindTwoPose = new Pose(62, 19, Math.toRadians(180));
-    private final Pose pushTwoPose = new Pose(18, 19, Math.toRadians(180));
+    private final Pose pushTwoPose = new Pose(19, 19, Math.toRadians(180));
     private final Pose collectOnePose = new Pose(WALL_COLLECT_X_POSITION, WALL_COLLECT_Y_POSITION, Math.toRadians(180));
-    private final Pose scoreOnePose = new Pose(CHAMBER_X_POSITION, CHAMBER_RIGHT_Y_POSITION - 7, Math.toRadians(180));
+    private final Pose scoreOnePose = new Pose(CHAMBER_X_POSITION, CHAMBER_RIGHT_Y_POSITION - 8, Math.toRadians(180));
     private final Pose collectTwoPose = new Pose(WALL_COLLECT_X_POSITION - 1.5, WALL_COLLECT_Y_POSITION - 3, Math.toRadians(180));
-    private final Pose scoreTwoPose = new Pose(CHAMBER_X_POSITION, CHAMBER_RIGHT_Y_POSITION - 9, Math.toRadians(180));
+    private final Pose scoreTwoPose = new Pose(CHAMBER_X_POSITION, CHAMBER_RIGHT_Y_POSITION - 7, Math.toRadians(180));
     private final Pose collectThreePose = new Pose(WALL_COLLECT_X_POSITION - 1.5, WALL_COLLECT_Y_POSITION - 5, Math.toRadians(180));
-    private final Pose scoreThreePose = new Pose(CHAMBER_X_POSITION - 0.5, CHAMBER_RIGHT_Y_POSITION - 11, Math.toRadians(180));
+    private final Pose scoreThreePose = new Pose(CHAMBER_X_POSITION - 0.75, CHAMBER_RIGHT_Y_POSITION - 6, Math.toRadians(180));
     private final Pose parkingPose = OBVZONE_PARKING_POSE.copy();
     private final Pose scoreControlPoint = new Pose(15,59.37662337662338, Math.toRadians(180));
 
@@ -67,9 +67,9 @@ public class Auto_Right_0_3 extends AutoTemplate {
     // Constants
     public static double preloadMaxSpeed = 0.9; // Speed reduction on the preload path
     public static double scoreSpeed = 0.85;
-    public static double timeout = 200;
+    public static double timeout = 250;
     public static long preloadPathDelay = 100; // Delay to allow for pivot to move before following first path
-    public static long collectDelay = 500;
+    public static long collectDelay = 425;
 
     @Override
     protected Pose getStartingPose() {
@@ -83,7 +83,7 @@ public class Auto_Right_0_3 extends AutoTemplate {
         scorePreloadPath = follower.pathBuilder()
                 .addPath(new BezierCurve(new Point(startingPose), new Point(scorePreloadPose)))
                 .setConstantHeadingInterpolation(scorePreloadPose.getHeading())
-                .setPathEndTimeoutConstraint(timeout)
+                .setPathEndTimeoutConstraint(0)
                 .build();
 
         pushPath = follower.pathBuilder()
@@ -153,7 +153,7 @@ public class Auto_Right_0_3 extends AutoTemplate {
                 ),
                 Commands.defer(ArmCommands.SCORE_SPECIMEN),
                 Commands.parallel(
-                        new FollowPathCommand(pushPath, false, 1),
+                        new FollowPathCommand(pushPath, false, 1).interruptOn(follower::isRobotStuck),
                         Commands.defer(ArmCommands.CHAMBER_TO_STOW)
                 ),
                 // Collect first
@@ -165,7 +165,7 @@ public class Auto_Right_0_3 extends AutoTemplate {
                 // Score
                 Commands.parallel(
                         Commands.defer(ArmCommands.SPECIMEN_COLLECT_TO_CHAMBER, Arm.getInstance()),
-                        new FollowPathCommand(scoreOnePath, true, scoreSpeed)
+                        new FollowPathCommand(scoreOnePath, true, scoreSpeed).interruptOn(follower::isRobotStuck)
                 ),
                 Commands.defer(ArmCommands.SCORE_SPECIMEN, Arm.getInstance()),
                 // Collect second
@@ -179,7 +179,7 @@ public class Auto_Right_0_3 extends AutoTemplate {
                 // Score
                 Commands.parallel(
                         Commands.defer(ArmCommands.SPECIMEN_COLLECT_TO_CHAMBER, Arm.getInstance()),
-                        new FollowPathCommand(scoreTwoPath, true, scoreSpeed)
+                        new FollowPathCommand(scoreTwoPath, true, scoreSpeed).interruptOn(follower::isRobotStuck)
                 ),
                 Commands.defer(ArmCommands.SCORE_SPECIMEN, Arm.getInstance()),
                 // Collect third
@@ -193,14 +193,15 @@ public class Auto_Right_0_3 extends AutoTemplate {
                 // Score
                 Commands.parallel(
                         Commands.defer(ArmCommands.SPECIMEN_COLLECT_TO_CHAMBER, Arm.getInstance()),
-                        new FollowPathCommand(scoreThreePath, true, scoreSpeed)
+                        new FollowPathCommand(scoreThreePath, true, scoreSpeed).interruptOn(follower::isRobotStuck)
                 ),
                 Commands.defer(ArmCommands.SCORE_SPECIMEN, Arm.getInstance()),
                 // Park
-                Commands.parallel(
-                        new FollowPathCommand(parkingPath, false),
-                        Commands.defer(ArmCommands.CHAMBER_TO_STOW, Arm.getInstance())
-                )
+//                Commands.parallel(
+//                        new FollowPathCommand(parkingPath, false),
+//                        Commands.defer(ArmCommands.CHAMBER_TO_STOW, Arm.getInstance())
+//                )
+                Commands.defer(ArmCommands.CHAMBER_TO_STOW, Arm.getInstance())
         );
     }
 }

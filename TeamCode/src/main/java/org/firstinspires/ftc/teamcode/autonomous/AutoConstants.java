@@ -31,9 +31,9 @@ public class AutoConstants {
     public static final Pose RIGHT_NEUTRAL_SAMPLE = new Pose(46, 121.25);
 
     // Specimen collect poses
-    public static double WALL_COLLECT_X_POSITION = 22.5;
+    public static double WALL_COLLECT_X_POSITION = 21.5;
     public static double WALL_COLLECT_X_POSITION_2 = 22.5;
-    public static double WALL_COLLECT_Y_POSITION = 35.5;
+    public static double WALL_COLLECT_Y_POSITION = 34.75;
 
     public static Pose checkAlliance(Pose pose) {
         if (RobotStatus.alliance == RobotStatus.Alliance.RED) return toRed(pose);

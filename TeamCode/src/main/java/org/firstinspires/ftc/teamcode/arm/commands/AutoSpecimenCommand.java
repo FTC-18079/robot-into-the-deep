@@ -27,9 +27,13 @@ public class AutoSpecimenCommand extends CommandBase {
         arm.setSlidePower(POWER);
     }
 
+    private boolean isStopped() {
+        return timer.milliseconds() > 15 && arm.getSlideVelocity() <= 30;
+    }
+
     @Override
     public boolean isFinished() {
-        return timer.milliseconds() >= COMMAND_TIMEOUT;
+        return timer.milliseconds() >= COMMAND_TIMEOUT /* || isStopped() */;
     }
 
     @Override
