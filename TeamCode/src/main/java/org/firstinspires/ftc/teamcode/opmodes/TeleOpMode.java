@@ -43,6 +43,8 @@ public class TeleOpMode extends LinearOpMode {
         gamepad1.setLedColor(1, 1, 0, -1);
         gamepad2.setLedColor(1, 1, 0, -1);
 
+        RobotStatus.autoRan = RobotStatus.AutoRan.NONE;
+
         // LOOP
         while (opModeIsActive()) {
             hydra.periodic();
