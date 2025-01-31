@@ -64,6 +64,10 @@ public class Chassis extends SubsystemIF {
         return follower.isBusy();
     }
 
+    public boolean isRobotStuck() {
+        return follower.isRobotStuck();
+    }
+
     public boolean isFieldCentric() {
         return isFieldCentric;
     }
