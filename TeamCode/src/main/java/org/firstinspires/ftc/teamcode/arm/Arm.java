@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.arm;
 
 import static org.firstinspires.ftc.teamcode.arm.ArmConstants.*;
 
+import com.arcrobotics.ftclib.command.Command;
+import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -10,6 +12,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Hydra;
 import org.firstinspires.ftc.teamcode.RobotMap;
 import org.firstinspires.ftc.teamcode.RobotStatus;
+import org.firstinspires.ftc.teamcode.arm.commands.MovePivotCommand;
 import org.firstinspires.ftc.teamcode.arm.commands.MoveSlideCommand;
 import org.firstinspires.ftc.teamcode.arm.commands.SlideZeroCommand;
 import org.firstinspires.ftc.teamcode.util.SubsystemIF;
@@ -83,12 +86,27 @@ public class Arm extends SubsystemIF {
         setPivotPos(getPivotPos());
         slidePid.setSetPoint(getSlidePos());
 
-        Commands.sequence(
-                Commands.waitUntil(RobotStatus::isEnabled),
-                Commands.runOnce(() -> setState(ArmState.SCORING_SAMPLE)),
-                new MoveSlideCommand(() -> SLIDE_CHAMBER_POSITION + 150)
-                //wait until enabled, then zero
-        ).schedule();
+        Command cmd;
+        switch (RobotStatus.autoRan) {
+            case SAMPLE:
+                cmd = Commands.sequence(
+                        Commands.waitUntil(RobotStatus::isEnabled),
+                        Commands.runOnce(() -> setState(ArmState.SCORING_SAMPLE)),
+                        new MoveSlideCommand(() -> SLIDE_CHAMBER_POSITION + 150)
+                );
+                break;
+            case SPECIMEN:
+                cmd = Commands.sequence(
+                        Commands.waitUntil(RobotStatus::isEnabled),
+                        Commands.runOnce(() -> setState(ArmState.STOW)),
+                        new MovePivotCommand(() -> PIVOT_REST_POSITION)
+                );
+                break;
+            default:
+                cmd = Commands.none();
+                break;
+        }
+        cmd.schedule();
 
         lastPivotPos = pivot.getPosition();
     }

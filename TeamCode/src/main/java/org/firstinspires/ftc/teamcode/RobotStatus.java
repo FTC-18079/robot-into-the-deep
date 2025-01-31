@@ -11,8 +11,8 @@ public class RobotStatus {
         DISABLED, AUTONOMOUS_INIT, AUTONOMOUS_ENABLED, TELEOP_INIT, TELEOP_ENABLED
     }
 
-    public enum ClimbState {
-        DISABLED, STARTED, ENGAGED, READY, CLIMBING, CLIMBED
+    public enum AutoRan {
+        NONE, SAMPLE, SPECIMEN
     }
 
     public static long delayMs = 0;
@@ -20,7 +20,7 @@ public class RobotStatus {
     public static RobotState robotState = RobotState.DISABLED;
     public static boolean liveView = false;
     public static Pose robotPose = new Pose();
-    public static ClimbState climbState = ClimbState.DISABLED;
+    public static AutoRan autoRan = AutoRan.NONE;
 
     public static void resetValues() {
         delayMs = 0;
@@ -28,15 +28,7 @@ public class RobotStatus {
         robotState = RobotState.DISABLED;
         liveView = false;
         robotPose = new Pose();
-        climbState = ClimbState.DISABLED;
-    }
-
-    public static void setClimbState(ClimbState state) {
-        climbState = state;
-    }
-
-    public static boolean isClimbReady() {
-        return climbState == ClimbState.READY;
+        autoRan = AutoRan.NONE;
     }
 
     public static boolean isEnabled() {

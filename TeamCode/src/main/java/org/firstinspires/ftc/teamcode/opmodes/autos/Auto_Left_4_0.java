@@ -10,6 +10,7 @@ import com.pedropathing.pathgen.PathChain;
 import com.pedropathing.pathgen.Point;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.teamcode.RobotStatus;
 import org.firstinspires.ftc.teamcode.arm.Arm;
 import org.firstinspires.ftc.teamcode.arm.ArmConstants;
 import org.firstinspires.ftc.teamcode.arm.commands.ArmCommands;
@@ -184,5 +185,10 @@ public class Auto_Left_4_0 extends AutoTemplate {
     @Override
     protected Pose getStartingPose() {
         return startingPose;
+    }
+
+    @Override
+    protected void setAutoRan() {
+        RobotStatus.autoRan = RobotStatus.AutoRan.SAMPLE;
     }
 }
