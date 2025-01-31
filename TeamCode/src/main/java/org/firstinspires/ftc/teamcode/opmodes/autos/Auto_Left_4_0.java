@@ -33,7 +33,7 @@ import org.firstinspires.ftc.teamcode.vision.LLVision;
  */
 
 @Config
-@Autonomous(name = "Left Side 4+0", group = "Auto")
+@Autonomous(name = "Left Side 4+0 Sample", group = "Auto")
 public class Auto_Left_4_0 extends AutoTemplate {
     // Poses
     private final Pose startingPose = new Pose(8, 104, Math.toRadians(0));
