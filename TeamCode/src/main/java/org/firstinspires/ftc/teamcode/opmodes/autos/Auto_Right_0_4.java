@@ -81,9 +81,9 @@ public class Auto_Right_0_4 extends AutoTemplate {
         follower = Chassis.getInstance().getFollower();
 
         scorePreloadPath = follower.pathBuilder()
-                .addPath(new BezierCurve(new Point(startingPose), new Point(scorePreloadPose)))
+                .addPath(new BezierLine(new Point(startingPose), new Point(scorePreloadPose)))
                 .setConstantHeadingInterpolation(scorePreloadPose.getHeading())
-                .setPathEndTimeoutConstraint(0)
+                .setPathEndTimeoutConstraint(timeout)
                 .build();
 
         pushPath = follower.pathBuilder()
