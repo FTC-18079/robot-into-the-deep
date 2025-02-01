@@ -45,10 +45,10 @@ public class Auto_Right_0_4 extends AutoTemplate {
     private final Pose behindTwoPose = new Pose(62, 18, Math.toRadians(180));
     private final Pose pushTwoPose = new Pose(19, 18.5, Math.toRadians(180));
     private final Pose collectOnePose = new Pose(WALL_COLLECT_X_POSITION + 0.5, WALL_COLLECT_Y_POSITION, Math.toRadians(180));
-    private final Pose scoreOnePose = new Pose(CHAMBER_X_POSITION, CHAMBER_RIGHT_Y_POSITION - 8, Math.toRadians(180));
+    private final Pose scoreOnePose = new Pose(CHAMBER_X_POSITION + 0.75, CHAMBER_RIGHT_Y_POSITION - 8, Math.toRadians(180));
     private final Pose collectTwoPose = new Pose(WALL_COLLECT_X_POSITION - 0.5, WALL_COLLECT_Y_POSITION - 3, Math.toRadians(180));
     private final Pose scoreTwoPose = new Pose(CHAMBER_X_POSITION, CHAMBER_RIGHT_Y_POSITION - 7, Math.toRadians(180));
-    private final Pose collectThreePose = new Pose(WALL_COLLECT_X_POSITION - 0.5, WALL_COLLECT_Y_POSITION - 5, Math.toRadians(180));
+    private final Pose collectThreePose = new Pose(WALL_COLLECT_X_POSITION, WALL_COLLECT_Y_POSITION - 5, Math.toRadians(180));
     private final Pose scoreThreePose = new Pose(CHAMBER_X_POSITION - 0.75, CHAMBER_RIGHT_Y_POSITION - 6.5, Math.toRadians(180));
     private final Pose parkingPose = OBVZONE_PARKING_POSE.copy();
     private final Pose scoreControlPoint = new Pose(15,59.37662337662338, Math.toRadians(180));
@@ -66,10 +66,10 @@ public class Auto_Right_0_4 extends AutoTemplate {
 
     // Constants
     public static double preloadMaxSpeed = 0.9; // Speed reduction on the preload path
-    public static double scoreSpeed = 0.85;
+    public static double scoreSpeed = 0.95;
     public static double timeout = 250;
     public static long preloadPathDelay = 100; // Delay to allow for pivot to move before following first path
-    public static long collectDelay = 425;
+    public static long collectDelay = 400;
 
     @Override
     protected Pose getStartingPose() {
@@ -87,7 +87,7 @@ public class Auto_Right_0_4 extends AutoTemplate {
                 .build();
 
         pushPath = follower.pathBuilder()
-                .addPath(new BezierCurve(new Point(scorePreloadPose), new Point(27, 13, Point.CARTESIAN), new Point(64, 44, Point.CARTESIAN), new Point(behindOnePose)))
+                .addPath(new BezierCurve(new Point(scorePreloadPose), new Point(23, 13, Point.CARTESIAN), new Point(64, 44, Point.CARTESIAN), new Point(behindOnePose)))
                 .setConstantHeadingInterpolation(scorePreloadPose.getHeading())
                 .setPathEndTimeoutConstraint(0)
                 .addPath(new BezierLine(new Point(behindOnePose), new Point(pushOnePose)))
