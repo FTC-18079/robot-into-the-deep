@@ -51,6 +51,8 @@ public class ArmCommands {
     public static Command TO_COLLECT;
     public static Command ARM_ACTION;
 
+    public static Command CLOSE_COLLECT;
+
     static {
         Supplier<Arm> arm = Arm::getInstance;
         Supplier<Claw> claw = Claw::getInstance;
@@ -250,6 +252,16 @@ public class ArmCommands {
                 } else {
                     return Commands.defer(STOW_TO_SAMPLE_COLLECT, arm.get());
                 }
+            } else return Commands.none();
+        });
+
+        CLOSE_COLLECT = Commands.deferredProxy(() -> {
+            if (arm.get().getState() == Arm.ArmState.STOW) {
+                return Commands.sequence(
+                    Commands.runOnce(() -> claw.get().setState(ClawConstants.SAMPLE_COLLECTING_STATE)),
+                    new MoveSlideCommand(() -> ArmConstants.SLIDE_CLOSE_SAMPLE_COLLECT_POSITION),
+                    Commands.runOnce(() -> arm.get().setState(Arm.ArmState.COLLECTING_SAMPLE))
+                );
             } else return Commands.none();
         });
 

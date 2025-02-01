@@ -31,10 +31,11 @@ public class ArmConstants {
     // Positions
     public static double SLIDE_REST_POSITION = 10.0;
     public static double SLIDE_SAMPLE_COLLECT_POSITION = 1090.0;
+    public static double SLIDE_CLOSE_SAMPLE_COLLECT_POSITION = 420;
     public static double SLIDE_SPECIMEN_COLLECT_POSITION = 350;
     public static double SLIDE_CHAMBER_POSITION = 430;
     public static double SLIDE_CHAMBER_SCORE_OFFSET = 350;
-    public static double SLIDE_BASKET_POSITION = 1350;
+    public static double SLIDE_BASKET_POSITION = 1380;
 
     // Climb
     public static double SLIDE_CLIMB_POSITION = 550;
