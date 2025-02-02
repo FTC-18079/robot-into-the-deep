@@ -14,4 +14,4 @@ This repo contains all the code for our Into the Deep robot, HYDRA. Take a look,
 To use this Android Studio project, you will need Android Studio Ladybug (2024.2) or later.
 
 ## Libraries
-Along with the FTC SDK, we use [PedroPathing](https://pedropathing.com) for localization and autonomous pathing and [FTCLib](https://docs.ftclib.orgftclib) for command-based programming and control loops.
+Along with the FTC SDK, we use [PedroPathing](https://pedropathing.com) for localization and autonomous pathing and [FTCLib](https://docs.ftclib.org/ftclib) for command-based programming and control loops.
