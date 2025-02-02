@@ -175,6 +175,10 @@ public class Hydra extends Robot {
                         () -> Arm.getInstance().getState() == Arm.ArmState.SCORING_SAMPLE
                 ));
 
+        // Close collect button
+        new Trigger(() -> manipController.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > TRIGGER_DEADZONE)
+                .whenActive(ArmCommands.CLOSE_COLLECT);
+
 //        manipController.getGamepadButton(GamepadKeys.Button.START)
 //                .whenPressed(Arm.getInstance()::resetPivotEncoder);
 //                .whenPressed(new PivotZeroCommand());

@@ -38,11 +38,11 @@ public class Auto_Left_4_0 extends AutoTemplate {
     // Poses
     private final Pose startingPose = new Pose(8, 104, Math.toRadians(0));
     private final Pose scorePreloadPose = AutoConstants.BASKET_SCORE_POSE;
-    private final Pose collectOnePose = new Pose(17.25, 117.75, Math.toRadians(0));
+    private final Pose collectOnePose = new Pose(17.5, 118.75, Math.toRadians(0));
     private final Pose scoreOnePose = AutoConstants.BASKET_SCORE_POSE;
-    private final Pose collectTwoPose = new Pose(17, 126, Math.toRadians(0));
+    private final Pose collectTwoPose = new Pose(17.25, 127.5, Math.toRadians(0));
     private final Pose scoreTwoPose = AutoConstants.BASKET_SCORE_POSE;
-    private final Pose collectThreePose = new Pose(18, 125, Math.toRadians(26));
+    private final Pose collectThreePose = new Pose(20.25, 125, Math.toRadians(26));
     private final Pose scoreThreePose = AutoConstants.BASKET_SCORE_POSE;
 
     // Paths
@@ -157,8 +157,7 @@ public class Auto_Left_4_0 extends AutoTemplate {
                 ),
                 Commands.defer(ArmCommands.STOW_TO_SAMPLE_COLLECT, Arm.getInstance()),
                 // Collect third
-                Commands.runOnce(() -> LLVision.getInstance().setClawOverride(1.0)),
-//                Commands.runOnce(() -> LLVision.getInstance().setClawOverride(0.4)),
+                Commands.runOnce(() -> LLVision.getInstance().setClawOverride(1)),
                 Commands.waitMillis(collectDelay),
                 Commands.defer(ArmCommands.COLLECT_SAMPLE, Claw.getInstance()),
                 Commands.defer(ArmCommands.GRAB, Claw.getInstance()),
