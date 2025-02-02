@@ -66,7 +66,7 @@ public class Auto_Right_0_4 extends AutoTemplate {
 
     // Constants
     public static double preloadMaxSpeed = 0.9; // Speed reduction on the preload path
-    public static double scoreSpeed = 0.95;
+    public static double scoreSpeed = 0.85;
     public static double timeout = 250;
     public static long preloadPathDelay = 100; // Delay to allow for pivot to move before following first path
     public static long collectDelay = 400;
