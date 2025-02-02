@@ -25,7 +25,7 @@ Aside from tuning/testing OpModes, we have four actual competition OpModes:
 ## OpModes
 
 Aside from tuning/testing OpModes, we have four actual competition OpModes:
-- [`TeleOp`](TeleOpMode.java)
-- [`Sample Auto`](Auto_Left_4_0.java)
-- [`Specimen Auto`](Auto_Right_0_4.java)
-- [`Hybrid Auto`](Auto_Left_3_1.java) (Note that this one has not been worked on or ran since LM2)
+- [`TeleOp`](opmodes/TeleOpMode.java)
+- [`Sample Auto`](opmodes/autos/Auto_Left_4_0.java)
+- [`Specimen Auto`](opmodes/autos/Auto_Right_0_4.java)
+- [`Hybrid Auto`](opmodes/autos/Auto_Left_3_1.java) (Note that this one has not been worked on or ran since LM2)
