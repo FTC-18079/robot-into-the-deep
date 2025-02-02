@@ -6,7 +6,7 @@ This module contains all the actual robot code
 - [`arm`](arm) - contains all functionality and commands for the pivoting arm and slides
 - [`autonomous`](autonomous) - contains our auto sequences
 - [`chassis`](chassis) - contains all functionality and commands for the chassis (glorified follower wrapper)
-- [`TeamCode/src/main/java/org/firstinspires/ftc/teamcode/claw`](claw) - contains all functionality for the claw
+- [`claw`](claw) - contains all functionality for the claw
 - [`opmodes`](opmodes) - you'll never guess
 - [`pedroPathing`](pedroPathing) - contains constants and tuners for PedroPathing
 - [`util`](util) - contains utility classes for the robot
