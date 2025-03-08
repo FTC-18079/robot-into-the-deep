@@ -2,21 +2,27 @@ package org.firstinspires.ftc.teamcode.opmodes;
 
 import static org.firstinspires.ftc.teamcode.RobotStatus.Alliance.*;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Hydra;
 import org.firstinspires.ftc.teamcode.RobotStatus;
+import org.firstinspires.ftc.teamcode.chassis.Chassis;
 
-@TeleOp(name = "Teleop", group = "A")
-public class TeleOpMode extends LinearOpMode {
+@Config
+@TeleOp(name = "Teleop Solo", group = "A")
+public class TeleOpModeSolo extends LinearOpMode {
+    public static double VELOCITY_MULTIPLIER = 0.6;
+
     private final Hydra robot = Hydra.getInstance();
     private boolean lastSquare = false;
 
     @Override
     public void runOpMode() {
         // INIT
-        robot.teleopInit(telemetry, hardwareMap, gamepad1, gamepad2);
+        // Pass in the same gamepad twice to register as single driver
+        robot.teleopInit(telemetry, hardwareMap, gamepad1, gamepad1);
 
         // INIT LOOP
         while (opModeInInit()) {
@@ -44,6 +50,8 @@ public class TeleOpMode extends LinearOpMode {
         gamepad2.setLedColor(1, 1, 0, -1);
 
         RobotStatus.autoRan = RobotStatus.AutoRan.NONE;
+
+        Chassis.getInstance().setVelocityMultiplier(VELOCITY_MULTIPLIER);
 
         // LOOP
         while (opModeIsActive()) {
