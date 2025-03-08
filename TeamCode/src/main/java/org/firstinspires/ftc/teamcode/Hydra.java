@@ -119,6 +119,8 @@ public class Hydra extends Robot {
 
     // Runs teleop initialization sequence and binds controls
     public void teleopInit(Telemetry telemetry, HardwareMap hardwareMap, Gamepad drive, Gamepad manip) {
+        boolean singleController = drive.equals(manip);
+
         reset();
         registerSubsystems();
         RobotStatus.robotState = RobotStatus.RobotState.TELEOP_INIT;
@@ -143,9 +145,12 @@ public class Hydra extends Robot {
                 () -> -applyResponseCurve(driveController.getLeftX(), DRIVE_SENSITIVITY),
                 () -> -applyResponseCurve(driveController.getRightX(), ROTATIONAL_SENSITIVITY) * ROTATION_DAMPEN
         ));
-        new Trigger(() -> driveController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > TRIGGER_DEADZONE)
-                .whenActive(Chassis.getInstance()::enableSlowMode)
-                .whenInactive(Chassis.getInstance()::disableSlowMode);
+
+        if (!singleController) {
+            new Trigger(() -> driveController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > TRIGGER_DEADZONE)
+                    .whenActive(Chassis.getInstance()::enableSlowMode)
+                    .whenInactive(Chassis.getInstance()::disableSlowMode);
+        }
 
         // Reset chassis heading
         driveController.getGamepadButton(GamepadKeys.Button.Y)
@@ -153,7 +158,7 @@ public class Hydra extends Robot {
                 .whenPressed(Chassis.getInstance()::resetHeading);
 
         // Toggle field centric
-        driveController.getGamepadButton(GamepadKeys.Button.B)
+        driveController.getGamepadButton(GamepadKeys.Button.A)
                 .whenPressed(Commands.runOnce(() -> rumble(300, driveController)))
                 .whenPressed(Chassis.getInstance()::toggleFieldCentric);
 
@@ -178,10 +183,6 @@ public class Hydra extends Robot {
         // Close collect button
         new Trigger(() -> manipController.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > TRIGGER_DEADZONE)
                 .whenActive(ArmCommands.CLOSE_COLLECT);
-
-//        manipController.getGamepadButton(GamepadKeys.Button.START)
-//                .whenPressed(Arm.getInstance()::resetPivotEncoder);
-//                .whenPressed(new PivotZeroCommand());
 
         // Switch game pieces
         manipController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)

@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.chassis;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Pose;
+import com.pedropathing.pathgen.MathFunctions;
 import com.pedropathing.pathgen.Path;
 import com.pedropathing.pathgen.PathChain;
 import com.pedropathing.util.Constants;
@@ -18,7 +19,7 @@ public class Chassis extends SubsystemIF {
     private Follower follower;
     private Telemetry telemetry;
     private boolean isFieldCentric;
-    private double m = 1.0;
+    private double velocityMultiplier = 1.0;
 
     private static final Chassis INSTANCE = new Chassis();
 
@@ -83,7 +84,7 @@ public class Chassis extends SubsystemIF {
     }
 
     public void setDriveVectors(double fwd, double str, double rot) {
-        follower.setTeleOpMovementVectors(fwd * m, str * m, rot * m, !isFieldCentric);
+        follower.setTeleOpMovementVectors(fwd * velocityMultiplier, str * velocityMultiplier, rot * velocityMultiplier, !isFieldCentric);
     }
 
     public void resetHeading() {
@@ -91,12 +92,16 @@ public class Chassis extends SubsystemIF {
         follower.setPose(new Pose(oldPose.getX(), oldPose.getY()));
     }
 
+    public void setVelocityMultiplier(double multiplier) {
+        velocityMultiplier = MathFunctions.clamp(multiplier, 0d, 1d);
+    }
+
     public void enableSlowMode() {
-        m = 0.25;
+        setVelocityMultiplier(0.25);
     }
 
     public void disableSlowMode() {
-        m = 1.0;
+        setVelocityMultiplier(1.0);
     }
 
     // PATHING
