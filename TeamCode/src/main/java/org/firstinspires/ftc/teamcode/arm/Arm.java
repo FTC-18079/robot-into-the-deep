@@ -20,7 +20,6 @@ import org.firstinspires.ftc.teamcode.util.commands.Commands;
 import org.firstinspires.ftc.teamcode.util.hardware.SuccessMotor;
 import org.firstinspires.ftc.teamcode.vision.LLVision;
 
-// TODO: clean up the janky zeroing
 public class Arm extends SubsystemIF {
     Telemetry telemetry;
 
